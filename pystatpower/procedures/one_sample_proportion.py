@@ -7,7 +7,7 @@ from typing import Any
 from scipy.stats import norm
 from scipy.optimize import brenth
 
-from openpower.exception import (
+from pystatpower.exception import (
     CalculationSolutionNotFoundError,
     EnumMemberNotExistError,
     ParameterValueEmptyError,
@@ -16,8 +16,8 @@ from openpower.exception import (
     TargetParameterNotUniqueError,
     TargetParameterNotExistError,
 )
-from openpower.utils import get_enum_by_name
-from openpower.interval import Interval
+from pystatpower.utils import get_enum_by_name
+from pystatpower.interval import Interval
 
 
 # 最大样本量

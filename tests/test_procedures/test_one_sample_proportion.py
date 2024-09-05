@@ -1,7 +1,7 @@
 from math import ceil
 
 import pytest
-from openpower.exception import (
+from pystatpower.exception import (
     CalculationSolutionNotFoundError,
     EnumMemberNotExistError,
     ParameterValueEmptyError,
@@ -10,7 +10,7 @@ from openpower.exception import (
     TargetParameterNotUniqueError,
     TargetParameterNotExistError,
 )
-from openpower.procedures import one_sample_proportion as OSP
+from pystatpower.procedures import one_sample_proportion as OSP
 
 
 def test_calc_power():

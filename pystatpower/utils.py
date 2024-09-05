@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import TypeVar
 
-from openpower.exception import EnumMemberNotExistError
+from pystatpower.exception import EnumMemberNotExistError
 
 
 T = TypeVar("T", bound=Enum)
