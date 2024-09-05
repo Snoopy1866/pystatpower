@@ -1,14 +1,12 @@
 import os
-from dotenv import load_dotenv
 from setuptools import setup, find_packages
 
-load_dotenv()
 
 author_email = os.getenv("SETUP_AUTHOR_EMAIL", "default@example.com")
 
 setup(
     name="pystatpower",
-    version="0.0.1-a1",
+    version="0.0.1-a2",
     packages=find_packages(include=["pystatpower", "pystatpower.*"]),
     install_requires=["scipy==1.14.1"],
     author="Snoopy1866",
