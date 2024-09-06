@@ -2,18 +2,29 @@
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 
+# black configuration
+[tool.black]
+line-length = 120
 
 # build configuration
 [build-system]
-requires = ["setuptools"]
+requires = [
+    "setuptools"
+]
 build-backend = "setuptools.build_meta"
 
 [project]
-dynamic = ["version"]
+dynamic = [
+    "version"
+]
 name = "pystatpower"
-dependencies = ["scipy"]
+dependencies = [
+    "scipy"
+]
 requires-python = ">=3.12"
-authors = [{ name = "Snoopy1866", email = "openpower2024@gmail.com" }]
+authors = [
+    { name = "Snoopy1866", email = "openpower2024@gmail.com" }
+]
 description = "A Power Analysis Toolkit for Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "GPL-3.0" }
@@ -22,7 +33,7 @@ keywords = [
     "power-analysis",
     "sample-size",
     "mathematics",
-    "statistics",
+    "statistics"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -30,7 +41,7 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Mathematics"
 ]
 
 [tool.setuptools.dynamic]

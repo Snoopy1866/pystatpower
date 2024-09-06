@@ -260,7 +260,16 @@ def solve(
     """
 
     # 检查参数类型和取值
-    _check(n, alpha, power, nullproportion, proportion, alternative, test_type, search_direction)
+    _check(
+        n,
+        alpha,
+        power,
+        nullproportion,
+        proportion,
+        alternative,
+        test_type,
+        search_direction,
+    )
 
     # 尝试将传入的字符串转换为枚举类型
     try:
@@ -403,7 +412,16 @@ def solve(
     return result
 
 
-def _check(n, alpha, power, nullproportion, proportion, alternative, test_type, search_direction) -> None:
+def _check(
+    n,
+    alpha,
+    power,
+    nullproportion,
+    proportion,
+    alternative,
+    test_type,
+    search_direction,
+) -> None:
     """检查参数类型和取值。"""
 
     if not isinstance(n, int) and n is not None:
