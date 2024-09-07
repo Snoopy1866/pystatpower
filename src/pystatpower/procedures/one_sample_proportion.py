@@ -128,7 +128,7 @@ supported_params = tuple(param_info.keys())
 unsolvable_params = tuple(key for key, value in param_info.items() if not value.solvable)
 
 # 可空的参数，即使不作为求解目标
-nonable_params_even_not_target = ("search_direction",)
+none_able_params_even_not_target = ("search_direction",)
 
 
 def calc_power(
@@ -189,16 +189,16 @@ def calc_power(
     if alternative == Alternative.ONE_SIDED:
         if p1 < p0:
             z = norm.ppf(1 - alpha)
-            gstat = gMean - gsd * z - gc
-            result = norm.cdf(gstat)
+            stat = gMean - gsd * z - gc
+            result = norm.cdf(stat)
         elif p1 > p0:
             z = norm.ppf(1 - alpha)
-            gstat = gMean + gsd * z + gc
-            result = 1 - norm.cdf(gstat)
+            stat = gMean + gsd * z + gc
+            result = 1 - norm.cdf(stat)
     elif alternative == Alternative.TWO_SIDED:
         z = norm.ppf(1 - alpha / 2)
-        gstat = [gMean - gsd * z - gc, gMean + gsd * z + gc]
-        result = norm.cdf(gstat[0]) + 1 - norm.cdf(gstat[1])
+        stat = [gMean - gsd * z - gc, gMean + gsd * z + gc]
+        result = norm.cdf(stat[0]) + 1 - norm.cdf(stat[1])
 
     return result
 
@@ -247,7 +247,7 @@ def solve(
     - ParameterValueEmptyError : 当求解目标是 `nullproportion` 或 `proportion` 时，未指定参数 `search_direction`
     - ParameterValueNotInDomainError : 参数值不在定义域内
     - EnumMemberNotExistError : 参数 `alternative`, `test_type`, `search_direction` 指定的字符串找不到对应的枚举名称
-    - TergatParameterNotExistError : 目标参数不存在
+    - TargetParameterNotExistError : 目标参数不存在
     - TargetParameterNotUniqueError : 目标参数不唯一
     - CalculationSolutionNotFoundError : 未找到解
 
@@ -294,7 +294,7 @@ def solve(
     for key, value in local_vars.items():
         if key == target_param:
             continue
-        if key in nonable_params_even_not_target:
+        if key in none_able_params_even_not_target:
             continue
         elif value not in param_info_domain[key]:
             raise ParameterValueNotInDomainError(f"Invalid value for {key}: {value}")
@@ -324,7 +324,7 @@ def solve(
         interval = param_info_domain[target_param]
 
         # 为了避免求解时出现边界问题，对区间进行微调
-        lower_bound, upper_bound = interval.pesudo_bound()
+        lower_bound, upper_bound = interval.pseudo_bound()
 
         if target_param == "n":
 
@@ -374,10 +374,10 @@ def solve(
                 )
 
             if search_direction == SearchDirection.LOWER:
-                lower_bound, upper_bound = Interval(0, proportion).pesudo_bound()
+                lower_bound, upper_bound = Interval(0, proportion).pseudo_bound()
                 result = solve_for_param(eval_nullproportion, lower_bound, upper_bound)
             elif search_direction == SearchDirection.UPPER:
-                lower_bound, upper_bound = Interval(proportion, 1).pesudo_bound()
+                lower_bound, upper_bound = Interval(proportion, 1).pseudo_bound()
                 result = solve_for_param(eval_nullproportion, lower_bound, upper_bound)
             else:
                 raise ParameterValueEmptyError(
@@ -399,10 +399,10 @@ def solve(
                 )
 
             if search_direction == SearchDirection.LOWER:
-                lower_bound, upper_bound = Interval(0, nullproportion).pesudo_bound()
+                lower_bound, upper_bound = Interval(0, nullproportion).pseudo_bound()
                 result = solve_for_param(eval_proportion, lower_bound, upper_bound)
             elif search_direction == SearchDirection.UPPER:
-                lower_bound, upper_bound = Interval(nullproportion, 1).pesudo_bound()
+                lower_bound, upper_bound = Interval(nullproportion, 1).pseudo_bound()
                 result = solve_for_param(eval_proportion, lower_bound, upper_bound)
             else:
                 raise ParameterValueEmptyError(

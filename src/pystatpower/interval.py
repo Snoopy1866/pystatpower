@@ -21,7 +21,7 @@ class Interval:
         False
         >>> 0 in interval
         False
-        >>> interval.pesudo_bound()
+        >>> interval.pseudo_bound()
         (0, 0.9999999999)
     """
 
@@ -45,9 +45,9 @@ class Interval:
             else:
                 return self.lower < value < self.upper
 
-    def __eq__(self, other: "Interval") -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Interval):
-            raise TypeError(f"unsupported operand type(s) for ==: 'Interval' and '{type(other)}'")
+            raise NotImplementedError(f"unsupported operand type(s) for ==: 'Interval' and '{type(other)}'")
 
         return (self.lower, self.upper, self.lower_inclusive, self.upper_inclusive) == (
             other.lower,
@@ -68,20 +68,20 @@ class Interval:
             else:
                 return f"({self.lower}, {self.upper})"
 
-    def pesudo_lbound(self, eps=1e-10) -> int | float:
+    def pseudo_lbound(self, eps=1e-10) -> int | float:
         """区间的伪下界，用于数值计算。"""
         if self.lower_inclusive:
             return self.lower
         else:
             return self.lower + eps
 
-    def pesudo_ubound(self, eps=1e-10) -> int | float:
+    def pseudo_ubound(self, eps=1e-10) -> int | float:
         """区间的伪上界，用于数值计算。"""
         if self.upper_inclusive:
             return self.upper
         else:
             return self.upper - eps
 
-    def pesudo_bound(self) -> tuple[int | float, int | float]:
+    def pseudo_bound(self) -> tuple[int | float, int | float]:
         """区间的伪上下界，用于数值计算。"""
-        return (self.pesudo_lbound(), self.pesudo_ubound())
+        return (self.pseudo_lbound(), self.pseudo_ubound())
