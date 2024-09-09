@@ -1,10 +1,14 @@
 ## PyStatPower
 
-PyStatPower 是一个专注于功效分析的开源的 Python 库。
+PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
+
+主要功能：样本量和检验效能的计算，以及给定参数下估算所需效应量大小。
+
+[详细文档](https://pystatpower.github.io/PyStatPower-Docs)
 
 ## 安装
 
-```
+```cmd
 pip install pystatpower
 ```
 
