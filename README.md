@@ -1,4 +1,4 @@
-## PyStatPower
+# PyStatPower
 
 ![Test](https://github.com/PyStatPower/PyStatPower/actions/workflows/test.yml/badge.svg?branch=main)
 
