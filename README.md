@@ -1,6 +1,6 @@
 # PyStatPower
 
-![Test](https://github.com/PyStatPower/PyStatPower/actions/workflows/test.yml/badge.svg?branch=main)
+[![Test](https://github.com/PyStatPower/PyStatPower/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/PyStatPower/PyStatPower/actions/workflows/test.yml)
 [![PyPI version](https://badge.fury.io/py/pystatpower.svg)](https://badge.fury.io/py/pystatpower)
 
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
