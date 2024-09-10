@@ -1,6 +1,10 @@
 # pytest configuration
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests"
+]
 
 # black configuration
 [tool.black]
@@ -14,6 +18,9 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
+authors = [
+    { name = "Snoopy1866", email = "openpower2024@gmail.com" }
+]
 dynamic = [
     "version"
 ]
@@ -22,9 +29,6 @@ dependencies = [
     "scipy"
 ]
 requires-python = ">=3.12"
-authors = [
-    { name = "Snoopy1866", email = "openpower2024@gmail.com" }
-]
 description = "A Power Analysis Toolkit for Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "GPL-3.0" }
