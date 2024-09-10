@@ -1,6 +1,1 @@
-# This file lists all the dependencies that your code needs to run.
-
 scipy==1.14.1
-
-pytest==8.3.2
-black==24.8.0
