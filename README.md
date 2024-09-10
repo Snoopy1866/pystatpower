@@ -1,5 +1,7 @@
 ## PyStatPower
 
+![Test](https://github.com/PyStatPower/PyStatPower/actions/workflows/test.yml/badge.svg?branch=main)
+
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
 主要功能：样本量和检验效能的计算，以及给定参数下估算所需效应量大小。
