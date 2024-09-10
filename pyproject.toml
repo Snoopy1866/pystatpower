@@ -5,6 +5,7 @@ addopts = "-ra -q"
 testpaths = [
     "tests"
 ]
+pythonpath = ["src"]
 
 # black configuration
 [tool.black]
