@@ -74,9 +74,9 @@ class SearchDirection(Enum):
     Attributes
     ----------
         LOWER : str
-            向上搜索
-        UPPER : str
             向下搜索
+        UPPER : str
+            向上搜索
     """
 
     LOWER = "Lower"
@@ -147,8 +147,6 @@ def calc_power(
             样本量
         alpha : float
             显著性水平
-        power : float
-            检验效能
         nullproportion : float
             零假设的概率
         proportion : float
