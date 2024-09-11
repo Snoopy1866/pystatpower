@@ -1,0 +1,35 @@
+name: Lint and Test
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: "requirements-dev.txt"
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Linter
+        run: |
+          black src --check --verbose
+
+      - name: Run Tests
+        run: |
+          pytest
