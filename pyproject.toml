@@ -29,7 +29,7 @@ name = "pystatpower"
 dependencies = [
     "scipy"
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 description = "A Power Analysis Toolkit for Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "GPL-3.0" }
