@@ -1,7 +1,11 @@
 # PyStatPower
 
-[![Test](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml)
-[![PyPI version](https://badge.fury.io/py/pystatpower.svg)](https://badge.fury.io/py/pystatpower)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
+[![PyPI - Version](https://img.shields.io/pypi/v/pystatpower)](https://badge.fury.io/py/pystatpower)
+![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FPyStatPower%2FPyStatPower%2Fmain%2Fpyproject.toml)
+![GitHub License](https://img.shields.io/github/license/PyStatPower/PyStatPower)
+![PyPI - Status](https://img.shields.io/pypi/status/PyStatPower)
+![PyPI - Downloads](https://img.shields.io/pypi/dw/pystatpower)
 
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
