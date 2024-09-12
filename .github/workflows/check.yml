@@ -34,4 +34,15 @@ jobs:
       - name: Run Tests
         run: |
           pytest
-        continue-on-error: true
+
+  report:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Report Results
+        run: |
+          if [[ "${{ needs.check.result }}" == "failure" ]]; then
+            exit 1
+          fi
