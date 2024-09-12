@@ -29,7 +29,7 @@ name = "pystatpower"
 dependencies = [
     "scipy"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 description = "A Power Analysis Toolkit for Python"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "GPL-3.0" }
@@ -45,7 +45,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
