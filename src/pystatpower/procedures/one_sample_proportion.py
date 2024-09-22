@@ -17,7 +17,7 @@ from pystatpower.exception import (
     TargetParameterNotExistError,
 )
 from pystatpower.utils import get_enum_by_name
-from pystatpower.interval import Interval
+from pystatpower.basic import Interval
 
 
 # 最大样本量
