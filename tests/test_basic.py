@@ -316,6 +316,23 @@ class TestPowerAnalysisNumeric:
         assert bool(PowerAnalysisNumeric(-inf)) == bool(-inf)
 
 
+class TestPowerAnalysisOption:
+    def test_getitem(self):
+        class TestEnum(Enum, metaclass=PowerAnalysisOption):
+            A = 1
+            B = 2
+
+        assert TestEnum["A"] == TestEnum.A
+        assert TestEnum["a"] == TestEnum.A
+        assert TestEnum["B"] == TestEnum.B
+        assert TestEnum["b"] == TestEnum.B
+
+        with pytest.raises(KeyError):
+            TestEnum["C"]
+        with pytest.raises(KeyError):
+            TestEnum[TestEnum.A]
+
+
 def test_alpha():
     assert Alpha(0.05) == 0.05
 
