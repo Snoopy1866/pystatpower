@@ -1,3 +1,4 @@
+from enum import Enum, EnumMeta
 from math import ceil, floor, inf, isclose, trunc
 from numbers import Real
 
@@ -92,6 +93,7 @@ class Interval:
 
 
 class PowerAnalysisNumeric(Real):
+    """自定义功效分析数值类型"""
 
     _domain = Interval(-inf, inf, lower_inclusive=True, upper_inclusive=True)
 
@@ -240,6 +242,16 @@ class PowerAnalysisNumeric(Real):
 
     def __bool__(self):
         return bool(self._value)
+
+
+class PowerAnalysisOption(EnumMeta):
+    """自定义功效分析选项的枚举元类，用于支持大小写不敏感的枚举值访问。"""
+
+    def __getitem__(self, name):
+        if isinstance(name, str):
+            return super().__getitem__(name.upper())
+        else:
+            return super().__getitem__(name)
 
 
 class Alpha(PowerAnalysisNumeric):
