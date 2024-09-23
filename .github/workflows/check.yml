@@ -38,30 +38,38 @@ jobs:
         run: |
           pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
 
-          echo '```python' >> $GITHUB_STEP_SUMMARY
-          cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
           # 检查 pytest 的退出状态码
-          exit_code=$?  
-          if [ $exit_code -ne 0 ]; then
+          if test ${PIPESTATUS[0]} -eq 0;  then
             echo "## Tests Failed" >> $GITHUB_STEP_SUMMARY
+            
+            echo '```python' >> $GITHUB_STEP_SUMMARY
+            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo '```python' >> $GITHUB_STEP_SUMMARY
+            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
           fi
-          exit $exit_code
 
       - name: Run pytest and capture output (Windows)
         if: runner.os == 'Windows'
         run: |
           pytest --color=no --cov --cov-report=xml | Out-File -FilePath pytest_output.txt -Encoding utf8
 
-          echo '```python' >> $env:GITHUB_STEP_SUMMARY
-          Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-          echo '```' >> $env:GITHUB_STEP_SUMMARY
-
           # 检查 pytest 的退出状态码
-          if ($LASTEXITCODE -ne 0) {
+          if ($?) {
             echo "## Tests Failed" >> $env:GITHUB_STEP_SUMMARY
+
+            echo '```python' >> $env:GITHUB_STEP_SUMMARY
+            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            echo '```' >> $env:GITHUB_STEP_SUMMARY
             exit 1
+          }
+          else {
+            echo '```python' >> $env:GITHUB_STEP_SUMMARY
+            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            echo '```' >> $env:GITHUB_STEP_SUMMARY
           }
 
       - name: Upload results to Codecov
