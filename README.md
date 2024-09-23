@@ -8,6 +8,7 @@
 ![PyPI - Downloads](https://img.shields.io/pypi/dw/pystatpower)
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![codecov](https://codecov.io/gh/PyStatPower/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/PyStatPower/PyStatPower)
 
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
