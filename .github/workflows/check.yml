@@ -36,7 +36,7 @@ jobs:
       - name: Run pytest and capture output (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          out = $(pytest --cov --cov-report=xml)
+          out=$(pytest --cov --cov-report=xml)
 
           echo '```python' >> $GITHUB_STEP_SUMMARY
           echo "${out}" >> $GITHUB_STEP_SUMMARY
