@@ -35,7 +35,9 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest --cov --cov-report=xml
+          pytest --cov --cov-report=xml | tee pytest_output.txt
+          echo "# Pytest Results Summary" >> $GITHUB_STEP_SUMMARY
+          cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
 
       - name: Upload results to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
