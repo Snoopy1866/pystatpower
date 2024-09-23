@@ -7,9 +7,17 @@ testpaths = [
 ]
 pythonpath = ["src"]
 
+
 # black configuration
 [tool.black]
 line-length = 120
+target-version = [
+    "py310",
+    "py311",
+    "py312"
+]
+required-version = "24"
+
 
 # build configuration
 [build-system]
@@ -19,20 +27,13 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
+name = "pystatpower"
+description = "A Power Analysis Toolkit for Python"
+license = { text = "GPL-3.0" }
+requires-python = ">=3.10"
 authors = [
     { name = "Snoopy1866", email = "openpower2024@gmail.com" }
 ]
-dynamic = [
-    "version"
-]
-name = "pystatpower"
-dependencies = [
-    "scipy"
-]
-requires-python = ">=3.10"
-description = "A Power Analysis Toolkit for Python"
-readme = { file = "README.md", content-type = "text/markdown" }
-license = { text = "GPL-3.0" }
 keywords = [
     "power",
     "power-analysis",
@@ -50,9 +51,14 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Mathematics"
 ]
+dependencies = [
+    "scipy>=1.12.0"
+]
+readme = { file = "README.md", content-type = "text/markdown" }
+dynamic = [
+    "version"
+]
 
-[tool.setuptools.dynamic]
-version = { attr = "pystatpower.__version__" }
 
 [project.urls]
 Homepage = "https://github.com/PyStatPower/PyStatPower"
@@ -60,3 +66,7 @@ Documentation = "https://github.com/PyStatPower/PyStatPower/blob/main/README.md"
 Repository = "https://github.com/PyStatPower/PyStatPower.git"
 Issues = "https://github.com/PyStatPower/PyStatPower/issues"
 Changelog = "https://github.com/PyStatPower/PyStatPower/blob/main/CHANGELOG.md"
+
+
+[tool.setuptools.dynamic]
+version = { attr = "pystatpower.__version__" }

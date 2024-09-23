@@ -7,6 +7,8 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/PyStatPower)
 ![PyPI - Downloads](https://img.shields.io/pypi/dw/pystatpower)
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
 主要功能：样本量和检验效能的计算，以及给定参数下估算所需效应量大小。
