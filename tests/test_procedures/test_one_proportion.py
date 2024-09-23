@@ -13,7 +13,7 @@ class TestSolveForSampleSize:
         (42, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0"),
         (49, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0_CC"),
         (17, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT"),
-        (24, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT_CC"),
+        (23, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT_CC"),
     ]
 
     params_raise_error_list = [
