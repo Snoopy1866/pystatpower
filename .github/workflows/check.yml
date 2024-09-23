@@ -36,7 +36,7 @@ jobs:
       - name: Run pytest and capture output (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          out=$(pytest --cov --cov-report=xml)
+          out=$(pytest --color=no --cov --cov-report=xml)
 
           echo '```python' >> $GITHUB_STEP_SUMMARY
           echo "${out}" >> $GITHUB_STEP_SUMMARY
@@ -52,7 +52,7 @@ jobs:
       - name: Run pytest and capture output (Windows)
         if: runner.os == 'Windows'
         run: |
-          $out = pytest --cov --cov-report=xml
+          $out = pytest --color=no --cov --cov-report=xml
 
           echo '```python' >> $env:GITHUB_STEP_SUMMARY
           echo $out >> $env:GITHUB_STEP_SUMMARY
