@@ -40,7 +40,10 @@ jobs:
 
           # 检查 pytest 的退出状态码
           if test ${PIPESTATUS[0]} -eq 0;  then
-            echo '<details><summary>Test Output</summary>' >> $GITHUB_STEP_SUMMARY
+            echo '## Tests Passed' >> $GITHUB_STEP_SUMMARY
+
+            echo '<details><summary>Output</summary>' >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
             echo '```python' >> $GITHUB_STEP_SUMMARY
             cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
@@ -48,7 +51,8 @@ jobs:
           else
             echo "## Tests Failed" >> $GITHUB_STEP_SUMMARY
 
-            echo '<details><summary>Test Output</summary>' >> $GITHUB_STEP_SUMMARY
+            echo '<details><summary>Output</summary>' >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
             echo '```python' >> $GITHUB_STEP_SUMMARY
             cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
