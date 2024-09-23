@@ -33,9 +33,52 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
-      - name: Run Tests
+      - name: Run pytest and capture output (Linux/macOS)
+        if: runner.os != 'Windows'
         run: |
-          pytest --cov --cov-report=xml
+          pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
+
+          # 检查 pytest 的退出状态码
+          if test ${PIPESTATUS[0]} -eq 0;  then
+            echo '<details><summary>Output</summary>' >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+
+            echo '```python' >> $GITHUB_STEP_SUMMARY
+            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+
+            echo '</details>' >> $GITHUB_STEP_SUMMARY
+          else
+            echo '```python' >> $GITHUB_STEP_SUMMARY
+            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+
+            exit 1
+          fi
+
+      - name: Run pytest and capture output (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pytest --color=no --cov --cov-report=xml | Out-File -FilePath pytest_output.txt -Encoding utf8
+
+          # 检查 pytest 的退出状态码
+          if ($?) {
+            Write-Output '<details><summary>Output</summary>' >> $env:GITHUB_STEP_SUMMARY
+            Write-Output '' >> $env:GITHUB_STEP_SUMMARY
+
+            Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
+            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            Write-Output '```' >> $env:GITHUB_STEP_SUMMARY
+
+            Write-Output '</details>' >> $env:GITHUB_STEP_SUMMARY
+          }
+          else {
+            Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
+            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            Write-Output '```' >> $env:GITHUB_STEP_SUMMARY
+
+            exit 1
+          }
 
       - name: Upload results to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
