@@ -36,18 +36,33 @@ jobs:
       - name: Run pytest and capture output (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
-          test ${PIPESTATUS[0]} -eq 0  # 检查 pytest 的退出状态码
-          echo "# Pytest Results Summary" >> $GITHUB_STEP_SUMMARY
-          cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
+          out = $(pytest --cov --cov-report=xml)
+
+          echo '```python' >> $GITHUB_STEP_SUMMARY
+          echo "${out}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          # 检查 pytest 的退出状态码
+          exit_code=$?  
+          if [ $exit_code -ne 0 ]; then
+            echo "## Tests Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          exit $exit_code
 
       - name: Run pytest and capture output (Windows)
         if: runner.os == 'Windows'
         run: |
-          pytest --color=no --cov --cov-report=xml | Out-File -FilePath pytest_output.txt -Encoding utf8
-          if ($?) { exit 0 } else { exit 1 }  # 检查 pytest 的退出状态码
-          echo "# Pytest Results Summary" >> $env:GITHUB_STEP_SUMMARY
-          Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+          $out = pytest --cov --cov-report=xml
+
+          echo '```python' >> $env:GITHUB_STEP_SUMMARY
+          echo $out >> $env:GITHUB_STEP_SUMMARY
+          echo '```' >> $env:GITHUB_STEP_SUMMARY
+
+          # 检查 pytest 的退出状态码
+          if ($LASTEXITCODE -ne 0) {
+            echo "## Tests Failed" >> $env:GITHUB_STEP_SUMMARY
+            exit 1
+          }
 
       - name: Upload results to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
