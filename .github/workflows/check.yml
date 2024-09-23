@@ -36,10 +36,10 @@ jobs:
       - name: Run pytest and capture output (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          out=$(pytest --color=no --cov --cov-report=xml)
+          pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
 
           echo '```python' >> $GITHUB_STEP_SUMMARY
-          echo "${out}" >> $GITHUB_STEP_SUMMARY
+          cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
           # 检查 pytest 的退出状态码
@@ -52,10 +52,10 @@ jobs:
       - name: Run pytest and capture output (Windows)
         if: runner.os == 'Windows'
         run: |
-          $out = pytest --color=no --cov --cov-report=xml
+          pytest --color=no --cov --cov-report=xml | Out-File -FilePath pytest_output.txt -Encoding utf8
 
           echo '```python' >> $env:GITHUB_STEP_SUMMARY
-          echo $out >> $env:GITHUB_STEP_SUMMARY
+          Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
           echo '```' >> $env:GITHUB_STEP_SUMMARY
 
           # 检查 pytest 的退出状态码
