@@ -6,6 +6,9 @@ on:
       - "main"
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "src/**"
+      - "tests/**"
 
 jobs:
   check:
@@ -40,15 +43,3 @@ jobs:
         with:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  report:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Report Results
-        run: |
-          if [[ '${{ needs.check.result }}' == 'failure' ]]; then
-            exit 1
-          fi
