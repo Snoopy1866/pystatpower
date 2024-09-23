@@ -1,11 +1,13 @@
 # pytest configuration
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-ra -q"
+addopts = "-ra -q -l --tb=auto --color=yes"
 testpaths = [
     "tests"
 ]
 pythonpath = ["src"]
+verbosity_test_cases = 2
+verbosity_assertions = 2
 
 
 # black configuration
