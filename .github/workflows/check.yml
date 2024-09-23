@@ -63,14 +63,14 @@ jobs:
 
           # 检查 pytest 的退出状态码
           if ($?) {
-            Write-Output '<details><summary>Output</summary>' >> $env:$GITHUB_STEP_SUMMARY
-            Write-Output '' >> $env:$GITHUB_STEP_SUMMARY
+            Write-Output '<details><summary>Output</summary>' >> $env:GITHUB_STEP_SUMMARY
+            Write-Output '' >> $env:GITHUB_STEP_SUMMARY
 
             Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
             Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
             Write-Output '```' >> $env:GITHUB_STEP_SUMMARY
 
-            Write-Output '</details>' >> $env:$GITHUB_STEP_SUMMARY
+            Write-Output '</details>' >> $env:GITHUB_STEP_SUMMARY
           }
           else {
             Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
