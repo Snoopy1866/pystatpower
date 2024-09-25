@@ -6,14 +6,22 @@
   "language": "en",
   // words - list of words to be always considered correct
   "words": [
-    "codecov",
-    "scipy",
-    "pingouin",
-    "pystatpower",
-    "PyStatPower",
     "brenth",
-    "proportion",
+    "brentq",
+    "codecov",
+    "ndigits",
     "nullproportion",
-    "ospp"
+    "pingouin",
+    "proportion",
+    "PyStatPower",
+    "pystatpower",
+    "radd",
+    "rmul",
+    "rtruediv",
+    "rfloordiv",
+    "rmod",
+    "rpow",
+    "scipy",
+    "unpooled"
   ]
 }
