@@ -100,7 +100,11 @@ class GroupAllocationOption(Flag, metaclass=PowerAnalysisOption):
 
 
 class GroupAllocation:
+    """用于定义样本量分配方式的类"""
+
     class ForSize:
+        """用于定义样本量分配方式的类（求解目标: 样本量）"""
+
         def __init__(
             self,
             group_allocation_option: GroupAllocationOption = GroupAllocationOption.EQUAL,
@@ -111,6 +115,21 @@ class GroupAllocation:
             percent_of_treatment: float = None,
             percent_of_reference: float = None,
         ):
+            """初始化 GroupAllocation.ForSize 类
+
+            Args:
+                group_allocation_option (GroupAllocationOption, optional): 分配方式选项。默认为 GroupAllocationOption.EQUAL.
+                size_of_treatment (float, optional): 试验组样本量
+                size_of_reference (float, optional): 对照组样本量
+                ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
+                ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
+                percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
+                percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+
+            Raises:
+                ValueError: 如果指定了不支持的分配方式
+            """
+
             self.group_allocation_option = group_allocation_option
             match group_allocation_option:
                 case GroupAllocationOption.EQUAL:
@@ -150,6 +169,23 @@ class GroupAllocation:
             percent_of_treatment: float = None,
             percent_of_reference: float = None,
         ):
+            """初始化 GroupAllocation.ForNotSize 类
+
+            Args:
+                group_allocation_option (GroupAllocationOption, required): 分配方式选项
+                size_of_total (float, optional): 总样本量
+                size_of_each (float, optional): 单组样本量
+                size_of_treatment (float, optional): 试验组样本量
+                size_of_reference (float, optional): 对照组样本量
+                ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
+                ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
+                percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
+                percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+
+            Raises:
+                ValueError: 如果指定了不支持的分配方式
+            """
+
             match group_allocation_option:
                 case x if x == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL:
                     self.treatment_size_formula = lambda: size_of_total / 2
@@ -239,9 +275,16 @@ class GroupAllocation:
                     raise ValueError("未知的样本量分配类型")
 
     ForAlpha = ForNotSize
+    """用于定义样本量分配方式的类（求解目标: 显著性水平）"""
+
     ForPower = ForNotSize
+    """用于定义样本量分配方式的类（求解目标: 检验效能）"""
+
     ForTreatmentProportion = ForNotSize
+    """用于定义样本量分配方式的类（求解目标: 试验组的率）"""
+
     ForReferenceProportion = ForNotSize
+    """用于定义样本量分配方式的类（求解目标: 对照组的率）"""
 
 
 def fun_power(
@@ -253,6 +296,20 @@ def fun_power(
     alternative: Alternative,
     test_type: TestType,
 ):
+    """_summary_
+
+    Args:
+        alpha (float): 显著性水平
+        treatment_n (float): 试验组样本量
+        reference_n (float): 对照组样本量
+        treatment_proportion (float): 试验组的率
+        reference_proportion (float): 对照组的率
+        alternative (Alternative): 备择假设类型
+        test_type (TestType): 检验类型
+
+    Returns:
+        power (float): 检验效能
+    """
     n1 = treatment_n
     n2 = reference_n
     p1 = treatment_proportion
@@ -300,7 +357,11 @@ def fun_power(
 
 
 class TwoProportion:
+    """两独立样本差异性功效分析模型"""
+
     class ForSize:
+        """两独立样本差异性功效分析模型（求解目标: 样本量）"""
+
         def __init__(
             self,
             alpha: Alpha,
@@ -340,6 +401,8 @@ class TwoProportion:
             self.reference_size = Size(self.group_allocation.reference_size_formula(n))
 
     class ForAlpha:
+        """两独立样本差异性功效分析模型（求解目标: 显著性水平）"""
+
         def __init__(
             self,
             power: Power,
@@ -378,6 +441,8 @@ class TwoProportion:
             self.reference_size = Size(self.group_allocation.reference_size_formula())
 
     class ForPower:
+        """两独立样本差异性功效分析模型（求解目标: 检验效能）"""
+
         def __init__(
             self,
             alpha: Alpha,
@@ -409,6 +474,8 @@ class TwoProportion:
             self.reference_size = Size(self.group_allocation.reference_size_formula())
 
     class ForTreatmentProportion:
+        """两独立样本差异性功效分析模型（求解目标: 试验组的率）"""
+
         def __init__(
             self,
             alpha: Alpha,
@@ -462,6 +529,8 @@ class TwoProportion:
             self.reference_size = Size(self.group_allocation.reference_size_formula())
 
     class ForReferenceProportion:
+        """两独立样本差异性功效分析模型（求解目标: 对照组的率）"""
+
         def __init__(
             self,
             alpha: Alpha,
@@ -523,6 +592,19 @@ def solve_for_sample_size(
     group_allocation: GroupAllocation.ForSize = GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
     full_output: bool = False,
 ):
+    """求解样本量
+
+    Args:
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        treatment_proportion (float): 试验组的率
+        reference_proportion (float): 对照组的率
+        alternative (str): 备择假设类型
+        test_type (str): 检验类型
+        group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式。默认值: GroupAllocation.ForSize(GroupAllocationOption.EQUAL)
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = TwoProportion.ForSize(
         alpha=Alpha(alpha),
         power=Power(power),
@@ -548,6 +630,18 @@ def solve_for_alpha(
     group_allocation: GroupAllocation.ForAlpha,
     full_output: bool = False,
 ):
+    """求解显著性水平
+
+    Args:
+        power (float): 检验效能
+        treatment_proportion (float): 试验组的率
+        reference_proportion (float): 对照组的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
+        group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = TwoProportion.ForAlpha(
         power=Power(power),
         alternative=Alternative[alternative],
@@ -572,6 +666,18 @@ def solve_for_power(
     group_allocation: GroupAllocation.ForPower,
     full_output: bool = False,
 ):
+    """求解检验效能
+
+    Args:
+        alpha (float): 显著性水平
+        treatment_proportion (float): 试验组的率
+        reference_proportion (float): 对照组的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
+        group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = TwoProportion.ForPower(
         alpha=Alpha(alpha),
         alternative=Alternative[alternative],
@@ -597,6 +703,19 @@ def solve_for_treatment_proportion(
     search_direction: SearchDirection,
     full_output: bool = False,
 ):
+    """求解试验组的率
+
+    Args:
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        reference_proportion (float): 对照组的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
+        group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = TwoProportion.ForTreatmentProportion(
         alpha=Alpha(alpha),
         power=Power(power),
@@ -623,6 +742,19 @@ def solve_for_reference_proportion(
     search_direction: str,
     full_output: bool = False,
 ):
+    """求解对照组的率
+
+    Args:
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        treatment_proportion (float): 试验组的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
+        group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = TwoProportion.ForReferenceProportion(
         alpha=Alpha(alpha),
         power=Power(power),
