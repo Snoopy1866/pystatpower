@@ -437,3 +437,6 @@ def solve_for_proportion(
     if full_output:
         return model
     return model.proportion
+
+
+print("Done!")
