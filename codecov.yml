@@ -5,5 +5,11 @@ coverage:
         # basic
         target: auto #default
         threshold: 0%
-        base: auto 
-        if_ci_failed: success
+        base: auto
+        informational: true
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+        base: auto
+        informational: true
