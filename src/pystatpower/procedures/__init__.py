@@ -1,1 +1,2 @@
 from pystatpower.procedures import one_proportion
+from pystatpower.procedures import two_proportion
