@@ -2,7 +2,7 @@ from math import ceil
 
 import pytest
 
-from pystatpower.procedures.two_proportion import *
+from pystatpower.models.two_proportion import *
 
 
 class TestSolveForSampleSize:

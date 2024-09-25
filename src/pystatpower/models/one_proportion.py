@@ -325,6 +325,18 @@ def solve_for_sample_size(
     test_type: str,
     full_output: bool = False,
 ):
+    """求解样本量
+
+    Args:
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        nullproportion (float): 零假设下的率
+        proportion (float): 备择假设下的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = OneProportion.ForSize(
         alpha=Alpha(alpha),
         power=Power(power),
@@ -349,6 +361,18 @@ def solve_for_alpha(
     test_type: str,
     full_output: bool = False,
 ):
+    """求解显著性水平
+
+    Args:
+        size (float): 样本量
+        power (float): 检验效能
+        nullproportion (float): 零假设下的率
+        proportion (float): 备择假设下的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = OneProportion.ForAlpha(
         size=Size(size),
         power=Power(power),
@@ -373,6 +397,18 @@ def solve_for_power(
     test_type: str,
     full_output: bool = False,
 ):
+    """求解检验效能
+
+    Args:
+        size (float): 样本量
+        alpha (float): 显著性水平
+        nullproportion (float): 零假设下的率
+        proportion (float): 备择假设下的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = OneProportion.ForPower(
         size=Size(size),
         alpha=Alpha(alpha),
@@ -398,6 +434,19 @@ def solve_for_nullproportion(
     search_direction: str,
     full_output: bool = False,
 ):
+    """求解零假设下的率
+
+    Args:
+        size (float): 样本量
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        proportion (float): 备择假设下的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = OneProportion.ForNullProportion(
         size=Size(size),
         alpha=Alpha(alpha),
@@ -424,6 +473,19 @@ def solve_for_proportion(
     search_direction: str,
     full_output: bool = False,
 ):
+    """求解备择假设下的率
+
+    Args:
+        size (float): 样本量
+        alpha (float): 显著性水平
+        power (float): 检验效能
+        nullproportion (float): 零假设下的率
+        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
+        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        full_output (bool, optional): 是否输出完整结果。默认值: False
+    """
+
     model = OneProportion.ForProportion(
         size=Size(size),
         alpha=Alpha(alpha),
