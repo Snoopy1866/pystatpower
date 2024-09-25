@@ -11,9 +11,19 @@
     "pingouin",
     "pystatpower",
     "PyStatPower",
+    "ndigits",
+    "radd",
+    "rmul",
+    "rtruediv",
+    "rfloordiv",
+    "rmod",
+    "rpow",
     "brenth",
+    "brentq",
     "proportion",
     "nullproportion",
-    "ospp"
+    "ospp",
+    "tspp",
+    "unpooled"
   ]
 }
