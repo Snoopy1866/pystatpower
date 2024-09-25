@@ -32,9 +32,11 @@ pip install pystatpower
 #### 单组样本率检验
 
 ```python
-from pystatpower.procedures import ospp
+from pystatpower.models import one_proportion
 
-result = ospp.solve(n=None, alpha=0.05, power=0.80, nullproportion=0.80, proportion=0.95)
+result = one_proportion.solve_for_sample_size(
+    alpha=0.05, power=0.80, nullproportion=0.80, proportion=0.95, alternative="two_sided", test_type="exact_test"
+)
 print(result)
 ```
 
