@@ -2,7 +2,7 @@
 
 ## 🏷 0.0.1 (2024-09-26)
 
-- 新增功效分析模型：两独立样本率差异性检验（[two_proportion.py](https://github.com/PyStatPower/PyStatPower/blob/main/src/pystatpower/models/two_proportion.py)）
+- 新增功效分析模型：两独立样本率差异性检验
 - 使用自定义参数类型，便于限制取值范围
 - 重写枚举元类的 `__getitem__` 方法，在以索引方式访问枚举值时，忽略字符串大小写 #26
 
