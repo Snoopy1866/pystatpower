@@ -8,6 +8,40 @@ from scipy.optimize import brentq
 
 from pystatpower.basic import Alpha, Interval, Percent, Power, PowerAnalysisOption, Proportion, Ratio, Size
 
+__all__ = [
+    "GroupAllocation",
+    "solve_for_sample_size",
+    "solve_for_alpha",
+    "solve_for_power",
+    "solve_for_treatment_proportion",
+    "solve_for_reference_proportion",
+]
+
+
+@unique
+class Target(Enum, metaclass=PowerAnalysisOption):
+    """求解目标
+
+    Attributes
+    __________
+        SIZE : (int)
+            样本量
+        ALPHA : (int)
+            显著性水平
+        POWER : (int)
+            检验效能
+        TREATMENT_PROPORTION : (int)
+            试验组的率
+        REFERENCE_PROPORTION : (int)
+            对照组的率
+    """
+
+    SIZE = 1
+    ALPHA = 2
+    POWER = 3
+    TREATMENT_PROPORTION = 4
+    REFERENCE_PROPORTION = 5
+
 
 @unique
 class Alternative(Enum, metaclass=PowerAnalysisOption):
@@ -102,267 +136,317 @@ class GroupAllocationOption(Flag, metaclass=PowerAnalysisOption):
 class GroupAllocation:
     """用于定义样本量分配方式的类"""
 
-    class ForSize:
-        """用于定义样本量分配方式的类（求解目标: 样本量）"""
+    def __init__(
+        self,
+        size_of_total: float = None,
+        size_of_each: float = None,
+        size_of_treatment: float = None,
+        size_of_reference: float = None,
+        ratio_of_treatment_to_reference: float = None,
+        ratio_of_reference_to_treatment: float = None,
+        percent_of_treatment: float = None,
+        percent_of_reference: float = None,
+    ):
+        """初始化 GroupAllocation 类
 
-        def __init__(
-            self,
-            size_of_treatment: float = None,
-            size_of_reference: float = None,
-            ratio_of_treatment_to_reference: float = None,
-            ratio_of_reference_to_treatment: float = None,
-            percent_of_treatment: float = None,
-            percent_of_reference: float = None,
-        ):
-            """初始化 GroupAllocation.ForSize 类
+        Args:
+            size_of_total (float, optional): 总样本量
+            size_of_each (float, optional): 单组样本量
+            size_of_treatment (float, optional): 试验组样本量
+            size_of_reference (float, optional): 对照组样本量
+            ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
+            ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
+            percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
+            percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+        """
 
-            Args:
-                size_of_treatment (float, optional): 试验组样本量
-                size_of_reference (float, optional): 对照组样本量
-                ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
-                ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
-                percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
-                percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+        self.group_allocation_params_dict_for_size = dict(
+            size_of_treatment=Size(size_of_treatment),
+            size_of_reference=Size(size_of_reference),
+            ratio_of_treatment_to_reference=Ratio(ratio_of_treatment_to_reference),
+            ratio_of_reference_to_treatment=Ratio(ratio_of_reference_to_treatment),
+            percent_of_treatment=Percent(percent_of_treatment),
+            percent_of_reference=Percent(percent_of_reference),
+        )
 
-            Raises:
-                ValueError: 如果指定了不支持的分配方式
-            """
+        self.group_allocation_params_dict_for_not_size = self.group_allocation_params_dict_for_size | dict(
+            size_of_total=Size(size_of_total),
+            size_of_each=Size(size_of_each),
+        )
 
-            self.size_of_treatment = Size(size_of_treatment)
-            self.size_of_reference = Size(size_of_reference)
-            self.ratio_of_treatment_to_reference = Ratio(ratio_of_treatment_to_reference)
-            self.ratio_of_reference_to_treatment = Ratio(ratio_of_reference_to_treatment)
-            self.percent_of_treatment = Percent(percent_of_treatment)
-            self.percent_of_reference = Percent(percent_of_reference)
+    def get_group_allocation_for_target(self, target: Target):
+        match target:
+            case Target.SIZE:
+                return GroupAllocationForSize(**self.group_allocation_params_dict_for_size)
+            case Target.ALPHA:
+                return GroupAllocationForAlpha(**self.group_allocation_params_dict_for_not_size)
+            case Target.POWER:
+                return GroupAllocationForPower(**self.group_allocation_params_dict_for_not_size)
+            case Target.TREATMENT_PROPORTION:
+                return GroupAllocationForTreatmentProportion(**self.group_allocation_params_dict_for_not_size)
+            case Target.REFERENCE_PROPORTION:
+                return GroupAllocationForReferenceProportion(**self.group_allocation_params_dict_for_not_size)
+            case _:  # pragma: no cover
+                assert False, "不支持的求解目标"
 
-            kwargs = {
-                "size_of_treatment": self.size_of_treatment,
-                "size_of_reference": self.size_of_reference,
-                "ratio_of_treatment_to_reference": self.ratio_of_treatment_to_reference,
-                "ratio_of_reference_to_treatment": self.ratio_of_reference_to_treatment,
-                "percent_of_treatment": self.percent_of_treatment,
-                "percent_of_reference": self.percent_of_reference,
-            }
 
-            kwargs_spec = {k: v for k, v in kwargs.items() if v is not None}
+class GroupAllocationForSize:
+    """用于定义样本量分配方式的类（求解目标: 样本量）"""
 
-            if len(kwargs_spec) == 0:
-                self.group_allocation_option = GroupAllocationOption.EQUAL
-            elif len(kwargs_spec) == 1:
-                arg = list(kwargs_spec.keys())[0]
-                self.group_allocation_option = GroupAllocationOption[arg]
+    def __init__(
+        self,
+        size_of_treatment: float = None,
+        size_of_reference: float = None,
+        ratio_of_treatment_to_reference: float = None,
+        ratio_of_reference_to_treatment: float = None,
+        percent_of_treatment: float = None,
+        percent_of_reference: float = None,
+    ):
+        """初始化 GroupAllocation.ForSize 类
+
+        Args:
+            size_of_treatment (float, optional): 试验组样本量
+            size_of_reference (float, optional): 对照组样本量
+            ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
+            ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
+            percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
+            percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+
+        Raises:
+            ValueError: 如果指定了不支持的分配方式
+        """
+
+        self.size_of_treatment = Size(size_of_treatment)
+        self.size_of_reference = Size(size_of_reference)
+        self.ratio_of_treatment_to_reference = Ratio(ratio_of_treatment_to_reference)
+        self.ratio_of_reference_to_treatment = Ratio(ratio_of_reference_to_treatment)
+        self.percent_of_treatment = Percent(percent_of_treatment)
+        self.percent_of_reference = Percent(percent_of_reference)
+
+        kwargs = {
+            "size_of_treatment": self.size_of_treatment,
+            "size_of_reference": self.size_of_reference,
+            "ratio_of_treatment_to_reference": self.ratio_of_treatment_to_reference,
+            "ratio_of_reference_to_treatment": self.ratio_of_reference_to_treatment,
+            "percent_of_treatment": self.percent_of_treatment,
+            "percent_of_reference": self.percent_of_reference,
+        }
+
+        kwargs_spec = {k: v for k, v in kwargs.items() if v is not None}
+
+        if len(kwargs_spec) == 0:
+            self.group_allocation_option = GroupAllocationOption.EQUAL
+        elif len(kwargs_spec) == 1:
+            arg = list(kwargs_spec.keys())[0]
+            self.group_allocation_option = GroupAllocationOption[arg]
+        else:
+            raise ValueError("不支持的参数")
+
+        match self.group_allocation_option:
+            case GroupAllocationOption.EQUAL:
+                self.treatment_size_formula = lambda n: n
+                self.reference_size_formula = lambda n: n
+            case GroupAllocationOption.SIZE_OF_TREATMENT:
+                self.treatment_size_formula = lambda n: size_of_treatment
+                self.reference_size_formula = lambda n: n
+            case GroupAllocationOption.SIZE_OF_REFERENCE:
+                self.treatment_size_formula = lambda n: n
+                self.reference_size_formula = lambda n: size_of_reference
+            case GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                self.treatment_size_formula = lambda n: ratio_of_treatment_to_reference * n
+                self.reference_size_formula = lambda n: n
+            case GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                self.treatment_size_formula = lambda n: n
+                self.reference_size_formula = lambda n: ratio_of_reference_to_treatment * n
+            case GroupAllocationOption.PERCENT_OF_TREATMENT:
+                self.treatment_size_formula = lambda n: n
+                self.reference_size_formula = lambda n: (1 - percent_of_treatment) / percent_of_treatment * n
+            case GroupAllocationOption.PERCENT_OF_REFERENCE:
+                self.treatment_size_formula = lambda n: (1 - percent_of_reference) / percent_of_reference * n
+                self.reference_size_formula = lambda n: n
+            case _:  # pragma: no cover
+                assert False, "不支持的参数"
+
+
+class GroupAllocationForNotSize:
+    def __init__(
+        self,
+        size_of_total: float = None,
+        size_of_each: float = None,
+        size_of_treatment: float = None,
+        size_of_reference: float = None,
+        ratio_of_treatment_to_reference: float = None,
+        ratio_of_reference_to_treatment: float = None,
+        percent_of_treatment: float = None,
+        percent_of_reference: float = None,
+    ):
+        """初始化 GroupAllocation.ForNotSize 类
+
+        Args:
+            size_of_total (float, optional): 总样本量
+            size_of_each (float, optional): 单组样本量
+            size_of_treatment (float, optional): 试验组样本量
+            size_of_reference (float, optional): 对照组样本量
+            ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
+            ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
+            percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
+            percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
+
+        Raises:
+            ValueError: 如果指定了不支持的分配方式
+        """
+
+        self.size_of_total = Size(size_of_total)
+        self.size_of_each = Size(size_of_each)
+        self.size_of_treatment = Size(size_of_treatment)
+        self.size_of_reference = Size(size_of_reference)
+        self.ratio_of_treatment_to_reference = Ratio(ratio_of_treatment_to_reference)
+        self.ratio_of_reference_to_treatment = Ratio(ratio_of_reference_to_treatment)
+        self.percent_of_treatment = Percent(percent_of_treatment)
+        self.percent_of_reference = Percent(percent_of_reference)
+
+        kwargs = {
+            "size_of_total": self.size_of_total,
+            "size_of_each": self.size_of_each,
+            "size_of_treatment": self.size_of_treatment,
+            "size_of_reference": self.size_of_reference,
+            "ratio_of_treatment_to_reference": self.ratio_of_treatment_to_reference,
+            "ratio_of_reference_to_treatment": self.ratio_of_reference_to_treatment,
+            "percent_of_treatment": self.percent_of_treatment,
+            "percent_of_reference": self.percent_of_reference,
+        }
+
+        kwargs_spec = {k: v for k, v in kwargs.items() if v is not None}
+        if len(kwargs_spec) == 1:
+            arg = list(kwargs_spec.keys())[0]
+            if arg in ["size_of_total", "size_of_each", "size_of_treatment", "size_of_reference"]:
+                self.group_allocation_option = GroupAllocationOption.EQUAL | GroupAllocationOption[arg]
             else:
-                raise ValueError("不支持的参数")
+                raise ValueError(
+                    "参数不足，若采用等量分配方式，则指定的参数必须是 'size_of_total', 'size_of_each', 'size_of_treatment' 或 'size_of_reference' 其中之一"
+                )
+        elif len(kwargs_spec) == 2:
+            args = list(kwargs_spec.keys())
+            self.group_allocation_option = GroupAllocationOption[args[0]] | GroupAllocationOption[args[1]]
+        else:
+            raise ValueError("不支持的参数组合")
 
-            match self.group_allocation_option:
-                case GroupAllocationOption.EQUAL:
-                    self.treatment_size_formula = lambda n: n
-                    self.reference_size_formula = lambda n: n
-                case GroupAllocationOption.SIZE_OF_TREATMENT:
-                    self.treatment_size_formula = lambda n: size_of_treatment
-                    self.reference_size_formula = lambda n: n
-                case GroupAllocationOption.SIZE_OF_REFERENCE:
-                    self.treatment_size_formula = lambda n: n
-                    self.reference_size_formula = lambda n: size_of_reference
-                case GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
-                    self.treatment_size_formula = lambda n: ratio_of_treatment_to_reference * n
-                    self.reference_size_formula = lambda n: n
-                case GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
-                    self.treatment_size_formula = lambda n: n
-                    self.reference_size_formula = lambda n: ratio_of_reference_to_treatment * n
-                case GroupAllocationOption.PERCENT_OF_TREATMENT:
-                    self.treatment_size_formula = lambda n: n
-                    self.reference_size_formula = lambda n: (1 - percent_of_treatment) / percent_of_treatment * n
-                case GroupAllocationOption.PERCENT_OF_REFERENCE:
-                    self.treatment_size_formula = lambda n: (1 - percent_of_reference) / percent_of_reference * n
-                    self.reference_size_formula = lambda n: n
-                case _:
-                    assert False, "不支持的参数"
-
-    class ForNotSize:
-        def __init__(
-            self,
-            size_of_total: float = None,
-            size_of_each: float = None,
-            size_of_treatment: float = None,
-            size_of_reference: float = None,
-            ratio_of_treatment_to_reference: float = None,
-            ratio_of_reference_to_treatment: float = None,
-            percent_of_treatment: float = None,
-            percent_of_reference: float = None,
-        ):
-            """初始化 GroupAllocation.ForNotSize 类
-
-            Args:
-                size_of_total (float, optional): 总样本量
-                size_of_each (float, optional): 单组样本量
-                size_of_treatment (float, optional): 试验组样本量
-                size_of_reference (float, optional): 对照组样本量
-                ratio_of_treatment_to_reference (float, optional): 试验组样本量与对照组样本量的比值
-                ratio_of_reference_to_treatment (float, optional): 对照组样本量与试验组样本量的比值
-                percent_of_treatment (float, optional): 试验组样本量占总样本量的百分比
-                percent_of_reference (float, optional): 对照组样本量占总样本量的百分比
-
-            Raises:
-                ValueError: 如果指定了不支持的分配方式
-            """
-
-            self.size_of_total = Size(size_of_total)
-            self.size_of_each = Size(size_of_each)
-            self.size_of_treatment = Size(size_of_treatment)
-            self.size_of_reference = Size(size_of_reference)
-            self.ratio_of_treatment_to_reference = Ratio(ratio_of_treatment_to_reference)
-            self.ratio_of_reference_to_treatment = Ratio(ratio_of_reference_to_treatment)
-            self.percent_of_treatment = Percent(percent_of_treatment)
-            self.percent_of_reference = Percent(percent_of_reference)
-
-            kwargs = {
-                "size_of_total": self.size_of_total,
-                "size_of_each": self.size_of_each,
-                "size_of_treatment": self.size_of_treatment,
-                "size_of_reference": self.size_of_reference,
-                "ratio_of_treatment_to_reference": self.ratio_of_treatment_to_reference,
-                "ratio_of_reference_to_treatment": self.ratio_of_reference_to_treatment,
-                "percent_of_treatment": self.percent_of_treatment,
-                "percent_of_reference": self.percent_of_reference,
-            }
-
-            kwargs_spec = {k: v for k, v in kwargs.items() if v is not None}
-            if len(kwargs_spec) == 1:
-                arg = list(kwargs_spec.keys())[0]
-                if arg in ["size_of_total", "size_of_each", "size_of_treatment", "size_of_reference"]:
-                    self.group_allocation_option = GroupAllocationOption.EQUAL | GroupAllocationOption[arg]
-                else:
-                    raise ValueError(
-                        "参数不足，若采用等量分配方式，则指定的参数必须是 'size_of_total', 'size_of_each', 'size_of_treatment' 或 'size_of_reference' 其中之一"
-                    )
-            elif len(kwargs_spec) == 2:
-                args = list(kwargs_spec.keys())
-                self.group_allocation_option = GroupAllocationOption[args[0]] | GroupAllocationOption[args[1]]
-            else:
+        match self.group_allocation_option:
+            case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL:
+                self.treatment_size_formula = lambda: size_of_total / 2
+                self.reference_size_formula = lambda: size_of_total / 2
+            case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_EACH:
+                self.treatment_size_formula = lambda: size_of_each
+                self.reference_size_formula = lambda: size_of_each
+            case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = lambda: size_of_treatment
+            case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_reference
+                self.reference_size_formula = lambda: size_of_reference
+            case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = lambda: size_of_total - size_of_treatment
+            case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_total - size_of_reference
+                self.reference_size_formula = lambda: size_of_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                self.treatment_size_formula = (
+                    lambda: size_of_total * ratio_of_treatment_to_reference / (1 + ratio_of_treatment_to_reference)
+                )
+                self.reference_size_formula = lambda: size_of_total / (1 + ratio_of_treatment_to_reference)
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_total / (1 + ratio_of_reference_to_treatment)
+                self.reference_size_formula = lambda: (
+                    size_of_total * ratio_of_reference_to_treatment / (1 + ratio_of_reference_to_treatment)
+                )
+            case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_total * percent_of_treatment
+                self.reference_size_formula = lambda: size_of_total * (1 - percent_of_treatment)
+            case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_total * (1 - percent_of_reference)
+                self.reference_size_formula = lambda: size_of_total * percent_of_reference
+            case option if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = lambda: size_of_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = lambda: size_of_treatment / ratio_of_treatment_to_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = lambda: size_of_treatment * ratio_of_reference_to_treatment
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = (
+                    lambda: size_of_treatment * (1 - percent_of_treatment) / percent_of_treatment
+                )
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_treatment
+                self.reference_size_formula = (
+                    lambda: size_of_treatment * percent_of_reference / (1 - percent_of_reference)
+                )
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                self.treatment_size_formula = lambda: size_of_reference * ratio_of_treatment_to_reference
+                self.reference_size_formula = lambda: size_of_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                self.treatment_size_formula = lambda: size_of_reference / ratio_of_reference_to_treatment
+                self.reference_size_formula = lambda: size_of_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                self.treatment_size_formula = (
+                    lambda: size_of_reference * percent_of_treatment / (1 - percent_of_treatment)
+                )
+                self.reference_size_formula = lambda: size_of_reference
+            case (
+                option
+            ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                self.treatment_size_formula = (
+                    lambda: size_of_reference * (1 - percent_of_reference) / percent_of_reference
+                )
+                self.reference_size_formula = lambda: size_of_reference
+            case _:
                 raise ValueError("不支持的参数组合")
 
-            match self.group_allocation_option:
-                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL:
-                    self.treatment_size_formula = lambda: size_of_total / 2
-                    self.reference_size_formula = lambda: size_of_total / 2
-                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_EACH:
-                    self.treatment_size_formula = lambda: size_of_each
-                    self.reference_size_formula = lambda: size_of_each
-                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = lambda: size_of_treatment
-                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_reference
-                    self.reference_size_formula = lambda: size_of_reference
-                case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = lambda: size_of_total - size_of_treatment
-                case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_total - size_of_reference
-                    self.reference_size_formula = lambda: size_of_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
-                    self.treatment_size_formula = (
-                        lambda: size_of_total * ratio_of_treatment_to_reference / (1 + ratio_of_treatment_to_reference)
-                    )
-                    self.reference_size_formula = lambda: size_of_total / (1 + ratio_of_treatment_to_reference)
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_total / (1 + ratio_of_reference_to_treatment)
-                    self.reference_size_formula = lambda: (
-                        size_of_total * ratio_of_reference_to_treatment / (1 + ratio_of_reference_to_treatment)
-                    )
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_total * percent_of_treatment
-                    self.reference_size_formula = lambda: size_of_total * (1 - percent_of_treatment)
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_total * (1 - percent_of_reference)
-                    self.reference_size_formula = lambda: size_of_total * percent_of_reference
-                case option if option == GroupAllocationOption.SIZE_OF_EACH:
-                    self.treatment_size_formula = lambda: size_of_each
-                    self.reference_size_formula = lambda: size_of_each
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = lambda: size_of_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = lambda: size_of_treatment / ratio_of_treatment_to_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = lambda: size_of_treatment * ratio_of_reference_to_treatment
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = (
-                        lambda: size_of_treatment * (1 - percent_of_treatment) / percent_of_treatment
-                    )
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_treatment
-                    self.reference_size_formula = (
-                        lambda: size_of_treatment * percent_of_reference / (1 - percent_of_reference)
-                    )
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
-                    self.treatment_size_formula = lambda: size_of_reference * ratio_of_treatment_to_reference
-                    self.reference_size_formula = lambda: size_of_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
-                    self.treatment_size_formula = lambda: size_of_reference / ratio_of_reference_to_treatment
-                    self.reference_size_formula = lambda: size_of_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_TREATMENT:
-                    self.treatment_size_formula = (
-                        lambda: size_of_reference * percent_of_treatment / (1 - percent_of_treatment)
-                    )
-                    self.reference_size_formula = lambda: size_of_reference
-                case (
-                    option
-                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_REFERENCE:
-                    self.treatment_size_formula = (
-                        lambda: size_of_reference * (1 - percent_of_reference) / percent_of_reference
-                    )
-                    self.reference_size_formula = lambda: size_of_reference
-                case _:
-                    raise ValueError("不支持的参数组合")
 
-    class ForAlpha(ForNotSize):
-        """用于定义样本量分配方式的类（求解目标: 显著性水平）"""
+class GroupAllocationForAlpha(GroupAllocationForNotSize):
+    """用于定义样本量分配方式的类（求解目标: 显著性水平）"""
 
-        pass
+    pass
 
-    class ForPower(ForNotSize):
-        """用于定义样本量分配方式的类（求解目标: 检验效能）"""
 
-        pass
+class GroupAllocationForPower(GroupAllocationForNotSize):
+    """用于定义样本量分配方式的类（求解目标: 检验效能）"""
 
-    class ForTreatmentProportion(ForNotSize):
-        """用于定义样本量分配方式的类（求解目标: 试验组的率）"""
+    pass
 
-        pass
 
-    class ForReferenceProportion(ForNotSize):
-        """用于定义样本量分配方式的类（求解目标: 对照组的率）"""
+class GroupAllocationForTreatmentProportion(GroupAllocationForNotSize):
+    """用于定义样本量分配方式的类（求解目标: 试验组的率）"""
 
-        pass
+    pass
+
+
+class GroupAllocationForReferenceProportion(GroupAllocationForNotSize):
+    """用于定义样本量分配方式的类（求解目标: 对照组的率）"""
+
+    pass
 
 
 def fun_power(
@@ -407,7 +491,7 @@ def fun_power(
             se = se_p
         case TestType.Z_TEST_UNPOOLED | TestType.Z_TEST_CC_UNPOOLED:
             se = se_u
-        case _:
+        case _:  # pragma: no cover
             assert False, "未知的检验类型"
 
     # 连续性校正
@@ -428,7 +512,7 @@ def fun_power(
                 power = 1 - norm.cdf((z_alpha * se + c - (p1 - p2)) / se_u)
             elif p1 <= p2:
                 power = norm.cdf((-z_alpha * se - c - (p1 - p2)) / se_u)
-        case _:
+        case _:  # pragma: no cover
             assert False, "未知的备择假设类型"
 
     return power
@@ -448,7 +532,7 @@ class TwoProportion:
             reference_proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
-            group_allocation: GroupAllocation.ForSize,
+            group_allocation: GroupAllocationForSize,
         ):
             self.alpha = alpha
             self.power = power
@@ -488,7 +572,7 @@ class TwoProportion:
             reference_proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
-            group_allocation: GroupAllocation.ForAlpha,
+            group_allocation: GroupAllocationForAlpha,
         ):
             self.power = power
             self.treatment_proportion = treatment_proportion
@@ -512,7 +596,7 @@ class TwoProportion:
             )
             try:
                 alpha = brentq(self._eval, 0, 1)
-            except ValueError as e:
+            except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
             self.alpha = Alpha(alpha)
             self.treatment_size = Size(self.group_allocation.treatment_size_formula())
@@ -528,7 +612,7 @@ class TwoProportion:
             reference_proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
-            group_allocation: GroupAllocation.ForPower,
+            group_allocation: GroupAllocationForPower,
         ):
             self.alpha = alpha
             self.treatment_proportion = treatment_proportion
@@ -561,7 +645,7 @@ class TwoProportion:
             reference_proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
-            group_allocation: GroupAllocation.ForTreatmentProportion,
+            group_allocation: GroupAllocationForTreatmentProportion,
             search_direction: SearchDirection,
         ):
             self.alpha = alpha
@@ -591,7 +675,7 @@ class TwoProportion:
                     lbound, ubound = Interval(0, self.reference_proportion).pseudo_bound()
                     try:
                         treatment_proportion = brentq(self._eval, lbound, ubound)
-                    except ValueError as e:
+                    except ValueError as e:  # pragma: no cover
                         raise ValueError("无解") from e
                 case SearchDirection.GREATER:
                     lbound, ubound = Interval(self.reference_proportion, 1).pseudo_bound()
@@ -599,7 +683,7 @@ class TwoProportion:
                         treatment_proportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
 
             self.treatment_proportion = Proportion(treatment_proportion)
@@ -616,7 +700,7 @@ class TwoProportion:
             treatment_proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
-            group_allocation: GroupAllocation.ForReferenceProportion,
+            group_allocation: GroupAllocationForReferenceProportion,
             search_direction: SearchDirection,
         ):
             self.alpha = alpha
@@ -645,7 +729,7 @@ class TwoProportion:
                     lbound, ubound = Interval(0, self.treatment_proportion).pseudo_bound()
                     try:
                         reference_proportion = brentq(self._eval, lbound, ubound)
-                    except ValueError as e:
+                    except ValueError as e:  # pragma: no cover
                         raise ValueError("无解") from e
                 case SearchDirection.GREATER:
                     lbound, ubound = Interval(self.treatment_proportion, 1).pseudo_bound()
@@ -653,7 +737,7 @@ class TwoProportion:
                         reference_proportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
             self.reference_proportion = Proportion(reference_proportion)
             self.treatment_size = Size(self.group_allocation.treatment_size_formula())
@@ -667,7 +751,7 @@ def solve_for_sample_size(
     reference_proportion: float,
     alternative: str,
     test_type: str,
-    group_allocation: GroupAllocation.ForSize = GroupAllocation.ForSize(),
+    group_allocation: GroupAllocation = GroupAllocation(),
     full_output: bool = False,
 ):
     """求解样本量
@@ -690,7 +774,7 @@ def solve_for_sample_size(
         test_type=TestType[test_type],
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
-        group_allocation=group_allocation,
+        group_allocation=group_allocation.get_group_allocation_for_target(Target.SIZE),
     )
     model.solve()
 
@@ -705,7 +789,7 @@ def solve_for_alpha(
     reference_proportion: float,
     alternative: str,
     test_type: str,
-    group_allocation: GroupAllocation.ForAlpha,
+    group_allocation: GroupAllocation,
     full_output: bool = False,
 ):
     """求解显著性水平
@@ -726,7 +810,7 @@ def solve_for_alpha(
         test_type=TestType[test_type],
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
-        group_allocation=group_allocation,
+        group_allocation=group_allocation.get_group_allocation_for_target(Target.ALPHA),
     )
     model.solve()
 
@@ -741,7 +825,7 @@ def solve_for_power(
     reference_proportion: float,
     alternative: str,
     test_type: str,
-    group_allocation: GroupAllocation.ForPower,
+    group_allocation: GroupAllocation,
     full_output: bool = False,
 ):
     """求解检验效能
@@ -762,7 +846,7 @@ def solve_for_power(
         test_type=TestType[test_type],
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
-        group_allocation=group_allocation,
+        group_allocation=group_allocation.get_group_allocation_for_target(Target.POWER),
     )
     model.solve()
 
@@ -777,7 +861,7 @@ def solve_for_treatment_proportion(
     reference_proportion: float,
     alternative: str,
     test_type: str,
-    group_allocation: GroupAllocation.ForTreatmentProportion,
+    group_allocation: GroupAllocation,
     search_direction: SearchDirection,
     full_output: bool = False,
 ):
@@ -800,7 +884,7 @@ def solve_for_treatment_proportion(
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
         reference_proportion=Proportion(reference_proportion),
-        group_allocation=group_allocation,
+        group_allocation=group_allocation.get_group_allocation_for_target(Target.TREATMENT_PROPORTION),
         search_direction=SearchDirection[search_direction],
     )
     model.solve()
@@ -816,7 +900,7 @@ def solve_for_reference_proportion(
     treatment_proportion: float,
     alternative: str,
     test_type: str,
-    group_allocation: GroupAllocation.ForReferenceProportion,
+    group_allocation: GroupAllocation,
     search_direction: str,
     full_output: bool = False,
 ):
@@ -839,7 +923,7 @@ def solve_for_reference_proportion(
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
         treatment_proportion=Proportion(treatment_proportion),
-        group_allocation=group_allocation,
+        group_allocation=group_allocation.get_group_allocation_for_target(Target.REFERENCE_PROPORTION),
         search_direction=SearchDirection[search_direction],
     )
     model.solve()
