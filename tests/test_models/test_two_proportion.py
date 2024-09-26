@@ -786,7 +786,27 @@ class TestSolveForAlpha:
                 reference_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
+                group_allocation=GroupAllocation.ForAlpha(ratio_of_treatment_to_reference=3),
+            )
+        with pytest.raises(ValueError):
+            solve_for_alpha(
+                power=0.80,
+                treatment_proportion=0.80,
+                reference_proportion=0.95,
+                alternative="TWO_SIDED",
+                test_type="Z_TEST_POOLED",
                 group_allocation=GroupAllocation.ForAlpha(ratio_of_treatment_to_reference=3, percent_of_reference=0.25),
+            )
+        with pytest.raises(ValueError):
+            solve_for_alpha(
+                power=0.80,
+                treatment_proportion=0.80,
+                reference_proportion=0.95,
+                alternative="TWO_SIDED",
+                test_type="Z_TEST_POOLED",
+                group_allocation=GroupAllocation.ForAlpha(
+                    ratio_of_treatment_to_reference=3, percent_of_reference=0.25, size_of_total=100
+                ),
             )
 
 
