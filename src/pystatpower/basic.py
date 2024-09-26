@@ -100,13 +100,13 @@ class PowerAnalysisNumeric(Real):
     def __new__(cls, value: Real):
         if value is None:
             return None
+        if not isinstance(value, Real):
+            raise TypeError(f"{value} is not a real number.")
+        if value not in cls._domain:
+            raise ValueError(f"{value} is not in {cls._domain}.")
         return super().__new__(cls)
 
     def __init__(self, value: Real):
-        if not isinstance(value, Real):
-            raise TypeError(f"{value} is not a real number.")
-        if value not in type(self)._domain:
-            raise ValueError(f"{value} is not in {type(self)._domain}.")
         self._value = value
 
     def __repr__(self):
