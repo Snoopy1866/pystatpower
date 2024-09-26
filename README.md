@@ -1,6 +1,6 @@
 # PyStatPower
 
-[![build](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/build.yml?query=branch:main)
+[![build](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/release.yml?query=branch:main)
 [![test](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main&label=test)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
 [![lint](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/black.yml?branch=main&label=lint)](https://github.com/PyStatPower/PyStatPower/actions/workflows/black.yml?query=branch:main)
 [![PyPI - Version](https://img.shields.io/pypi/v/pystatpower)](https://badge.fury.io/py/pystatpower)
