@@ -491,7 +491,7 @@ def fun_power(
             se = se_p
         case TestType.Z_TEST_UNPOOLED | TestType.Z_TEST_CC_UNPOOLED:
             se = se_u
-        case _:
+        case _:  # pragma: no cover
             assert False, "未知的检验类型"
 
     # 连续性校正
@@ -512,7 +512,7 @@ def fun_power(
                 power = 1 - norm.cdf((z_alpha * se + c - (p1 - p2)) / se_u)
             elif p1 <= p2:
                 power = norm.cdf((-z_alpha * se - c - (p1 - p2)) / se_u)
-        case _:
+        case _:  # pragma: no cover
             assert False, "未知的备择假设类型"
 
     return power
@@ -596,7 +596,7 @@ class TwoProportion:
             )
             try:
                 alpha = brentq(self._eval, 0, 1)
-            except ValueError as e:
+            except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
             self.alpha = Alpha(alpha)
             self.treatment_size = Size(self.group_allocation.treatment_size_formula())
@@ -675,7 +675,7 @@ class TwoProportion:
                     lbound, ubound = Interval(0, self.reference_proportion).pseudo_bound()
                     try:
                         treatment_proportion = brentq(self._eval, lbound, ubound)
-                    except ValueError as e:
+                    except ValueError as e:  # pragma: no cover
                         raise ValueError("无解") from e
                 case SearchDirection.GREATER:
                     lbound, ubound = Interval(self.reference_proportion, 1).pseudo_bound()
@@ -683,7 +683,7 @@ class TwoProportion:
                         treatment_proportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
 
             self.treatment_proportion = Proportion(treatment_proportion)
@@ -729,7 +729,7 @@ class TwoProportion:
                     lbound, ubound = Interval(0, self.treatment_proportion).pseudo_bound()
                     try:
                         reference_proportion = brentq(self._eval, lbound, ubound)
-                    except ValueError as e:
+                    except ValueError as e:  # pragma: no cover
                         raise ValueError("无解") from e
                 case SearchDirection.GREATER:
                     lbound, ubound = Interval(self.treatment_proportion, 1).pseudo_bound()
@@ -737,7 +737,7 @@ class TwoProportion:
                         reference_proportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
             self.reference_proportion = Proportion(reference_proportion)
             self.treatment_size = Size(self.group_allocation.treatment_size_formula())

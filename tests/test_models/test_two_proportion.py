@@ -3,6 +3,7 @@ from math import ceil
 import pytest
 
 from pystatpower.models.two_proportion import *
+from pystatpower.models.two_proportion import TwoProportion
 
 
 class TestSolveForSampleSize:
@@ -501,6 +502,19 @@ class TestSolveForSampleSize:
             )
             assert tuple(map(ceil, result)) == (expected_treatment_size, expected_reference_size)
 
+    def test_solve_full_output(self):
+        result = solve_for_sample_size(
+            0.05,
+            0.80,
+            0.80,
+            0.95,
+            "TWO_SIDED",
+            "Z_TEST_POOLED",
+            group_allocation=GroupAllocation(),
+            full_output=True,
+        )
+        assert isinstance(result, TwoProportion.ForSize)
+
     def test_invalid_group_allocation(self):
         with pytest.raises(ValueError):
             solve_for_sample_size(
@@ -778,6 +792,18 @@ class TestSolveForAlpha:
             )
             assert round(result, 8) == expected_alpha
 
+    def test_solve_full_output(self):
+        result = solve_for_alpha(
+            0.80,
+            0.80,
+            0.95,
+            "TWO_SIDED",
+            "Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_each=100),
+            full_output=True,
+        )
+        assert isinstance(result, TwoProportion.ForAlpha)
+
     def test_invalid_group_allocation(self):
         with pytest.raises(ValueError):
             solve_for_alpha(
@@ -844,6 +870,18 @@ class TestSolveForPower:
             )
             assert round(result, 8) == expected_power
 
+    def test_solve_full_output(self):
+        result = solve_for_power(
+            0.05,
+            0.80,
+            0.95,
+            "TWO_SIDED",
+            "Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_each=100),
+            full_output=True,
+        )
+        assert isinstance(result, TwoProportion.ForPower)
+
 
 class TestSolveForTreatmentProportion:
     params_list = [
@@ -891,6 +929,19 @@ class TestSolveForTreatmentProportion:
                 search_direction=search_direction,
             )
             assert round(result, 8) == expected_treatment_proportion
+
+    def test_solve_full_output(self):
+        result = solve_for_treatment_proportion(
+            0.05,
+            0.80,
+            0.95,
+            "TWO_SIDED",
+            "Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_each=100),
+            search_direction="LESS",
+            full_output=True,
+        )
+        assert isinstance(result, TwoProportion.ForTreatmentProportion)
 
     def test_no_solution(self):
         with pytest.raises(ValueError):
@@ -951,6 +1002,19 @@ class TestSolveForReferenceProportion:
                 search_direction=search_direction,
             )
             assert round(result, 8) == expected_reference_proportion
+
+    def test_solve_full_output(self):
+        result = solve_for_reference_proportion(
+            0.05,
+            0.80,
+            0.95,
+            "TWO_SIDED",
+            "Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_each=100),
+            search_direction="LESS",
+            full_output=True,
+        )
+        assert isinstance(result, TwoProportion.ForReferenceProportion)
 
     def test_no_solution(self):
         with pytest.raises(ValueError):
