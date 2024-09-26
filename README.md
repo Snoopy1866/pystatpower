@@ -73,7 +73,7 @@ print(result)
 ### 计算检验效能
 
 ```python
-from pystatpower.models.two_proportion import *
+from pystatpower.models.two_proportion import solve_for_power, GroupAllocation
 
 result = solve_for_power(
     alpha=0.05,
@@ -81,7 +81,7 @@ result = solve_for_power(
     reference_proportion=0.80,
     alternative="two_sided",
     test_type="z_test_pooled",
-    group_allocation=GroupAllocation.ForPower(
+    group_allocation=GroupAllocation(
         size_of_treatment=100,
         size_of_reference=50,
     ),
