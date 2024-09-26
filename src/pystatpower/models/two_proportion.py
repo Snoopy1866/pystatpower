@@ -243,86 +243,100 @@ class GroupAllocation:
                 raise ValueError("不支持的参数组合")
 
             match self.group_allocation_option:
-                case x if x == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL:
+                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL:
                     self.treatment_size_formula = lambda: size_of_total / 2
                     self.reference_size_formula = lambda: size_of_total / 2
-                case x if x == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_EACH:
+                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_EACH:
                     self.treatment_size_formula = lambda: size_of_each
                     self.reference_size_formula = lambda: size_of_each
-                case x if x == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TREATMENT:
+                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = lambda: size_of_treatment
-                case x if x == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_REFERENCE:
+                case option if option == GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_reference
                     self.reference_size_formula = lambda: size_of_reference
-                case x if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_TREATMENT:
+                case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = lambda: size_of_total - size_of_treatment
-                case x if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_REFERENCE:
+                case option if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_total - size_of_reference
                     self.reference_size_formula = lambda: size_of_reference
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
                     self.treatment_size_formula = (
                         lambda: size_of_total * ratio_of_treatment_to_reference / (1 + ratio_of_treatment_to_reference)
                     )
                     self.reference_size_formula = lambda: size_of_total / (1 + ratio_of_treatment_to_reference)
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_total / (1 + ratio_of_reference_to_treatment)
                     self.reference_size_formula = lambda: (
                         size_of_total * ratio_of_reference_to_treatment / (1 + ratio_of_reference_to_treatment)
                     )
-                case x if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_total * percent_of_treatment
                     self.reference_size_formula = lambda: size_of_total * (1 - percent_of_treatment)
-                case x if x == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_total * (1 - percent_of_reference)
                     self.reference_size_formula = lambda: size_of_total * percent_of_reference
-                case x if x == GroupAllocationOption.SIZE_OF_EACH:
+                case option if option == GroupAllocationOption.SIZE_OF_EACH:
                     self.treatment_size_formula = lambda: size_of_each
                     self.reference_size_formula = lambda: size_of_each
-                case x if x == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = lambda: size_of_reference
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = lambda: size_of_treatment / ratio_of_treatment_to_reference
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = lambda: size_of_treatment * ratio_of_reference_to_treatment
-                case x if x == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = (
                         lambda: size_of_treatment * (1 - percent_of_treatment) / percent_of_treatment
                     )
-                case x if x == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_treatment
                     self.reference_size_formula = (
                         lambda: size_of_treatment * percent_of_reference / (1 - percent_of_reference)
                     )
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE:
                     self.treatment_size_formula = lambda: size_of_reference * ratio_of_treatment_to_reference
                     self.reference_size_formula = lambda: size_of_reference
                 case (
-                    x
-                ) if x == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT:
                     self.treatment_size_formula = lambda: size_of_reference / ratio_of_reference_to_treatment
                     self.reference_size_formula = lambda: size_of_reference
-                case x if x == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_TREATMENT:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_TREATMENT:
                     self.treatment_size_formula = (
                         lambda: size_of_reference * percent_of_treatment / (1 - percent_of_treatment)
                     )
                     self.reference_size_formula = lambda: size_of_reference
-                case x if x == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_REFERENCE:
+                case (
+                    option
+                ) if option == GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_REFERENCE:
                     self.treatment_size_formula = (
                         lambda: size_of_reference * (1 - percent_of_reference) / percent_of_reference
                     )
