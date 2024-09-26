@@ -1,6 +1,5 @@
 """两独立样本差异性检验"""
 
-import warnings
 from enum import Enum, Flag, auto, unique
 from math import sqrt
 
@@ -153,7 +152,7 @@ class GroupAllocation:
                 arg = list(kwargs_spec.keys())[0]
                 self.group_allocation_option = GroupAllocationOption[arg]
             else:
-                raise ValueError("不支持的参数组合")
+                raise ValueError("不支持的参数")
 
             match self.group_allocation_option:
                 case GroupAllocationOption.EQUAL:

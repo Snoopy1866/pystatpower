@@ -18,7 +18,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -29,7 +29,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             85,
@@ -40,7 +40,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             120,
@@ -51,9 +51,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             52,
@@ -64,9 +62,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             205,
@@ -77,7 +73,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             40,
@@ -88,7 +84,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
         # TWO_SIDED + Z_TEST_UNPOOLED
         (
@@ -100,7 +96,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -111,7 +107,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             74,
@@ -122,7 +118,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             89,
@@ -133,9 +129,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             65,
@@ -146,9 +140,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             123,
@@ -159,7 +151,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             60,
@@ -170,7 +162,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
         # TWO_SIDED + Z_TEST_CC_POOLED
         (
@@ -182,7 +174,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -193,7 +185,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             135,
@@ -204,7 +196,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             139,
@@ -215,9 +207,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             62,
@@ -228,9 +218,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             237,
@@ -241,7 +229,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             48,
@@ -252,7 +240,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
         # TWO_SIDED + Z_TEST_CC_UNPOOLED
         (
@@ -264,7 +252,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -275,7 +263,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             93,
@@ -286,7 +274,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             109,
@@ -297,9 +285,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             74,
@@ -310,9 +296,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             154,
@@ -323,7 +307,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             69,
@@ -334,7 +318,7 @@ class TestSolveForSampleSize:
             0.95,
             "TWO_SIDED",
             "Z_TEST_CC_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
         # ONE_SIDED + Z_TEST_POOLED
         (
@@ -346,7 +330,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -357,7 +341,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             49,
@@ -368,7 +352,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             93,
@@ -379,9 +363,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             42,
@@ -392,9 +374,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             157,
@@ -405,7 +385,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             32,
@@ -416,7 +396,7 @@ class TestSolveForSampleSize:
             0.95,
             "ONE_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
         # ONE_SIDED + Z_TEST_UNPOOLED
         (
@@ -428,7 +408,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+            GroupAllocation.ForSize(),
         ),
         (
             70,
@@ -439,7 +419,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=70),
+            GroupAllocation.ForSize(size_of_treatment=70),
         ),
         (
             412,
@@ -450,7 +430,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=70),
+            GroupAllocation.ForSize(size_of_reference=70),
         ),
         (
             169,
@@ -461,9 +441,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE, ratio_of_treatment_to_reference=2
-            ),
+            GroupAllocation.ForSize(ratio_of_treatment_to_reference=2),
         ),
         (
             76,
@@ -474,9 +452,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(
-                GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT, ratio_of_reference_to_treatment=2
-            ),
+            GroupAllocation.ForSize(ratio_of_reference_to_treatment=2),
         ),
         (
             295,
@@ -487,7 +463,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_TREATMENT, percent_of_treatment=0.8),
+            GroupAllocation.ForSize(percent_of_treatment=0.8),
         ),
         (
             60,
@@ -498,7 +474,7 @@ class TestSolveForSampleSize:
             0.65,
             "ONE_SIDED",
             "Z_TEST_UNPOOLED",
-            GroupAllocation.ForSize(GroupAllocationOption.PERCENT_OF_REFERENCE, percent_of_reference=0.8),
+            GroupAllocation.ForSize(percent_of_reference=0.8),
         ),
     ]
 
@@ -534,9 +510,7 @@ class TestSolveForSampleSize:
                 reference_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
-                group_allocation=GroupAllocation.ForSize(
-                    GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL
-                ),
+                group_allocation=GroupAllocation.ForSize(size_of_treatment=100, size_of_reference=100),
             )
 
     def test_no_solution(self):
@@ -548,7 +522,7 @@ class TestSolveForSampleSize:
                 reference_proportion=0.49999999999,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
-                group_allocation=GroupAllocation.ForSize(GroupAllocationOption.EQUAL),
+                group_allocation=GroupAllocation.ForSize(),
             )
 
 
@@ -562,9 +536,7 @@ class TestSolveForAlpha:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForAlpha(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForAlpha(size_of_total=100),
         ),
         (
             0.01696612,
@@ -573,9 +545,7 @@ class TestSolveForAlpha:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForAlpha(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_EACH, size_of_each=100
-            ),
+            GroupAllocation.ForAlpha(size_of_each=100),
         ),
         (
             0.01696612,
@@ -584,9 +554,7 @@ class TestSolveForAlpha:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForAlpha(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TREATMENT, size_of_treatment=100
-            ),
+            GroupAllocation.ForAlpha(size_of_treatment=100),
         ),
         (
             0.01696612,
@@ -595,9 +563,7 @@ class TestSolveForAlpha:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForAlpha(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_REFERENCE, size_of_reference=100
-            ),
+            GroupAllocation.ForAlpha(size_of_reference=100),
         ),
         (
             0.18362176,
@@ -607,7 +573,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_TREATMENT,
                 size_of_total=100,
                 size_of_treatment=30,
             ),
@@ -620,7 +585,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.SIZE_OF_REFERENCE,
                 size_of_total=100,
                 size_of_reference=30,
             ),
@@ -633,7 +597,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE,
                 size_of_total=100,
                 ratio_of_treatment_to_reference=3,
             ),
@@ -646,7 +609,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT,
                 size_of_total=100,
                 ratio_of_reference_to_treatment=3,
             ),
@@ -659,7 +621,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_TREATMENT,
                 size_of_total=100,
                 percent_of_treatment=0.8,
             ),
@@ -672,7 +633,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TOTAL | GroupAllocationOption.PERCENT_OF_REFERENCE,
                 size_of_total=100,
                 percent_of_reference=0.8,
             ),
@@ -685,7 +645,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_EACH,
                 size_of_each=100,
             ),
         ),
@@ -697,7 +656,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE,
                 size_of_treatment=100,
                 size_of_reference=100,
             ),
@@ -710,7 +668,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE,
                 size_of_treatment=100,
                 ratio_of_treatment_to_reference=4,
             ),
@@ -723,7 +680,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT,
                 size_of_treatment=100,
                 ratio_of_reference_to_treatment=4,
             ),
@@ -736,7 +692,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_TREATMENT,
                 size_of_treatment=100,
                 percent_of_treatment=0.8,
             ),
@@ -749,7 +704,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE,
                 size_of_treatment=100,
                 percent_of_reference=0.8,
             ),
@@ -762,7 +716,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_TREATMENT_TO_REFERENCE,
                 size_of_reference=100,
                 ratio_of_treatment_to_reference=4,
             ),
@@ -775,7 +728,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT,
                 size_of_reference=100,
                 ratio_of_reference_to_treatment=4,
             ),
@@ -788,7 +740,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_TREATMENT,
                 size_of_reference=100,
                 percent_of_treatment=0.8,
             ),
@@ -801,7 +752,6 @@ class TestSolveForAlpha:
             "TWO_SIDED",
             "Z_TEST_POOLED",
             GroupAllocation.ForAlpha(
-                GroupAllocationOption.SIZE_OF_REFERENCE | GroupAllocationOption.PERCENT_OF_REFERENCE,
                 size_of_reference=100,
                 percent_of_reference=0.8,
             ),
@@ -836,9 +786,7 @@ class TestSolveForAlpha:
                 reference_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
-                group_allocation=GroupAllocation.ForAlpha(
-                    GroupAllocationOption.RATIO_OF_REFERENCE_TO_TREATMENT | GroupAllocationOption.PERCENT_OF_REFERENCE
-                ),
+                group_allocation=GroupAllocation.ForAlpha(ratio_of_treatment_to_reference=3, percent_of_reference=0.25),
             )
 
 
@@ -852,9 +800,7 @@ class TestSolveForPower:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForPower(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForPower(size_of_total=100),
         ),
     ]
 
@@ -889,9 +835,7 @@ class TestSolveForTreatmentProportion:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForTreatmentProportion(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForTreatmentProportion(size_of_total=100),
             "LESS",
         ),
         (
@@ -901,9 +845,7 @@ class TestSolveForTreatmentProportion:
             0.85,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForTreatmentProportion(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForTreatmentProportion(size_of_total=100),
             "GREATER",
         ),
     ]
@@ -938,9 +880,7 @@ class TestSolveForTreatmentProportion:
                 reference_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
-                group_allocation=GroupAllocation.ForTreatmentProportion(
-                    GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-                ),
+                group_allocation=GroupAllocation.ForTreatmentProportion(size_of_total=100),
                 search_direction="GREATER",
             )
 
@@ -955,9 +895,7 @@ class TestSolveForReferenceProportion:
             0.95,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForReferenceProportion(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForReferenceProportion(size_of_total=100),
             "LESS",
         ),
         (
@@ -967,9 +905,7 @@ class TestSolveForReferenceProportion:
             0.85,
             "TWO_SIDED",
             "Z_TEST_POOLED",
-            GroupAllocation.ForReferenceProportion(
-                GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-            ),
+            GroupAllocation.ForReferenceProportion(size_of_total=100),
             "GREATER",
         ),
     ]
@@ -1004,8 +940,6 @@ class TestSolveForReferenceProportion:
                 reference_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
-                group_allocation=GroupAllocation.ForReferenceProportion(
-                    GroupAllocationOption.EQUAL | GroupAllocationOption.SIZE_OF_TOTAL, size_of_total=100
-                ),
+                group_allocation=GroupAllocation.ForReferenceProportion(size_of_total=100),
                 search_direction="GREATER",
             )
