@@ -117,19 +117,9 @@ class PowerAnalysisNumeric(Real):
             return self._value + other
         return NotImplemented
 
-    def __radd__(self, other):
-        if isinstance(other, Real):
-            return other + self._value
-        return NotImplemented
-
     def __sub__(self, other):
         if isinstance(other, Real):
             return self._value - other
-        return NotImplemented
-
-    def __rsub__(self, other):
-        if isinstance(other, Real):
-            return other - self._value
         return NotImplemented
 
     def __mul__(self, other):
@@ -137,19 +127,9 @@ class PowerAnalysisNumeric(Real):
             return self._value * other
         return NotImplemented
 
-    def __rmul__(self, other):
-        if isinstance(other, Real):
-            return other * self._value
-        return NotImplemented
-
     def __truediv__(self, other):
         if isinstance(other, Real):
             return self._value / other
-        return NotImplemented
-
-    def __rtruediv__(self, other):
-        if isinstance(other, Real):
-            return other / self._value
         return NotImplemented
 
     def __floordiv__(self, other):
@@ -157,14 +137,39 @@ class PowerAnalysisNumeric(Real):
             return self._value // other
         return NotImplemented
 
-    def __rfloordiv__(self, other):
-        if isinstance(other, Real):
-            return other // self._value
-        return NotImplemented
-
     def __mod__(self, other):
         if isinstance(other, Real):
             return self._value % other
+        return NotImplemented
+
+    def __pow__(self, other, modulo=None):
+        if isinstance(other, Real):
+            return pow(self._value, other, modulo)
+        return NotImplemented
+
+    def __radd__(self, other):
+        if isinstance(other, Real):
+            return other + self._value
+        return NotImplemented
+
+    def __rsub__(self, other):
+        if isinstance(other, Real):
+            return other - self._value
+        return NotImplemented
+
+    def __rmul__(self, other):
+        if isinstance(other, Real):
+            return other * self._value
+        return NotImplemented
+
+    def __rtruediv__(self, other):
+        if isinstance(other, Real):
+            return other / self._value
+        return NotImplemented
+
+    def __rfloordiv__(self, other):
+        if isinstance(other, Real):
+            return other // self._value
         return NotImplemented
 
     def __rmod__(self, other):
@@ -172,24 +177,31 @@ class PowerAnalysisNumeric(Real):
             return other % self._value
         return NotImplemented
 
-    def __pow__(self, other):
-        if isinstance(other, Real):
-            return self._value**other
-        return NotImplemented
-
-    def __rpow__(self, base):
+    def __rpow__(self, base, modulo=None):
         if isinstance(base, Real):
-            return base**self._value
+            return pow(base, self._value, modulo)
         return NotImplemented
-
-    def __abs__(self):
-        return abs(self._value)
 
     def __neg__(self):
         return -self._value
 
     def __pos__(self):
         return +self._value
+
+    def __abs__(self):
+        return abs(self._value)
+
+    def __complex__(self):
+        return complex(self._value)
+
+    def __int__(self):
+        return int(self._value)
+
+    def __float__(self):
+        return float(self._value)
+
+    def __round__(self, ndigits=None):
+        return round(self._value, ndigits)
 
     def __trunc__(self):
         return trunc(self._value)
@@ -199,19 +211,6 @@ class PowerAnalysisNumeric(Real):
 
     def __ceil__(self):
         return ceil(self._value)
-
-    def __round__(self, ndigits=None):
-        return round(self._value, ndigits)
-
-    def __eq__(self, other):
-        if isinstance(other, Real):
-            return self._value == other
-        raise RuntimeError(f"{type(self)}.__eq__ only supports real numbers, but you passed in a {type(other)}.")
-
-    def __ne__(self, other):
-        if isinstance(other, Real):
-            return self._value != other
-        raise RuntimeError(f"{type(self)}.__ne__ only supports real numbers, but you passed in a {type(other)}.")
 
     def __lt__(self, other):
         if isinstance(other, Real):
@@ -223,6 +222,16 @@ class PowerAnalysisNumeric(Real):
             return self._value <= other
         raise RuntimeError(f"{type(self)}.__le__ only supports real numbers, but you passed in a {type(other)}.")
 
+    def __eq__(self, other):
+        if isinstance(other, Real):
+            return self._value == other
+        raise RuntimeError(f"{type(self)}.__eq__ only supports real numbers, but you passed in a {type(other)}.")
+
+    def __ne__(self, other):
+        if isinstance(other, Real):
+            return self._value != other
+        raise RuntimeError(f"{type(self)}.__ne__ only supports real numbers, but you passed in a {type(other)}.")
+
     def __gt__(self, other):
         if isinstance(other, Real):
             return self._value > other
@@ -232,15 +241,6 @@ class PowerAnalysisNumeric(Real):
         if isinstance(other, Real):
             return self._value >= other
         raise RuntimeError(f"{type(self)}.__ge__ only supports real numbers, but you passed in a {type(other)}.")
-
-    def __int__(self):
-        return int(self._value)
-
-    def __float__(self):
-        return float(self._value)
-
-    def __complex__(self):
-        return complex(self._value)
 
     def __hash__(self):
         return hash(self._value)
