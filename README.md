@@ -80,7 +80,6 @@ result = solve_for_power(
     alternative="two_sided",
     test_type="z_test_pooled",
     group_allocation=GroupAllocation.ForPower(
-        GroupAllocationOption.SIZE_OF_TREATMENT | GroupAllocationOption.SIZE_OF_REFERENCE,
         size_of_treatment=100,
         size_of_reference=50,
     ),
