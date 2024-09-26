@@ -963,3 +963,6 @@ class TestSolveForReferenceProportion:
                 group_allocation=GroupAllocation.ForReferenceProportion(size_of_total=100),
                 search_direction="GREATER",
             )
+
+
+print("Done!")
