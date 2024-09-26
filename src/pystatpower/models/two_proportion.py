@@ -186,8 +186,8 @@ class GroupAllocation:
                 return GroupAllocationForTreatmentProportion(**self.group_allocation_params_dict_for_not_size)
             case Target.REFERENCE_PROPORTION:
                 return GroupAllocationForReferenceProportion(**self.group_allocation_params_dict_for_not_size)
-            case _:
-                assert False, "不支持的求解目标"  # pragma: no cover
+            case _:  # pragma: no cover
+                assert False, "不支持的求解目标"
 
 
 class GroupAllocationForSize:
@@ -264,8 +264,8 @@ class GroupAllocationForSize:
             case GroupAllocationOption.PERCENT_OF_REFERENCE:
                 self.treatment_size_formula = lambda n: (1 - percent_of_reference) / percent_of_reference * n
                 self.reference_size_formula = lambda n: n
-            case _:
-                assert False, "不支持的参数"  # pragma: no cover
+            case _:  # pragma: no cover
+                assert False, "不支持的参数"
 
 
 class GroupAllocationForNotSize:
