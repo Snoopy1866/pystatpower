@@ -97,6 +97,11 @@ class PowerAnalysisNumeric(Real):
 
     _domain = Interval(-inf, inf, lower_inclusive=True, upper_inclusive=True)
 
+    def __new__(cls, value: Real):
+        if value is None:
+            return None
+        return super().__new__(cls)
+
     def __init__(self, value: Real):
         if not isinstance(value, Real):
             raise TypeError(f"{value} is not a real number.")
