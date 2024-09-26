@@ -9,6 +9,15 @@ from scipy.optimize import brentq
 from pystatpower.basic import Alpha, Interval, Power, PowerAnalysisOption, Proportion, Size
 
 
+__all__ = [
+    "solve_for_sample_size",
+    "solve_for_alpha",
+    "solve_for_power",
+    "solve_for_nullproportion",
+    "solve_for_proportion",
+]
+
+
 @unique
 class Alternative(Enum, metaclass=PowerAnalysisOption):
     """备择假设类型
