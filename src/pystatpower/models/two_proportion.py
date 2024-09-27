@@ -6,7 +6,9 @@ from math import sqrt
 from scipy.stats import norm
 from scipy.optimize import brentq
 
-from pystatpower.basic import Alpha, Interval, Percent, Power, PowerAnalysisOption, Proportion, Ratio, Size
+from pystatpower.numeric import Alpha, Interval, Percent, Power, Proportion, Ratio, Size
+from pystatpower.option import Alternative, Option, SearchDirection
+
 
 __all__ = [
     "GroupAllocation",
@@ -19,7 +21,7 @@ __all__ = [
 
 
 @unique
-class Target(Enum, metaclass=PowerAnalysisOption):
+class Target(Enum, metaclass=Option):
     """求解目标
 
     Attributes
@@ -44,23 +46,7 @@ class Target(Enum, metaclass=PowerAnalysisOption):
 
 
 @unique
-class Alternative(Enum, metaclass=PowerAnalysisOption):
-    """备择假设类型
-
-    Attributes
-    ----------
-        TWO_SIDED : (int)
-            双侧检验
-        ONE_SIDED : (int)
-            单侧检验
-    """
-
-    TWO_SIDED = 1
-    ONE_SIDED = 2
-
-
-@unique
-class TestType(Enum, metaclass=PowerAnalysisOption):
+class TestType(Enum, metaclass=Option):
     """检验类型
 
     Attributes
@@ -81,23 +67,7 @@ class TestType(Enum, metaclass=PowerAnalysisOption):
     Z_TEST_CC_UNPOOLED = 4
 
 
-@unique
-class SearchDirection(Enum, metaclass=PowerAnalysisOption):
-    """搜索方向
-
-    Attributes
-    ----------
-        LESS : (int)
-            向下搜索
-        GREATER : (int)
-            向上搜索
-    """
-
-    LESS = 1
-    GREATER = 2
-
-
-class GroupAllocationOption(Flag, metaclass=PowerAnalysisOption):
+class GroupAllocationOption(Flag, metaclass=Option):
     """样本量分配类型（求解目标：样本量）
 
     Attributes

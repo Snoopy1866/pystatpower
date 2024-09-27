@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from enum import EnumMeta
-from math import ceil, floor, inf, isclose, trunc
+from math import ceil, floor, isclose, trunc
 from numbers import Real
 
 
@@ -96,7 +95,7 @@ class Interval:
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
 
-class PowerAnalysisNumeric(Real):
+class Numeric(Real):
     """自定义功效分析数值类型"""
 
     _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT, lower_inclusive=True, upper_inclusive=True)
@@ -259,65 +258,55 @@ class PowerAnalysisNumeric(Real):
         return bool(self._value)
 
 
-class PowerAnalysisOption(EnumMeta):
-    """自定义功效分析选项的枚举元类，用于支持大小写不敏感的枚举值访问。"""
-
-    def __getitem__(self, name):
-        if isinstance(name, str):
-            return super().__getitem__(name.upper())
-        else:
-            return super().__getitem__(name)
-
-
-class Alpha(PowerAnalysisNumeric):
+class Alpha(Numeric):
     """显著性水平"""
 
     _domain = Interval(0, 1)
 
 
-class Power(PowerAnalysisNumeric):
+class Power(Numeric):
     """检验效能"""
 
     _domain = Interval(0, 1)
 
 
-class Mean(PowerAnalysisNumeric):
+class Mean(Numeric):
     """均值"""
 
     _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT)
 
 
-class STD(PowerAnalysisNumeric):
+class STD(Numeric):
     """标准差"""
 
     _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
-class Proportion(PowerAnalysisNumeric):
+class Proportion(Numeric):
     """率"""
 
     _domain = Interval(0, 1)
 
 
-class Percent(PowerAnalysisNumeric):
+class Percent(Numeric):
     """百分比"""
 
     _domain = Interval(0, 1)
 
 
-class Ratio(PowerAnalysisNumeric):
+class Ratio(Numeric):
     """比例"""
 
     _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
-class Size(PowerAnalysisNumeric):
+class Size(Numeric):
     """样本量"""
 
     _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
-class DropOutRate(PowerAnalysisNumeric):
+class DropOutRate(Numeric):
     """脱落率"""
 
     _domain = Interval(0, 1, lower_inclusive=True)

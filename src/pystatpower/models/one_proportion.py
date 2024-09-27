@@ -6,7 +6,8 @@ from math import sqrt
 from scipy.stats import norm
 from scipy.optimize import brentq
 
-from pystatpower.basic import Alpha, Interval, Power, PowerAnalysisOption, Proportion, Size
+from pystatpower.numeric import Alpha, Interval, Power, Proportion, Size
+from pystatpower.option import Alternative, Option, SearchDirection
 
 
 __all__ = [
@@ -19,23 +20,7 @@ __all__ = [
 
 
 @unique
-class Alternative(Enum, metaclass=PowerAnalysisOption):
-    """备择假设类型
-
-    Attributes
-    ----------
-        TWO_SIDED : (int)
-            双侧检验
-        ONE_SIDED : (int)
-            单侧检验
-    """
-
-    TWO_SIDED = 1
-    ONE_SIDED = 2
-
-
-@unique
-class TestType(Enum, metaclass=PowerAnalysisOption):
+class TestType(Enum, metaclass=Option):
     """检验类型枚举类。
 
     Attributes
@@ -57,22 +42,6 @@ class TestType(Enum, metaclass=PowerAnalysisOption):
     Z_TEST_USING_S_P0_CC = "Z-Test using S(P0) with Continuity Correction"
     Z_TEST_USING_S_PHAT = "Z-Test using S(PHat)"
     Z_TEST_USING_S_PHAT_CC = "Z-Test using S(PHat) with Continuity Correction"
-
-
-@unique
-class SearchDirection(Enum, metaclass=PowerAnalysisOption):
-    """搜索方向
-
-    Attributes
-    ----------
-        LESS : (int)
-            向下搜索
-        GREATER : (int)
-            向上搜索
-    """
-
-    LESS = 1
-    GREATER = 2
 
 
 def fun_power(
