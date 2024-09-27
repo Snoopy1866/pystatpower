@@ -60,6 +60,12 @@ class TestSolveForSampleSize:
                     test_type=test_type,
                 )
 
+    def test_solve_full_output(self):
+        result = one_proportion.solve_for_sample_size(
+            0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", full_output=True
+        )
+        assert isinstance(result, one_proportion.OneProportion.ForSize)
+
 
 class TestSolveForAlpha:
     params_list = [
@@ -86,6 +92,10 @@ class TestSolveForAlpha:
                 test_type=test_type,
             )
             assert round(result, 2) == expected_result
+
+    def test_solve_full_output(self):
+        result = one_proportion.solve_for_alpha(70, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", full_output=True)
+        assert isinstance(result, one_proportion.OneProportion.ForAlpha)
 
 
 class TestSolveForPower:
@@ -118,6 +128,10 @@ class TestSolveForPower:
                 test_type=test_type,
             )
             assert round(result, 5) == expected_result
+
+    def test_solve_full_output(self):
+        result = one_proportion.solve_for_power(70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", full_output=True)
+        assert isinstance(result, one_proportion.OneProportion.ForPower)
 
 
 class TestSolveForNullProportion:
@@ -176,6 +190,12 @@ class TestSolveForNullProportion:
                     search_direction=search_direction,
                 )
 
+    def test_solve_full_output(self):
+        result = one_proportion.solve_for_nullproportion(
+            70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True
+        )
+        assert isinstance(result, one_proportion.OneProportion.ForNullProportion)
+
 
 class TestSolveForProportion:
     params_list = [
@@ -232,3 +252,9 @@ class TestSolveForProportion:
                     test_type=test_type,
                     search_direction=search_direction,
                 )
+
+    def test_solve_full_output(self):
+        result = one_proportion.solve_for_proportion(
+            70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True
+        )
+        assert isinstance(result, one_proportion.OneProportion.ForProportion)

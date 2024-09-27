@@ -207,7 +207,7 @@ class OneProportion:
             )
             try:
                 alpha = brentq(self._eval, 0, 1)
-            except ValueError as e:
+            except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
             self.alpha = Alpha(alpha)
 
@@ -274,7 +274,7 @@ class OneProportion:
                         nullproportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
 
             self.nullproportion = Proportion(nullproportion)
@@ -319,7 +319,7 @@ class OneProportion:
                         proportion = brentq(self._eval, lbound, ubound)
                     except ValueError as e:
                         raise ValueError("无解") from e
-                case _:
+                case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
 
             self.proportion = Proportion(proportion)
