@@ -56,26 +56,44 @@ class TestInterval:
 
 class TestPowerAnalysisNumeric:
     def test_domain(self):
-        assert PowerAnalysisNumeric._domain == Interval(-inf, inf, lower_inclusive=True, upper_inclusive=True)
+        assert PowerAnalysisNumeric._domain == Interval(
+            MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT, lower_inclusive=True, upper_inclusive=True
+        )
 
     def test_init(self):
         assert PowerAnalysisNumeric(0) == 0
         assert PowerAnalysisNumeric(0.5) == 0.5
         assert PowerAnalysisNumeric(1) == 1
-        assert PowerAnalysisNumeric(-inf) == -inf
-        assert PowerAnalysisNumeric(inf) == inf
+        assert PowerAnalysisNumeric(MIN_NEGATIVE_FLOAT) == MIN_NEGATIVE_FLOAT
+        assert PowerAnalysisNumeric(MAX_NEGATIVE_FLOAT) == MAX_NEGATIVE_FLOAT
+        assert PowerAnalysisNumeric(MIN_POSITIVE_FLOAT) == MIN_POSITIVE_FLOAT
+        assert PowerAnalysisNumeric(MAX_POSITIVE_FLOAT) == MAX_POSITIVE_FLOAT
 
         with pytest.raises(TypeError):
             PowerAnalysisNumeric("0.5")
         with pytest.raises(ValueError):
             PowerAnalysisNumeric(nan)
 
+    def test_pseudo_domain(self):
+        assert PowerAnalysisNumeric.pseudo_bound() == (MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT)
+        assert Alpha.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
+        assert Power.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
+        assert Mean.pseudo_bound() == (MIN_NEGATIVE_FLOAT + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
+        assert STD.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
+        assert Proportion.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
+        assert Percent.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
+        assert Ratio.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
+        assert Size.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
+        assert DropOutRate.pseudo_bound() == (0, 1 - MIN_POSITIVE_FLOAT)
+
     def test_repr(self):
         assert repr(PowerAnalysisNumeric(0)) == "PowerAnalysisNumeric(0)"
         assert repr(PowerAnalysisNumeric(0.5)) == "PowerAnalysisNumeric(0.5)"
         assert repr(PowerAnalysisNumeric(1)) == "PowerAnalysisNumeric(1)"
-        assert repr(PowerAnalysisNumeric(-inf)) == "PowerAnalysisNumeric(-inf)"
-        assert repr(PowerAnalysisNumeric(inf)) == "PowerAnalysisNumeric(inf)"
+        assert repr(PowerAnalysisNumeric(MIN_NEGATIVE_FLOAT)) == f"PowerAnalysisNumeric({MIN_NEGATIVE_FLOAT})"
+        assert repr(PowerAnalysisNumeric(MAX_NEGATIVE_FLOAT)) == f"PowerAnalysisNumeric({MAX_NEGATIVE_FLOAT})"
+        assert repr(PowerAnalysisNumeric(MIN_POSITIVE_FLOAT)) == f"PowerAnalysisNumeric({MIN_POSITIVE_FLOAT})"
+        assert repr(PowerAnalysisNumeric(MAX_POSITIVE_FLOAT)) == f"PowerAnalysisNumeric({MAX_POSITIVE_FLOAT})"
 
     def test_add(self):
         assert PowerAnalysisNumeric(1) + 1 == 2
@@ -305,15 +323,19 @@ class TestPowerAnalysisNumeric:
 
     def test_hash(self):
         assert hash(PowerAnalysisNumeric(3)) == hash(3.0)
-        assert hash(PowerAnalysisNumeric(inf)) == hash(inf)
-        assert hash(PowerAnalysisNumeric(-inf)) == hash(-inf)
+        assert hash(PowerAnalysisNumeric(MIN_NEGATIVE_FLOAT)) == hash(MIN_NEGATIVE_FLOAT)
+        assert hash(PowerAnalysisNumeric(MAX_NEGATIVE_FLOAT)) == hash(MAX_NEGATIVE_FLOAT)
+        assert hash(PowerAnalysisNumeric(MIN_POSITIVE_FLOAT)) == hash(MIN_POSITIVE_FLOAT)
+        assert hash(PowerAnalysisNumeric(MAX_POSITIVE_FLOAT)) == hash(MAX_POSITIVE_FLOAT)
 
     def test_bool(self):
         assert bool(PowerAnalysisNumeric(3)) == bool(3.0)
         assert bool(PowerAnalysisNumeric(0)) == bool(0.0)
         assert bool(PowerAnalysisNumeric(-3)) == bool(-3.0)
-        assert bool(PowerAnalysisNumeric(inf)) == bool(inf)
-        assert bool(PowerAnalysisNumeric(-inf)) == bool(-inf)
+        assert bool(PowerAnalysisNumeric(MIN_NEGATIVE_FLOAT)) == bool(MIN_NEGATIVE_FLOAT)
+        assert bool(PowerAnalysisNumeric(MAX_NEGATIVE_FLOAT)) == bool(MAX_NEGATIVE_FLOAT)
+        assert bool(PowerAnalysisNumeric(MIN_POSITIVE_FLOAT)) == bool(MIN_POSITIVE_FLOAT)
+        assert bool(PowerAnalysisNumeric(MAX_POSITIVE_FLOAT)) == bool(MAX_POSITIVE_FLOAT)
 
 
 class TestPowerAnalysisOption:

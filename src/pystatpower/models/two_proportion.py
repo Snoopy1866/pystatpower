@@ -555,8 +555,10 @@ class TwoProportion:
                 )
                 - self.power
             )
+
+            lbound, ubound = Size.pseudo_bound()
             try:
-                n = brentq(self._eval, 1, 1e10)
+                n = brentq(self._eval, lbound, ubound)
             except ValueError as e:
                 raise ValueError("无解") from e
             self.treatment_size = Size(self.group_allocation.treatment_size_formula(n))
@@ -594,8 +596,10 @@ class TwoProportion:
                 )
                 - self.power
             )
+
+            lbound, ubound = Alpha.pseudo_bound()
             try:
-                alpha = brentq(self._eval, 0, 1)
+                alpha = brentq(self._eval, lbound, ubound)
             except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
             self.alpha = Alpha(alpha)

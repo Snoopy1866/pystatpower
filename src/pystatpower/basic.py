@@ -1,9 +1,13 @@
-from enum import Enum, EnumMeta
+from dataclasses import dataclass
+from enum import EnumMeta
 from math import ceil, floor, inf, isclose, trunc
 from numbers import Real
 
 
-from dataclasses import dataclass
+MIN_NEGATIVE_FLOAT: Real = -1e10
+MAX_NEGATIVE_FLOAT: Real = -1e-10
+MIN_POSITIVE_FLOAT: Real = 1e-10
+MAX_POSITIVE_FLOAT: Real = 1e10
 
 
 @dataclass(frozen=True)
@@ -73,21 +77,21 @@ class Interval:
             else:
                 return f"({self.lower}, {self.upper})"
 
-    def pseudo_lbound(self, eps: Real = 1e-10) -> Real:
+    def pseudo_lbound(self, eps: Real = MIN_POSITIVE_FLOAT) -> Real:
         """区间的伪下界，用于数值计算。"""
         if self.lower_inclusive:
             return self.lower
         else:
             return self.lower + eps
 
-    def pseudo_ubound(self, eps: Real = 1e-10) -> Real:
+    def pseudo_ubound(self, eps: Real = MIN_POSITIVE_FLOAT) -> Real:
         """区间的伪上界，用于数值计算。"""
         if self.upper_inclusive:
             return self.upper
         else:
             return self.upper - eps
 
-    def pseudo_bound(self, eps: Real = 1e-10) -> tuple[Real, Real]:
+    def pseudo_bound(self, eps: Real = MIN_POSITIVE_FLOAT) -> tuple[Real, Real]:
         """区间的伪上下界，用于数值计算。"""
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
@@ -95,7 +99,7 @@ class Interval:
 class PowerAnalysisNumeric(Real):
     """自定义功效分析数值类型"""
 
-    _domain = Interval(-inf, inf, lower_inclusive=True, upper_inclusive=True)
+    _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
     def __new__(cls, value: Real):
         if value is None:
@@ -108,6 +112,12 @@ class PowerAnalysisNumeric(Real):
 
     def __init__(self, value: Real):
         self._value = value
+
+    @classmethod
+    def pseudo_bound(cls) -> tuple[Real, Real]:
+        """伪区间，用于数值计算。"""
+
+        return cls._domain.pseudo_bound()
 
     def __repr__(self):
         return f"{type(self).__name__}({self._value})"
@@ -274,13 +284,13 @@ class Power(PowerAnalysisNumeric):
 class Mean(PowerAnalysisNumeric):
     """均值"""
 
-    _domain = Interval(-inf, inf)
+    _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT)
 
 
 class STD(PowerAnalysisNumeric):
     """标准差"""
 
-    _domain = Interval(0, inf)
+    _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
 class Proportion(PowerAnalysisNumeric):
@@ -298,13 +308,13 @@ class Percent(PowerAnalysisNumeric):
 class Ratio(PowerAnalysisNumeric):
     """比例"""
 
-    _domain = Interval(0, inf)
+    _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
 class Size(PowerAnalysisNumeric):
     """样本量"""
 
-    _domain = Interval(0, inf)
+    _domain = Interval(0, MAX_POSITIVE_FLOAT)
 
 
 class DropOutRate(PowerAnalysisNumeric):

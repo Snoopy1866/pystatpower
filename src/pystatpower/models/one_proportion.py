@@ -175,8 +175,10 @@ class OneProportion:
                 )
                 - self.power
             )
+
+            lbound, ubound = Size.pseudo_bound()
             try:
-                size = brentq(self._eval, 1, 1e10)
+                size = brentq(self._eval, lbound, ubound)
             except ValueError as e:
                 raise ValueError("无解") from e
             self.size = Size(size)
@@ -205,8 +207,10 @@ class OneProportion:
                 )
                 - self.power
             )
+
+            lbound, ubound = Alpha.pseudo_bound()
             try:
-                alpha = brentq(self._eval, 0, 1)
+                alpha = brentq(self._eval, lbound, ubound)
             except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
             self.alpha = Alpha(alpha)
