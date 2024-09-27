@@ -1018,10 +1018,10 @@ class TestSolveForReferenceProportion:
 
     def test_no_solution(self):
         with pytest.raises(ValueError):
-            solve_for_treatment_proportion(
+            solve_for_reference_proportion(
                 alpha=0.05,
                 power=0.80,
-                reference_proportion=0.95,
+                treatment_proportion=0.95,
                 alternative="TWO_SIDED",
                 test_type="Z_TEST_POOLED",
                 group_allocation=GroupAllocation(size_of_total=100),
