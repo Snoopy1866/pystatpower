@@ -5,6 +5,29 @@ import pytest
 from pystatpower.numeric import *
 
 
+class ForwardOperatorNotImplementedNumeric(Numeric):
+    def __add__(self, other):
+        return NotImplemented
+
+    def __sub__(self, other):
+        return NotImplemented
+
+    def __mul__(self, other):
+        return NotImplemented
+
+    def __truediv__(self, other):
+        return NotImplemented
+
+    def __floordiv__(self, other):
+        return NotImplemented
+
+    def __mod__(self, other):
+        return NotImplemented
+
+    def __pow__(self, base, modulo=None):
+        return NotImplemented
+
+
 class TestInterval:
     def test_contains(self):
         assert 0.5 in Interval(0, 1)
@@ -106,6 +129,8 @@ class TestNumeric:
         assert 1 + Numeric(1) == 2
         assert 1 + Numeric(0.5) == 1.5
 
+        assert ForwardOperatorNotImplementedNumeric(1) + Numeric(0.5) == 1.5
+
         with pytest.raises(TypeError):
             "1" + Numeric(1)
 
@@ -123,6 +148,8 @@ class TestNumeric:
         assert 1 - Numeric(1) == 0
         assert 1 - Numeric(0.5) == 0.5
 
+        assert ForwardOperatorNotImplementedNumeric(1) - Numeric(0.5) == 0.5
+
         with pytest.raises(TypeError):
             "1" - Numeric(1)
 
@@ -139,6 +166,8 @@ class TestNumeric:
     def test_rmul(self):
         assert 2 * Numeric(4) == 8
         assert 2 * Numeric(0.5) == 1
+
+        assert ForwardOperatorNotImplementedNumeric(2) * Numeric(0.5) == 1
 
         with pytest.raises(TypeError):
             "4" * Numeric(2)
@@ -162,6 +191,8 @@ class TestNumeric:
 
         assert 1 / Numeric(3) == 1 / 3
 
+        assert ForwardOperatorNotImplementedNumeric(1) / Numeric(2) == 0.5
+
         with pytest.raises(TypeError):
             "2" / Numeric(1)
 
@@ -175,6 +206,8 @@ class TestNumeric:
     def test_rfloordiv(self):
         assert 3 // Numeric(2) == 1
 
+        assert ForwardOperatorNotImplementedNumeric(3) // Numeric(2) == 1
+
         with pytest.raises(TypeError):
             "3" // Numeric(2)
 
@@ -187,6 +220,8 @@ class TestNumeric:
 
     def test_rmod(self):
         assert 3 % Numeric(2) == 1
+
+        assert ForwardOperatorNotImplementedNumeric(3) % Numeric(2) == 1
 
         class Person:
             pass
@@ -206,6 +241,8 @@ class TestNumeric:
     def test_rpow(self):
         assert 2 ** Numeric(3) == 8
         assert 2 ** Numeric(0.5) == 2**0.5
+
+        assert ForwardOperatorNotImplementedNumeric(2) ** Numeric(3) == 8
 
         with pytest.raises(TypeError):
             "2" ** Numeric(3)
