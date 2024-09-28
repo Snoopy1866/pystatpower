@@ -13,7 +13,7 @@ class TestInterval:
         assert 0 in Interval(0, 1, lower_inclusive=True, upper_inclusive=True)
         assert 1 in Interval(0, 1, lower_inclusive=True, upper_inclusive=True)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             assert "0.5" in Interval(0, 1)
 
     def test_eq(self):
@@ -29,7 +29,7 @@ class TestInterval:
         # 区间范围近似相同，但另一个区间包含边界
         assert Interval(0, 1e10) != Interval(0, 1e10 + 1, lower_inclusive=True)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             assert Interval(0, 1) == "Interval(0, 1)"
 
     def test_repr(self):
@@ -55,18 +55,16 @@ class TestInterval:
 
 class TestNumeric:
     def test_domain(self):
-        assert Numeric._domain == Interval(
-            MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT, lower_inclusive=True, upper_inclusive=True
-        )
+        assert Numeric._domain == Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
     def test_init(self):
         assert Numeric(0) == 0
         assert Numeric(0.5) == 0.5
         assert Numeric(1) == 1
-        assert Numeric(MIN_NEGATIVE_FLOAT) == MIN_NEGATIVE_FLOAT
-        assert Numeric(MAX_NEGATIVE_FLOAT) == MAX_NEGATIVE_FLOAT
-        assert Numeric(MIN_POSITIVE_FLOAT) == MIN_POSITIVE_FLOAT
-        assert Numeric(MAX_POSITIVE_FLOAT) == MAX_POSITIVE_FLOAT
+        assert Numeric(-MAX_FLOAT) == -MAX_FLOAT
+        assert Numeric(-MIN_FLOAT) == -MIN_FLOAT
+        assert Numeric(MIN_FLOAT) == MIN_FLOAT
+        assert Numeric(MAX_FLOAT) == MAX_FLOAT
 
         with pytest.raises(TypeError):
             Numeric("0.5")
@@ -74,25 +72,25 @@ class TestNumeric:
             Numeric(nan)
 
     def test_pseudo_domain(self):
-        assert Numeric.pseudo_bound() == (MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT)
-        assert Alpha.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
-        assert Power.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
-        assert Mean.pseudo_bound() == (MIN_NEGATIVE_FLOAT + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
-        assert STD.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
-        assert Proportion.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
-        assert Percent.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, 1 - MIN_POSITIVE_FLOAT)
-        assert Ratio.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
-        assert Size.pseudo_bound() == (0 + MIN_POSITIVE_FLOAT, MAX_POSITIVE_FLOAT - MIN_POSITIVE_FLOAT)
-        assert DropOutRate.pseudo_bound() == (0, 1 - MIN_POSITIVE_FLOAT)
+        assert Numeric.pseudo_bound() == (-MAX_FLOAT, MAX_FLOAT)
+        assert Alpha.pseudo_bound() == (0 + MIN_FLOAT, 1 - MIN_FLOAT)
+        assert Power.pseudo_bound() == (0 + MIN_FLOAT, 1 - MIN_FLOAT)
+        assert Mean.pseudo_bound() == (-MAX_FLOAT + MIN_FLOAT, MAX_FLOAT - MIN_FLOAT)
+        assert STD.pseudo_bound() == (0 + MIN_FLOAT, MAX_FLOAT - MIN_FLOAT)
+        assert Proportion.pseudo_bound() == (0 + MIN_FLOAT, 1 - MIN_FLOAT)
+        assert Percent.pseudo_bound() == (0 + MIN_FLOAT, 1 - MIN_FLOAT)
+        assert Ratio.pseudo_bound() == (0 + MIN_FLOAT, MAX_FLOAT - MIN_FLOAT)
+        assert Size.pseudo_bound() == (0 + MIN_FLOAT, MAX_FLOAT - MIN_FLOAT)
+        assert DropOutRate.pseudo_bound() == (0, 1 - MIN_FLOAT)
 
     def test_repr(self):
         assert repr(Numeric(0)) == f"{Numeric.__name__}(0)"
         assert repr(Numeric(0.5)) == f"{Numeric.__name__}(0.5)"
         assert repr(Numeric(1)) == f"{Numeric.__name__}(1)"
-        assert repr(Numeric(MIN_NEGATIVE_FLOAT)) == f"{Numeric.__name__}({MIN_NEGATIVE_FLOAT})"
-        assert repr(Numeric(MAX_NEGATIVE_FLOAT)) == f"{Numeric.__name__}({MAX_NEGATIVE_FLOAT})"
-        assert repr(Numeric(MIN_POSITIVE_FLOAT)) == f"{Numeric.__name__}({MIN_POSITIVE_FLOAT})"
-        assert repr(Numeric(MAX_POSITIVE_FLOAT)) == f"{Numeric.__name__}({MAX_POSITIVE_FLOAT})"
+        assert repr(Numeric(-MAX_FLOAT)) == f"{Numeric.__name__}({-MAX_FLOAT})"
+        assert repr(Numeric(-MIN_FLOAT)) == f"{Numeric.__name__}({-MIN_FLOAT})"
+        assert repr(Numeric(MIN_FLOAT)) == f"{Numeric.__name__}({MIN_FLOAT})"
+        assert repr(Numeric(MAX_FLOAT)) == f"{Numeric.__name__}({MAX_FLOAT})"
 
     def test_add(self):
         assert Numeric(1) + 1 == 2
@@ -254,7 +252,7 @@ class TestNumeric:
         assert Numeric(0.5) == Numeric(0.5)
         assert 0.5 == Numeric(0.5)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(0) == "0"
 
     def test_ne(self):
@@ -265,7 +263,7 @@ class TestNumeric:
         assert Numeric(0.5) != Numeric(0.6)
         assert 0.5 != Numeric(0.6)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(0) != "0"
 
     def test_lt(self):
@@ -276,7 +274,7 @@ class TestNumeric:
         assert Numeric(0.5) < Numeric(0.6)
         assert 0.5 < Numeric(0.6)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(0) < "1"
 
     def test_le(self):
@@ -287,7 +285,7 @@ class TestNumeric:
         assert Numeric(0.5) <= Numeric(0.5)
         assert 0.5 <= Numeric(0.5)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(0) <= "1"
 
     def test_gt(self):
@@ -298,7 +296,7 @@ class TestNumeric:
         assert Numeric(0.6) > Numeric(0.5)
         assert 0.6 > Numeric(0.5)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(1) > "0"
 
     def test_ge(self):
@@ -309,7 +307,7 @@ class TestNumeric:
         assert Numeric(0.6) >= Numeric(0.5)
         assert 0.6 >= Numeric(0.5)
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(TypeError):
             Numeric(1) >= "0"
 
     def test_float(self):
@@ -322,19 +320,19 @@ class TestNumeric:
 
     def test_hash(self):
         assert hash(Numeric(3)) == hash(3.0)
-        assert hash(Numeric(MIN_NEGATIVE_FLOAT)) == hash(MIN_NEGATIVE_FLOAT)
-        assert hash(Numeric(MAX_NEGATIVE_FLOAT)) == hash(MAX_NEGATIVE_FLOAT)
-        assert hash(Numeric(MIN_POSITIVE_FLOAT)) == hash(MIN_POSITIVE_FLOAT)
-        assert hash(Numeric(MAX_POSITIVE_FLOAT)) == hash(MAX_POSITIVE_FLOAT)
+        assert hash(Numeric(-MAX_FLOAT)) == hash(-MAX_FLOAT)
+        assert hash(Numeric(-MIN_FLOAT)) == hash(-MIN_FLOAT)
+        assert hash(Numeric(MIN_FLOAT)) == hash(MIN_FLOAT)
+        assert hash(Numeric(MAX_FLOAT)) == hash(MAX_FLOAT)
 
     def test_bool(self):
         assert bool(Numeric(3)) == bool(3.0)
         assert bool(Numeric(0)) == bool(0.0)
         assert bool(Numeric(-3)) == bool(-3.0)
-        assert bool(Numeric(MIN_NEGATIVE_FLOAT)) == bool(MIN_NEGATIVE_FLOAT)
-        assert bool(Numeric(MAX_NEGATIVE_FLOAT)) == bool(MAX_NEGATIVE_FLOAT)
-        assert bool(Numeric(MIN_POSITIVE_FLOAT)) == bool(MIN_POSITIVE_FLOAT)
-        assert bool(Numeric(MAX_POSITIVE_FLOAT)) == bool(MAX_POSITIVE_FLOAT)
+        assert bool(Numeric(-MAX_FLOAT)) == bool(-MAX_FLOAT)
+        assert bool(Numeric(-MIN_FLOAT)) == bool(-MIN_FLOAT)
+        assert bool(Numeric(MIN_FLOAT)) == bool(MIN_FLOAT)
+        assert bool(Numeric(MAX_FLOAT)) == bool(MAX_FLOAT)
 
 
 def test_alpha():

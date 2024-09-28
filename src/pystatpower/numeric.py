@@ -1,12 +1,8 @@
 from dataclasses import dataclass
 from math import ceil, floor, isclose, trunc
-from numbers import Real
 
-
-MIN_NEGATIVE_FLOAT: Real = -1e10
-MAX_NEGATIVE_FLOAT: Real = -1e-10
-MIN_POSITIVE_FLOAT: Real = 1e-10
-MAX_POSITIVE_FLOAT: Real = 1e10
+MIN_FLOAT: float = 1e-10
+MAX_FLOAT: float = 1e10
 
 
 @dataclass(frozen=True)
@@ -15,8 +11,8 @@ class Interval:
 
     Parameters
     ----------
-        lower (Real): 区间下限
-        upper (Real): 区间上限
+        lower (float): 区间下限
+        upper (float): 区间上限
         lower_inclusive (bool): 是否包含区间下限
         upper_inclusive (bool): 是否包含区间上限
 
@@ -33,13 +29,13 @@ class Interval:
     (0, 0.9999999999)
     """
 
-    lower: Real
-    upper: Real
+    lower: int | float
+    upper: int | float
     lower_inclusive: bool = False
     upper_inclusive: bool = False
 
-    def __contains__(self, value: Real) -> bool:
-        if isinstance(value, Real):
+    def __contains__(self, value: int | float) -> bool:
+        if isinstance(value, (int, float)):
             if self.lower_inclusive:
                 if self.upper_inclusive:
                     return self.lower <= value <= self.upper
@@ -51,7 +47,7 @@ class Interval:
                 else:
                     return self.lower < value < self.upper
 
-        raise RuntimeError(f"Interval.__contains__ only supports real numbers, but you passed in a {type(value)}.")
+        raise TypeError(f"Interval.__contains__ only supports real numbers, but you passed in a {type(value)}.")
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Interval):
@@ -62,7 +58,7 @@ class Interval:
                 and self.upper_inclusive == other.upper_inclusive
             )
 
-        raise RuntimeError(f"Interval.__eq__ only supports Interval, but you passed in a {type(other)}.")
+        raise TypeError(f"Interval.__eq__ only supports Interval, but you passed in a {type(other)}.")
 
     def __repr__(self) -> str:
         if self.lower_inclusive:
@@ -76,44 +72,52 @@ class Interval:
             else:
                 return f"({self.lower}, {self.upper})"
 
-    def pseudo_lbound(self, eps: Real = MIN_POSITIVE_FLOAT) -> Real:
+    def pseudo_lbound(self, eps: float = MIN_FLOAT) -> float:
         """区间的伪下界，用于数值计算。"""
+
         if self.lower_inclusive:
             return self.lower
         else:
             return self.lower + eps
 
-    def pseudo_ubound(self, eps: Real = MIN_POSITIVE_FLOAT) -> Real:
+    def pseudo_ubound(self, eps: float = MIN_FLOAT) -> float:
         """区间的伪上界，用于数值计算。"""
+
         if self.upper_inclusive:
             return self.upper
         else:
             return self.upper - eps
 
-    def pseudo_bound(self, eps: Real = MIN_POSITIVE_FLOAT) -> tuple[Real, Real]:
+    def pseudo_bound(self, eps: float = MIN_FLOAT) -> tuple[float, float]:
         """区间的伪上下界，用于数值计算。"""
+
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
 
-class Numeric(Real):
+class Numeric:
     """自定义功效分析数值类型"""
 
-    _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT, lower_inclusive=True, upper_inclusive=True)
+    _domain = Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
-    def __new__(cls, value: Real):
+    def __new__(cls, value):
         if value is None:
             return None
-        if not isinstance(value, Real):
-            raise TypeError(f"{value} is not a real number.")
+        if isinstance(value, Numeric):
+            return cls(value._value)
+
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"{value} is not an int or float number.")
         if value not in cls._domain:
             raise ValueError(f"{value} is not in {cls._domain}.")
+
         return super().__new__(cls)
 
-    def __init__(self, value: Real):
-        self._value = value
+    def __init__(self, value):
+        if isinstance(value, (int, float)):
+            self._value = value
 
     @classmethod
-    def pseudo_bound(cls) -> tuple[Real, Real]:
+    def pseudo_bound(cls) -> tuple[float, float]:
         """伪区间，用于数值计算。"""
 
         return cls._domain.pseudo_bound()
@@ -122,73 +126,101 @@ class Numeric(Real):
         return f"{type(self).__name__}({self._value})"
 
     def __add__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value + other
+        if isinstance(other, Numeric):
+            return self._value + other._value
         return NotImplemented
 
     def __sub__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value - other
+        if isinstance(other, Numeric):
+            return self._value - other._value
         return NotImplemented
 
     def __mul__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value * other
+        if isinstance(other, Numeric):
+            return self._value * other._value
         return NotImplemented
 
     def __truediv__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value / other
+        if isinstance(other, Numeric):
+            return self._value / other._value
         return NotImplemented
 
     def __floordiv__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value // other
+        if isinstance(other, Numeric):
+            return self._value // other._value
         return NotImplemented
 
     def __mod__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value % other
+        if isinstance(other, Numeric):
+            return self._value % other._value
         return NotImplemented
 
     def __pow__(self, other, modulo=None):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return pow(self._value, other, modulo)
+        if isinstance(other, Numeric):
+            return pow(self._value, other._value, modulo)
         return NotImplemented
 
     def __radd__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other + self._value
+        if isinstance(other, Numeric):
+            return other._value + self._value
         return NotImplemented
 
     def __rsub__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other - self._value
+        if isinstance(other, Numeric):
+            return other._value - self._value
         return NotImplemented
 
     def __rmul__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other * self._value
+        if isinstance(other, Numeric):
+            return other._value * self._value
         return NotImplemented
 
     def __rtruediv__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other / self._value
+        if isinstance(other, Numeric):
+            return other._value / self._value
         return NotImplemented
 
     def __rfloordiv__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other // self._value
+        if isinstance(other, Numeric):
+            return other._value // self._value
         return NotImplemented
 
     def __rmod__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return other % self._value
+        if isinstance(other, Numeric):
+            return other._value % self._value
         return NotImplemented
 
     def __rpow__(self, base, modulo=None):
-        if isinstance(base, Real):
+        if isinstance(base, (int, float)):
             return pow(base, self._value, modulo)
+        if isinstance(base, Numeric):
+            return pow(base._value, self._value, modulo)
         return NotImplemented
 
     def __neg__(self):
@@ -222,34 +254,46 @@ class Numeric(Real):
         return ceil(self._value)
 
     def __lt__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value < other
-        raise RuntimeError(f"{type(self)}.__lt__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value < other._value
+        raise TypeError(f"{type(self)}.__lt__ only supports float numbers, but you passed in a {type(other)}.")
 
     def __le__(self, other):
-        if isinstance(other, Real):
+        if isinstance(other, (int, float)):
             return self._value <= other
-        raise RuntimeError(f"{type(self)}.__le__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value <= other._value
+        raise TypeError(f"{type(self)}.__le__ only supports float numbers, but you passed in a {type(other)}.")
 
-    def __eq__(self, other):
-        if isinstance(other, Real):
+    def __eq__(self, other) -> bool:
+        if isinstance(other, (int, float)):
             return self._value == other
-        raise RuntimeError(f"{type(self)}.__eq__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value == other._value
+        raise TypeError(f"{type(self)}.__eq__ only supports float numbers, but you passed in a {type(other)}.")
 
-    def __ne__(self, other):
-        if isinstance(other, Real):
+    def __ne__(self, other) -> bool:
+        if isinstance(other, (int, float)):
             return self._value != other
-        raise RuntimeError(f"{type(self)}.__ne__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value != other._value
+        raise TypeError(f"{type(self)}.__ne__ only supports float numbers, but you passed in a {type(other)}.")
 
-    def __gt__(self, other):
-        if isinstance(other, Real):
+    def __gt__(self, other) -> bool:
+        if isinstance(other, (int, float)):
             return self._value > other
-        raise RuntimeError(f"{type(self)}.__gt__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value > other._value
+        raise TypeError(f"{type(self)}.__gt__ only supports float numbers, but you passed in a {type(other)}.")
 
-    def __ge__(self, other):
-        if isinstance(other, Real):
+    def __ge__(self, other) -> bool:
+        if isinstance(other, (int, float)):
             return self._value >= other
-        raise RuntimeError(f"{type(self)}.__ge__ only supports real numbers, but you passed in a {type(other)}.")
+        if isinstance(other, Numeric):
+            return self._value >= other._value
+        raise TypeError(f"{type(self)}.__ge__ only supports float numbers, but you passed in a {type(other)}.")
 
     def __hash__(self):
         return hash(self._value)
@@ -273,13 +317,13 @@ class Power(Numeric):
 class Mean(Numeric):
     """均值"""
 
-    _domain = Interval(MIN_NEGATIVE_FLOAT, MAX_POSITIVE_FLOAT)
+    _domain = Interval(-MAX_FLOAT, MAX_FLOAT)
 
 
 class STD(Numeric):
     """标准差"""
 
-    _domain = Interval(0, MAX_POSITIVE_FLOAT)
+    _domain = Interval(0, MAX_FLOAT)
 
 
 class Proportion(Numeric):
@@ -297,13 +341,13 @@ class Percent(Numeric):
 class Ratio(Numeric):
     """比例"""
 
-    _domain = Interval(0, MAX_POSITIVE_FLOAT)
+    _domain = Interval(0, MAX_FLOAT)
 
 
 class Size(Numeric):
     """样本量"""
 
-    _domain = Interval(0, MAX_POSITIVE_FLOAT)
+    _domain = Interval(0, MAX_FLOAT)
 
 
 class DropOutRate(Numeric):
