@@ -884,6 +884,33 @@ class TestSolveForAlpha:
             )
             assert round(result, 8) == expected_alpha
 
+    def test_solve_with_dropout_rate(self):
+        result = solve_for_alpha(
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_each=100),
+            dropout_rate=0.1,
+            full_output=True,
+        )
+
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (112, 112)
+
+        result = solve_for_alpha(
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_total=100, ratio_of_treatment_to_reference=2),
+            dropout_rate=0.1,
+            full_output=True,
+        )
+
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (75, 38)
+
     def test_solve_full_output(self):
         result = solve_for_alpha(
             0.80,
