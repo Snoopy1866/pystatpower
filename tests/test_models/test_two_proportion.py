@@ -502,6 +502,98 @@ class TestSolveForSampleSize:
             )
             assert tuple(map(ceil, result)) == (expected_treatment_size, expected_reference_size)
 
+    def test_solve_with_dropout_rate(self) -> None:
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (85, 85)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_treatment=70),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (78, 88)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(size_of_reference=70),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (95, 78)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(ratio_of_treatment_to_reference=2),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (134, 67)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(ratio_of_reference_to_treatment=2),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (58, 116)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(percent_of_treatment=0.8),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (228, 58)
+
+        result = solve_for_sample_size(
+            alpha=0.05,
+            power=0.80,
+            treatment_proportion=0.80,
+            reference_proportion=0.95,
+            alternative="TWO_SIDED",
+            test_type="Z_TEST_POOLED",
+            group_allocation=GroupAllocation(percent_of_reference=0.8),
+            dropout_rate=0.10,
+            full_output=True,
+        )
+        assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == (45, 177)
+
     def test_solve_full_output(self):
         result = solve_for_sample_size(
             0.05,
