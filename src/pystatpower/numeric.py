@@ -354,3 +354,9 @@ class DropOutRate(Numeric):
     """脱落率"""
 
     _domain = Interval(0, 1, lower_inclusive=True)
+
+
+class DropOutSize(Numeric):
+    """脱落样本量"""
+
+    _domain = Interval(0, MAX_FLOAT, lower_inclusive=True)
