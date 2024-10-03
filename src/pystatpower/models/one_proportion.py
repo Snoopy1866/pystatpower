@@ -1,12 +1,13 @@
 """单样本率检验的功效分析模块"""
 
 from enum import Enum, unique
-from math import sqrt
+from math import ceil, sqrt
 
 from scipy.stats import norm
 from scipy.optimize import brentq
 
-from pystatpower.basic import Alpha, Interval, Power, PowerAnalysisOption, Proportion, Size
+from pystatpower.numeric import Alpha, DropOutRate, DropOutSize, Interval, Power, Proportion, Size
+from pystatpower.option import Alternative, Option, SearchDirection
 
 
 __all__ = [
@@ -19,23 +20,7 @@ __all__ = [
 
 
 @unique
-class Alternative(Enum, metaclass=PowerAnalysisOption):
-    """备择假设类型
-
-    Attributes
-    ----------
-        TWO_SIDED : (int)
-            双侧检验
-        ONE_SIDED : (int)
-            单侧检验
-    """
-
-    TWO_SIDED = 1
-    ONE_SIDED = 2
-
-
-@unique
-class TestType(Enum, metaclass=PowerAnalysisOption):
+class TestType(Enum, metaclass=Option):
     """检验类型枚举类。
 
     Attributes
@@ -57,22 +42,6 @@ class TestType(Enum, metaclass=PowerAnalysisOption):
     Z_TEST_USING_S_P0_CC = "Z-Test using S(P0) with Continuity Correction"
     Z_TEST_USING_S_PHAT = "Z-Test using S(PHat)"
     Z_TEST_USING_S_PHAT_CC = "Z-Test using S(PHat) with Continuity Correction"
-
-
-@unique
-class SearchDirection(Enum, metaclass=PowerAnalysisOption):
-    """搜索方向
-
-    Attributes
-    ----------
-        LESS : (int)
-            向下搜索
-        GREATER : (int)
-            向上搜索
-    """
-
-    LESS = 1
-    GREATER = 2
 
 
 def fun_power(
@@ -155,6 +124,7 @@ class OneProportion:
             proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
+            dropout_rate: DropOutRate,
         ):
             self.alpha = alpha
             self.power = power
@@ -162,6 +132,7 @@ class OneProportion:
             self.proportion = proportion
             self.alternative = alternative
             self.test_type = test_type
+            self.dropout_rate = dropout_rate
 
         def solve(self) -> Size:
             self._eval = (
@@ -181,7 +152,11 @@ class OneProportion:
                 size = brentq(self._eval, lbound, ubound)
             except ValueError as e:
                 raise ValueError("无解") from e
-            self.size = Size(size)
+
+            self.size = Size(ceil(size))
+
+            self.size_include_dropouts = Size(ceil(self.size / (1 - self.dropout_rate)))
+            self.dropouts = DropOutSize(self.size_include_dropouts - self.size)
 
     class ForAlpha:
         def __init__(
@@ -192,6 +167,7 @@ class OneProportion:
             proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
+            dropout_rate: DropOutRate,
         ):
             self.size = size
             self.power = power
@@ -199,6 +175,7 @@ class OneProportion:
             self.proportion = proportion
             self.alternative = alternative
             self.test_type = test_type
+            self.dropout_rate = dropout_rate
 
         def solve(self) -> Alpha:
             self._eval = (
@@ -213,7 +190,11 @@ class OneProportion:
                 alpha = brentq(self._eval, lbound, ubound)
             except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
+
             self.alpha = Alpha(alpha)
+
+            self.size_include_dropouts = Size(ceil(self.size / (1 - self.dropout_rate)))
+            self.dropouts = DropOutSize(self.size_include_dropouts - self.size)
 
     class ForPower:
         def __init__(
@@ -224,6 +205,7 @@ class OneProportion:
             proportion: Proportion,
             alternative: Alternative,
             test_type: TestType,
+            dropout_rate: DropOutRate,
         ):
             self.size = size
             self.alpha = alpha
@@ -231,12 +213,17 @@ class OneProportion:
             self.proportion = proportion
             self.alternative = alternative
             self.test_type = test_type
+            self.dropout_rate = dropout_rate
 
         def solve(self) -> Power:
             power = fun_power(
                 self.size, self.alpha, self.nullproportion, self.proportion, self.alternative, self.test_type
             )
+
             self.power = Power(power)
+
+            self.size_include_dropouts = Size(ceil(self.size / (1 - self.dropout_rate)))
+            self.dropouts = DropOutSize(self.size_include_dropouts - self.size)
 
     class ForNullProportion:
         def __init__(
@@ -248,6 +235,7 @@ class OneProportion:
             alternative: Alternative,
             test_type: TestType,
             search_direction: SearchDirection,
+            dropout_rate: DropOutRate,
         ):
             self.size = size
             self.alpha = alpha
@@ -256,6 +244,7 @@ class OneProportion:
             self.alternative = alternative
             self.test_type = test_type
             self.search_direction = search_direction
+            self.dropout_rate = dropout_rate
 
         def solve(self) -> Proportion:
             self._eval = (
@@ -283,6 +272,9 @@ class OneProportion:
 
             self.nullproportion = Proportion(nullproportion)
 
+            self.size_include_dropouts = Size(ceil(self.size / (1 - self.dropout_rate)))
+            self.dropouts = DropOutSize(self.size_include_dropouts - self.size)
+
     class ForProportion:
         def __init__(
             self,
@@ -293,6 +285,7 @@ class OneProportion:
             alternative: Alternative,
             test_type: TestType,
             search_direction: SearchDirection,
+            dropout_rate: DropOutRate,
         ):
             self.size = size
             self.alpha = alpha
@@ -301,6 +294,7 @@ class OneProportion:
             self.alternative = alternative
             self.test_type = test_type
             self.search_direction = search_direction
+            self.dropout_rate = dropout_rate
 
         def solve(self) -> Proportion:
             self._eval = (
@@ -328,6 +322,9 @@ class OneProportion:
 
             self.proportion = Proportion(proportion)
 
+            self.size_include_dropouts = Size(ceil(self.size / (1 - self.dropout_rate)))
+            self.dropouts = DropOutSize(self.size_include_dropouts - self.size)
+
 
 def solve_for_sample_size(
     alpha: float,
@@ -336,6 +333,7 @@ def solve_for_sample_size(
     proportion: float,
     alternative: str,
     test_type: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解样本量
@@ -347,6 +345,7 @@ def solve_for_sample_size(
         proportion (float): 备择假设下的率
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        dropout_rate (float, optional): 脱落率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -357,6 +356,7 @@ def solve_for_sample_size(
         proportion=Proportion(proportion),
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -372,6 +372,7 @@ def solve_for_alpha(
     proportion: float,
     alternative: str,
     test_type: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解显著性水平
@@ -383,8 +384,11 @@ def solve_for_alpha(
         proportion (float): 备择假设下的率
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        dropout_rate (float, optional): 脱落率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
+
+    size = round(size)  # 将输入的样本量提前进行四舍五入
 
     model = OneProportion.ForAlpha(
         size=Size(size),
@@ -393,6 +397,7 @@ def solve_for_alpha(
         proportion=Proportion(proportion),
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -408,6 +413,7 @@ def solve_for_power(
     proportion: float,
     alternative: str,
     test_type: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解检验效能
@@ -419,8 +425,11 @@ def solve_for_power(
         proportion (float): 备择假设下的率
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
+        dropout_rate (float, optional): 脱落率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
+
+    size = round(size)  # 将输入的样本量提前进行四舍五入
 
     model = OneProportion.ForPower(
         size=Size(size),
@@ -429,6 +438,7 @@ def solve_for_power(
         proportion=Proportion(proportion),
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -445,6 +455,7 @@ def solve_for_nullproportion(
     alternative: str,
     test_type: str,
     search_direction: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解零假设下的率
@@ -457,8 +468,11 @@ def solve_for_nullproportion(
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
         search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        dropout_rate (float, optional): 脱落率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
+
+    size = round(size)  # 将输入的样本量提前进行四舍五入
 
     model = OneProportion.ForNullProportion(
         size=Size(size),
@@ -468,6 +482,7 @@ def solve_for_nullproportion(
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
         search_direction=SearchDirection[search_direction],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -484,6 +499,7 @@ def solve_for_proportion(
     alternative: str,
     test_type: str,
     search_direction: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解备择假设下的率
@@ -496,8 +512,11 @@ def solve_for_proportion(
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
         search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        dropout_rate (float, optional): 脱落率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
+
+    size = round(size)  # 将输入的样本量提前进行四舍五入
 
     model = OneProportion.ForProportion(
         size=Size(size),
@@ -507,6 +526,7 @@ def solve_for_proportion(
         alternative=Alternative[alternative],
         test_type=TestType[test_type],
         search_direction=SearchDirection[search_direction],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
     if full_output:

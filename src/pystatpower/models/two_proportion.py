@@ -1,12 +1,14 @@
 """两独立样本差异性检验"""
 
 from enum import Enum, Flag, auto, unique
-from math import sqrt
+from math import ceil, sqrt
 
 from scipy.stats import norm
 from scipy.optimize import brentq
 
-from pystatpower.basic import Alpha, Interval, Percent, Power, PowerAnalysisOption, Proportion, Ratio, Size
+from pystatpower.numeric import Alpha, DropOutRate, DropOutSize, Interval, Percent, Power, Proportion, Ratio, Size
+from pystatpower.option import Alternative, Option, SearchDirection
+
 
 __all__ = [
     "GroupAllocation",
@@ -19,7 +21,7 @@ __all__ = [
 
 
 @unique
-class Target(Enum, metaclass=PowerAnalysisOption):
+class Target(Enum, metaclass=Option):
     """求解目标
 
     Attributes
@@ -44,23 +46,7 @@ class Target(Enum, metaclass=PowerAnalysisOption):
 
 
 @unique
-class Alternative(Enum, metaclass=PowerAnalysisOption):
-    """备择假设类型
-
-    Attributes
-    ----------
-        TWO_SIDED : (int)
-            双侧检验
-        ONE_SIDED : (int)
-            单侧检验
-    """
-
-    TWO_SIDED = 1
-    ONE_SIDED = 2
-
-
-@unique
-class TestType(Enum, metaclass=PowerAnalysisOption):
+class TestType(Enum, metaclass=Option):
     """检验类型
 
     Attributes
@@ -81,23 +67,7 @@ class TestType(Enum, metaclass=PowerAnalysisOption):
     Z_TEST_CC_UNPOOLED = 4
 
 
-@unique
-class SearchDirection(Enum, metaclass=PowerAnalysisOption):
-    """搜索方向
-
-    Attributes
-    ----------
-        LESS : (int)
-            向下搜索
-        GREATER : (int)
-            向上搜索
-    """
-
-    LESS = 1
-    GREATER = 2
-
-
-class GroupAllocationOption(Flag, metaclass=PowerAnalysisOption):
+class GroupAllocationOption(Flag, metaclass=Option):
     """样本量分配类型（求解目标：样本量）
 
     Attributes
@@ -533,6 +503,7 @@ class TwoProportion:
             alternative: Alternative,
             test_type: TestType,
             group_allocation: GroupAllocationForSize,
+            dropout_rate: DropOutRate,
         ):
             self.alpha = alpha
             self.power = power
@@ -541,6 +512,7 @@ class TwoProportion:
             self.alternative = alternative
             self.test_type = test_type
             self.group_allocation = group_allocation
+            self.dropout_rate = dropout_rate
 
         def solve(self):
             self._eval = (
@@ -561,8 +533,14 @@ class TwoProportion:
                 n = brentq(self._eval, lbound, ubound)
             except ValueError as e:
                 raise ValueError("无解") from e
-            self.treatment_size = Size(self.group_allocation.treatment_size_formula(n))
-            self.reference_size = Size(self.group_allocation.reference_size_formula(n))
+
+            self.treatment_size = Size(ceil(self.group_allocation.treatment_size_formula(n)))
+            self.reference_size = Size(ceil(self.group_allocation.reference_size_formula(n)))
+
+            self.treatment_size_include_dropouts = Size(ceil(self.treatment_size / (1 - self.dropout_rate)))
+            self.reference_size_include_dropouts = Size(ceil(self.reference_size / (1 - self.dropout_rate)))
+            self.treatment_dropouts = DropOutSize(self.treatment_size_include_dropouts - self.treatment_size)
+            self.reference_dropouts = DropOutSize(self.reference_size_include_dropouts - self.reference_size)
 
     class ForAlpha:
         """两独立样本差异性功效分析模型（求解目标: 显著性水平）"""
@@ -575,6 +553,7 @@ class TwoProportion:
             alternative: Alternative,
             test_type: TestType,
             group_allocation: GroupAllocationForAlpha,
+            dropout_rate: DropOutRate,
         ):
             self.power = power
             self.treatment_proportion = treatment_proportion
@@ -582,6 +561,7 @@ class TwoProportion:
             self.alternative = alternative
             self.test_type = test_type
             self.group_allocation = group_allocation
+            self.dropout_rate = dropout_rate
 
         def solve(self):
             self._eval = (
@@ -602,9 +582,16 @@ class TwoProportion:
                 alpha = brentq(self._eval, lbound, ubound)
             except ValueError as e:  # pragma: no cover
                 raise ValueError("无解") from e
+
             self.alpha = Alpha(alpha)
-            self.treatment_size = Size(self.group_allocation.treatment_size_formula())
-            self.reference_size = Size(self.group_allocation.reference_size_formula())
+
+            self.treatment_size = Size(ceil(self.group_allocation.treatment_size_formula()))
+            self.reference_size = Size(ceil(self.group_allocation.reference_size_formula()))
+
+            self.treatment_size_include_dropouts = Size(ceil(self.treatment_size / (1 - self.dropout_rate)))
+            self.reference_size_include_dropouts = Size(ceil(self.reference_size / (1 - self.dropout_rate)))
+            self.treatment_dropouts = DropOutSize(self.treatment_size_include_dropouts - self.treatment_size)
+            self.reference_dropouts = DropOutSize(self.reference_size_include_dropouts - self.reference_size)
 
     class ForPower:
         """两独立样本差异性功效分析模型（求解目标: 检验效能）"""
@@ -617,6 +604,7 @@ class TwoProportion:
             alternative: Alternative,
             test_type: TestType,
             group_allocation: GroupAllocationForPower,
+            dropout_rate: DropOutRate,
         ):
             self.alpha = alpha
             self.treatment_proportion = treatment_proportion
@@ -624,6 +612,7 @@ class TwoProportion:
             self.alternative = alternative
             self.test_type = test_type
             self.group_allocation = group_allocation
+            self.dropout_rate = dropout_rate
 
         def solve(self):
             power = fun_power(
@@ -635,9 +624,16 @@ class TwoProportion:
                 self.alternative,
                 self.test_type,
             )
+
             self.power = Power(power)
-            self.treatment_size = Size(self.group_allocation.treatment_size_formula())
-            self.reference_size = Size(self.group_allocation.reference_size_formula())
+
+            self.treatment_size = Size(ceil(self.group_allocation.treatment_size_formula()))
+            self.reference_size = Size(ceil(self.group_allocation.reference_size_formula()))
+
+            self.treatment_size_include_dropouts = Size(ceil(self.treatment_size / (1 - self.dropout_rate)))
+            self.reference_size_include_dropouts = Size(ceil(self.reference_size / (1 - self.dropout_rate)))
+            self.treatment_dropouts = DropOutSize(self.treatment_size_include_dropouts - self.treatment_size)
+            self.reference_dropouts = DropOutSize(self.reference_size_include_dropouts - self.reference_size)
 
     class ForTreatmentProportion:
         """两独立样本差异性功效分析模型（求解目标: 试验组的率）"""
@@ -651,6 +647,7 @@ class TwoProportion:
             test_type: TestType,
             group_allocation: GroupAllocationForTreatmentProportion,
             search_direction: SearchDirection,
+            dropout_rate: DropOutRate,
         ):
             self.alpha = alpha
             self.power = power
@@ -659,6 +656,7 @@ class TwoProportion:
             self.test_type = test_type
             self.group_allocation = group_allocation
             self.search_direction = search_direction
+            self.dropout_rate = dropout_rate
 
         def solve(self):
             self._eval = (
@@ -691,8 +689,14 @@ class TwoProportion:
                     assert False, "未知的搜索方向"
 
             self.treatment_proportion = Proportion(treatment_proportion)
-            self.treatment_size = Size(self.group_allocation.treatment_size_formula())
-            self.reference_size = Size(self.group_allocation.reference_size_formula())
+
+            self.treatment_size = Size(ceil(self.group_allocation.treatment_size_formula()))
+            self.reference_size = Size(ceil(self.group_allocation.reference_size_formula()))
+
+            self.treatment_size_include_dropouts = Size(ceil(self.treatment_size / (1 - self.dropout_rate)))
+            self.reference_size_include_dropouts = Size(ceil(self.reference_size / (1 - self.dropout_rate)))
+            self.treatment_dropouts = DropOutSize(self.treatment_size_include_dropouts - self.treatment_size)
+            self.reference_dropouts = DropOutSize(self.reference_size_include_dropouts - self.reference_size)
 
     class ForReferenceProportion:
         """两独立样本差异性功效分析模型（求解目标: 对照组的率）"""
@@ -706,6 +710,7 @@ class TwoProportion:
             test_type: TestType,
             group_allocation: GroupAllocationForReferenceProportion,
             search_direction: SearchDirection,
+            dropout_rate: DropOutRate,
         ):
             self.alpha = alpha
             self.power = power
@@ -714,6 +719,7 @@ class TwoProportion:
             self.test_type = test_type
             self.group_allocation = group_allocation
             self.search_direction = search_direction
+            self.dropout_rate = dropout_rate
 
         def solve(self):
             self._eval = (
@@ -743,9 +749,16 @@ class TwoProportion:
                         raise ValueError("无解") from e
                 case _:  # pragma: no cover
                     assert False, "未知的搜索方向"
+
             self.reference_proportion = Proportion(reference_proportion)
-            self.treatment_size = Size(self.group_allocation.treatment_size_formula())
-            self.reference_size = Size(self.group_allocation.reference_size_formula())
+
+            self.treatment_size = Size(ceil(self.group_allocation.treatment_size_formula()))
+            self.reference_size = Size(ceil(self.group_allocation.reference_size_formula()))
+
+            self.treatment_size_include_dropouts = Size(ceil(self.treatment_size / (1 - self.dropout_rate)))
+            self.reference_size_include_dropouts = Size(ceil(self.reference_size / (1 - self.dropout_rate)))
+            self.treatment_dropouts = DropOutSize(self.treatment_size_include_dropouts - self.treatment_size)
+            self.reference_dropouts = DropOutSize(self.reference_size_include_dropouts - self.reference_size)
 
 
 def solve_for_sample_size(
@@ -756,6 +769,7 @@ def solve_for_sample_size(
     alternative: str,
     test_type: str,
     group_allocation: GroupAllocation = GroupAllocation(),
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解样本量
@@ -768,6 +782,7 @@ def solve_for_sample_size(
         alternative (str): 备择假设类型
         test_type (str): 检验类型
         group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式。默认值: GroupAllocation.ForSize(GroupAllocationOption.EQUAL)
+        dropout_rate (float, optional): 退出率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -779,6 +794,7 @@ def solve_for_sample_size(
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
         group_allocation=group_allocation.get_group_allocation_for_target(Target.SIZE),
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -794,6 +810,7 @@ def solve_for_alpha(
     alternative: str,
     test_type: str,
     group_allocation: GroupAllocation,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解显著性水平
@@ -805,6 +822,7 @@ def solve_for_alpha(
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
         group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        dropout_rate (float, optional): 退出率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -815,6 +833,7 @@ def solve_for_alpha(
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
         group_allocation=group_allocation.get_group_allocation_for_target(Target.ALPHA),
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -830,6 +849,7 @@ def solve_for_power(
     alternative: str,
     test_type: str,
     group_allocation: GroupAllocation,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解检验效能
@@ -841,6 +861,7 @@ def solve_for_power(
         alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
         test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
         group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
+        dropout_rate (float, optional): 退出率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -851,6 +872,7 @@ def solve_for_power(
         treatment_proportion=Proportion(treatment_proportion),
         reference_proportion=Proportion(reference_proportion),
         group_allocation=group_allocation.get_group_allocation_for_target(Target.POWER),
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -867,6 +889,7 @@ def solve_for_treatment_proportion(
     test_type: str,
     group_allocation: GroupAllocation,
     search_direction: SearchDirection,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解试验组的率
@@ -879,6 +902,7 @@ def solve_for_treatment_proportion(
         test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
         group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
         search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        dropout_rate (float, optional): 退出率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -890,6 +914,7 @@ def solve_for_treatment_proportion(
         reference_proportion=Proportion(reference_proportion),
         group_allocation=group_allocation.get_group_allocation_for_target(Target.TREATMENT_PROPORTION),
         search_direction=SearchDirection[search_direction],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
@@ -906,6 +931,7 @@ def solve_for_reference_proportion(
     test_type: str,
     group_allocation: GroupAllocation,
     search_direction: str,
+    dropout_rate: float = 0,
     full_output: bool = False,
 ):
     """求解对照组的率
@@ -918,6 +944,7 @@ def solve_for_reference_proportion(
         test_type (str): 检验类型，可选值: "Z_TEST_POOLED", "Z_TEST_UNPOOLED", "Z_TEST_CC_POOLED", "Z_TEST_CC_UNPOOLED"
         group_allocation (GroupAllocation.ForSize, optional): 样本量分配模式
         search_direction (str): 搜索方向，可选值: "LESS", "GREATER"
+        dropout_rate (float, optional): 退出率。默认值: 0
         full_output (bool, optional): 是否输出完整结果。默认值: False
     """
 
@@ -929,6 +956,7 @@ def solve_for_reference_proportion(
         treatment_proportion=Proportion(treatment_proportion),
         group_allocation=group_allocation.get_group_allocation_for_target(Target.REFERENCE_PROPORTION),
         search_direction=SearchDirection[search_direction],
+        dropout_rate=DropOutRate(dropout_rate),
     )
     model.solve()
 
