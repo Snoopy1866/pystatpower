@@ -34,14 +34,15 @@ description = "A Power Analysis Toolkit for Python"
 license = { text = "GPL-3.0" }
 requires-python = ">=3.10"
 authors = [
-    { name = "Snoopy1866", email = "openpower2024@gmail.com" }
+    { name = "Snoopy1866", email = "pystatpower@gmail.com" }
 ]
 keywords = [
-    "power",
-    "power-analysis",
-    "sample-size",
     "mathematics",
-    "statistics"
+    "statistics",
+    "power analysis",
+    "sample size",
+    "power",
+    "hypothesis"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
