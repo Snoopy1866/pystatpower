@@ -16,7 +16,8 @@ line-length = 120
 target-version = [
     "py310",
     "py311",
-    "py312"
+    "py312",
+    "py313"
 ]
 required-version = "24"
 
@@ -52,6 +53,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Mathematics"
 ]
 dependencies = [
