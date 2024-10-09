@@ -29,7 +29,7 @@ class Interval:
     (0, 0.9999999999)
     """
 
-    lower: int | float
+    lower: int |float
     upper: int | float
     lower_inclusive: bool = False
     upper_inclusive: bool = False
