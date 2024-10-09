@@ -12,6 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: psf/black@stable
+        with:
+          fetch-depth: 0
+
+      - name: Black checking
+        uses: psf/black@stable
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           options: "--check --diff --color --verbose"
+
+      - name: Black formatting
+        uses: psf/black@stable
+        if: github.event_name == 'pull_request'
+        with:
+          options: "--color --verbose"
+
+      - name: Check for changes
+        id: check_changes
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff --exit-code || echo "::set-output name=changes::true"
+
+      - name: Commit changes
+        if: github.event_name == 'pull_request' && steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Apply black formatting" || echo "No changes to commit"
+
+      - name: Push changes
+        if: github.event_name == 'pull_request' && steps.check_changes.outputs.changes == 'true'
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
