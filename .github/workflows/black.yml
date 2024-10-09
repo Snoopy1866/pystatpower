@@ -15,7 +15,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: psf/black@stable
+      - name: Black checking
+        uses: psf/black@stable
+        if: github.event_name == 'main'
+        with:
+          options: "--check --diff --color --verbose"
+
+      - name: Black formatting
+        uses: psf/black@stable
+        if: github.event_name == 'pull_request'
         with:
           options: "--color --verbose"
 
