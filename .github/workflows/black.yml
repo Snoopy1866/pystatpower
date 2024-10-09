@@ -17,7 +17,7 @@ jobs:
 
       - name: Black checking
         uses: psf/black@stable
-        if: github.event_name == 'main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           options: "--check --diff --color --verbose"
 
