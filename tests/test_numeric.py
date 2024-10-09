@@ -68,6 +68,8 @@ class TestNumeric:
 
         with pytest.raises(TypeError):
             PowerAnalysisFloat("0.5")
+        with pytest.raises(ValueError):
+            PowerAnalysisFloat(-MAX_FLOAT - 1)
 
     def test_pseudo_domain(self):
         assert PowerAnalysisFloat.pseudo_bound() == (-MAX_FLOAT, MAX_FLOAT)
