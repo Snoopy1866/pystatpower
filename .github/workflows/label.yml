@@ -28,11 +28,17 @@ jobs:
             const number = isIssue ? payload.issue.number : payload.pull_request.number;
             const labels = [];
 
+            console.log(`Event type: ${isIssue ? 'Issue' : 'Pull Request'}`);
+            console.log(`Title: ${title}`);
+            console.log(`Number: ${number}`);
+
             // 获取仓库中的所有标签
             const repoLabels = await github.paginate(github.issues.listLabelsForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo
             });
+
+            console.log('Repository labels:', repoLabels);
 
             // 遍历仓库中的标签，根据标题添加标签
             for (const label of repoLabels) {
@@ -41,6 +47,8 @@ jobs:
               }
             }
 
+            console.log('Labels to add:', labels);
+
             if (labels.length > 0) {
               await github.issues.addLabels({
                 owner: context.repo.owner,
@@ -48,4 +56,7 @@ jobs:
                 issue_number: number,
                 labels: labels
               });
+              console.log('Labels added successfully');
+            } else {
+              console.log('No labels to add');
             }
