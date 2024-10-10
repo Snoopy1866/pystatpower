@@ -17,11 +17,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      pull-requests: write
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install @octokit/rest
+
       - name: Label issues and pull requests based on title
         uses: actions/github-script@v7
         with:
           script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
             const payload = context.payload;
             const isIssue = !!payload.issue;
             const title = isIssue ? payload.issue.title : payload.pull_request.title;
@@ -33,7 +45,7 @@ jobs:
             console.log(`Number: ${number}`);
 
             // 获取仓库中的所有标签
-            const repoLabels = await github.paginate(github.issues.listLabelsForRepo, {
+            const repoLabels = await octokit.paginate(octokit.issues.listLabelsForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo
             });
@@ -50,7 +62,7 @@ jobs:
             console.log('Labels to add:', labels);
 
             if (labels.length > 0) {
-              await github.issues.addLabels({
+              await octokit.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: number,
