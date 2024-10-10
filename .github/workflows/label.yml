@@ -6,6 +6,11 @@ on:
       - opened
       - reopened
       - edited
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
 
 jobs:
   label_issue:
