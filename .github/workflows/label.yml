@@ -31,7 +31,9 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { Octokit } = require("@octokit/rest");
+            import { Octokit } from '@octokit/rest';
+            import { context } from '@actions/github';
+
             const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
             const payload = context.payload;
