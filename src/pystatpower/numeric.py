@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from math import ceil, floor, isclose, trunc
+from math import isclose
 
 MIN_FLOAT: float = 1e-10
 MAX_FLOAT: float = 1e10
@@ -94,269 +94,83 @@ class Interval:
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
 
-class Numeric:
+class PowerAnalysisFloat(float):
     """自定义功效分析数值类型"""
 
-    _domain = Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
+    domain = Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
-    def __new__(cls, value):
-        if value is None:
+    def __new__(cls, obj):
+        if isinstance(obj, (int, float)):
+            if obj not in cls.domain:
+                raise ValueError(f"{obj} is not in {cls.domain}.")
+            return super().__new__(cls, obj)
+        elif obj is None:
             return None
-        if isinstance(value, Numeric):
-            return cls(value._value)
-
-        if not isinstance(value, (int, float)):
-            raise TypeError(f"{value} is not an int or float number.")
-        if value not in cls._domain:
-            raise ValueError(f"{value} is not in {cls._domain}.")
-
-        return super().__new__(cls)
-
-    def __init__(self, value):
-        if isinstance(value, (int, float)):
-            self._value = value
+        else:
+            raise TypeError(f"{obj} must be either an int, float, or None.")
 
     @classmethod
     def pseudo_bound(cls) -> tuple[float, float]:
         """伪区间，用于数值计算。"""
 
-        return cls._domain.pseudo_bound()
-
-    def __repr__(self):
-        return f"{type(self).__name__}({self._value})"
-
-    def __add__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value + other
-        if isinstance(other, Numeric):
-            return self._value + other._value
-        return NotImplemented
-
-    def __sub__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value - other
-        if isinstance(other, Numeric):
-            return self._value - other._value
-        return NotImplemented
-
-    def __mul__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value * other
-        if isinstance(other, Numeric):
-            return self._value * other._value
-        return NotImplemented
-
-    def __truediv__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value / other
-        if isinstance(other, Numeric):
-            return self._value / other._value
-        return NotImplemented
-
-    def __floordiv__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value // other
-        if isinstance(other, Numeric):
-            return self._value // other._value
-        return NotImplemented
-
-    def __mod__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value % other
-        if isinstance(other, Numeric):
-            return self._value % other._value
-        return NotImplemented
-
-    def __pow__(self, other, modulo=None):
-        if isinstance(other, (int, float)):
-            return pow(self._value, other, modulo)
-        if isinstance(other, Numeric):
-            return pow(self._value, other._value, modulo)
-        return NotImplemented
-
-    def __radd__(self, other):
-        if isinstance(other, (int, float)):
-            return other + self._value
-        if isinstance(other, Numeric):
-            return other._value + self._value
-        return NotImplemented
-
-    def __rsub__(self, other):
-        if isinstance(other, (int, float)):
-            return other - self._value
-        if isinstance(other, Numeric):
-            return other._value - self._value
-        return NotImplemented
-
-    def __rmul__(self, other):
-        if isinstance(other, (int, float)):
-            return other * self._value
-        if isinstance(other, Numeric):
-            return other._value * self._value
-        return NotImplemented
-
-    def __rtruediv__(self, other):
-        if isinstance(other, (int, float)):
-            return other / self._value
-        if isinstance(other, Numeric):
-            return other._value / self._value
-        return NotImplemented
-
-    def __rfloordiv__(self, other):
-        if isinstance(other, (int, float)):
-            return other // self._value
-        if isinstance(other, Numeric):
-            return other._value // self._value
-        return NotImplemented
-
-    def __rmod__(self, other):
-        if isinstance(other, (int, float)):
-            return other % self._value
-        if isinstance(other, Numeric):
-            return other._value % self._value
-        return NotImplemented
-
-    def __rpow__(self, base, modulo=None):
-        if isinstance(base, (int, float)):
-            return pow(base, self._value, modulo)
-        if isinstance(base, Numeric):
-            return pow(base._value, self._value, modulo)
-        return NotImplemented
-
-    def __neg__(self):
-        return -self._value
-
-    def __pos__(self):
-        return +self._value
-
-    def __abs__(self):
-        return abs(self._value)
-
-    def __complex__(self):
-        return complex(self._value)
-
-    def __int__(self):
-        return int(self._value)
-
-    def __float__(self):
-        return float(self._value)
-
-    def __round__(self, ndigits=None):
-        return round(self._value, ndigits)
-
-    def __trunc__(self):
-        return trunc(self._value)
-
-    def __floor__(self):
-        return floor(self._value)
-
-    def __ceil__(self):
-        return ceil(self._value)
-
-    def __lt__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value < other
-        if isinstance(other, Numeric):
-            return self._value < other._value
-        raise TypeError(f"{type(self)}.__lt__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __le__(self, other):
-        if isinstance(other, (int, float)):
-            return self._value <= other
-        if isinstance(other, Numeric):
-            return self._value <= other._value
-        raise TypeError(f"{type(self)}.__le__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __eq__(self, other) -> bool:
-        if isinstance(other, (int, float)):
-            return self._value == other
-        if isinstance(other, Numeric):
-            return self._value == other._value
-        raise TypeError(f"{type(self)}.__eq__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __ne__(self, other) -> bool:
-        if isinstance(other, (int, float)):
-            return self._value != other
-        if isinstance(other, Numeric):
-            return self._value != other._value
-        raise TypeError(f"{type(self)}.__ne__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __gt__(self, other) -> bool:
-        if isinstance(other, (int, float)):
-            return self._value > other
-        if isinstance(other, Numeric):
-            return self._value > other._value
-        raise TypeError(f"{type(self)}.__gt__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __ge__(self, other) -> bool:
-        if isinstance(other, (int, float)):
-            return self._value >= other
-        if isinstance(other, Numeric):
-            return self._value >= other._value
-        raise TypeError(f"{type(self)}.__ge__ only supports float numbers, but you passed in a {type(other)}.")
-
-    def __hash__(self):
-        return hash(self._value)
-
-    def __bool__(self):
-        return bool(self._value)
+        return cls.domain.pseudo_bound()
 
 
-class Alpha(Numeric):
+class Alpha(PowerAnalysisFloat):
     """显著性水平"""
 
-    _domain = Interval(0, 1)
+    domain = Interval(0, 1)
 
 
-class Power(Numeric):
+class Power(PowerAnalysisFloat):
     """检验效能"""
 
-    _domain = Interval(0, 1)
+    domain = Interval(0, 1)
 
 
-class Mean(Numeric):
+class Mean(PowerAnalysisFloat):
     """均值"""
 
-    _domain = Interval(-MAX_FLOAT, MAX_FLOAT)
+    domain = Interval(-MAX_FLOAT, MAX_FLOAT)
 
 
-class STD(Numeric):
+class STD(PowerAnalysisFloat):
     """标准差"""
 
-    _domain = Interval(0, MAX_FLOAT)
+    domain = Interval(0, MAX_FLOAT)
 
 
-class Proportion(Numeric):
+class Proportion(PowerAnalysisFloat):
     """率"""
 
-    _domain = Interval(0, 1)
+    domain = Interval(0, 1)
 
 
-class Percent(Numeric):
+class Percent(PowerAnalysisFloat):
     """百分比"""
 
-    _domain = Interval(0, 1)
+    domain = Interval(0, 1)
 
 
-class Ratio(Numeric):
+class Ratio(PowerAnalysisFloat):
     """比例"""
 
-    _domain = Interval(0, MAX_FLOAT)
+    domain = Interval(0, MAX_FLOAT)
 
 
-class Size(Numeric):
+class Size(PowerAnalysisFloat):
     """样本量"""
 
-    _domain = Interval(0, MAX_FLOAT)
+    domain = Interval(0, MAX_FLOAT)
 
 
-class DropOutRate(Numeric):
+class DropOutRate(PowerAnalysisFloat):
     """脱落率"""
 
-    _domain = Interval(0, 1, lower_inclusive=True)
+    domain = Interval(0, 1, lower_inclusive=True)
 
 
-class DropOutSize(Numeric):
+class DropOutSize(PowerAnalysisFloat):
     """脱落样本量"""
 
-    _domain = Interval(0, MAX_FLOAT, lower_inclusive=True)
+    domain = Interval(0, MAX_FLOAT, lower_inclusive=True)
