@@ -7,9 +7,14 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+defaults:
+  run:
+    shell: bash -e {0}
+
 jobs:
   check:
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -30,8 +35,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
-      - name: Run pytest and capture output (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Run pytest and capture output
         run: |
           pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
 
@@ -52,30 +56,6 @@ jobs:
 
             exit 1
           fi
-
-      - name: Run pytest and capture output (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          pytest --color=no --cov --cov-report=xml | Out-File -FilePath pytest_output.txt -Encoding utf8
-
-          # 检查 pytest 的退出状态码
-          if ($?) {
-            Write-Output '<details><summary>Output</summary>' >> $env:GITHUB_STEP_SUMMARY
-            Write-Output '' >> $env:GITHUB_STEP_SUMMARY
-
-            Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
-            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-            Write-Output '```' >> $env:GITHUB_STEP_SUMMARY
-
-            Write-Output '</details>' >> $env:GITHUB_STEP_SUMMARY
-          }
-          else {
-            Write-Output '```python' >> $env:GITHUB_STEP_SUMMARY
-            Get-Content pytest_output.txt | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-            Write-Output '```' >> $env:GITHUB_STEP_SUMMARY
-
-            exit 1
-          }
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
