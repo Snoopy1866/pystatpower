@@ -67,7 +67,7 @@ class TestInterval:
 
     def test_pseudo_ubound(self):
         assert Interval(0, 1).pseudo_ubound() == 1 - 1e-10
-        assert Interval(0, 1, upper_inclusive=True).pseudo_ubound() == 2
+        assert Interval(0, 1, upper_inclusive=True).pseudo_ubound() == 1
 
     def test_pseudo_bound(self):
         assert Interval(0, 1).pseudo_bound() == (1e-10, 1 - 1e-10)
