@@ -37,7 +37,7 @@ jobs:
 
       - name: Run pytest and capture output
         run: |
-          pytest --color=no --cov --cov-report=xml | tee pytest_output.txt
+          pytest --cache-clear --color=no --cov --cov-report=xml | tee pytest_output.txt
 
           # 检查 pytest 的退出状态码
           if test ${PIPESTATUS[0]} -eq 0;  then
