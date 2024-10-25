@@ -6,59 +6,30 @@ from pystatpower.models import one_proportion
 
 
 class TestSolveForSampleSize:
-    params_list = [
-        # (expected_result, alpha, power, nullproportion, proportion, alternative, test_type)
-        (42, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST"),
-        (32, 0.05, 0.80, 0.80, 0.95, "ONE_SIDED", "EXACT_TEST"),
-        (42, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0"),
-        (49, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0_CC"),
-        (17, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT"),
-        (23, 0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT_CC"),
+    test_data = [
+        # (alpha, power, nullproportion, proportion, alternative, test_type, expected_result)
+        ((0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST"), 42),
+        ((0.05, 0.80, 0.80, 0.95, "ONE_SIDED", "EXACT_TEST"), 32),
+        ((0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0"), 42),
+        ((0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_P0_CC"), 49),
+        ((0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT"), 17),
+        ((0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_USING_S_PHAT_CC"), 23),
     ]
 
-    params_raise_error_list = [
-        # (expected_error, alpha, power, nullproportion, proportion, alternative, test_type)
-        (ValueError, 0.05, 0.80, 0.80, 0.80, "TWO_SIDED", "EXACT_TEST"),
+    test_data_raise_error = [
+        # (alpha, power, nullproportion, proportion, alternative, test_type, expected_error)
+        ((0.05, 0.80, 0.80, 0.80, "TWO_SIDED", "EXACT_TEST"), ValueError),
     ]
 
-    def test_solve(self):
-        for (
-            expected_result,
-            alpha,
-            power,
-            nullproportion,
-            proportion,
-            alternative,
-            test_type,
-        ) in TestSolveForSampleSize.params_list:
-            result = one_proportion.solve_for_sample_size(
-                alpha=alpha,
-                power=power,
-                nullproportion=nullproportion,
-                proportion=proportion,
-                alternative=alternative,
-                test_type=test_type,
-            )
-            assert ceil(result) == expected_result
+    @pytest.mark.parametrize(("params", "result"), test_data)
+    def test_solve(self, params, result):
+        result = one_proportion.solve_for_sample_size(*params)
+        assert ceil(result) == result
 
-        for (
-            expected_error,
-            alpha,
-            power,
-            nullproportion,
-            proportion,
-            alternative,
-            test_type,
-        ) in TestSolveForSampleSize.params_raise_error_list:
-            with pytest.raises(expected_error):
-                one_proportion.solve_for_sample_size(
-                    alpha=alpha,
-                    power=power,
-                    nullproportion=nullproportion,
-                    proportion=proportion,
-                    alternative=alternative,
-                    test_type=test_type,
-                )
+    @pytest.mark.parametrize(("params", "expected_error"), test_data_raise_error)
+    def test_solve_raise_error(self, params, expected_error):
+        with pytest.raises(expected_error):
+            one_proportion.solve_for_sample_size(*params)
 
     def test_solve_full_output(self):
         result = one_proportion.solve_for_sample_size(
