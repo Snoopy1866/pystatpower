@@ -1,31 +1,40 @@
 from dataclasses import dataclass
 from math import isclose
 
+#: The minimum meaningful float number.
 MIN_FLOAT: float = 1e-10
+
+#: The maximum meaningful float number.
 MAX_FLOAT: float = 1e10
 
 
 @dataclass(frozen=True)
 class Interval:
-    """定义一个区间，可指定是否包含上下限，不支持单点区间（例如：[1, 1]）。
+    """Dataclass of interval, single point (eg. [1, 1]) is not supported.
 
     Parameters
     ----------
-        lower (float): 区间下限
-        upper (float): 区间上限
-        lower_inclusive (bool): 是否包含区间下限
-        upper_inclusive (bool): 是否包含区间上限
+    lower : float
+        The lower bound of the interval.
+    upper : float
+        The upper bound of the interval.
+    lower_inclusive : bool
+        True to include the lower bound. False otherwise. Defaults to False.
+    upper_inclusive : bool
+        True to include the upper bound. False otherwise. Defaults to False.
 
     Examples
     --------
-    >>> interval = Interval(0, 1, lower_inclusive=True, upper_inclusive=False)
-    >>> 0.5 in interval
+    >>> itv= Interval(0, 1, lower_inclusive=True, upper_inclusive=False)
+    >>> itv
+    [0, 1)
+    >>> 0.5 in itv
     True
-    >>> 1 in interval
+    >>> 1 in itv
     False
-    >>> 0 in interval
+    >>> 0 in itv
     False
-    >>> interval.pseudo_bound()
+    >>> itv.pseudo_bound()
     (0, 0.9999999999)
     """
 
@@ -73,7 +82,18 @@ class Interval:
                 return f"({self.lower}, {self.upper})"
 
     def pseudo_lbound(self, eps: float = MIN_FLOAT) -> float:
-        """区间的伪下界，用于数值计算。"""
+        """Return the pseudo lower bound of the interval for numerical calculation.
+
+        Parameters
+        ----------
+        eps : float
+            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+
+        Returns
+        -------
+        float
+            The pseudo lower bound of the interval.
+        """
 
         if self.lower_inclusive:
             return self.lower
@@ -81,7 +101,18 @@ class Interval:
             return self.lower + eps
 
     def pseudo_ubound(self, eps: float = MIN_FLOAT) -> float:
-        """区间的伪上界，用于数值计算。"""
+        """Return the pseudo upper bound of the interval for numerical calculation.
+
+        Parameters
+        ----------
+        eps : float
+            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+
+        Returns
+        -------
+        float
+            The pseudo upper bound of the interval.
+        """
 
         if self.upper_inclusive:
             return self.upper
@@ -89,14 +120,42 @@ class Interval:
             return self.upper - eps
 
     def pseudo_bound(self, eps: float = MIN_FLOAT) -> tuple[float, float]:
-        """区间的伪上下界，用于数值计算。"""
+        """Return the pseudo two-bounds tuple for numerical calculation.
+
+        Parameters
+        ----------
+        eps : float
+            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+
+        Returns
+        -------
+        tuple[float, float]
+            The pseudo interval for numerical calculation.
+        """
 
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
 
 class PowerAnalysisFloat(float):
-    """自定义功效分析数值类型"""
+    """Base class for all numeric types in power analysis.
 
+    - if an `int` or `float` numeric is passed to create an instance, it will be checked if it is in the domain.
+      if not, a `ValueError` will be raised, else a new float object is returned, whose behaviour is the same as the built-in float object.
+    - if `None` is passed to create an instance, `None` will be returned.
+    - if any other type is passed to create an instance, a `TypeError` will be raised.
+
+    Examples
+    --------
+    >>> PowerAnalysisFloat(0.5)
+    0.5
+    >>> PowerAnalysisFloat(0.5) * PowerAnalysisFloat(0.5)
+    0.25
+    >>> isinstance(PowerAnalysisFloat(0.5), float)
+    True
+    """
+
+    #: An :class:`Interval` object that limits the range of values for a specific numerical type.
+    #: Tryting to create an instance with a value outside the domain will raise a ValueError.
     domain = Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
     def __new__(cls, obj):
@@ -111,66 +170,76 @@ class PowerAnalysisFloat(float):
 
     @classmethod
     def pseudo_bound(cls) -> tuple[float, float]:
-        """伪区间，用于数值计算。"""
+        """Return the pseudo two-bounds tuple for numerical calculation."""
 
         return cls.domain.pseudo_bound()
 
 
 class Alpha(PowerAnalysisFloat):
-    """显著性水平"""
+    """Significance level"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Power(PowerAnalysisFloat):
-    """检验效能"""
+    """Power"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Mean(PowerAnalysisFloat):
-    """均值"""
+    """Mean"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(-MAX_FLOAT, MAX_FLOAT)
 
 
 class STD(PowerAnalysisFloat):
-    """标准差"""
+    """Standard deviation"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class Proportion(PowerAnalysisFloat):
-    """率"""
+    """Proportion"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Percent(PowerAnalysisFloat):
-    """百分比"""
+    """Percent"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Ratio(PowerAnalysisFloat):
-    """比例"""
+    """Ratio"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class Size(PowerAnalysisFloat):
-    """样本量"""
+    """Sample size"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class DropOutRate(PowerAnalysisFloat):
-    """脱落率"""
+    """Dropout rate"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1, lower_inclusive=True)
 
 
 class DropOutSize(PowerAnalysisFloat):
-    """脱落样本量"""
+    """Dropout-inflated enrollment sample size"""
 
+    #: See :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT, lower_inclusive=True)

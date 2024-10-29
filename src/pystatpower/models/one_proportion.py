@@ -10,15 +10,6 @@ from pystatpower.numeric import Alpha, DropOutRate, DropOutSize, Interval, Power
 from pystatpower.option import Alternative, Option, SearchDirection
 
 
-__all__ = [
-    "solve_for_sample_size",
-    "solve_for_alpha",
-    "solve_for_power",
-    "solve_for_nullproportion",
-    "solve_for_proportion",
-]
-
-
 @unique
 class TestType(Enum, metaclass=Option):
     """检验类型枚举类。
@@ -336,17 +327,31 @@ def solve_for_sample_size(
     dropout_rate: float = 0,
     full_output: bool = False,
 ):
-    """求解样本量
+    """Calculate the sample size for one proportion test.
 
-    Args:
-        alpha (float): 显著性水平
-        power (float): 检验效能
-        nullproportion (float): 零假设下的率
-        proportion (float): 备择假设下的率
-        alternative (str): 备择假设类型，可选值: "TWO_SIDED", "ONE_SIDED"
-        test_type (str): 检验类型，可选值: "EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"
-        dropout_rate (float, optional): 脱落率。默认值: 0
-        full_output (bool, optional): 是否输出完整结果。默认值: False
+    Parameters
+    ----------
+    alpha : float
+        Significance level.
+    power : float
+        Power of the test.
+    nullproportion : float
+        The proportion under the null hypothesis.
+    proportion : float
+        The proportion under the alternative hypothesis.
+    alternative : {"TWO_SIDED", "ONE_SIDED"}
+        The type of alternative hypothesis.
+    test_type : {"EXACT_TEST", "Z_TEST_USING_S_P0", "Z_TEST_USING_S_P0_CC", "Z_TEST_USING_S_PHAT", "Z_TEST_USING_S_PHAT_CC"}
+        The type of statistical test.
+    dropout_rate : float, default=0
+        The dropout rate.
+    full_output : bool, default=False
+        Whether to return the full output.
+
+    Returns
+    -------
+    Size | OneProportion.ForSize
+        The sample size for one proportion test. If `full_output` is True, return a `OneProportion.ForSize` object.
     """
 
     model = OneProportion.ForSize(
