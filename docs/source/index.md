@@ -10,7 +10,6 @@ For further information, including instructions on how to install the package, p
 
 ```{toctree}
 :maxdepth: 1
-:caption:
 :hidden:
 
 quickstart

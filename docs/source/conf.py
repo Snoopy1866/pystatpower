@@ -22,18 +22,18 @@ version = release = pystatpower.__version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx_copybutton",
     "sphinx_issues",
+    "sphinx_tippy",
     "sphinx_togglebutton",
     "autodoc2",
     "myst_parser",
     "notfound.extension",
-    "sphinx_tippy",
 ]
 
 maximum_signature_line_length = 79
@@ -46,9 +46,9 @@ language = "en"
 nitpicky = True
 
 # -- Options for sphinx.ext.autodoc ------------------------------------------
-autoclass_content = "class"
-autodoc_class_signature = "mixed"
-autodoc_member_order = "bysource"
+# autoclass_content = "class"
+# autodoc_class_signature = "mixed"
+# autodoc_member_order = "bysource"
 
 # -- Options for sphinx.ext.napoleon -----------------------------------------
 napoleon_use_admonition_for_examples = True
@@ -80,11 +80,14 @@ autodoc2_output_dir = "api"
 
 # -- Options for myst_parser -------------------------------------------------
 myst_enable_extensions = [
+    "attrs_block",
+    "attrs_inline",
     "colon_fence",
     "dollarmath",
     "tasklist",
 ]
 myst_heading_anchors = 3
+myst_links_external_new_tab = True
 
 # --Options for sphinx_tippy -------------------------------------------------
 tippy_props = {
@@ -105,5 +108,7 @@ html_theme_options = {
     "use_issues_button": True,
     "use_edit_page_button": True,
     "use_download_button": True,
+    "use_source_button": True,
+    "announcement": "This project is under alpha development, APIs may change without notice.",
 }
-html_css_files = ["tippy.css"]
+html_css_files = ["css/tippy.css"]
