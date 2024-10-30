@@ -1,5 +1,5 @@
 # pystatpower.option
 
-```{literalinclude} ../../../src/pystatpower/option.py
+```{literalinclude} /../../src/pystatpower/option.py
 :linenos:
 ```

@@ -1,5 +1,5 @@
 # pystatpower.numeric
 
-```{literalinclude} ../../../src/pystatpower/numeric.py
+```{literalinclude} /../../src/pystatpower/numeric.py
 :linenos:
 ```
