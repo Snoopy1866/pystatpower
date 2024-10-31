@@ -1,27 +1,27 @@
 from dataclasses import dataclass
 from math import isclose
 
-#: The minimum meaningful float number.
+#: 对于数值计算有意义的最小浮点数。
 MIN_FLOAT: float = 1e-10
 
-#: The maximum meaningful float number.
+#: 对于数值计算有意义的最大浮点数。
 MAX_FLOAT: float = 1e10
 
 
 @dataclass(frozen=True)
 class Interval:
-    """Dataclass of interval, single point (eg. [1, 1]) is not supported.
+    """定义一个数值区间，不支持单点区间，例如：[1, 1]。
 
     Parameters
     ----------
-    lower : float
-        The lower bound of the interval.
-    upper : float
-        The upper bound of the interval.
+    lower : int | float
+        区间的下界。
+    upper : int | float
+        区间的上界。
     lower_inclusive : bool
-        True to include the lower bound. False otherwise. Defaults to False.
+        `True` 表示包含下界，`False` 表示不包含下界。默认为 `False`。
     upper_inclusive : bool
-        True to include the upper bound. False otherwise. Defaults to False.
+        `True` 表示包含上界，`False` 表示不包含上界。默认为 `False`。
 
     Examples
     --------
@@ -81,18 +81,18 @@ class Interval:
             else:
                 return f"({self.lower}, {self.upper})"
 
-    def pseudo_lbound(self, eps: float = MIN_FLOAT) -> float:
-        """Return the pseudo lower bound of the interval for numerical calculation.
+    def pseudo_lbound(self, eps: float = MIN_FLOAT) -> int | float:
+        """返回区间的伪下界，用于数值计算。
 
         Parameters
         ----------
         eps : float
-            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+            用于计算伪下界的 ε 。默认为 :const:`MIN_FLOAT`。
 
         Returns
         -------
-        float
-            The pseudo lower bound of the interval.
+        int | float
+            区间的伪下界。
         """
 
         if self.lower_inclusive:
@@ -100,18 +100,18 @@ class Interval:
         else:
             return self.lower + eps
 
-    def pseudo_ubound(self, eps: float = MIN_FLOAT) -> float:
-        """Return the pseudo upper bound of the interval for numerical calculation.
+    def pseudo_ubound(self, eps: float = MIN_FLOAT) -> int | float:
+        """返回区间的伪上界，用于数值计算。
 
         Parameters
         ----------
         eps : float
-            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+            用于计算伪上界的 ε 。默认为 :const:`MIN_FLOAT`。
 
         Returns
         -------
-        float
-            The pseudo upper bound of the interval.
+        int | float
+            区间的伪上界。
         """
 
         if self.upper_inclusive:
@@ -120,29 +120,29 @@ class Interval:
             return self.upper - eps
 
     def pseudo_bound(self, eps: float = MIN_FLOAT) -> tuple[float, float]:
-        """Return the pseudo two-bounds tuple for numerical calculation.
+        """返回区间的伪上、下界，用于数值计算。
 
         Parameters
         ----------
         eps : float
-            The epsilon used to calculate the pseudo bound. Defaults to `MIN_FLOAT`.
+            用于计算伪上、下界的 ε 。默认为 :const:`MIN_FLOAT`。
 
         Returns
         -------
         tuple[float, float]
-            The pseudo interval for numerical calculation.
+            区间的伪下界和伪上界。
         """
 
         return (self.pseudo_lbound(eps), self.pseudo_ubound(eps))
 
 
 class PowerAnalysisFloat(float):
-    """Base class for all numeric types in power analysis.
+    """功效分析数值类型的基类。
 
-    - if an `int` or `float` numeric is passed to create an instance, it will be checked if it is in the domain.
-      if not, a `ValueError` will be raised, else a new float object is returned, whose behaviour is the same as the built-in float object.
-    - if `None` is passed to create an instance, `None` will be returned.
-    - if any other type is passed to create an instance, a `TypeError` will be raised.
+    - 如果传递一个 `int` 或 `float` 数值来创建一个实例，将会检查它是否在定义域 :attr:`domain` 内。
+      如果不在，将会引发一个 `ValueError`，否则将返回一个新的浮点数对象，其行为与内置的浮点数对象相同。
+    - 如果传递 `None` 来创建一个实例，将会返回 `None`。
+    - 如果传递其他类型来创建一个实例，将会引发一个 `TypeError`。
 
     Examples
     --------
@@ -154,8 +154,7 @@ class PowerAnalysisFloat(float):
     True
     """
 
-    #: An :class:`Interval` object that limits the range of values for a specific numerical type.
-    #: Tryting to create an instance with a value outside the domain will raise a ValueError.
+    #: 一个 :class:`Interval` 对象，用于限制特定数值类型的取值范围。
     domain = Interval(-MAX_FLOAT, MAX_FLOAT, lower_inclusive=True, upper_inclusive=True)
 
     def __new__(cls, obj):
@@ -170,76 +169,82 @@ class PowerAnalysisFloat(float):
 
     @classmethod
     def pseudo_bound(cls) -> tuple[float, float]:
-        """Return the pseudo two-bounds tuple for numerical calculation."""
+        """
+        返回一个元祖，包含用于数值计算的伪上、下界。
+
+        See Also
+        --------
+        :func:`Interval.pseudo_bound`
+        """
 
         return cls.domain.pseudo_bound()
 
 
 class Alpha(PowerAnalysisFloat):
-    """Significance level"""
+    """显著性水平"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Power(PowerAnalysisFloat):
-    """Power"""
+    """检验效能"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Mean(PowerAnalysisFloat):
-    """Mean"""
+    """均值"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(-MAX_FLOAT, MAX_FLOAT)
 
 
 class STD(PowerAnalysisFloat):
-    """Standard deviation"""
+    """标准差"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class Proportion(PowerAnalysisFloat):
-    """Proportion"""
+    """率"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Percent(PowerAnalysisFloat):
-    """Percent"""
+    """百分比"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1)
 
 
 class Ratio(PowerAnalysisFloat):
-    """Ratio"""
+    """比值"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class Size(PowerAnalysisFloat):
-    """Sample size"""
+    """样本量"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT)
 
 
 class DropOutRate(PowerAnalysisFloat):
-    """Dropout rate"""
+    """脱落率"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, 1, lower_inclusive=True)
 
 
 class DropOutSize(PowerAnalysisFloat):
-    """Dropout-inflated enrollment sample size"""
+    """考虑脱落率后的样本量"""
 
-    #: See :attr:`PowerAnalysisFloat.domain`.
+    #: 参见 :attr:`PowerAnalysisFloat.domain`.
     domain = Interval(0, MAX_FLOAT, lower_inclusive=True)
