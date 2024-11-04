@@ -48,12 +48,13 @@ nitpicky = True
 
 # -- Options for sphinx.ext.autodoc ------------------------------------------
 autoclass_content = "class"
-autodoc_class_signature = "mixed"
+autodoc_class_signature = "separated"
 autodoc_member_order = "bysource"
 autodoc_default_options = {
     "members": None,
     "member-order": "bysource",
     "class-doc-from": "class",
+    "show-inheritance": None,
 }
 autodoc_docstring_signature = True
 autodoc_typehints = "none"
@@ -62,7 +63,7 @@ autodoc_type_aliases = {}
 autodoc_typehints_format = "short"
 autodoc_preserve_defaults = False
 autodoc_warningiserror = True
-autodoc_inherit_docstrings = True
+autodoc_inherit_docstrings = False
 
 # -- Options for sphinx.ext.intersphinx --------------------------------------
 intersphinx_mapping = {
@@ -89,6 +90,11 @@ napoleon_attr_annotations = True
 # -- Options for sphinx_ext_viewcode -----------------------------------------
 viewcode_follow_imported_members = True
 viewcode_line_numbers = True
+
+# -- Options for sphinx_copybutton -------------------------------------------
+copybutton_prompt_text = r">>> |\.\.\. "
+copybutton_prompt_is_regexp = True
+copybutton_line_continuation_character = "\\"
 
 # -- Options for sphinx_issues -----------------------------------------------
 issues_github_path = "PyStatPower/PyStatPower"
@@ -130,7 +136,6 @@ tippy_props = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_static_path = ["_static"]
-
 html_theme = "sphinx_book_theme"
 html_theme_options = {
     "repository_url": "https://github.com/PyStatPower/PyStatPower",
