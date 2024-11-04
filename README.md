@@ -16,22 +16,13 @@ PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
 主要功能：样本量和检验效能的计算，以及给定参数下估算所需效应量大小。
 
-[详细文档](https://pystatpower.github.io/PyStatPower-Docs)
-
-> [!WARNING]
-> 本项目处于 alpha 阶段，文档尚未完成。
-
 ## 安装
 
-```cmd
+```bash
 pip install pystatpower
 ```
 
 ## 示例
-
-### 计算样本量
-
-#### 单组样本率检验
 
 ```python
 from pystatpower.models import one_proportion
@@ -46,53 +37,6 @@ print(result)
 
 ```python
 Size(41.59499160228066)
-```
-
-#### 两独立样本率差异性检验
-
-```python
-from pystatpower.models import two_proportion
-
-result = two_proportion.solve_for_sample_size(
-    alpha=0.05,
-    power=0.80,
-    treatment_proportion=0.95,
-    reference_proportion=0.80,
-    alternative="two_sided",
-    test_type="z_test_pooled",
-)
-print(result)
-```
-
-输出：
-
-```python
-(Size(75.11862332120842), Size(75.11862332120842))
-```
-
-### 计算检验效能
-
-```python
-from pystatpower.models.two_proportion import solve_for_power, GroupAllocation
-
-result = solve_for_power(
-    alpha=0.05,
-    treatment_proportion=0.95,
-    reference_proportion=0.80,
-    alternative="two_sided",
-    test_type="z_test_pooled",
-    group_allocation=GroupAllocation(
-        size_of_treatment=100,
-        size_of_reference=50,
-    ),
-)
-print(result)
-```
-
-输出：
-
-```python
-Power(0.7865318578853373)
 ```
 
 ## 鸣谢
