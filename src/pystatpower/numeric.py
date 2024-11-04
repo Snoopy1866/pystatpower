@@ -170,7 +170,7 @@ class PowerAnalysisFloat(float):
     @classmethod
     def pseudo_bound(cls) -> tuple[float, float]:
         """
-        返回一个元祖，包含用于数值计算的伪上、下界。
+        返回一个元组，包含用于数值计算的伪上、下界。
 
         See Also
         --------
