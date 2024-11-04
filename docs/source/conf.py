@@ -42,7 +42,7 @@ maximum_signature_line_length = 79
 templates_path = ["_templates"]
 exclude_patterns = []
 
-language = "zh"
+language = "zh_CN"
 
 nitpicky = True
 

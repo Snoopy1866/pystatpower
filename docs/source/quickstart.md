@@ -1,98 +1,100 @@
-# Quickstart
+# 快速开始
 
-(usage/installation)=
+## 安装
 
-## Installation
+使用 PyStatPower 前，需要先安装 [Python 解释器](https://www.python.org/downloads/)，支持 3.10 及以上版本。
 
-To use PyStatPower, first install the [Python](https://www.python.org/downloads/) interpreter, version 3.10+ is supported.
-
-Then, you can install PyStatPower using pip:
+使用以下命令安装 pystatpower：
 
 ```bash
 pip install pystatpower
 ```
 
-To check is the PyStatPower is installed correctly, you can run the following code:
+安装完成后，运行以下命令检查是否正确安装：
 
 ```bash
 python -m pystatpower
 ```
 
-If you see the output similarily as below, the PyStatPower is installed correctly:
+你应当看到类似如下的版本号信息：
 
 ```bash
 pystatpower version 0.0.2
 ```
 
-## Examples
+## 示例
 
-PyStatPower provide many modules for power analysis under different scenarios. Here are some examples:
+pystatpower 提供了一些模块用于对不同假设检验场景下的分析，下面是一些具体的代码示例：
 
-1. **Solve for sample size under one proportion test**
+### 单样本率差异性检验
 
-   ```python
-   from pystatpower.models import one_proportion
+#### 估算样本量
 
-   result = one_proportion.solve_for_sample_size(
-       alpha=0.05,
-       power=0.80,
-       nullproportion=0.80,
-       proportion=0.95,
-       alternative="two_sided",
-       test_type="exact_test"
-   )
-   print(result)
-   ```
+```python
+from pystatpower.models import one_proportion
 
-   Output:
+result = one_proportion.solve_for_sample_size(
+    alpha=0.05,
+    power=0.80,
+    nullproportion=0.80,
+    proportion=0.95,
+    alternative="two_sided",
+    test_type="exact_test"
+)
+print(result)
+```
 
-   ```bash
-   42.0
-   ```
+输出:
 
-2. **Solve for sample size under two independent proportion test**
+```python
+42.0
+```
 
-   ```python
-   from pystatpower.models import two_proportion
+### 两独立样本率差异性检验
 
-   result = two_proportion.solve_for_sample_size(
-       alpha=0.05,
-       power=0.80,
-       treatment_proportion=0.95,
-       reference_proportion=0.80,
-       alternative="two_sided",
-       test_type="z_test_pooled",
-   )
-   print(result)
-   ```
+#### 估算样本量
 
-   Output:
+```python
+from pystatpower.models import two_proportion
 
-   ```bash
-   (76.0, 76.0)
-   ```
+result = two_proportion.solve_for_sample_size(
+    alpha=0.05,
+    power=0.80,
+    treatment_proportion=0.95,
+    reference_proportion=0.80,
+    alternative="two_sided",
+    test_type="z_test_pooled",
+)
+print(result)
+```
 
-3. **Solve for power under two independent proportion test**
+输出:
 
-   ```python
-   from pystatpower.models.two_proportion import solve_for_power, GroupAllocation
+```python
+(76.0, 76.0)
+```
 
-   result = solve_for_power(
-       alpha=0.05,
-       treatment_proportion=0.95,
-       reference_proportion=0.80,
-       alternative="two_sided",
-       test_type="z_test_pooled",
-       group_allocation=GroupAllocation(
-           size_of_treatment=100,
-           size_of_reference=50,
-       ),
-   )
-   print(result)
-   ```
+#### 计算检验效能
 
-   Output:
+```python
+from pystatpower.models.two_proportion import solve_for_power, GroupAllocation
 
-   ```bash
-   0.7865318578853373
-   ```
+result = solve_for_power(
+    alpha=0.05,
+    treatment_proportion=0.95,
+    reference_proportion=0.80,
+    alternative="two_sided",
+    test_type="z_test_pooled",
+    group_allocation=GroupAllocation(
+        size_of_treatment=100,
+        size_of_reference=50,
+    ),
+)
+print(result)
+```
+
+输出:
+
+```python
+0.7865318578853373
+```
