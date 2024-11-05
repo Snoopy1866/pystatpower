@@ -4,6 +4,10 @@
 # Required
 version: 2
 
+# Additional formats of the documentation to be built, apart from the default HTML.
+formats:
+  - pdf
+
 # Set the OS, Python version and other tools you might need
 build:
   os: ubuntu-22.04
