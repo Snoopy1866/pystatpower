@@ -1,13 +1,15 @@
 # PyStatPower
 
-[![build](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/release.yml?query=branch:main)
-[![test](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main&label=test)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
-[![lint](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/black.yml?branch=main&label=lint)](https://github.com/PyStatPower/PyStatPower/actions/workflows/black.yml?query=branch:main)
 [![PyPI - Version](https://img.shields.io/pypi/v/pystatpower)](https://badge.fury.io/py/pystatpower)
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FPyStatPower%2FPyStatPower%2Fmain%2Fpyproject.toml)
 ![GitHub License](https://img.shields.io/github/license/PyStatPower/PyStatPower)
 ![PyPI - Status](https://img.shields.io/pypi/status/PyStatPower)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/pystatpower)
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/release.yml?query=branch:main)
+[![Documentation Status](https://readthedocs.org/projects/pystatpower/badge/?version=latest)](https://pystatpower.readthedocs.io/zh-cn/latest/?badge=latest)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main&label=test)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
+[![Lint Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/black.yml?branch=main&label=lint)](https://github.com/PyStatPower/PyStatPower/actions/workflows/black.yml?query=branch:main)
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![codecov](https://codecov.io/gh/PyStatPower/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/PyStatPower/PyStatPower)
