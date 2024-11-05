@@ -18,3 +18,8 @@ repos:
     hooks:
       - id: black
         language_version: python3.13
+
+  - repo: https://github.com/opensource-nepal/commitlint
+    rev: v1.3.0
+    hooks:
+      - id: commitlint
