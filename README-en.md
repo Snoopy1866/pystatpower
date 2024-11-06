@@ -16,17 +16,17 @@
 
 [简体中文](README.md) | [English](README-en.md)
 
-PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
+PyStatPower is an open-source Python library focused on power analysis in the field of statistics.
 
-主要功能：样本量和检验效能的计算，以及给定参数下估算所需效应量大小。
+Main features: calculation of sample size and test power, and estimation of the required effect size
 
-## 安装
+## Installation
 
 ```bash
 pip install pystatpower
 ```
 
-## 示例
+## Example
 
 ```python
 from pystatpower.models import one_proportion
@@ -37,48 +37,41 @@ result = one_proportion.solve_for_sample_size(
 print(result)
 ```
 
-输出:
+Output:
 
 ```python
 Size(41.59499160228066)
 ```
 
-## 构建
+## Build
 
-1. 克隆本仓库
+1. Clone this repository
 
    ```bash
    git clone https://github.com/PyStatPower/PyStatPower.git
    ```
 
-2. 安装依赖
+2. Install dependencies
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. 安装 pre-commit
-
-   ```bash
-   pre-commit install
-   pre-commit install --hook-type commit-msg
-   ```
-
-4. 切换到文档目录
+3. Change to the documentation directory
 
    ```bash
    cd docs
    ```
 
-5. 构建文档
+4. Build the documentation
 
    ```bash
    make clean && make html
    ```
 
-你可以在 `docs/build/html` 目录下看到生成的文档，双击 `index.html` 即可在浏览器中查看。
+You can view the generated documentation in the `docs/build/html` directory by opening `index.html` in your browser.
 
-## 鸣谢
+## Acknowledgements
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)
