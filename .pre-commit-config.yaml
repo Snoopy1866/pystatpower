@@ -30,3 +30,4 @@ repos:
     rev: v1.3.0
     hooks:
       - id: commitlint
+
