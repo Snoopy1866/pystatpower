@@ -17,7 +17,7 @@ from pystatpower.numeric import (
     Ratio,
     Size,
 )
-from pystatpower.option import Alternative, Option, SearchDirection
+from pystatpower.option import    Alternative, Option, SearchDirection
 
 __all__ = [
     "GroupAllocation",
