@@ -15,7 +15,7 @@ from pystatpower.numeric import (
     Proportion,
     Size,
 )
-from pystatpower.option import Alternative, Option, SearchDirection
+from pystatpower.option import Alternative, Option,   SearchDirection
 
 
 @unique
