@@ -13,6 +13,7 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![codecov](https://codecov.io/gh/PyStatPower/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/PyStatPower/PyStatPower)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/PyStatPower/PyStatPower/main.svg)](https://results.pre-commit.ci/latest/github/PyStatPower/PyStatPower/main)
 
 [简体中文](README.md) | [English](README-en.md)
 
