@@ -9,6 +9,10 @@ pythonpath = ["src"]
 verbosity_test_cases = 2
 verbosity_assertions = 2
 
+# isort configuration
+[tool.isort]
+profile = "black"
+skip_gitignore = true
 
 # black configuration
 [tool.black]

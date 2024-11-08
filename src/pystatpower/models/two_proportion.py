@@ -3,12 +3,21 @@
 from enum import Enum, Flag, auto, unique
 from math import ceil, sqrt
 
-from scipy.stats import norm
 from scipy.optimize import brentq
+from scipy.stats import norm
 
-from pystatpower.numeric import Alpha, DropOutRate, DropOutSize, Interval, Percent, Power, Proportion, Ratio, Size
+from pystatpower.numeric import (
+    Alpha,
+    DropOutRate,
+    DropOutSize,
+    Interval,
+    Percent,
+    Power,
+    Proportion,
+    Ratio,
+    Size,
+)
 from pystatpower.option import Alternative, Option, SearchDirection
-
 
 __all__ = [
     "GroupAllocation",

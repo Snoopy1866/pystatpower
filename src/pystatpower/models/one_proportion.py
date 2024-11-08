@@ -3,10 +3,18 @@
 from enum import Enum, unique
 from math import ceil, sqrt
 
-from scipy.stats import norm
 from scipy.optimize import brentq
+from scipy.stats import norm
 
-from pystatpower.numeric import Alpha, DropOutRate, DropOutSize, Interval, Power, Proportion, Size
+from pystatpower.numeric import (
+    Alpha,
+    DropOutRate,
+    DropOutSize,
+    Interval,
+    Power,
+    Proportion,
+    Size,
+)
 from pystatpower.option import Alternative, Option, SearchDirection
 
 
