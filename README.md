@@ -54,7 +54,7 @@ Size(41.59499160228066)
 2. 安装依赖
 
    ```bash
-   pip install -r requirements.txt
+   pip install .[docs]
    ```
 
 3. 安装 pre-commit
@@ -73,7 +73,8 @@ Size(41.59499160228066)
 5. 构建文档
 
    ```bash
-   make clean && make html
+   make clean
+   make html
    ```
 
 你可以在 `docs/build/html` 目录下看到生成的文档，双击 `index.html` 即可在浏览器中查看。
