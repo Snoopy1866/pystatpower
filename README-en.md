@@ -54,7 +54,7 @@ Size(41.59499160228066)
 2. Install dependencies
 
    ```bash
-   pip install -r requirements.txt
+   pip install .[docs]
    ```
 
 3. Change to the documentation directory
@@ -66,7 +66,8 @@ Size(41.59499160228066)
 4. Build the documentation
 
    ```bash
-   make clean && make html
+   make clean
+   make html
    ```
 
 You can view the generated documentation in the `docs/build/html` directory by opening `index.html` in your browser.
