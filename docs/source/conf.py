@@ -2,7 +2,6 @@
 
 import os
 import sys
-
 import jieba
 
 sys.path.insert(0, os.path.abspath("../../src"))
