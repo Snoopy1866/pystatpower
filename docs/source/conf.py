@@ -3,6 +3,8 @@
 import os
 import sys
 
+import jieba
+
 sys.path.insert(0, os.path.abspath("../../src"))
 
 import pystatpower
@@ -60,9 +62,6 @@ html_theme_options = {
     "announcement": "本项目处于 alpha 阶段，API 可能随时更改。",
 }
 html_css_files = ["css/tippy.css"]
-
-import jieba
-
 html_search_language = "zh"
 html_search_options = {
     "dict": os.path.join(os.path.dirname(jieba.__file__), jieba.DEFAULT_DICT_NAME),

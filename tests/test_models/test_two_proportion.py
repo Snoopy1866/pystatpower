@@ -2,8 +2,15 @@ from math import ceil
 
 import pytest
 
-from pystatpower.models.two_proportion import *
-from pystatpower.models.two_proportion import TwoProportion
+from pystatpower.models.two_proportion import (
+    GroupAllocation,
+    TwoProportion,
+    solve_for_alpha,
+    solve_for_power,
+    solve_for_reference_proportion,
+    solve_for_sample_size,
+    solve_for_treatment_proportion,
+)
 
 
 class TestSolveForSampleSize:
