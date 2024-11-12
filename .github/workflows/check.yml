@@ -37,28 +37,15 @@ jobs:
 
       - name: Run pytest and capture output
         run: |
-          pytest --cache-clear --color=no --cov --cov-report=xml | tee pytest_output.txt
+          pytest --cov --junitxml=junit.xml -o junit_family=legacy
 
-          # 检查 pytest 的退出状态码
-          if test ${PIPESTATUS[0]} -eq 0;  then
-            echo '<details><summary>Output</summary>' >> $GITHUB_STEP_SUMMARY
-            echo '' >> $GITHUB_STEP_SUMMARY
-
-            echo '```python' >> $GITHUB_STEP_SUMMARY
-            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-
-            echo '</details>' >> $GITHUB_STEP_SUMMARY
-          else
-            echo '```python' >> $GITHUB_STEP_SUMMARY
-            cat pytest_output.txt >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-
-            exit 1
-          fi
-
-      - name: Upload results to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
           token: ${{ secrets.CODECOV_TOKEN }}
