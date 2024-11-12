@@ -11,7 +11,7 @@ coverage:
         threshold: 0%
         base: auto
 comment:
-  layout: "condensed_header, condensed_files, condensed_footer"
+  layout: "diff, files, header, footer"
   behavior: default
   require_changes: false
   require_base: false
