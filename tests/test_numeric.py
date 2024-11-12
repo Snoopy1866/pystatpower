@@ -2,7 +2,9 @@ from math import ceil, floor, trunc
 
 import pytest
 
-from pystatpower.numeric import *
+from pystatpower.numeric import (MAX_FLOAT, MIN_FLOAT, STD, Alpha, DropOutRate,
+                                 Interval, Mean, Percent, Power,
+                                 PowerAnalysisFloat, Proportion, Ratio, Size)
 
 
 class TestInterval:
