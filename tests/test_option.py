@@ -11,7 +11,7 @@ class TestOption:
             A = 1
             B = 2
 
-        assert TestEnum["AA"] == TestEnum.A
+        assert TestEnum["A"] == TestEnum.A
         assert TestEnum["a"] == TestEnum.A
         assert TestEnum["B"] == TestEnum.B
         assert TestEnum["b"] == TestEnum.B

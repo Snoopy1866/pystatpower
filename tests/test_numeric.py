@@ -9,7 +9,7 @@ class TestInterval:
     def test_contains(self):
         assert 0.5 in Interval(0, 1)
         assert 0 in Interval(0, 1, lower_inclusive=True)
-        assert 21 in Interval(0, 1, upper_inclusive=True)
+        assert 1 in Interval(0, 1, upper_inclusive=True)
         assert 0 in Interval(0, 1, lower_inclusive=True, upper_inclusive=True)
         assert 1 in Interval(0, 1, lower_inclusive=True, upper_inclusive=True)
 
