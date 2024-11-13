@@ -2,6 +2,12 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 fail_fast: false
+ci:
+  autofix_commit_msg: |
+    chore: auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autoupdate_commit_msg: "chore: pre-commit autoupdate"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
