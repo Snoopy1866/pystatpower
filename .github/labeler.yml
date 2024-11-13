@@ -1,13 +1,19 @@
-docs:
-  - "docs/**"
-  - "README.md"
-  - "README-*.md"
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "README.md"
+          - "README-*.md"
 
 tests:
-  - "tests/**"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"
 
 ci:
-  - ".github/**"
-  - ".pre-commit-config.yaml"
-  - ".readthedocs.yaml"
-  - "codedev.yml"
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - ".pre-commit-config.yaml"
+          - ".readthedocs.yaml"
+          - "codedev.yml"
