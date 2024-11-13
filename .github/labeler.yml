@@ -1,0 +1,13 @@
+docs:
+  - "docs/**"
+  - "README.md"
+  - "README-*.md"
+
+tests:
+  - "tests/**"
+
+ci:
+  - ".github/**"
+  - ".pre-commit-config.yaml"
+  - ".readthedocs.yaml"
+  - "codedev.yml"
