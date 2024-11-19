@@ -7,12 +7,14 @@
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/pystatpower)
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/release.yml?query=branch:main)
-[![Documentation Status](https://readthedocs.org/projects/pystatpower/badge/?version=latest)](https://pystatpower.readthedocs.io/zh-cn/latest/?badge=latest)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main&label=test)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
-
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Documentation Status](https://readthedocs.org/projects/pystatpower/badge/?version=latest)](https://pystatpower.readthedocs.io/zh-cn/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/PyStatPower/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/PyStatPower/PyStatPower)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/PyStatPower/PyStatPower/main.svg)](https://results.pre-commit.ci/latest/github/PyStatPower/PyStatPower/main)
+
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
+[![sphinx](https://img.shields.io/badge/logo-sphinx-blue?logo=sphinx&labelColor=5c5c5c&label=%20)](https://github.com/sphinx-doc/sphinx)
 
 [简体中文](README.md) | [English](README-en.md)
 
