@@ -19,7 +19,7 @@ python -m pystatpower
 你应当看到类似如下的版本号信息：
 
 ```bash
-pystatpower version 0.0.2
+pystatpower version x.y.z
 ```
 
 ## 示例
