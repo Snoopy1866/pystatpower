@@ -17,3 +17,7 @@ ci:
           - ".pre-commit-config.yaml"
           - ".readthedocs.yaml"
           - "codedev.yml"
+build:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/pystatpower/__init__.py"
