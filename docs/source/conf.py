@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 import pystatpower
 
 # -- Project information -----------------------------------------------------
-project = "PyStatPower"
+project = "pystatpower"
 author = "Snoopy1866"
 copyright = "%Y, Snoopy1866"
 version = release = pystatpower.__version__
@@ -51,7 +51,7 @@ templates_path = ["_templates"]
 html_static_path = ["_static"]
 html_theme = "sphinx_book_theme"
 html_theme_options = {
-    "repository_url": "https://github.com/Snoopy1866/PyStatPower",
+    "repository_url": "https://github.com/Snoopy1866/pystatpower",
     "repository_branch": "main",
     "path_to_docs": "docs/source",
     "use_repository_button": True,
@@ -128,7 +128,7 @@ copybutton_prompt_is_regexp = True
 copybutton_line_continuation_character = "\\"
 
 # sphinx_issues
-issues_github_path = "Snoopy1866/PyStatPower"
+issues_github_path = "Snoopy1866/pystatpower"
 
 # autodoc2
 autodoc2_packages = [
