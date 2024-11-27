@@ -1,7 +1,9 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - "*"
 
 jobs:
   build:
@@ -30,7 +32,7 @@ jobs:
       - name: Upload the distribution packages
         uses: actions/upload-artifact@v4
         with:
-          name: distribution
+          name: python-package-distributions
           path: dist/
 
   publish-to-pypi:
