@@ -56,11 +56,11 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/PyStatPower/PyStatPower"
-Documentation = "https://github.com/PyStatPower/PyStatPower/blob/main/README.md"
-Repository = "https://github.com/PyStatPower/PyStatPower.git"
-Issues = "https://github.com/PyStatPower/PyStatPower/issues"
-Changelog = "https://github.com/PyStatPower/PyStatPower/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Snoopy1866/PyStatPower"
+Documentation = "https://github.com/Snoopy1866/PyStatPower/blob/main/README.md"
+Repository = "https://github.com/Snoopy1866/PyStatPower.git"
+Issues = "https://github.com/Snoopy1866/PyStatPower/issues"
+Changelog = "https://github.com/Snoopy1866/PyStatPower/blob/main/CHANGELOG.md"
 
 # setuptools configuration
 [tool.setuptools.dynamic]
