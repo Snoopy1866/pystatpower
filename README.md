@@ -2,15 +2,15 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/pystatpower)](https://badge.fury.io/py/pystatpower)
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FPyStatPower%2FPyStatPower%2Fmain%2Fpyproject.toml)
-![GitHub License](https://img.shields.io/github/license/PyStatPower/PyStatPower)
+![GitHub License](https://img.shields.io/github/license/Snoopy1866/PyStatPower)
 ![PyPI - Status](https://img.shields.io/pypi/status/PyStatPower)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/pystatpower)
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/release.yml?branch=main&label=build)](https://github.com/PyStatPower/PyStatPower/actions/workflows/release.yml?query=branch:main)
-[![Test Status](https://img.shields.io/github/actions/workflow/status/PyStatPower/PyStatPower/check.yml?branch=main&label=test)](https://github.com/PyStatPower/PyStatPower/actions/workflows/check.yml?query=branch:main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/PyStatPower/release.yml?branch=main&label=build)](https://github.com/Snoopy1866/PyStatPower/actions/workflows/release.yml?query=branch:main)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/PyStatPower/check.yml?branch=main&label=test)](https://github.com/Snoopy1866/PyStatPower/actions/workflows/check.yml?query=branch:main)
 [![Documentation Status](https://readthedocs.org/projects/pystatpower/badge/?version=latest)](https://pystatpower.readthedocs.io/zh-cn/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/PyStatPower/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/PyStatPower/PyStatPower)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/PyStatPower/PyStatPower/main.svg)](https://results.pre-commit.ci/latest/github/PyStatPower/PyStatPower/main)
+[![codecov](https://codecov.io/gh/Snoopy1866/PyStatPower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/Snoopy1866/PyStatPower)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Snoopy1866/PyStatPower/main.svg)](https://results.pre-commit.ci/latest/github/Snoopy1866/PyStatPower/main)
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
@@ -50,7 +50,7 @@ Size(41.59499160228066)
 1. 克隆本仓库
 
    ```bash
-   git clone https://github.com/PyStatPower/PyStatPower.git
+   git clone https://github.com/Snoopy1866/PyStatPower.git
    ```
 
 2. 安装依赖
