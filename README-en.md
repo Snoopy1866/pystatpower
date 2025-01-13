@@ -4,7 +4,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystatpower)
 ![GitHub License](https://img.shields.io/github/license/Snoopy1866/pystatpower)
 ![PyPI - Status](https://img.shields.io/pypi/status/pystatpower)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/pystatpower)
+[![PyPI Downloads](https://static.pepy.tech/badge/pystatpower)](https://pepy.tech/projects/pystatpower)
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/release.yml?branch=main&label=build)](https://github.com/Snoopy1866/pystatpower/actions/workflows/release.yml?query=branch:main)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/check.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/check.yml?query=branch:main)
