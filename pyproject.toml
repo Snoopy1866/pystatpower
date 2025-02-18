@@ -39,7 +39,7 @@ dev = [
     "pre-commit==4.1.0",
     "pytest==8.3.4",
     "pytest-cov==6.0.0",
-    "ruff==0.9.5",
+    "ruff==0.9.6",
 ]
 docs = [
     "jieba==0.42.1",
