@@ -39,12 +39,12 @@ dev = [
     "pre-commit==4.1.0",
     "pytest==8.3.4",
     "pytest-cov==6.0.0",
-    "ruff==0.9.7",
+    "ruff==0.9.9",
 ]
 docs = [
     "jieba==0.42.1",
     "myst-parser==4.0.1",
-    "sphinx==8.2.0",
+    "sphinx==8.2.1",
     "sphinx-autobuild==2024.10.3",
     "sphinx-autodoc2==0.5.0",
     "sphinx-book-theme==1.1.4",
