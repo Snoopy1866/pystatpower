@@ -10,7 +10,7 @@ ci:
   autoupdate_commit_msg: "chore: pre-commit autoupdate"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-case-conflict
@@ -29,13 +29,13 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.7
+    rev: v0.14.6
     hooks:
       - id: ruff
         args: [ --fix ]
       - id: ruff-format
 
   - repo: https://github.com/opensource-nepal/commitlint
-    rev: v1.3.0
+    rev: v1.3.1
     hooks:
       - id: commitlint
