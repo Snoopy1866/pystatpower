@@ -13,3 +13,6 @@ coverage:
         base: auto
 github_checks:
   annotations: false
+
+comment:
+  layout: "diff, flags, files"
