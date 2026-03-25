@@ -29,13 +29,13 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.6
+    rev: v0.15.7
     hooks:
       - id: ruff
         args: [ --fix ]
       - id: ruff-format
 
   - repo: https://github.com/opensource-nepal/commitlint
-    rev: v1.3.1
+    rev: v1.13.3
     hooks:
       - id: commitlint
