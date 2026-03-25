@@ -60,11 +60,8 @@ def _size_wilson_cc(alpha: float, proportion: float, ci_width: float):
             )
         ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
 
-        width = ci_upper - ci_lower
-
         return ci_upper - ci_lower
 
-    # size = brentq(lambda size: ci_half_width(size, alpha, proportion) - ci_width, 1.99, 1e10)
     initial_size = _size_wilson(alpha, proportion, ci_width)
     solver: RootResults = root_scalar(lambda size: ci_half_width(size, alpha, proportion) - ci_width, x0=initial_size)
     return float(solver.root) if solver.converged else None
@@ -104,7 +101,7 @@ def size(
     method: str = "clopper_pearson",
     continuity_correction: bool = False,
 ):
-    """估算定性指标单样本估计精度的样本量
+    """估算定性指标单样本置信区间的样本量
 
     Args:
         alpha (float): 显著性水平
