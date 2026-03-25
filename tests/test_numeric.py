@@ -34,9 +34,7 @@ class TestInterval:
         assert Interval(0, 1) == Interval(0, 1)
         assert Interval(0, 1, lower_inclusive=True) == Interval(0, 1, lower_inclusive=True)
         assert Interval(0, 1, upper_inclusive=True) == Interval(0, 1, upper_inclusive=True)
-        assert Interval(0, 1, lower_inclusive=True, upper_inclusive=True) == Interval(
-            0, 1, lower_inclusive=True, upper_inclusive=True
-        )
+        assert Interval(0, 1, lower_inclusive=True, upper_inclusive=True) == Interval(0, 1, lower_inclusive=True, upper_inclusive=True)
 
         # 区间范围近似相同
         assert Interval(0, 1e10) == Interval(0, 1e10 + 1)

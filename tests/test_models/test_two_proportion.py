@@ -246,9 +246,7 @@ class TestSolveForSampleSize:
         assert (result.treatment_size_include_dropouts, result.reference_size_include_dropouts) == expected_result
 
     def test_solve_full_output(self):
-        result = solve_for_sample_size(
-            0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_POOLED", group_allocation=GroupAllocation(), full_output=True
-        )
+        result = solve_for_sample_size(0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "Z_TEST_POOLED", group_allocation=GroupAllocation(), full_output=True)
         assert isinstance(result, TwoProportion.ForSize)
 
     def test_invalid_group_allocation(self):

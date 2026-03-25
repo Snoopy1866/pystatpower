@@ -30,9 +30,7 @@ class TestSolveForSampleSize:
             one_proportion.solve_for_sample_size(*params)
 
     def test_solve_full_output(self):
-        result = one_proportion.solve_for_sample_size(
-            0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", full_output=True
-        )
+        result = one_proportion.solve_for_sample_size(0.05, 0.80, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", full_output=True)
         assert isinstance(result, one_proportion.OneProportion.ForSize)
 
 
@@ -93,9 +91,7 @@ class TestSolveForNullProportion:
             one_proportion.solve_for_nullproportion(*params)
 
     def test_solve_full_output(self):
-        result = one_proportion.solve_for_nullproportion(
-            70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True
-        )
+        result = one_proportion.solve_for_nullproportion(70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True)
         assert isinstance(result, one_proportion.OneProportion.ForNullProportion)
 
 
@@ -121,7 +117,5 @@ class TestSolveForProportion:
             one_proportion.solve_for_proportion(*params)
 
     def test_solve_full_output(self):
-        result = one_proportion.solve_for_proportion(
-            70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True
-        )
+        result = one_proportion.solve_for_proportion(70, 0.05, 0.80, 0.95, "TWO_SIDED", "EXACT_TEST", "LESS", full_output=True)
         assert isinstance(result, one_proportion.OneProportion.ForProportion)
