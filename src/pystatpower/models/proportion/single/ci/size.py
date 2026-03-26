@@ -26,8 +26,8 @@ def _size_wald_cc(alpha: float, proportion: float, ci_width: float):
         size = 1 / (-A + sqrt(A**2 + 2 * (proportion + ci_width - 1))) ** 2
     elif ci_width < 2 * min(proportion, 1 - proportion):
         size = 1 / (-A + sqrt(A**2 + ci_width)) ** 2
-    elif 2 * proportion <= ci_width < 2 * (1 - proportion):
-        size = 1 / (-A + sqrt(A**2 + 2 * ci_width)) ** 2
+    elif 2 * proportion <= ci_width < 1:
+        size = 1 / (-A + sqrt(A**2 - 2 * (proportion - ci_width))) ** 2
     elif ci_width == 1:
         size = LOWER_LIMIT_OF_SAMPLE_SIZE
     return size
