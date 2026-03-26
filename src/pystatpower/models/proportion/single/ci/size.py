@@ -2,7 +2,7 @@
 
 from math import sqrt
 
-from scipy.optimize import RootResults, brentq, root_scalar
+from scipy.optimize import brentq
 from scipy.stats import f, norm
 
 from .....constant import LOWER_LIMIT_OF_SAMPLE_SIZE
@@ -42,7 +42,7 @@ def _size_wilson(alpha: float, proportion: float, ci_width: float):
     return size
 
 
-def _size_wilson_cc(alpha: float, proportion: float, ci_width: float):
+def _size_wilson_cc(alpha: float, proportion: float, ci_width: float, maximum: float = 1e10):
     def ci_half_width(size: float, alpha: float, proportion: float):
         ci_lower = (
             (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 - 1)
@@ -62,9 +62,15 @@ def _size_wilson_cc(alpha: float, proportion: float, ci_width: float):
 
         return ci_upper - ci_lower
 
-    initial_size = _size_wilson(alpha, proportion, ci_width)
-    solver: RootResults = root_scalar(lambda size: ci_half_width(size, alpha, proportion) - ci_width, x0=initial_size)
-    return float(solver.root) if solver.converged else None
+    def f(size: float):
+        return ci_half_width(size, alpha, proportion) - ci_width
+
+    # 函数 f(x) 在 [0, +infinity] 内的函数值从 -infinity -> maximum -> -infinity，如果存在根，则大概率存在两个根，需要取最大的那个根
+    if f(LOWER_LIMIT_OF_SAMPLE_SIZE) <= 0:
+        return LOWER_LIMIT_OF_SAMPLE_SIZE
+    else:
+        size = brentq(f, LOWER_LIMIT_OF_SAMPLE_SIZE, maximum)
+        return float(size)
 
 
 def _size_clopper_pearson(alpha: float, proportion: float, ci_width: float):
