@@ -66,3 +66,10 @@ lines-between-types = 1
 
 [dependency-groups]
 dev = ["pre-commit>=4.3.0", "pytest>=8.3.5", "pytest-cov>=7.0.0", "ruff>=0.9.9"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-git-committers-plugin-2>=2.5.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.5.1",
+    "mkdocs-include-markdown-plugin>=7.2.1",
+    "mkdocs-material>=9.7.6",
+]
