@@ -24,7 +24,8 @@ repos:
       - id: fix-byte-order-marker
       - id: forbid-submodules
       - id: name-tests-test
-        args: [ --pytest-test-first ]
+        args: [--pytest-test-first]
+        exclude: ^tests/smoke_test\.py$
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
@@ -32,7 +33,7 @@ repos:
     rev: v0.15.7
     hooks:
       - id: ruff
-        args: [ --fix ]
+        args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/opensource-nepal/commitlint
