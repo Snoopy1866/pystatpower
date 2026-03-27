@@ -1,0 +1,82 @@
+[project]
+nav = [
+    { "首页" = "index.md" },
+    { "API 文档" = [
+        { "单样本率置信区间" = "models/proportion/single.md" },
+        { "两独立样本率非劣效设计" = "models/proportion/independent/noninferiority.md" },
+        { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" }
+    ] }
+]
+site_name = "pystatpower"
+site_url = "https://pystatpower.readthedocs.io"
+site_author = "Snoopy1866"
+repo_url = "https://github.com/Snoopy1866/pystatpower"
+edit_uri = "edit/main/docs/"
+copyright = "copyright &copy; 2024 - 2026 Snoopy1866"
+docs_dir = "docs"
+site_dir = "site"
+extra_javascript = [
+    "javascripts/mathjax.js",
+    "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"
+]
+
+
+[project.theme]
+language = "zh"
+features = [
+    "content.action.edit",
+    "content.action.view",
+    "content.code.copy",
+    "content.code.select",
+    "content.code.annotate",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
+    "navigation.tracking",
+    "navigation.tabs",
+    "navigation.sections",
+    "navigation.path",
+    "navigation.prune",
+    "navigation.top",
+    "toc.follow",
+    "search.highlight",
+    "header.autohide"
+]
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.snippets]
+[project.markdown_extensions.pymdownx.superfences]
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
