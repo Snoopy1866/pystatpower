@@ -6,7 +6,7 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/pystatpower)
 [![PyPI Downloads](https://static.pepy.tech/badge/pystatpower)](https://pepy.tech/projects/pystatpower)
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/release.yml?branch=main&label=build)](https://github.com/Snoopy1866/pystatpower/actions/workflows/release.yml?query=branch:main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/release.yml)](https://github.com/Snoopy1866/pystatpower/actions/workflows/release.yml?query=branch:main)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/check.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/check.yml?query=branch:main)
 [![Documentation Status](https://readthedocs.org/projects/pystatpower/badge/?version=latest)](https://pystatpower.readthedocs.io/zh-cn/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/Snoopy1866/pystatpower/graph/badge.svg?token=P9UWC8Q4P6)](https://codecov.io/gh/Snoopy1866/pystatpower)
