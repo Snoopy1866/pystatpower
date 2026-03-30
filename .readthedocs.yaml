@@ -11,7 +11,7 @@ build:
     python: latest
   jobs:
     install:
-      - pip install zensical
+      - pip install --group docs
     build:
       html:
         - zensical build
