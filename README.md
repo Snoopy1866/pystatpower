@@ -18,6 +18,8 @@
 
 PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
 
+[📚文档](https://pystatpower.readthedocs.io/)
+
 ## 安装
 
 ```bash
@@ -44,8 +46,6 @@ print(size)
 ```python
 (47.96537615435558, 47.96537615435558)
 ```
-
-详细用法请查看 [API](./docs/api/index.md)。
 
 ## 鸣谢
 

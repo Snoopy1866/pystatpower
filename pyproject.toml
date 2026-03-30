@@ -10,7 +10,7 @@ description = "A Power Analysis Toolkit for Python"
 license = { text = "GPL-3.0" }
 requires-python = ">=3.11"
 authors = [
-    { name = "Snoopy1866", email = "pystatpower@gmail.com" },
+    { name = "Snoopy1866", email = "pystatpower@gmail.com" }
 ]
 keywords = [
     "mathematics",
@@ -18,7 +18,7 @@ keywords = [
     "power analysis",
     "sample size",
     "power",
-    "hypothesis",
+    "hypothesis"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -29,7 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Mathematics"
 ]
 dependencies = ["scipy>=1.16.0"]
 readme = { file = "README.md", content-type = "text/markdown" }
@@ -71,12 +71,9 @@ dev = [
     "pre-commit>=4.3.0",
     "pytest>=8.3.5",
     "pytest-cov>=7.0.0",
-    "ruff>=0.9.9",
+    "ruff>=0.9.9"
 ]
 docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-git-committers-plugin-2>=2.5.0",
-    "mkdocs-git-revision-date-localized-plugin>=1.5.1",
-    "mkdocs-include-markdown-plugin>=7.2.1",
-    "mkdocs-material>=9.7.6",
+    "mkdocstrings-python>=2.0.3",
+    "zensical>=0.0.29",
 ]
