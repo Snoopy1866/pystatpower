@@ -1,11 +1,12 @@
 [project]
 nav = [
     { "首页" = "index.md" },
-    { "API 文档" = [
+    { "算法" = [
         { "单样本率置信区间" = "models/proportion/single.md" },
         { "两独立样本率非劣效设计" = "models/proportion/independent/noninferiority.md" },
         { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" }
-    ] }
+    ] },
+    { "API Reference" = "api.md" }
 ]
 site_name = "pystatpower"
 site_url = "https://pystatpower.readthedocs.io"
@@ -93,6 +94,21 @@ inventories = [
 paths = ["src"]
 
 [project.plugins.mkdocstrings.handlers.python.options]
+backlinks = "tree"
+docstring_options.ignore_init_summary = true
 docstring_style = "google"
+docstring_section_style = "list"
+filters = ["!^_"]
 inherited_members = true
+heading_level = 1
+merge_init_into_class = true
+parameter_headings = true
+separate_signature = true
 show_source = false
+show_root_heading = true
+show_root_full_path = true
+show_signature_annotations = true
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+signature_crossrefs = true
+summary = true
