@@ -17,7 +17,7 @@ $$
 从上述方程中解出样本量 $n$ 需要分类讨论：
 
 ??? note "情况 1. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \ge 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \gt 0$"
-    
+
     $$
     d = 1 - \left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}\right) \Rightarrow n = \frac{z_{1-\alpha/2}^2 p(1-p)}{\left(d+p-1\right)^2}
     $$
@@ -39,7 +39,7 @@ $$
     $$
 
 ??? note "情况 2. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \ge 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \le 0$"
-    
+
     $$
     d = 1 - 0 = 1
     $$
@@ -47,7 +47,7 @@ $$
     这种情况下置信区间宽度恒等于 1，与样本量 $n$ 无关，无实际意义。
 
 ??? note "情况 3. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \lt 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \gt 0$"
-    
+
     $$
     d = \left(p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}\right) - \left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}\right) \Rightarrow n = \frac{4 z_{1-\alpha/2}^2 p(1-p)}{d^2}
     $$
@@ -69,7 +69,7 @@ $$
     $$
 
 ??? note "情况 4. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \lt 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} \le 0$"
-    
+
     $$
     d = \left(p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}\right) - 0 \Rightarrow n = \frac{z_{1-\alpha/2}^2 p(1-p)}{(d-p)^2}\ 且 \ d \gt p
     $$
@@ -118,7 +118,7 @@ $$
 从上述方程中解出样本量 $n$ 需要分类讨论：
 
 ??? note "情况 1. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} + \frac{1}{2n} \ge 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n} \gt 0$"
-    
+
     $$
     d = 1 - \left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n}\right) \Rightarrow \frac{1}{2n} + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - (p + d - 1) = 0
     $$
@@ -158,7 +158,7 @@ $$
     $$
 
 ??? note "情况 2. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} + \frac{1}{2n} \ge 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n} \le 0$"
-    
+
     $$
     d = 1 - 0 = 1
     $$
@@ -166,7 +166,7 @@ $$
     这种情况下置信区间宽度恒等于 1，与样本量 $n$ 无关，无实际意义。
 
 ??? note "情况 3. $p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} + \frac{1}{2n} \lt 1, p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n} \gt 0$"
-    
+
     $$
     d = \left(p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} + \frac{1}{2n}\right) - \left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n}\right)
     $$
