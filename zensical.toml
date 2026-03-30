@@ -80,3 +80,6 @@ alternate_style = true
 [project.markdown_extensions.def_list]
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
+[project.markdown_extensions.toc]
+permalink = true
+permalink_title = "指向本节的链接"
