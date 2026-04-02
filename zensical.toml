@@ -2,7 +2,8 @@
 nav = [
     { "首页" = "index.md" },
     { "算法" = [
-        { "单样本率置信区间" = "models/proportion/single.md" },
+        { "单样本率置信区间" = "models/proportion/single/ci.md" },
+        { "单样本率差异性检验" = "models/proportion/single/difference.md" },
         { "两独立样本率非劣效设计" = "models/proportion/independent/noninferiority.md" },
         { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" }
     ] },
@@ -40,6 +41,7 @@ features = [
     "navigation.prune",
     "navigation.top",
     "toc.follow",
+    "toc.integrate",
     "search.highlight",
     "header.autohide"
 ]
