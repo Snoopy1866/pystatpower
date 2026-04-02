@@ -7,7 +7,8 @@ nav = [
         { "两独立样本率非劣效设计" = "models/proportion/independent/noninferiority.md" },
         { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" }
     ] },
-    { "API Reference" = "api.md" }
+    { "API Reference" = "api.md" },
+    { "Theory Reference" = "theory.md" }
 ]
 site_name = "pystatpower"
 site_url = "https://pystatpower.readthedocs.io"
