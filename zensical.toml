@@ -8,7 +8,7 @@ nav = [
         { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" },
         { "相关系数" = "models/correlation/difference.md" }
     ] },
-    { "API Reference" = "api.md" }
+    { "API 参考" = "api.md" }
 ]
 site_name = "pystatpower"
 site_url = "https://pystatpower.readthedocs.io"
