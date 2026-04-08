@@ -5,7 +5,7 @@ from math import sqrt
 from scipy.optimize import brentq
 from scipy.stats import f, norm
 
-from .....constant import LOWER_LIMIT_OF_SAMPLE_SIZE
+from ...._constant import LOWER_LIMIT_OF_SAMPLE_SIZE
 
 
 def _size_wald(alpha: float, proportion: float, ci_width: float):

@@ -1,11 +1,11 @@
-"""定性指标、两独立样本、优效性检验"""
+"""定性指标、两独立样本、非劣效检验"""
 
 from math import sqrt
 
 from scipy.stats import norm
 
-from .....constant import LOWER_LIMIT_OF_SAMPLE_SIZE
-from .....restrict import Restrict
+from ...._constant import LOWER_LIMIT_OF_SAMPLE_SIZE
+from ...._restrict import Restrict
 
 
 def _continuity_correction(
@@ -150,14 +150,14 @@ def size(
     pooled: bool = False,
     continuity_correction: bool = False,
 ):
-    """估算定性指标两独立样本优效性检验的样本量
+    """估算定性指标两独立样本非劣效检验的样本量
 
     Args:
         alpha (float): 显著性水平
         power (float): 检验效能
         treatment_proportion (float): 试验组指标值
         reference_proportion (float): 对照组指标值
-        margin (float): 优效界值
+        margin (float): 非劣界值
         ratio (float): 样本量分配比例，试验组：对照组
         pooled (bool): 是否使用合并方差
         continuity_correction (bool): 是否使用连续性校正
