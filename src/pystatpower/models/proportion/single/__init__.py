@@ -1,4 +1,4 @@
-from . import ci
+from . import ci, difference
 
 __all__ = [
     "ci",
