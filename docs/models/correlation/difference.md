@@ -64,7 +64,7 @@ $$
 根据大数定律和连续映射定理，当 $n$ 较大时，$\hat{\zeta}$ 满足：
 
 $$
-\hat{\zeta} \xrightarrow{d} \zeta_1
+\hat{\zeta} \xrightarrow{p} \zeta_1
 $$
 
 进而有：
