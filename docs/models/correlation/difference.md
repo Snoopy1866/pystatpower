@@ -1,5 +1,6 @@
 # 相关系数差异性检验
 
+## 未校正偏倚 {#bias-not-adj}
 
 $$
 \begin{align}
@@ -55,7 +56,7 @@ $$
 \zeta_1 = \frac{1}{2} \ln{\frac{1+\rho_1}{1-\rho_1}} \tag{2}
 $$
 
-构建 $z$ 统计量：
+构建 $z'$ 统计量：
 
 $$
 z' = \frac{\hat{\zeta} - \zeta_0}{1/\sqrt{n-3}} = \left(\hat{\zeta} - \zeta_0\right) \sqrt{n-3}
@@ -97,5 +98,56 @@ $$
 代入 $(1)$ 和 $(2)$，得：
 
 $$
-n = \frac{4 \left(z_{1-\alpha/2} + z_{1-\beta}\right)^2}{\ln^2{\frac{\left(1+\rho_1\right) \left(1-\rho_0\right)}{\left(1-\rho_1\right) \left(1+\rho_0\right)}}} + 3
+n = 4 \left( \frac{z_{1-\alpha/2} + z_{1-\beta}}{\ln{\frac{\left(1+\rho_1\right) \left(1-\rho_0\right)}{\left(1-\rho_1\right) \left(1+\rho_0\right)}}} \right)^2+ 3
 $$
+
+## 校正偏倚 {#bias-adj}
+
+
+在 $H_0$ 成立时，$\hat{\zeta}$ 近似服从正态分布：
+
+$$
+\hat{\zeta} \sim N\left(\zeta_0 + \frac{\rho_0}{2(n-1)},\ \frac{1}{n-3}\right)
+$$
+
+构建 $z$ 统计量：
+
+$$
+z = \frac{\hat{\zeta} - \zeta_0 - \frac{\rho_0}{2(n-1)}}{1/\sqrt{n-3}} = \left(\hat{\zeta} - \zeta_0 - \frac{\rho_0}{2(n-1)}\right) \sqrt{n-3} \sim N(0, 1)
+$$
+
+在 $H_1$ 成立时，$\hat{\zeta}$ 近似服从正态分布：
+
+$$
+\hat{\zeta} \sim N\left(\zeta_1 + \frac{\rho_1}{2(n-1)},\ \frac{1}{n-3}\right)
+$$
+
+
+构建 $z'$ 统计量：
+
+$$
+z' = \frac{\hat{\zeta} - \zeta_0 - \frac{\rho_0}{2(n-1)}}{1/\sqrt{n-3}} = \left(\hat{\zeta} - \zeta_0 - \frac{\rho_0}{2(n-1)}\right) \sqrt{n-3}
+$$
+
+根据大数定律和连续映射定理，当 $n$ 较大时，$\hat{\zeta}$ 满足：
+
+$$
+\hat{\zeta} \xrightarrow{p} \zeta_1
+$$
+
+进而有：
+
+$$
+z' = \left(\hat{\zeta} - \zeta_1 - \frac{\rho_1}{2(n-1)}\right) \sqrt{n-3} + \left(\zeta_1 - \zeta_0 + \frac{\rho_1 - \rho_0}{2(n-1)}\right) \sqrt{n-3} \xrightarrow{d} N\left(\left(\zeta_1 - \zeta_0 + \frac{\rho_1 - \rho_0}{2(n-1)}\right) \sqrt{n-3}, 1\right)
+$$
+
+
+计算检验效能：
+
+$$
+\begin{aligned}
+P\left( \left| z' \right| > z_{1-\alpha/2} \right) \approx 1 - \Phi\left( z_{1-\alpha/2} - \left( \left|\zeta_1 - \zeta_0\right| + \frac{\left|\rho_1 - \rho_0\right|}{2(n-1)} \right) \sqrt{n-3} \right) = 1 - \beta
+\end{aligned}
+$$
+
+可使用数值方法解出样本量。
