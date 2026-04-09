@@ -5,7 +5,111 @@ from math import sqrt
 from scipy.optimize import brentq
 from scipy.stats import f, norm
 
-from ...._constant import LOWER_LIMIT_OF_SAMPLE_SIZE
+from ...._constant import LOWER_LIMIT_OF_SAMPLE_SIZE, SAMPLE_SIZE_SEARCH_MAX
+
+
+def _ci(
+    proportion: float,
+    size: float,
+    alpha: float = 0.05,
+    method: str = "clopper_pearson",
+    continuity_correction: bool = False,
+) -> float:
+    match method.lower():
+        case "clopper_pearson":
+            return _ci_clopper_pearson(proportion, size, alpha)
+        case "wald":
+            return _ci_wald(proportion, size, alpha, continuity_correction)
+        case "wilson":
+            return _ci_wilson(proportion, size, alpha, continuity_correction)
+
+
+def _ci_clopper_pearson(proportion: float, size: float, alpha: float = 0.05):
+    ci_lower = (
+        size
+        * proportion
+        / (
+            size * proportion
+            + (size - size * proportion + 1)
+            * f.ppf(1 - alpha / 2, 2 * (size - size * proportion + 1), 2 * size * proportion)
+        )
+    )
+
+    ci_upper = (
+        (size * proportion + 1)
+        * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
+        / (
+            (size - size * proportion)
+            + (size * proportion + 1)
+            * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
+        )
+    )
+
+    return ci_upper - ci_lower
+
+
+def _ci_wald(proportion: float, size: float, alpha: float = 0.05, continuity_correction: bool = False) -> float:
+    if continuity_correction:
+        ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size) + 1 / size
+    else:
+        ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
+
+    return ci_width
+
+
+def _ci_wilson(proportion: float, size: float, alpha: float = 0.05, continuity_correction: bool = False) -> float:
+    if continuity_correction:
+        ci_lower = (
+            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 - 1)
+            - norm.ppf(1 - alpha / 2)
+            * sqrt(
+                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) + 4 * proportion - 2
+            )
+        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
+
+        ci_upper = (
+            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 + 1)
+            + norm.ppf(1 - alpha / 2)
+            * sqrt(
+                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) - 4 * proportion + 2
+            )
+        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
+        ci_width = ci_upper - ci_lower
+    else:
+        ci_width = (
+            norm.ppf(1 - alpha / 2)
+            * sqrt(norm.ppf(1 - alpha / 2) ** 2 + 4 * size * proportion * (1 - proportion))
+            / (size + norm.ppf(1 - alpha / 2) ** 2)
+        )
+
+    return float(ci_width)
+
+
+def solve_size(
+    proportion: float,
+    ci_width: float,
+    alpha: float = 0.05,
+    method: str = "clopper_pearson",
+    continuity_correction: bool = False,
+) -> float:
+    """Estimate the sample size required to achieve a given confidence interval for one proportion.
+
+    Args:
+        proportion (float): Proportion.
+        ci_width (float): Confidence interval width.
+        alpha (float, optional): Significance level. Default is 0.05.
+        method (str, optional): Specify the method for calculating confidence interval. Default is "clopper_pearson".
+        continuity_correction (bool, optional): Specify whether or not the continuity correction is used, only valid for method = "wald" or "wilson". Default is False.
+
+    Returns:
+        size(float): The required sample size.
+    """
+
+    def func(size: float) -> float:
+        return _ci(proportion, size, alpha, method, continuity_correction) - ci_width
+
+    size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
+    return float(size)
 
 
 def _size_wald(alpha: float, proportion: float, ci_width: float):
