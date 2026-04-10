@@ -1,5 +1,3 @@
-"""定性指标、单样本、置信区间"""
-
 from math import sqrt
 
 from scipy.optimize import OptimizeResult, brentq, minimize_scalar
