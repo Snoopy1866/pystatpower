@@ -6,7 +6,7 @@ from scipy.stats import f, norm
 from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 
 
-def _ci(
+def _ci_width(
     proportion: float,
     size: float,
     alpha: float = 0.05,
@@ -15,20 +15,20 @@ def _ci(
 ) -> float:
     match method.lower():
         case "clopper_pearson":
-            return _ci_clopper_pearson(proportion, size, alpha)
+            return _ci_width_clopper_pearson(proportion, size, alpha)
         case "wald":
             if continuity_correction:
-                return _ci_wald_cc(proportion, size, alpha)
+                return _ci_width_wald_cc(proportion, size, alpha)
             else:
-                return _ci_wald(proportion, size, alpha)
+                return _ci_width_wald(proportion, size, alpha)
         case "wilson":
             if continuity_correction:
                 return _ci_wilson_cc(proportion, size, alpha)
             else:
-                return _ci_wilson(proportion, size, alpha)
+                return _ci_width_wilson(proportion, size, alpha)
 
 
-def _ci_clopper_pearson(proportion: float, size: float, alpha: float = 0.05):
+def _ci_width_clopper_pearson(proportion: float, size: float, alpha: float = 0.05) -> float:
     ci_lower = (
         size
         * proportion
@@ -49,20 +49,23 @@ def _ci_clopper_pearson(proportion: float, size: float, alpha: float = 0.05):
         )
     )
 
-    return ci_upper - ci_lower
+    ci_width = ci_upper - ci_lower
+    return float(ci_width)
 
 
-def _ci_wald(proportion: float, size: float, alpha: float = 0.05) -> float:
-    ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
-    return ci_width
+def _ci_width_wald(proportion: float, size: float, alpha: float = 0.05) -> float:
+    ci_lower = proportion - norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
+    ci_upper = proportion + norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
+    ci_width = min(ci_upper, 1) - max(ci_lower, 0)
+    return float(ci_width)
 
 
-def _ci_wald_cc(proportion: float, size: float, alpha: float = 0.05) -> float:
+def _ci_width_wald_cc(proportion: float, size: float, alpha: float = 0.05) -> float:
     ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size) + 1 / size
-    return ci_width
+    return float(ci_width)
 
 
-def _ci_wilson(proportion: float, size: float, alpha: float = 0.05, continuity_correction: bool = False) -> float:
+def _ci_width_wilson(proportion: float, size: float, alpha: float = 0.05) -> float:
     ci_width = (
         norm.ppf(1 - alpha / 2)
         * sqrt(norm.ppf(1 - alpha / 2) ** 2 + 4 * size * proportion * (1 - proportion))
@@ -102,15 +105,15 @@ def solve_size(
         proportion (float): Proportion.
         ci_width (float): Confidence interval width.
         alpha (float, optional): Significance level. Default is 0.05.
-        method (str, optional): Specify the method for calculating confidence interval. Default is "clopper_pearson".
-        continuity_correction (bool, optional): Specify whether or not the continuity correction is used, only valid for method = "wald" or "wilson". Default is False.
+        method (str, optional): Specify the method for calculating confidence interval. Default is `clopper_pearson`.
+        continuity_correction (bool, optional): Specify whether or not the continuity correction is used, only valid for `method` = `wald` or `wilson`. Default is False.
 
     Returns:
         size(float): The required sample size.
     """
 
     def func(size: float) -> float:
-        return _ci(proportion, size, alpha, method, continuity_correction) - ci_width
+        return _ci_width(proportion, size, alpha, method, continuity_correction) - ci_width
 
     if method == "wilson" and continuity_correction:
         # wilson score 连续性校正公式中的分子可能存在对负数开算术平方根的情况，这可能会导致置信区间宽度计算失败，因此需要先缩小 brentq 搜索范围
@@ -135,3 +138,62 @@ def solve_size(
         size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
 
     return float(size)
+
+
+def solve_ci_width(
+    proportion: float,
+    size: float,
+    alpha: float = 0.05,
+    method: str = "clopper-pearson",
+    continuity_correction: bool = True,
+) -> float:
+    """Calculate the confidence interval width for one proportion.
+
+    Args:
+        proportion (float): Proportion.
+        size (float): Sample size.
+        alpha (float, optional): Significance level. Default is 0.05.
+        method (str, optional): Specify the method for calculating confidence interval. Default is `clopper_pearson`.
+        continuity_correction (bool, optional): Specify whether or not the continuity correction is used, only valid for `method` = `wald` or `wilson`. Default is False.
+
+    Returns:
+        ci_width(float): The confidence interval width.
+    """
+
+    return _ci_width(proportion, size, alpha, method, continuity_correction)
+
+
+def solve_proportion(
+    size: float,
+    ci_width: float,
+    alpha: float = 0.05,
+    method: str = "clopper_pearson",
+    continuity_correction: bool = False,
+    side: str = "upper",
+) -> float:
+    """Estimate the proportion required to achieve a given confidence interval for one proportion.
+
+    Args:
+        size (float): Sample size.
+        ci_width (float): Confidence interval width.
+        alpha (float, optional): Significance level. Default is 0.05.
+        method (str, optional): The method for calculating confidence interval. Default is `clopper_pearson`.
+        continuity_correction (bool, optional): Whether or not the continuity correction is used, only valid for `method` = `wald` or `wilson`. Default is False.
+        side (str, optional): Which root to return. Must be `lower` (proportion closer to 0) or `upper` (proportion closer to 1). Default is `upper`.
+
+    Returns:
+        ci_width(float): The confidence interval width.
+    """
+
+    def func(proportion: float) -> float:
+        return _ci_width(proportion, size, alpha, method, continuity_correction) - ci_width
+
+    match side.lower():
+        case "lower":
+            proportion = brentq(func, 0.000001, 0.5)
+        case "upper":
+            proportion = brentq(func, 0.5, 0.999999)
+        case _:
+            raise ValueError("side must be 'lower' or 'upper'")
+
+    return proportion
