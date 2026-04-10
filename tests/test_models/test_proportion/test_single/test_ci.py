@@ -6,7 +6,7 @@ from math import ceil
 
 import pytest
 
-from pystatpower.models.proportion.single.ci import solve_size
+from pystatpower.models.proportion.single.ci import solve_ci_width, solve_proportion, solve_size
 
 
 @pytest.fixture(
@@ -66,6 +66,17 @@ from pystatpower.models.proportion.single.ci import solve_size
         (0.05, 0.90, 0.08, 243, "wilson", True),
         (0.05, 0.90, 0.09, 195, "wilson", True),
         (0.05, 0.90, 0.10, 160, "wilson", True),
+        # alpha = 0.05, proportion = 0.10, ci_width = 0.01 to 0.10 by 0.01, method = "wilson", continuity_correction = True
+        (0.05, 0.10, 0.01, 14032, "wilson", True),
+        (0.05, 0.10, 0.02, 3560, "wilson", True),
+        (0.05, 0.10, 0.03, 1606, "wilson", True),
+        (0.05, 0.10, 0.04, 917, "wilson", True),
+        (0.05, 0.10, 0.05, 595, "wilson", True),
+        (0.05, 0.10, 0.06, 420, "wilson", True),
+        (0.05, 0.10, 0.07, 313, "wilson", True),
+        (0.05, 0.10, 0.08, 243, "wilson", True),
+        (0.05, 0.10, 0.09, 195, "wilson", True),
+        (0.05, 0.10, 0.10, 160, "wilson", True),
     ],
     ids=lambda p: f"{p[0]}, {p[1]}, {p[2]}, {p[3]}, {p[4]}, {p[5]}",
 )
@@ -81,3 +92,19 @@ def test_solve_size(case) -> None:
 def test_solve_wilson_cc_no_solution() -> None:
     with pytest.raises(ValueError):
         assert solve_size(0.90, 0.99, 0.05, method="wilson", continuity_correction=True)
+
+
+def test_solve_ci_width(case) -> None:
+    alpha, proportion, expected_ci_width, size, method, continuity_correction = case
+    assert round(solve_ci_width(proportion, size, alpha, method, continuity_correction), 2) == expected_ci_width
+
+
+def test_solve_proportion(case) -> None:
+    alpha, expected_proportion, ci_width, size, method, continuity_correction = case
+    if expected_proportion > 0.5:
+        assert round(solve_proportion(size, ci_width, alpha, method, continuity_correction, side="upper"), 2) == expected_proportion
+    else:
+        assert round(solve_proportion(size, ci_width, alpha, method, continuity_correction, side="lower"), 2) == expected_proportion
+
+    with pytest.raises(ValueError):
+        solve_proportion(size, ci_width, alpha, method, continuity_correction, side="neutral")
