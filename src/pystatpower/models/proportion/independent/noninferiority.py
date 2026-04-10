@@ -1,5 +1,3 @@
-"""定性指标、两独立样本、非劣效检验"""
-
 from math import sqrt
 
 from scipy.stats import norm
