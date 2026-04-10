@@ -76,3 +76,8 @@ def case(request: pytest.FixtureRequest):
 def test_solve_size(case) -> None:
     alpha, proportion, ci_width, expected_size, method, continuity_correction = case
     assert ceil(solve_size(proportion, ci_width, alpha, method, continuity_correction)) == expected_size
+
+
+def test_solve_wilson_cc_no_solution() -> None:
+    with pytest.raises(ValueError):
+        assert solve_size(0.90, 0.99, 0.05, method="wilson", continuity_correction=True)

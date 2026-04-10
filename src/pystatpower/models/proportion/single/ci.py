@@ -2,10 +2,10 @@
 
 from math import sqrt
 
-from scipy.optimize import brentq
+from scipy.optimize import OptimizeResult, brentq, minimize_scalar
 from scipy.stats import f, norm
 
-from ...._constant import LOWER_LIMIT_OF_SAMPLE_SIZE, SAMPLE_SIZE_SEARCH_MAX
+from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 
 
 def _ci(
@@ -19,9 +19,15 @@ def _ci(
         case "clopper_pearson":
             return _ci_clopper_pearson(proportion, size, alpha)
         case "wald":
-            return _ci_wald(proportion, size, alpha, continuity_correction)
+            if continuity_correction:
+                return _ci_wald_cc(proportion, size, alpha)
+            else:
+                return _ci_wald(proportion, size, alpha)
         case "wilson":
-            return _ci_wilson(proportion, size, alpha, continuity_correction)
+            if continuity_correction:
+                return _ci_wilson_cc(proportion, size, alpha)
+            else:
+                return _ci_wilson(proportion, size, alpha)
 
 
 def _ci_clopper_pearson(proportion: float, size: float, alpha: float = 0.05):
@@ -48,39 +54,39 @@ def _ci_clopper_pearson(proportion: float, size: float, alpha: float = 0.05):
     return ci_upper - ci_lower
 
 
-def _ci_wald(proportion: float, size: float, alpha: float = 0.05, continuity_correction: bool = False) -> float:
-    if continuity_correction:
-        ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size) + 1 / size
-    else:
-        ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
+def _ci_wald(proportion: float, size: float, alpha: float = 0.05) -> float:
+    ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size)
+    return ci_width
 
+
+def _ci_wald_cc(proportion: float, size: float, alpha: float = 0.05) -> float:
+    ci_width = 2 * norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion) / size) + 1 / size
     return ci_width
 
 
 def _ci_wilson(proportion: float, size: float, alpha: float = 0.05, continuity_correction: bool = False) -> float:
-    if continuity_correction:
-        ci_lower = (
-            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 - 1)
-            - norm.ppf(1 - alpha / 2)
-            * sqrt(
-                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) + 4 * proportion - 2
-            )
-        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
+    ci_width = (
+        norm.ppf(1 - alpha / 2)
+        * sqrt(norm.ppf(1 - alpha / 2) ** 2 + 4 * size * proportion * (1 - proportion))
+        / (size + norm.ppf(1 - alpha / 2) ** 2)
+    )
 
-        ci_upper = (
-            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 + 1)
-            + norm.ppf(1 - alpha / 2)
-            * sqrt(
-                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) - 4 * proportion + 2
-            )
-        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
-        ci_width = ci_upper - ci_lower
-    else:
-        ci_width = (
-            norm.ppf(1 - alpha / 2)
-            * sqrt(norm.ppf(1 - alpha / 2) ** 2 + 4 * size * proportion * (1 - proportion))
-            / (size + norm.ppf(1 - alpha / 2) ** 2)
-        )
+    return float(ci_width)
+
+
+def _ci_wilson_cc(proportion: float, size: float, alpha: float = 0.05) -> float:
+    ci_lower = (
+        (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 - 1)
+        - norm.ppf(1 - alpha / 2)
+        * sqrt(norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) + 4 * proportion - 2)
+    ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
+
+    ci_upper = (
+        (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 + 1)
+        + norm.ppf(1 - alpha / 2)
+        * sqrt(norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) - 4 * proportion + 2)
+    ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
+    ci_width = ci_upper - ci_lower
 
     return float(ci_width)
 
@@ -108,133 +114,26 @@ def solve_size(
     def func(size: float) -> float:
         return _ci(proportion, size, alpha, method, continuity_correction) - ci_width
 
-    size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
-    return float(size)
+    if method == "wilson" and continuity_correction:
+        # wilson score 连续性校正公式中的分子可能存在对负数开算术平方根的情况，这可能会导致置信区间宽度计算失败，因此需要先缩小 brentq 搜索范围
+        a = 4 * proportion * (1 - proportion)
+        b = norm.ppf(1 - alpha / 2) ** 2 - 4 * proportion + 2
+        c = -1
+        n1 = (-b - sqrt(b**2 - 4 * a * c)) / (2 * a)
+        n2 = (-b + sqrt(b**2 - 4 * a * c)) / (2 * a)
+        lower_bound = max(n1, n2)
+        upper_bound = SAMPLE_SIZE_SEARCH_MAX
 
+        # wilson score 连续性校正计算出的置信区间宽度并随样本量增大而单调减小，而是在小样本区间内先增大，随着样本量继续增大，置信区间宽度逐渐减小。
+        # 因此，直接使用 brentq 可能无法收敛，必须先找到置信区间的极大值点 $n'$，然后将 brentq 的搜索区间限定为 $[n', 10^6]$，才能保证收敛。
+        res: OptimizeResult = minimize_scalar(lambda size: -func(size), bounds=(lower_bound, upper_bound))
+        if -res.fun < ci_width:
+            raise ValueError("No solution found.")
+        else:
+            lower_bound = max(lower_bound, res.x)
 
-def _size_wald(alpha: float, proportion: float, ci_width: float):
-    if 2 * (1 - proportion) <= ci_width < 2 * proportion:
-        size = norm.ppf(1 - alpha / 2) ** 2 * proportion * (1 - proportion) / (proportion + ci_width - 1) ** 2
-    elif ci_width < 2 * min(proportion, 1 - proportion):
-        size = 4 * norm.ppf(1 - alpha / 2) ** 2 * proportion * (1 - proportion) / ci_width**2
-    elif 2 * proportion <= ci_width < 2 * (1 - proportion):
-        size = norm.ppf(1 - alpha / 2) ** 2 * proportion * (1 - proportion) / (proportion - ci_width) ** 2
-    elif ci_width == 1:
-        size = LOWER_LIMIT_OF_SAMPLE_SIZE
-    return size
-
-
-def _size_wald_cc(alpha: float, proportion: float, ci_width: float):
-    A = norm.ppf(1 - alpha / 2) * sqrt(proportion * (1 - proportion))
-    if 2 * (1 - proportion) <= ci_width < 1:
-        size = 1 / (-A + sqrt(A**2 + 2 * (proportion + ci_width - 1))) ** 2
-    elif ci_width < 2 * min(proportion, 1 - proportion):
-        size = 1 / (-A + sqrt(A**2 + ci_width)) ** 2
-    elif 2 * proportion <= ci_width < 1:
-        size = 1 / (-A + sqrt(A**2 - 2 * (proportion - ci_width))) ** 2
-    elif ci_width == 1:
-        size = LOWER_LIMIT_OF_SAMPLE_SIZE
-    return size
-
-
-def _size_wilson(alpha: float, proportion: float, ci_width: float):
-    A = ci_width**2
-    B = (2 * ci_width**2 - 4 * proportion * (1 - proportion)) * norm.ppf(1 - alpha / 2) ** 2
-    C = (ci_width**2 - 1) * norm.ppf(1 - alpha / 2) ** 4
-
-    size = (-B + sqrt(B**2 - 4 * A * C)) / (2 * A)
-    return size
-
-
-def _size_wilson_cc(alpha: float, proportion: float, ci_width: float, maximum: float = 1e10):
-    def ci_half_width(size: float, alpha: float, proportion: float):
-        ci_lower = (
-            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 - 1)
-            - norm.ppf(1 - alpha / 2)
-            * sqrt(
-                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) + 4 * proportion - 2
-            )
-        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
-
-        ci_upper = (
-            (2 * size * proportion + norm.ppf(1 - alpha / 2) ** 2 + 1)
-            + norm.ppf(1 - alpha / 2)
-            * sqrt(
-                norm.ppf(1 - alpha / 2) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) - 4 * proportion + 2
-            )
-        ) / (2 * (size + norm.ppf(1 - alpha / 2) ** 2))
-
-        return ci_upper - ci_lower
-
-    def f(size: float):
-        return ci_half_width(size, alpha, proportion) - ci_width
-
-    # 函数 f(x) 在 [0, +infinity] 内的函数值从 -infinity -> maximum -> -infinity，如果存在根，则大概率存在两个根，需要取最大的那个根
-    if f(LOWER_LIMIT_OF_SAMPLE_SIZE) <= 0:
-        return LOWER_LIMIT_OF_SAMPLE_SIZE
+        size = brentq(func, lower_bound, upper_bound)
     else:
-        size = brentq(f, LOWER_LIMIT_OF_SAMPLE_SIZE, maximum)
-        return float(size)
+        size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
 
-
-def _size_clopper_pearson(alpha: float, proportion: float, ci_width: float):
-    def ci_half_width(size: float, alpha: float, proportion: float):
-        ci_lower = (
-            size
-            * proportion
-            / (
-                size * proportion
-                + (size - size * proportion + 1)
-                * f.ppf(1 - alpha / 2, 2 * (size - size * proportion + 1), 2 * size * proportion)
-            )
-        )
-
-        ci_upper = (
-            (size * proportion + 1)
-            * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
-            / (
-                (size - size * proportion)
-                + (size * proportion + 1)
-                * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
-            )
-        )
-
-        return ci_upper - ci_lower
-
-    return brentq(lambda size: ci_half_width(size, alpha, proportion) - ci_width, 1e-10, 1e10)
-
-
-def size(
-    alpha: float,
-    proportion: float,
-    ci_width: float,
-    method: str = "clopper_pearson",
-    continuity_correction: bool = False,
-):
-    """估算定性指标单样本置信区间的样本量
-
-    Args:
-        alpha (float): 显著性水平
-        proportion (float): 样本指标值
-        ci_width (float): 置信区间宽度
-        method (str, optional): 置信区间估计方法，可选 "wald", "wilson", "clopper_pearson"，默认为 "clopper_pearson"
-        continuity_correction (bool, optional): 是否进行连续性校正，仅在 method 为 "wald" 和 "wilson" 时可用，默认为 False
-    """
-
-    match method:
-        case "clopper_pearson":
-            size = _size_clopper_pearson(alpha, proportion, ci_width)
-        case "wald":
-            if continuity_correction:
-                size = _size_wald_cc(alpha, proportion, ci_width)
-            else:
-                size = _size_wald(alpha, proportion, ci_width)
-        case "wilson":
-            if continuity_correction:
-                size = _size_wilson_cc(alpha, proportion, ci_width)
-            else:
-                size = _size_wilson(alpha, proportion, ci_width)
-        case _:
-            raise ValueError("method must be wald, wilson or clopper_pearson")
-
-    return max(size, LOWER_LIMIT_OF_SAMPLE_SIZE)
+    return float(size)
