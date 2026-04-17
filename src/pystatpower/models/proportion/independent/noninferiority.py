@@ -274,6 +274,16 @@ def solve_treatment_proportion(
 
     Returns:
         treatment_proportion(float): The required treatment proportion.
+
+    Notes:
+        The range of the treatment proportion $(p_1)$ is determined by the reference proportion $(p_0)$ and non-inferiority margin $(\delta)$:
+
+        $$
+        \\begin{cases}
+        (p_0, \ 1) \cup \left(\max(p_0+\delta, \ 0), p_0\\right) & , \\text{if } \delta < 0 \\\\
+        (0, \ p_0) \cup \left(p_0, \ \min(p_2+\delta, \ 1)\\right) & , \\text{if } \delta > 0
+        \end{cases}
+        $$
     """
 
     def func(treatment_proportion: float) -> float:
@@ -291,8 +301,22 @@ def solve_treatment_proportion(
             - power
         )
 
-    treatment_proportion = brentq(func, max(reference_proportion + margin, 0), 1)
-    return treatment_proportion
+    if margin < 0:
+        lower_bound, upper_bound = reference_proportion, 1
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
+
+        lower_bound, upper_bound = max(reference_proportion + margin, 0), reference_proportion
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
+    else:
+        lower_bound, upper_bound = 0, reference_proportion
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
+
+        lower_bound, upper_bound = reference_proportion, min(reference_proportion + margin, 1)
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
 
 
 def solve_reference_proportion(
@@ -321,14 +345,12 @@ def solve_reference_proportion(
         reference_proportion(float): The required reference proportion.
 
     Notes:
-        The non-inferiority margin should be negative when higher is better, otherwise positive.
-
         The range of the reference proportion $(p_0)$ is determined by the treatment proportion $(p_1)$ and non-inferiority margin $(\delta)$:
 
         $$
         \\begin{cases}
-        (-\delta, \ p_1-\delta) \cup (-\delta, \ 1) & , \\text{if } \delta < 0 \\\\
-        (p_1-\delta, \ 1-\delta) \cup (0, \ 1-\delta) & , \\text{if } \delta > 0
+        (-\delta, \ p_1) \cup \left(\max(p_1, \ -\delta), \min(p_1-\delta, \ 1)\\right) & , \\text{if } \delta < 0 \\\\
+        (p_1, \ 1-\delta) \cup \left(\max(p_1-\delta, \ 0), \ \min(p_1, \ 1-\delta)\\right) & , \\text{if } \delta > 0
         \end{cases}
         $$
     """
@@ -348,14 +370,22 @@ def solve_reference_proportion(
             - power
         )
 
-    if margin > 0:
-        if func(treatment_proportion - margin) * func(1 - margin) < 0:
-            pass
-    else:
-        lower_bound, upper_bound = -margin, treatment_proportion - margin
+    if margin < 0:
+        lower_bound, upper_bound = -margin, treatment_proportion
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
 
-    reference_proportion = brentq(func, lower_bound, upper_bound)
-    return reference_proportion
+        lower_bound, upper_bound = max(treatment_proportion, -margin), min(treatment_proportion - margin, 1)
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
+    else:
+        lower_bound, upper_bound = treatment_proportion, 1 - margin
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
+
+        lower_bound, upper_bound = max(treatment_proportion - margin, 0), min(treatment_proportion, 1 - margin)
+        if func(lower_bound) * func(upper_bound) < 0:
+            return float(brentq(func, lower_bound, upper_bound))
 
 
 def solve_margin(
