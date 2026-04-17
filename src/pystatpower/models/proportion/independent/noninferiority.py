@@ -1,4 +1,4 @@
-from math import ceil, sqrt
+from math import ceil, copysign, sqrt
 
 from scipy.optimize import brentq
 from scipy.stats import norm
@@ -9,7 +9,7 @@ from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 def _power_pooled(
     treatment_proportion: float,
     reference_proportion: float,
-    magin: float,
+    margin: float,
     treatment_size: float,
     reference_size: float,
     alpha: float = 0.05,
@@ -21,7 +21,7 @@ def _power_pooled(
         (
             norm.ppf(1 - alpha)
             * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
-            - abs(treatment_proportion - reference_proportion - magin)
+            - abs(treatment_proportion - reference_proportion - margin)
         )
         / sqrt(
             treatment_proportion * (1 - treatment_proportion) / treatment_size
@@ -34,7 +34,7 @@ def _power_pooled(
 def _power_pooled_cc(
     treatment_proportion: float,
     reference_proportion: float,
-    magin: float,
+    margin: float,
     treatment_size: float,
     reference_size: float,
     alpha: float = 0.05,
@@ -47,7 +47,10 @@ def _power_pooled_cc(
             norm.ppf(1 - alpha)
             * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
             - abs(
-                treatment_proportion - reference_proportion - magin - 1 / 2 * (1 / treatment_size + 1 / reference_size)
+                treatment_proportion
+                - reference_proportion
+                - margin
+                + copysign(1, margin) * 1 / 2 * (1 / treatment_size + 1 / reference_size)
             )
         )
         / sqrt(
@@ -61,14 +64,14 @@ def _power_pooled_cc(
 def _power_unpooled(
     treatment_proportion: float,
     reference_proportion: float,
-    magin: float,
+    margin: float,
     treatment_size: float,
     reference_size: float,
     alpha: float = 0.05,
 ) -> float:
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha)
-        - abs(treatment_proportion - reference_proportion - magin)
+        - abs(treatment_proportion - reference_proportion - margin)
         / sqrt(
             treatment_proportion * (1 - treatment_proportion) / treatment_size
             + reference_proportion * (1 - reference_proportion) / reference_size
@@ -80,14 +83,19 @@ def _power_unpooled(
 def _power_unpooled_cc(
     treatment_proportion: float,
     reference_proportion: float,
-    magin: float,
+    margin: float,
     treatment_size: float,
     reference_size: float,
     alpha: float = 0.05,
 ) -> float:
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha)
-        - abs(treatment_proportion - reference_proportion - magin - 1 / 2 * (1 / treatment_size + 1 / reference_size))
+        - abs(
+            treatment_proportion
+            - reference_proportion
+            - margin
+            + copysign(1, margin) * 1 / 2 * (1 / treatment_size + 1 / reference_size)
+        )
         / sqrt(
             treatment_proportion * (1 - treatment_proportion) / treatment_size
             + reference_proportion * (1 - reference_proportion) / reference_size
@@ -99,7 +107,7 @@ def _power_unpooled_cc(
 def _power(
     treatment_proportion: float,
     reference_proportion: float,
-    magin: float,
+    margin: float,
     treatment_size: float,
     reference_size: float,
     alpha: float = 0.05,
@@ -109,20 +117,20 @@ def _power(
     if pooled:
         if continuity_correction:
             return _power_pooled_cc(
-                treatment_proportion, reference_proportion, magin, treatment_size, reference_size, alpha
+                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
             )
         else:
             return _power_pooled(
-                treatment_proportion, reference_proportion, magin, treatment_size, reference_size, alpha
+                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
             )
     else:
         if continuity_correction:
             return _power_unpooled_cc(
-                treatment_proportion, reference_proportion, magin, treatment_size, reference_size, alpha
+                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
             )
         else:
             return _power_unpooled(
-                treatment_proportion, reference_proportion, magin, treatment_size, reference_size, alpha
+                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
             )
 
 
@@ -191,6 +199,15 @@ def solve_size(
         size(tuple[int, int]): The required sample size.
     """
 
+    # If continuity correction is applied, in the case of small sample size, the power decreases with the increase of sample size, and then as the sample size continues to increase, the power gradually increases,
+    # so there is a minimum value point in the power function, when using brentq to search, the minimum value point x0 must be found first, and then the search interval of brentq must be limited to (x0, 10^6) to ensure convergence.
+    if continuity_correction:
+        lower_bound = 1 / 2 * (1 / ratio + 1) / abs(treatment_proportion - reference_proportion - margin)
+    else:
+        lower_bound = 0.000001
+
+    upper_bound = SAMPLE_SIZE_SEARCH_MAX
+
     if ratio >= 1:
 
         def func(reference_size: float) -> float:
@@ -208,7 +225,7 @@ def solve_size(
                 - power
             )
 
-        reference_size = int(ceil(brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)))
+        reference_size = int(ceil(brentq(func, lower_bound, upper_bound)))
         treatment_size = int(ceil(reference_size * ratio))
         return treatment_size, reference_size
     else:
@@ -228,7 +245,7 @@ def solve_size(
                 - power
             )
 
-        treatment_size = ceil(brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX))
+        treatment_size = ceil(brentq(func, lower_bound, upper_bound))
         reference_size = ceil(treatment_size * (1 / ratio))
         return float(treatment_size), float(reference_size)
 
@@ -302,6 +319,18 @@ def solve_reference_proportion(
 
     Returns:
         reference_proportion(float): The required reference proportion.
+
+    Notes:
+        The non-inferiority margin should be negative when higher is better, otherwise positive.
+
+        The range of the reference proportion $(p_0)$ is determined by the treatment proportion $(p_1)$ and non-inferiority margin $(\delta)$:
+
+        $$
+        \\begin{cases}
+        (-\delta, \ p_1-\delta) \cup (-\delta, \ 1) & , \\text{if } \delta < 0 \\\\
+        (p_1-\delta, \ 1-\delta) \cup (0, \ 1-\delta) & , \\text{if } \delta > 0
+        \end{cases}
+        $$
     """
 
     def func(reference_proportion: float) -> float:
@@ -319,7 +348,13 @@ def solve_reference_proportion(
             - power
         )
 
-    reference_proportion = brentq(func, 0, min(treatment_proportion - margin, 1))
+    if margin > 0:
+        if func(treatment_proportion - margin) * func(1 - margin) < 0:
+            pass
+    else:
+        lower_bound, upper_bound = -margin, treatment_proportion - margin
+
+    reference_proportion = brentq(func, lower_bound, upper_bound)
     return reference_proportion
 
 
@@ -355,7 +390,7 @@ def solve_margin(
 
         $$
         \\begin{cases}
-        (-p_1, \ 0) \cup (p_1-p_2, \ 1-p_2) & , \\text{if } p_1 > p_2 \\\\
+        (-p_2, \ 0) \cup (p_1-p_2, \ 1-p_2) & , \\text{if } p_1 > p_2 \\\\
         (-p_2, \ p_1-p_2) \cup (0, \ 1-p_2) & , \\text{if } p_1 < p_2 \\\\
         (-p_1, \ 0) \cup (0, \ 1-p_2)       & , \\text{if } p_1 = p_2
         \end{cases}
@@ -378,8 +413,8 @@ def solve_margin(
         )
 
     if treatment_proportion > reference_proportion:
-        if func(-treatment_proportion) * func(0) < 0:
-            margin = brentq(func, -treatment_proportion, 0)
+        if func(-reference_proportion) * func(0) < 0:
+            margin = brentq(func, -reference_proportion, 0)
         elif func(treatment_proportion - reference_proportion) * func(1 - reference_proportion) < 0:
             margin = brentq(func, treatment_proportion - reference_proportion, 1 - reference_proportion)
     elif treatment_proportion < reference_proportion:
@@ -394,177 +429,3 @@ def solve_margin(
             margin = brentq(func, 0, 1 - reference_proportion)
 
     return float(margin)
-
-
-def _continuity_correction(
-    original_size: float,
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float,
-) -> float:
-    if alpha < power:
-        corrected_size = (
-            original_size
-            / 4
-            * (
-                1
-                + sqrt(
-                    1
-                    + 2 * (ratio + 1) / (ratio * (treatment_proportion - reference_proportion - margin) * original_size)
-                )
-            )
-            ** 2
-        )
-    elif alpha > power:
-        corrected_size = (
-            original_size
-            / 4
-            * (
-                -1
-                + sqrt(
-                    1
-                    + 2 * (ratio + 1) / (ratio * (treatment_proportion - reference_proportion - margin) * original_size)
-                )
-            )
-            ** 2
-        )
-    elif alpha == power:
-        corrected_size = (ratio + 1) / (2 * ratio * (treatment_proportion - reference_proportion - margin))
-
-    return float(corrected_size)
-
-
-def _size_pooled(
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float = 1,
-    skip_restrict: bool = False,
-) -> tuple[float, float]:
-    if not skip_restrict and Restrict.is_power_lt_alpha(alpha, power):
-        reference_size = LOWER_LIMIT_OF_SAMPLE_SIZE
-    else:
-        p_bar = (ratio * treatment_proportion + reference_proportion) / (ratio + 1)
-        reference_size = (
-            norm.ppf(1 - alpha) * sqrt(p_bar * (1 - p_bar) * (1 / ratio + 1))
-            + norm.ppf(power)
-            * sqrt(
-                1 / ratio * treatment_proportion * (1 - treatment_proportion)
-                + reference_proportion * (1 - reference_proportion)
-            )
-        ) ** 2 / (treatment_proportion - reference_proportion - margin) ** 2
-
-    treatment_size = reference_size * ratio
-
-    return float(treatment_size), float(reference_size)
-
-
-def _size_pooled_cc(
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float = 1,
-) -> tuple[float, float]:
-    original_size = _size_pooled(
-        alpha, power, treatment_proportion, reference_proportion, margin, ratio, skip_restrict=True
-    )[1]
-    reference_size = _continuity_correction(
-        original_size, alpha, power, treatment_proportion, reference_proportion, margin, ratio
-    )
-    treatment_proportion = reference_size * ratio
-
-    return treatment_proportion, reference_size
-
-
-def _size_unpooled(
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float = 1,
-    skip_restrict: bool = False,
-) -> tuple[float, float]:
-    if not skip_restrict and Restrict.is_power_lt_alpha(alpha, power):
-        reference_size = LOWER_LIMIT_OF_SAMPLE_SIZE
-    else:
-        reference_size = (
-            (norm.ppf(1 - alpha) + norm.ppf(power)) ** 2
-            * (
-                1 / ratio * treatment_proportion * (1 - treatment_proportion)
-                + reference_proportion * (1 - reference_proportion)
-            )
-            / (treatment_proportion - reference_proportion - margin) ** 2
-        )
-
-    treatment_size = reference_size * ratio
-
-    return float(treatment_size), float(reference_size)
-
-
-def _size_unpooled_cc(
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float = 1,
-) -> tuple[float, float]:
-    original_size = _size_unpooled(
-        alpha, power, treatment_proportion, reference_proportion, margin, ratio, skip_restrict=True
-    )[1]
-    reference_size = _continuity_correction(
-        original_size, alpha, power, treatment_proportion, reference_proportion, margin, ratio
-    )
-    treatment_size = reference_size * ratio
-
-    return float(treatment_size), float(reference_size)
-
-
-def size(
-    alpha: float,
-    power: float,
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    ratio: float = 1,
-    pooled: bool = False,
-    continuity_correction: bool = False,
-):
-    """估算定性指标两独立样本非劣效检验的样本量
-
-    Args:
-        alpha (float): 显著性水平
-        power (float): 检验效能
-        treatment_proportion (float): 试验组指标值
-        reference_proportion (float): 对照组指标值
-        margin (float): 非劣界值
-        ratio (float): 样本量分配比例，试验组：对照组
-        pooled (bool): 是否使用合并方差
-        continuity_correction (bool): 是否使用连续性校正
-    """
-
-    if Restrict.is_alpha_gt_one_half(alpha):
-        alpha = 1 - alpha
-
-    if pooled:
-        if continuity_correction:
-            size_tuple = _size_pooled_cc(alpha, power, treatment_proportion, reference_proportion, margin, ratio)
-        else:
-            size_tuple = _size_pooled(alpha, power, treatment_proportion, reference_proportion, margin, ratio)
-    else:
-        if continuity_correction:
-            size_tuple = _size_unpooled_cc(alpha, power, treatment_proportion, reference_proportion, margin, ratio)
-        else:
-            size_tuple = _size_unpooled(alpha, power, treatment_proportion, reference_proportion, margin, ratio)
-
-    size_tuple = tuple(map(lambda size: max(size, LOWER_LIMIT_OF_SAMPLE_SIZE), size_tuple))
-
-    return size_tuple

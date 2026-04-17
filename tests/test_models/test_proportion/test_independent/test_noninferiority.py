@@ -83,9 +83,47 @@ from pystatpower.models.proportion.independent.noninferiority import solve_power
         (0.05, 0.80, 0.8096, 0.93, 0.80, -0.10, True, False, 39, 20),
         (0.05, 0.80, 0.8017, 0.94, 0.80, -0.10, True, False, 34, 17),
         (0.05, 0.80, 0.8020, 0.95, 0.80, -0.10, True, False, 30, 15),
-        # case series: alpha = 0.05, power = 0.80, treatment_proportion = 0.90, reference_proportion = 0.80, margin = -0.10, pooled = True, continuity_correction = False
+        # case series: alpha = 0.05, power = 0.80, treatment_proportion = 0.90, reference_proportion = 0.70 to 0.75 by 0.01, margin = -0.10, pooled = True, continuity_correction = False
         (0.05, 0.80, 0.8090, 0.90, 0.70, -0.10, True, False, 31, 16),
         (0.05, 0.80, 0.8121, 0.90, 0.71, -0.10, True, False, 33, 17),
+        (0.05, 0.80, 0.8136, 0.90, 0.72, -0.10, True, False, 35, 18),
+        (0.05, 0.80, 0.8135, 0.90, 0.73, -0.10, True, False, 37, 19),
+        (0.05, 0.80, 0.8118, 0.90, 0.74, -0.10, True, False, 39, 20),
+        (0.05, 0.80, 0.8086, 0.90, 0.75, -0.10, True, False, 41, 21),
+        # case series: alpha = 0.05, power = 0.80, treatment_proportion = 0.90, reference_proportion = 0.80, margin = -0.20 to -0.01 by 0.01, pooled = True, continuity_correction = False
+        (0.05, 0.80, 0.8047, 0.90, 0.80, -0.20, True, False, 25, 13),
+        (0.05, 0.80, 0.8071, 0.90, 0.80, -0.19, True, False, 27, 14),
+        (0.05, 0.80, 0.8070, 0.90, 0.80, -0.18, True, False, 29, 15),
+        (0.05, 0.80, 0.8046, 0.90, 0.80, -0.17, True, False, 31, 16),
+        (0.05, 0.80, 0.8038, 0.90, 0.80, -0.16, True, False, 34, 17),
+        (0.05, 0.80, 0.8111, 0.90, 0.80, -0.15, True, False, 37, 19),
+        (0.05, 0.80, 0.8014, 0.90, 0.80, -0.14, True, False, 39, 20),
+        (0.05, 0.80, 0.8050, 0.90, 0.80, -0.13, True, False, 43, 22),
+        (0.05, 0.80, 0.8046, 0.90, 0.80, -0.12, True, False, 47, 24),
+        (0.05, 0.80, 0.8006, 0.90, 0.80, -0.11, True, False, 51, 26),
+        (0.05, 0.80, 0.8047, 0.90, 0.80, -0.10, True, False, 57, 29),
+        (0.05, 0.80, 0.8035, 0.90, 0.80, -0.09, True, False, 63, 32),
+        (0.05, 0.80, 0.8069, 0.90, 0.80, -0.08, True, False, 71, 36),
+        (0.05, 0.80, 0.8041, 0.90, 0.80, -0.07, True, False, 79, 40),
+        (0.05, 0.80, 0.8032, 0.90, 0.80, -0.06, True, False, 89, 45),
+        (0.05, 0.80, 0.8020, 0.90, 0.80, -0.05, True, False, 101, 51),
+        (0.05, 0.80, 0.8002, 0.90, 0.80, -0.04, True, False, 116, 58),
+        (0.05, 0.80, 0.8028, 0.90, 0.80, -0.03, True, False, 135, 68),
+        (0.05, 0.80, 0.8004, 0.90, 0.80, -0.02, True, False, 158, 79),
+        (0.05, 0.80, 0.8004, 0.90, 0.80, -0.01, True, False, 188, 94),
+        # case series: alpha = 0.05, power = 0.80, treatment_proportion = 0.90, reference_proportion = 0.80, margin = -0.10, pooled = True/False, continuity_correction = True/False, ratio ≈ 2
+        # ratio = 2
+        (0.05, 0.80, 0.8035, 0.90, 0.80, -0.10, True, True, 71, 36),
+        (0.05, 0.80, 0.8047, 0.90, 0.80, -0.10, True, False, 57, 29),
+        (0.05, 0.80, 0.8006, 0.90, 0.80, -0.10, False, True, 77, 39),
+        (0.05, 0.80, 0.8022, 0.90, 0.80, -0.10, False, False, 63, 32),
+        # ratio = 0.5
+        (0.05, 0.80, 0.8090, 0.90, 0.80, -0.10, True, True, 38, 76),
+        (0.05, 0.80, 0.8105, 0.90, 0.80, -0.10, True, False, 31, 62),
+        (0.05, 0.80, 0.8083, 0.90, 0.80, -0.10, False, True, 34, 68),
+        (0.05, 0.80, 0.8094, 0.90, 0.80, -0.10, False, False, 27, 54),
+        # case: alpha = 0.05, power = 0.80, treatment_proportion = 0.90, reference_proportion = 0.80, margin = 0.15, pooled = True, continuity_correction = True
+        (0.05, 0.80, 0.8003, 0.90, 0.80, 0.15, True, True, 512, 1024),
     ],
     ids=lambda p: f"{p[0]}, {p[1]}, {p[2]}, {p[3]}, {p[4]}, {p[5]}, {p[6]}, {p[7]}, {p[8]}, {p[9]}",
 )
@@ -169,7 +207,7 @@ def test_solve_reference_proportion(case) -> None:
 
 
 def test_solve_margin(case) -> None:
-    alpha, power, _, treatment_proportion, reference_proportion, expected_margin, pooled, continuity_correction, treatment_size, reference_size = case
+    alpha, _, actual_power, treatment_proportion, reference_proportion, expected_margin, pooled, continuity_correction, treatment_size, reference_size = case
     assert (
         round(
             solve_margin(
@@ -178,7 +216,7 @@ def test_solve_margin(case) -> None:
                 treatment_size,
                 reference_size,
                 alpha,
-                power,
+                actual_power,
                 pooled,
                 continuity_correction,
             ),
