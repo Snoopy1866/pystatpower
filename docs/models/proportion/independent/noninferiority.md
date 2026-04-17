@@ -154,7 +154,7 @@ z' & = \frac{\left(\hat{p}_1 - \hat{p}_2\right) - \left(p_1 - p_2\right) + \left
             {\sqrt{\bar{p}(1-\bar{p}) \left(\frac{1}{n_1} + \frac{1}{n_2}\right)}} \\
    & \xrightarrow{d}
        N\left(\frac{p_1 - p_2 - \delta - \frac{1}{2}\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}
-                   {\sqrt{\bar{p}(1-\bar{p}) \left(\frac{1}{n_1} + \frac{1}{n_2}\right)}}, \ 
+                   {\sqrt{\bar{p}(1-\bar{p}) \left(\frac{1}{n_1} + \frac{1}{n_2}\right)}}, \
               \frac{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}
                    {\bar{p}(1-\bar{p}) \left(\frac{1}{n_1} + \frac{1}{n_2}\right)}
         \right)
