@@ -4,7 +4,7 @@ nav = [
     { "算法" = [
         { "单样本率置信区间" = "models/proportion/single/ci.md" },
         { "单样本率差异性检验" = "models/proportion/single/difference.md" },
-        { "两独立样本率非劣效设计" = "models/proportion/independent/noninferiority.md" },
+        { "两独立样本率非劣效检验" = "models/proportion/independent/noninferiority.md" },
         { "两独立样本率优效性设计" = "models/proportion/independent/superiority.md" },
         { "相关系数" = "models/correlation/difference.md" }
     ] },
