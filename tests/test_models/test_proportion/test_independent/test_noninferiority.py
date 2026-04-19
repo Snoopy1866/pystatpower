@@ -3,7 +3,7 @@
 
 import pytest
 
-from pystatpower.models.proportion.independent.noninferiority import solve_power, solve_size, solve_treatment_proportion, solve_reference_proportion, solve_margin
+from pystatpower.models.proportion.independent.noninferiority import solve_margin, solve_power, solve_reference_proportion, solve_size, solve_treatment_proportion
 
 
 @pytest.fixture(
