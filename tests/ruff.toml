@@ -1,3 +1,5 @@
 extend = "../pyproject.toml"
 
 line-length = 240
+
+lint.ignore = ["I001"]
