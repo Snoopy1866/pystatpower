@@ -1,4 +1,4 @@
-name: Test
+name: PyTest
 
 on:
   push:
@@ -12,16 +12,17 @@ defaults:
     shell: bash -e {0}
 
 jobs:
-  check:
-    runs-on: ${{ matrix.os }}
-    continue-on-error: true
+  test-core:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    name: test-core (${{ matrix.os }}, ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -30,7 +31,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --group dev
 
       - name: Test with python ${{ matrix.python-version }}
         run: |
@@ -41,4 +42,50 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
-          flags: ${{ matrix.os }}-py${{ matrix.python-version }}
+          flags: test-core-${{ matrix.os }}-py${{ matrix.python-version }}
+
+  test-minimum-scipy:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        deps:
+          - python-version: "3.10"
+            scipy-version: "1.7.2"
+          - python-version: "3.11"
+            scipy-version: "1.10.1"
+          - python-version: "3.12"
+            scipy-version: "1.11.3"
+          - python-version: "3.13"
+            scipy-version: "1.15.0"
+          - python-version: "3.14"
+            scipy-version: "1.16.1"
+
+    name: test-minimum-scipy (${{ matrix.os }}, ${{ matrix.deps.python-version }}, scipy == ${{ matrix.deps.scipy-version }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.11.7"
+          python-version: ${{ matrix.deps.python-version }}
+
+      - name: Install the project
+        run: uv sync --locked --group dev
+
+      - name: Install SciPy
+        run: uv pip install scipy==${{ matrix.deps.scipy-version }} --no-build
+
+      - name: Test with python ${{ matrix.deps.python-version }}
+        run: |
+          uv run --frozen pytest --cov=pystatpower --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: test-minimum-scipy-${{ matrix.os }}-py${{ matrix.deps.python-version }}-scipy${{ matrix.deps.scipy-version }}
