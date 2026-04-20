@@ -71,8 +71,8 @@ jobs:
       - name: Install the project
         run: uv sync --locked --group dev
 
-      - name: Install specific SciPy
-        run: uv pip install scipy==${{ matrix.scipy-version }}
+      - name: Install SciPy
+        run: uv pip install scipy==${{ matrix.scipy-version }} --no-build
 
       - name: Test with python ${{ matrix.python-version }}
         run: |
