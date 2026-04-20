@@ -16,27 +16,33 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
 
-PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
+PyStatPower is a Python package for power analysis in statistics.
 
-[📚文档](https://pystatpower.readthedocs.io/)
+The following models are currently supported:
 
-## 安装
+- Confidence intervals for one proportion
+- Difference test for one proportion
+- Difference test for correlation coefficient
+- Non-inderiority test for two independent proportions
+
+## Usage
 
 ```bash
 pip install pystatpower
 ```
 
-## 使用示例
+## Example
 
 ```python
 from pystatpower.models import proportion
 
-size = proportion.independent.noninferiority.size(
-    alpha=0.025,
-    power=0.8,
+size = proportion.independent.noninferiority.solve_size(
     treatment_proportion=0.95,
     reference_proportion=0.90,
     margin=-0.10,
+    ratio=1,
+    alpha=0.025,
+    power=0.8,
 )
 print(size)
 ```
@@ -44,10 +50,10 @@ print(size)
 输出:
 
 ```python
-(47.96537615435558, 47.96537615435558)
+(48, 48)
 ```
 
-## 鸣谢
+## Acknowlegement
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)
