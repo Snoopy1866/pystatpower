@@ -1,5 +1,3 @@
-from math import ceil
-
 import pytest
 
 from pystatpower.models.correlation.difference import solve_correlation, solve_null_correlation, solve_power, solve_size
@@ -37,7 +35,7 @@ def case(request: pytest.FixtureRequest):
 
 def test_solve_size(case) -> None:
     null_correlation, correlation, alpha, power, expected_size, bias_adj = case
-    assert ceil(solve_size(null_correlation, correlation, alpha, power, bias_adj)) == expected_size
+    assert solve_size(null_correlation, correlation, alpha, power, bias_adj) == expected_size
 
 
 def test_solve_power(case) -> None:

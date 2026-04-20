@@ -1,4 +1,4 @@
-from math import log, sqrt
+from math import ceil, log, sqrt
 
 from scipy.optimize import brentq
 from scipy.stats import norm
@@ -77,7 +77,7 @@ def solve_size(
 
     size = brentq(func, 3, SAMPLE_SIZE_SEARCH_MAX)
 
-    return float(size)
+    return ceil(size)
 
 
 def solve_correlation(

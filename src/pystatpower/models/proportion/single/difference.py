@@ -1,4 +1,4 @@
-from math import sqrt
+from math import ceil, sqrt
 
 from scipy.stats import norm
 
@@ -68,4 +68,4 @@ def size(
         case (False, False):
             size = _size_p0(alpha, power, proportion, null_proportion)
 
-    return size
+    return ceil(size)
