@@ -12,16 +12,15 @@ defaults:
     shell: bash -e {0}
 
 jobs:
-  check:
-    runs-on: ${{ matrix.os }}
-    continue-on-error: true
+  test-core:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -30,7 +29,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --group dev
 
       - name: Test with python ${{ matrix.python-version }}
         run: |
@@ -42,3 +41,48 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           flags: ${{ matrix.os }}-py${{ matrix.python-version }}
+
+  test-dependency:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        include:
+          - python-version: 3.11
+            scipy-version: 1.14.0
+          - python-version: 3.12
+            scipy-version: 1.14.0
+          - python-version: 3.13
+            scipy-version: 1.14.0
+          - python-version: 3.14
+            scipy-version: 1.14.0
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.11.7"
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --locked --group dev
+
+      - name: Install specific SciPy
+        run: uv pip install scipy==${{ matrix.scipy-version }}
+
+      - name: Test with python ${{ matrix.python-version }}
+        run: |
+          uv run --frozen pytest --cov=pystatpower --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: ${{ matrix.os }}-py${{ matrix.python-version }}-scipy${{ matrix.scipy-version }}
