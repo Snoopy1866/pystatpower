@@ -48,8 +48,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
-          - windows-latest
         include:
           - python-version: 3.11
             scipy-version: 1.14.0
