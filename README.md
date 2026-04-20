@@ -16,14 +16,14 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
 
-PyStatPower is a Python package for power analysis in statistics.
+PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本量、检验效能和效应量大小的估计。
 
-The following models are currently supported:
+目前支持的模块如下：
 
-- Confidence intervals for one proportion
-- Difference test for one proportion
-- Difference test for correlation coefficient
-- Non-inderiority test for two independent proportions
+- 单样本率置信区间
+- 单样本率差异性检验
+- 两独立样本率非劣效检验
+- 相关系数检验
 
 ## Usage
 
