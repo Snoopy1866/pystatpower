@@ -1,6 +1,13 @@
 version = 1
 revision = 3
 requires-python = ">=3.11"
+resolution-markers = [
+    "python_full_version == '3.14.*'",
+    "python_full_version == '3.13.*'",
+    "python_full_version == '3.12.*'",
+    "python_full_version < '3.12'",
+    "python_full_version >= '3.15'",
+]
 
 [[package]]
 name = "cfgv"
@@ -544,7 +551,7 @@ name = "pystatpower"
 version = "0.0.4"
 source = { editable = "." }
 dependencies = [
-    { name = "scipy" },
+    { name = "scipy", marker = "python_full_version < '3.15'" },
 ]
 
 [package.dev-dependencies]
@@ -560,7 +567,12 @@ docs = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "scipy", specifier = ">=1.16.0" }]
+requires-dist = [
+    { name = "scipy", marker = "python_full_version == '3.11.*'", specifier = ">=1.10.1" },
+    { name = "scipy", marker = "python_full_version == '3.12.*'", specifier = ">=1.11.3" },
+    { name = "scipy", marker = "python_full_version == '3.13.*'", specifier = ">=1.15.0" },
+    { name = "scipy", marker = "python_full_version == '3.14.*'", specifier = ">=1.16.1" },
+]
 
 [package.metadata.requires-dev]
 dev = [
@@ -712,7 +724,7 @@ name = "scipy"
 version = "1.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy" },
+    { name = "numpy", marker = "python_full_version < '3.15'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/7a/97/5a3609c4f8d58b039179648e62dd220f89864f56f7357f5d4f45c29eb2cc/scipy-1.17.1.tar.gz", hash = "sha256:95d8e012d8cb8816c226aef832200b1d45109ed4464303e997c5b13122b297c0", size = 30573822, upload-time = "2026-02-23T00:26:24.851Z" }
 wheels = [
