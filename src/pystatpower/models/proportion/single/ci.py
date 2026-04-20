@@ -29,24 +29,14 @@ def _ci_width(
 
 
 def _ci_width_clopper_pearson(proportion: float, size: float, alpha: float = 0.05) -> float:
-    ci_lower = (
-        size
-        * proportion
-        / (
-            size * proportion
-            + (size - size * proportion + 1)
-            * f.ppf(1 - alpha / 2, 2 * (size - size * proportion + 1), 2 * size * proportion)
-        )
-    )
+    size_positive = size * proportion
+    size_negative = size - size_positive
 
-    ci_upper = (
-        (size * proportion + 1)
-        * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
-        / (
-            (size - size * proportion)
-            + (size * proportion + 1)
-            * f.ppf(1 - alpha / 2, 2 * (size * proportion + 1), 2 * (size - size * proportion))
-        )
+    ci_lower = 1 / (
+        1 + (size_negative + 1) / (size_positive * f.ppf(alpha / 2, 2 * size_positive, 2 * (size_negative + 1)))
+    )
+    ci_upper = 1 / (
+        1 + size_negative / ((size_positive + 1) * f.ppf(1 - alpha / 2, 2 * (size_positive + 1), 2 * size_negative))
     )
 
     ci_width = ci_upper - ci_lower

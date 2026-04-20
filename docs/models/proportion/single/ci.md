@@ -269,11 +269,11 @@ $$
 Clopper-Pearson 法使用以下公式计算置信区间：
 
 $$
-L = \frac{np}{np + (n - np + 1)F_{1-\alpha/2; 2(n-np+1), 2np}}
+L = \left[ 1 + \frac{n - np + 1}{np F_{\frac{\alpha}{2};\ 2np,\ 2(n - np + 1)}} \right]^{-1}
 $$
 
 $$
-U = \frac{(np + 1)F_{1-\alpha/2; 2(np+1), 2(n-np)}}{(n - np) + (np + 1)F_{1-\alpha/2; 2(np+1), 2(n-np)}}
+U = \left[ 1 + \frac{n - np}{(np + 1) F_{1-\frac{\alpha}{2};\ 2(np + 1), \ 2(n - np)}} \right]^{-1}
 $$
 
 置信区间宽度：
