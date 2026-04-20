@@ -1,148 +1,187 @@
 # Validation Software: PASS 15
-# Module: Test for One Proportion
-
-
-from math import ceil
+# Module: Tests for One Proportions
 
 import pytest
 
-from pystatpower.models.proportion.single.difference import size
+from pystatpower.models.proportion.single.difference import solve_power, solve_size, solve_null_proportion, solve_proportion
 
 
-@pytest.mark.parametrize(
-    "alpha, power, proportion, null_proportion, expected",
-    [
-        # alpha = 0.01 to 0.20 by 0.01, power = 0.80, proportion = 0.95, null_proportion = 0.80
-        (0.01, 0.80, 0.95, 0.80, 66),
-        (0.02, 0.80, 0.95, 0.80, 56),
-        (0.03, 0.80, 0.95, 0.80, 50),
-        (0.04, 0.80, 0.95, 0.80, 45),
-        (0.05, 0.80, 0.95, 0.80, 42),
-        (0.06, 0.80, 0.95, 0.80, 39),
-        (0.07, 0.80, 0.95, 0.80, 37),
-        (0.08, 0.80, 0.95, 0.80, 35),
-        (0.09, 0.80, 0.95, 0.80, 33),
-        (0.10, 0.80, 0.95, 0.80, 32),
-        (0.11, 0.80, 0.95, 0.80, 31),
-        (0.12, 0.80, 0.95, 0.80, 29),
-        (0.13, 0.80, 0.95, 0.80, 28),
-        (0.14, 0.80, 0.95, 0.80, 27),
-        (0.15, 0.80, 0.95, 0.80, 26),
-        (0.16, 0.80, 0.95, 0.80, 25),
-        (0.17, 0.80, 0.95, 0.80, 24),
-        (0.18, 0.80, 0.95, 0.80, 24),
-        (0.19, 0.80, 0.95, 0.80, 23),
-        (0.20, 0.80, 0.95, 0.80, 22),
+@pytest.fixture(
+    params=[
+        # null_proportion, proportion, size, alpha, power, phat, continuity_correction, actual_power
+        # null_proportion = 0.65 to 0.79 by 0.01, proportion = 0.95, phat = True, continuity_correction = True
+        (0.80, 0.65, 86, 0.05, 0.80, True, True, 0.8005),
+        (0.80, 0.66, 97, 0.05, 0.80, True, True, 0.8006),
+        (0.80, 0.67, 111, 0.05, 0.80, True, True, 0.8029),
+        (0.80, 0.68, 127, 0.05, 0.80, True, True, 0.8007),
+        (0.80, 0.69, 148, 0.05, 0.80, True, True, 0.8008),
+        (0.80, 0.70, 175, 0.05, 0.80, True, True, 0.8008),
+        (0.80, 0.71, 211, 0.05, 0.80, True, True, 0.8010),
+        (0.80, 0.72, 260, 0.05, 0.80, True, True, 0.8007),
+        (0.80, 0.73, 330, 0.05, 0.80, True, True, 0.8002),
+        (0.80, 0.74, 436, 0.05, 0.80, True, True, 0.8000),
+        (0.80, 0.75, 609, 0.05, 0.80, True, True, 0.8003),
+        (0.80, 0.76, 920, 0.05, 0.80, True, True, 0.8002),
+        (0.80, 0.77, 1578, 0.05, 0.80, True, True, 0.8001),
+        (0.80, 0.78, 3417, 0.05, 0.80, True, True, 0.8000),
+        (0.80, 0.79, 13122, 0.05, 0.80, True, True, 0.8000),
+        # null_proportion = 0.81 to 0.95 by 0.01, proportion = 0.95, phat = True, continuity_correction = True
+        (0.80, 0.81, 12180, 0.05, 0.80, True, True, 0.8000),
+        (0.80, 0.82, 2947, 0.05, 0.80, True, True, 0.8001),
+        (0.80, 0.83, 1264, 0.05, 0.80, True, True, 0.8001),
+        (0.80, 0.84, 685, 0.05, 0.80, True, True, 0.8005),
+        (0.80, 0.85, 421, 0.05, 0.80, True, True, 0.8009),
+        (0.80, 0.86, 279, 0.05, 0.80, True, True, 0.8001),
+        (0.80, 0.87, 196, 0.05, 0.80, True, True, 0.8017),
+        (0.80, 0.88, 142, 0.05, 0.80, True, True, 0.8008),
+        (0.80, 0.89, 106, 0.05, 0.80, True, True, 0.8013),
+        (0.80, 0.90, 81, 0.05, 0.80, True, True, 0.8037),
+        (0.80, 0.91, 62, 0.05, 0.80, True, True, 0.8009),
+        (0.80, 0.92, 49, 0.05, 0.80, True, True, 0.8087),
+        (0.80, 0.93, 38, 0.05, 0.80, True, True, 0.8059),
+        (0.80, 0.94, 30, 0.05, 0.80, True, True, 0.8118),
+        (0.80, 0.95, 23, 0.05, 0.80, True, True, 0.8058),
+        # null_proportion = 0.65 to 0.79 by 0.01, proportion = 0.95, phat = True, continuity_correction = False
+        (0.80, 0.65, 80, 0.05, 0.80, True, False, 0.8031),
+        (0.80, 0.66, 90, 0.05, 0.80, True, False, 0.8006),
+        (0.80, 0.67, 103, 0.05, 0.80, True, False, 0.8012),
+        (0.80, 0.68, 119, 0.05, 0.80, True, False, 0.8013),
+        (0.80, 0.69, 139, 0.05, 0.80, True, False, 0.8007),
+        (0.80, 0.70, 165, 0.05, 0.80, True, False, 0.8004),
+        (0.80, 0.71, 200, 0.05, 0.80, True, False, 0.8009),
+        (0.80, 0.72, 248, 0.05, 0.80, True, False, 0.8012),
+        (0.80, 0.73, 316, 0.05, 0.80, True, False, 0.8004),
+        (0.80, 0.74, 420, 0.05, 0.80, True, False, 0.8005),
+        (0.80, 0.75, 589, 0.05, 0.80, True, False, 0.8002),
+        (0.80, 0.76, 895, 0.05, 0.80, True, False, 0.8001),
+        (0.80, 0.77, 1545, 0.05, 0.80, True, False, 0.8001),
+        (0.80, 0.78, 3368, 0.05, 0.80, True, False, 0.8001),
+        (0.80, 0.79, 13022, 0.05, 0.80, True, False, 0.8000),
+        # null_proportion = 0.81 to 0.95 by 0.01, proportion = 0.95, phat = True, continuity_correction = False
+        (0.80, 0.81, 12080, 0.05, 0.80, True, False, 0.8000),
+        (0.80, 0.82, 2897, 0.05, 0.80, True, False, 0.8001),
+        (0.80, 0.83, 1231, 0.05, 0.80, True, False, 0.8002),
+        (0.80, 0.84, 660, 0.05, 0.80, True, False, 0.8004),
+        (0.80, 0.85, 401, 0.05, 0.80, True, False, 0.8007),
+        (0.80, 0.86, 263, 0.05, 0.80, True, False, 0.8007),
+        (0.80, 0.87, 182, 0.05, 0.80, True, False, 0.8018),
+        (0.80, 0.88, 130, 0.05, 0.80, True, False, 0.8015),
+        (0.80, 0.89, 95, 0.05, 0.80, True, False, 0.8006),
+        (0.80, 0.90, 71, 0.05, 0.80, True, False, 0.8020),
+        (0.80, 0.91, 54, 0.05, 0.80, True, False, 0.8064),
+        (0.80, 0.92, 41, 0.05, 0.80, True, False, 0.8085),
+        (0.80, 0.93, 31, 0.05, 0.80, True, False, 0.8097),
+        (0.80, 0.94, 23, 0.05, 0.80, True, False, 0.8071),
+        (0.80, 0.95, 17, 0.05, 0.80, True, False, 0.8100),
     ],
+    ids=lambda p: f"{p[0]}, {p[1]}, {p[2]}, {p[3]}, {p[4]}, {p[5]}, {p[6]}, {p[7]}",
 )
-def test_size_p0(alpha: float, power: float, proportion: float, null_proportion: float, expected: int) -> None:
-    assert ceil(size(alpha, power, proportion, null_proportion, phat=False, continuity_correction=False)) == expected
+def case(request: pytest.FixtureRequest):
+    return request.param
 
 
-@pytest.mark.parametrize(
-    "alpha, power, proportion, null_proportion, expected",
-    [
-        # alpha = 0.01 to 0.20 by 0.01, power = 0.80, proportion = 0.95, null_proportion = 0.80
-        (0.01, 0.80, 0.95, 0.80, 72),
-        (0.02, 0.80, 0.95, 0.80, 62),
-        (0.03, 0.80, 0.95, 0.80, 56),
-        (0.04, 0.80, 0.95, 0.80, 52),
-        (0.05, 0.80, 0.95, 0.80, 49),
-        (0.06, 0.80, 0.95, 0.80, 46),
-        (0.07, 0.80, 0.95, 0.80, 44),
-        (0.08, 0.80, 0.95, 0.80, 42),
-        (0.09, 0.80, 0.95, 0.80, 40),
-        (0.10, 0.80, 0.95, 0.80, 38),
-        (0.11, 0.80, 0.95, 0.80, 37),
-        (0.12, 0.80, 0.95, 0.80, 36),
-        (0.13, 0.80, 0.95, 0.80, 35),
-        (0.14, 0.80, 0.95, 0.80, 33),
-        (0.15, 0.80, 0.95, 0.80, 32),
-        (0.16, 0.80, 0.95, 0.80, 32),
-        (0.17, 0.80, 0.95, 0.80, 31),
-        (0.18, 0.80, 0.95, 0.80, 30),
-        (0.19, 0.80, 0.95, 0.80, 29),
-        (0.20, 0.80, 0.95, 0.80, 28),
-    ],
-)
-def test_size_p0_cc(alpha: float, power: float, proportion: float, null_proportion: float, expected: int) -> None:
-    assert ceil(size(alpha, power, proportion, null_proportion, phat=False, continuity_correction=True)) == expected
+def test_size_solve_power(case) -> None:
+    null_proportion, proportion, size, alpha, _, phat, continuity_correction, expected_power = case
+    assert (
+        round(
+            solve_power(
+                null_proportion,
+                proportion,
+                size,
+                alpha,
+                phat,
+                continuity_correction,
+            ),
+            4,
+        )
+        == expected_power
+    )
 
 
-@pytest.mark.parametrize(
-    "alpha, power, proportion, null_proportion, expected",
-    [
-        # alpha = 0.01 to 0.20 by 0.01, power = 0.80, proportion = 0.95, null_proportion = 0.80
-        (0.01, 0.80, 0.95, 0.80, 25),
-        (0.02, 0.80, 0.95, 0.80, 22),
-        (0.03, 0.80, 0.95, 0.80, 20),
-        (0.04, 0.80, 0.95, 0.80, 18),
-        (0.05, 0.80, 0.95, 0.80, 17),
-        (0.06, 0.80, 0.95, 0.80, 16),
-        (0.07, 0.80, 0.95, 0.80, 15),
-        (0.08, 0.80, 0.95, 0.80, 15),
-        (0.09, 0.80, 0.95, 0.80, 14),
-        (0.10, 0.80, 0.95, 0.80, 14),
-        (0.11, 0.80, 0.95, 0.80, 13),
-        (0.12, 0.80, 0.95, 0.80, 13),
-        (0.13, 0.80, 0.95, 0.80, 12),
-        (0.14, 0.80, 0.95, 0.80, 12),
-        (0.15, 0.80, 0.95, 0.80, 11),
-        (0.16, 0.80, 0.95, 0.80, 11),
-        (0.17, 0.80, 0.95, 0.80, 11),
-        (0.18, 0.80, 0.95, 0.80, 11),
-        (0.19, 0.80, 0.95, 0.80, 10),
-        (0.20, 0.80, 0.95, 0.80, 10),
-    ],
-)
-def test_size_phat(alpha: float, power: float, proportion: float, null_proportion: float, expected: int) -> None:
-    assert ceil(size(alpha, power, proportion, null_proportion, phat=True, continuity_correction=False)) == expected
+def test_solve_size(case) -> None:
+    null_proportion, proportion, expected_size, alpha, power, phat, continuity_correction, _ = case
+    assert (
+        solve_size(
+            null_proportion,
+            proportion,
+            alpha,
+            power,
+            phat,
+            continuity_correction,
+        )
+        == expected_size
+    )
 
 
-@pytest.mark.parametrize(
-    "alpha, power, proportion, null_proportion, expected",
-    [
-        # alpha = 0.01 to 0.20 by 0.01, power = 0.80, proportion = 0.95, null_proportion = 0.80
-        (0.01, 0.80, 0.95, 0.80, 31),
-        (0.02, 0.80, 0.95, 0.80, 28),
-        (0.03, 0.80, 0.95, 0.80, 26),
-        (0.04, 0.80, 0.95, 0.80, 24),
-        (0.05, 0.80, 0.95, 0.80, 23),
-        (0.06, 0.80, 0.95, 0.80, 22),
-        (0.07, 0.80, 0.95, 0.80, 22),
-        (0.08, 0.80, 0.95, 0.80, 21),
-        (0.09, 0.80, 0.95, 0.80, 20),
-        (0.10, 0.80, 0.95, 0.80, 20),
-        (0.11, 0.80, 0.95, 0.80, 19),
-        (0.12, 0.80, 0.95, 0.80, 19),
-        (0.13, 0.80, 0.95, 0.80, 18),
-        (0.14, 0.80, 0.95, 0.80, 18),
-        (0.15, 0.80, 0.95, 0.80, 17),
-        (0.16, 0.80, 0.95, 0.80, 17),
-        (0.17, 0.80, 0.95, 0.80, 17),
-        (0.18, 0.80, 0.95, 0.80, 17),
-        (0.19, 0.80, 0.95, 0.80, 16),
-        (0.20, 0.80, 0.95, 0.80, 16),
-    ],
-)
-def test_size_phat_cc(alpha: float, power: float, proportion: float, null_proportion: float, expected: int) -> None:
-    assert ceil(size(alpha, power, proportion, null_proportion, phat=True, continuity_correction=True)) == expected
+def test_size_solve_null_proportion(case) -> None:
+    expected_null_proportion, proportion, size, alpha, _, phat, continuity_correction, power = case
+
+    if expected_null_proportion < proportion:
+        assert (
+            round(
+                solve_null_proportion(
+                    proportion,
+                    size,
+                    alpha,
+                    power,
+                    phat,
+                    continuity_correction,
+                    proportion_selection="lower",
+                ),
+                2,
+            )
+            == expected_null_proportion
+        )
+    else:
+        assert (
+            round(
+                solve_null_proportion(
+                    proportion,
+                    size,
+                    alpha,
+                    power,
+                    phat,
+                    continuity_correction,
+                    proportion_selection="upper",
+                ),
+                2,
+            )
+            == expected_null_proportion
+        )
 
 
-if __name__ == "__main__":
-    from math import sqrt
+def test_size_solve_proportion(case) -> None:
+    null_proportion, expected_proportion, size, alpha, _, phat, continuity_correction, power = case
 
-    from scipy.stats import norm, t
-
-    null_proportion = 0.80
-    proportion = 0.95
-    alpha = 0.68
-    size = 4
-    a = (proportion - null_proportion) / sqrt(proportion * (1 - proportion) / size) - t.ppf(1 - alpha / 2, size - 1)
-    a = (proportion - null_proportion) * sqrt(size) / sqrt(proportion * (1 - proportion))
-    b = t.ppf(1 - alpha / 2, size - 1)
-    power = norm.cdf(a - b)
-    print(power)
-
-    # a = size(alpha=0.05, power=0.80, proportion=0.5, null_proportion=0.3, phat=True)
-    # print(a)
+    if expected_proportion < null_proportion:
+        assert (
+            round(
+                solve_proportion(
+                    null_proportion,
+                    size,
+                    alpha,
+                    power,
+                    phat,
+                    continuity_correction,
+                    proportion_selection="lower",
+                ),
+                2,
+            )
+            == expected_proportion
+        )
+    else:
+        assert (
+            round(
+                solve_proportion(
+                    null_proportion,
+                    size,
+                    alpha,
+                    power,
+                    phat,
+                    continuity_correction,
+                    proportion_selection="upper",
+                ),
+                2,
+            )
+            == expected_proportion
+        )

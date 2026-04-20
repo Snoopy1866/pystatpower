@@ -1,71 +1,223 @@
 from math import ceil, sqrt
+from typing import Literal
 
+from scipy.optimize import brentq
 from scipy.stats import norm
 
-
-def _continuity_correction(size_not_cc: float, proportion: float, null_proportion: float) -> float:
-    return size_not_cc / 4 * (1 + sqrt(1 + 2 / (abs(proportion - null_proportion) * size_not_cc))) ** 2
+from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 
 
-def _size_phat(alpha: float, power: float, proportion: float, null_proportion: float) -> float:
-    size = (
-        (norm.ppf(1 - alpha / 2) + norm.ppf(power)) ** 2
-        * proportion
-        * (1 - proportion)
-        / (proportion - null_proportion) ** 2
+def _power_p0(null_proportion: float, proportion: float, size: int, alpha: float) -> float:
+    power = 1 - norm.cdf(
+        (
+            norm.ppf(1 - alpha / 2) * sqrt(null_proportion * (1 - null_proportion))
+            - sqrt(size) * abs(proportion - null_proportion)
+        )
+        / sqrt(proportion * (1 - proportion))
     )
-    return size
+    return float(power)
 
 
-def _size_phat_cc(alpha: float, power: float, proportion: float, null_proportion: float) -> float:
-    size_not_cc = _size_phat(alpha, power, proportion, null_proportion)
-    size = _continuity_correction(size_not_cc, proportion, null_proportion)
-    return size
+def _power_p0_cc(null_proportion: float, proportion: float, size: int, alpha: float) -> float:
+    power = 1 - norm.cdf(
+        (
+            norm.ppf(1 - alpha / 2) * sqrt(null_proportion * (1 - null_proportion))
+            - sqrt(size) * (abs(proportion - null_proportion) - 1 / (2 * size))
+        )
+        / sqrt(proportion * (1 - proportion))
+    )
+    return float(power)
 
 
-def _size_p0(alpha: float, power: float, proportion: float, null_proportion: float) -> float:
-    size = (
-        norm.ppf(1 - alpha / 2) * sqrt(null_proportion * (1 - null_proportion))
-        + norm.ppf(power) * sqrt(proportion * (1 - proportion))
-    ) ** 2 / (proportion - null_proportion) ** 2
-    return size
+def _power_phat(null_proportion: float, proportion: float, size: int, alpha: float) -> float:
+    power = 1 - norm.cdf(
+        norm.ppf(1 - alpha / 2) - sqrt(size) * abs(proportion - null_proportion) / sqrt(proportion * (1 - proportion))
+    )
+
+    return float(power)
 
 
-def _size_p0_cc(alpha: float, power: float, proportion: float, null_proportion: float) -> float:
-    size_not_cc = _size_p0(alpha, power, proportion, null_proportion)
-    size = _continuity_correction(size_not_cc, proportion, null_proportion)
-    return size
+def _power_phat_cc(null_proportion: float, proportion: float, size: int, alpha: float) -> float:
+    power = 1 - norm.cdf(
+        norm.ppf(1 - alpha / 2)
+        - sqrt(size) * (abs(proportion - null_proportion) - 1 / (2 * size)) / sqrt(proportion * (1 - proportion))
+    )
+    return float(power)
 
 
-def size(
-    alpha: float,
-    power: float,
-    proportion: float,
+def _power(
     null_proportion: float,
+    proportion: float,
+    size: int,
+    alpha: float,
     phat: bool = False,
     continuity_correction: bool = False,
 ) -> float:
-    """单样本率差异性检验样本量计算
-
-    Args:
-        alpha (float): 显著性水平
-        power (float): 检验效能
-        proportion (float): 备择假设下的样本率
-        null_proportion (float): 零假设下的样本率
-        phat (bool, optional): 是否使用样本率计算标准差。默认为 `False`。
-        continuity_correction (bool, optional): 是否进行连续性校正。默认为 `False`。
-
-    Returns:
-        size: 样本量
-    """
     match (phat, continuity_correction):
         case (True, True):
-            size = _size_phat_cc(alpha, power, proportion, null_proportion)
+            power = _power_phat_cc(null_proportion, proportion, size, alpha)
         case (True, False):
-            size = _size_phat(alpha, power, proportion, null_proportion)
+            power = _power_phat(null_proportion, proportion, size, alpha)
         case (False, True):
-            size = _size_p0_cc(alpha, power, proportion, null_proportion)
+            power = _power_p0_cc(null_proportion, proportion, size, alpha)
         case (False, False):
-            size = _size_p0(alpha, power, proportion, null_proportion)
+            power = _power_p0(null_proportion, proportion, size, alpha)
+    return power
 
+
+def solve_power(
+    null_proportion: float,
+    proportion: float,
+    size: int,
+    alpha: float = 0.05,
+    phat: bool = False,
+    continuity_correction: bool = False,
+) -> float:
+    """Calculate the power of the difference test between one proportion and a null proportion.
+
+    Args:
+        null_proportion (float): Proportion under the null hypothesis.
+        correlation (float): Proportion under the alternative hypothesis.
+        size (int): Sample size.
+        alpha (float): Two-sided significance level. Defaults is 0.05.
+        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+
+    Returns:
+        power(float): Power of the test.
+    """
+
+    return _power(null_proportion, proportion, size, alpha, phat, continuity_correction)
+
+
+def solve_size(
+    null_proportion: float,
+    proportion: float,
+    alpha: float = 0.05,
+    power: float = 0.80,
+    phat: bool = False,
+    continuity_correction: bool = False,
+) -> int:
+    """Estimate the sample size required for the difference test between one proportion and a null proportion.
+
+    Args:
+        null_proportion (float): Proportion under the null hypothesis.
+        correlation (float): Proportion under the alternative hypothesis.
+        alpha (float): Two-sided significance level. Defaults is 0.05.
+        power (float): Power of the test. Defaults is 0.80.
+        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False
+        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+
+    Returns:
+        size(float): The required sample size.
+    """
+
+    def func(size: float) -> float:
+        return _power(null_proportion, proportion, size, alpha, phat, continuity_correction) - power
+
+    size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
     return ceil(size)
+
+
+def solve_null_proportion(
+    proportion: float,
+    size: int,
+    alpha: float = 0.05,
+    power: float = 0.80,
+    phat: bool = False,
+    continuity_correction: bool = False,
+    proportion_selection: Literal["lower", "upper"] = "lower",
+):
+    """Estimate the null proportion required for the difference test between one proportion and a null proportion.
+
+    Args:
+        proportion (float): Proportion under the alternative hypothesis.
+        size (int): Sample size.
+        alpha (float): Two-sided significance level. Defaults is 0.05.
+        power (float): Power of the test. Defaults is 0.80.
+        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        proportion_selection (Literal["lower", "upper"], optional):
+            If there are two solutions that meet the requirements, specify which solution to return. Defaults is "lower".
+
+            - `lower`: Return the null proportion in interval (0, `proportion`).
+            - `upper`: Return the null proportion in interval (`proportion`, 1).
+
+            If there is only one solution in the interval (0, 1), this parameter is ignored.
+
+    Returns:
+        null_proportion(float): The required null proportion.
+    """
+
+    def func(null_proportion: float) -> float:
+        return _power(null_proportion, proportion, size, alpha, phat, continuity_correction) - power
+
+    null_proportions: list[float] = []
+    lower_bound, upper_bound = 0.000001, proportion
+    if func(lower_bound) * func(upper_bound) < 0:
+        null_proportions.append(float(brentq(func, lower_bound, upper_bound)))
+
+    lower_bound, upper_bound = proportion, 0.999999
+    if func(lower_bound) * func(upper_bound) < 0:
+        null_proportions.append(float(brentq(func, lower_bound, upper_bound)))
+
+    if len(null_proportions) == 2:
+        match proportion_selection.lower():
+            case "lower":
+                return null_proportions[0]
+            case "upper":
+                return null_proportions[1]
+    else:
+        return null_proportions[0]
+
+
+def solve_proportion(
+    null_proportion: float,
+    size: int,
+    alpha: float = 0.05,
+    power: float = 0.80,
+    phat: bool = False,
+    continuity_correction: bool = False,
+    proportion_selection: Literal["lower", "upper"] = "upper",
+):
+    """Estimate the proportion required for the difference test between one proportion and a null proportion.
+
+    Args:
+        null_proportion (float): Proportion under the null hypothesis.
+        size (int): Sample size.
+        alpha (float): Two-sided significance level. Defaults is 0.05.
+        power (float): Power of the test. Defaults is 0.80.
+        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        proportion_selection (Literal["lower", "upper"], optional):
+            If there are two solutions that meet the requirements, specify which solution to return. Defaults is "upper".
+
+            - `lower`: Return the proportion in interval (0, `null_proportion`).
+            - `upper`: Return the proportion in interval (`null_proportion`, 1).
+
+            If there is only one solution in the interval (0, 1), this parameter is ignored.
+
+    Returns:
+        proportion(float): The required proportion.
+    """
+
+    def func(proportion: float) -> float:
+        return _power(null_proportion, proportion, size, alpha, phat, continuity_correction) - power
+
+    proportions: list[float] = []
+    lower_bound, upper_bound = 0.000001, null_proportion
+    if func(lower_bound) * func(upper_bound) < 0:
+        proportions.append(float(brentq(func, lower_bound, upper_bound)))
+
+    lower_bound, upper_bound = null_proportion, 0.999999
+    if func(lower_bound) * func(upper_bound) < 0:
+        proportions.append(float(brentq(func, lower_bound, upper_bound)))
+
+    if len(proportions) == 2:
+        match proportion_selection.lower():
+            case "lower":
+                return proportions[0]
+            case "upper":
+                return proportions[1]
+    else:
+        return proportions[0]
