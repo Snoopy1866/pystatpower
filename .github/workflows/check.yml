@@ -44,7 +44,7 @@ jobs:
           files: ./coverage.xml
           flags: test-core-${{ matrix.os }}-py${{ matrix.python-version }}
 
-  test-dependency:
+  test-minimum-scipy:
     strategy:
       fail-fast: false
       matrix:
@@ -62,7 +62,7 @@ jobs:
           - python-version: "3.14"
             scipy-version: "1.16.1"
 
-    name: test-dependency (${{ matrix.os }}, ${{ matrix.deps.python-version }}, scipy == ${{ matrix.deps.scipy-version }})
+    name: test-minimum-scipy (${{ matrix.os }}, ${{ matrix.deps.python-version }}, scipy == ${{ matrix.deps.scipy-version }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -88,4 +88,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
-          flags: test-dependency-${{ matrix.os }}-py${{ matrix.deps.python-version }}-scipy${{ matrix.deps.scipy-version }}
+          flags: test-minimum-scipy-${{ matrix.os }}-py${{ matrix.deps.python-version }}-scipy${{ matrix.deps.scipy-version }}
