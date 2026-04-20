@@ -2,8 +2,6 @@
 # Module: Confidence Interval for One Proportion
 
 
-from math import ceil
-
 import pytest
 
 from pystatpower.models.proportion.single.ci import solve_ci_width, solve_proportion, solve_size

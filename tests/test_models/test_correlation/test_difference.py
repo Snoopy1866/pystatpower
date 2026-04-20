@@ -1,5 +1,3 @@
-from math import ceil
-
 import pytest
 
 from pystatpower.models.correlation.difference import solve_correlation, solve_null_correlation, solve_power, solve_size
