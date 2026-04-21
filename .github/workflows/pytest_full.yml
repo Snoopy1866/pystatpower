@@ -3,8 +3,6 @@ name: PyTest for all SciPy minor versions
 on:
   push:
     branches: ["main"]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 defaults:
   run:
