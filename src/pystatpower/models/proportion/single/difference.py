@@ -150,19 +150,34 @@ def solve_power(
     phat: bool = False,
     continuity_correction: bool = False,
 ) -> float:
-    """Calculate the power of the difference test between one proportion and a null proportion.
+    """
+    Calculate the power for a one-sample proportion test.
 
     Args:
-        null_proportion (float): Proportion under the null hypothesis.
-        proportion (float): Proportion under the alternative hypothesis.
-        size (int): Sample size.
-        alternative (Literal["one-sided", "two-sided"]): Specify whether the alternative hypothesis of the test is one-sided or two-sided. Default is "two-sided".
-        alpha (float): Significance level. Defaults is 0.05.
-        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
-        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        null_proportion (float):
+            The proportion specified under the null hypothesis (p0).
+            Must be in the interval (0, 1).
+        proportion (float):
+            The expected or observed proportion under the alternative hypothesis (p1).
+            Must be in the interval (0, 1).
+        size (int):
+            Total number of independent observations (sample size). Must be >= 1.
+        alternative (Literal["one-sided", "two-sided"]):
+            Direction of the test:
+
+            - "two-sided": $H1: p1 \\neq p_0$
+            - "one-sided": $H1: p1 > p_0$ or $p1 < p_0$
+
+            Default is "two-sided".
+        alpha (float):
+            Significance level (Type I error rate). Defaults is 0.05.
+        phat (bool, optional):
+            Whether to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional):
+            Whether to apply continuity correction to the normal approximation. Defaults is False.
 
     Returns:
-        power(float): Power of the test.
+        power(float): The calculated power of the test, in the range [0, 1].
     """
 
     return _power(null_proportion, proportion, size, alternative, alpha, phat, continuity_correction)
@@ -177,19 +192,34 @@ def solve_size(
     phat: bool = False,
     continuity_correction: bool = False,
 ) -> int:
-    """Estimate the sample size required for the difference test between one proportion and a null proportion.
+    """
+    Estimate the sample size required for a one-sample proportion test.
 
     Args:
-        null_proportion (float): Proportion under the null hypothesis.
-        proportion (float): Proportion under the alternative hypothesis.
-        alternative (Literal["one-sided", "two-sided"]): Specify whether the alternative hypothesis of the test is one-sided or two-sided. Default is "two-sided".
-        alpha (float): Significance level. Defaults is 0.05.
-        power (float): Power of the test. Defaults is 0.80.
-        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False
-        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        null_proportion (float):
+            The proportion specified under the null hypothesis (p0).
+            Must be in the interval (0, 1).
+        proportion (float):
+            The expected proportion under the alternative hypothesis (p1).
+            Must be in the interval (0, 1).
+        alternative (Literal["one-sided", "two-sided"]):
+            Direction of the test:
+
+            - "two-sided": $H1: p \\neq p_0$
+            - "one-sided": $H1: p > p_0$ or $p < p_0$
+
+            Default is "two-sided".
+        alpha (float):
+            Significance level (Type I error rate). Defaults is 0.05.
+        power (float):
+            Desired statistical power (1 - Type II error rate). Defaults is 0.80.
+        phat (bool, optional):
+            Whether to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional):
+            Whether to apply continuity correction to the normal approximation. Defaults is False.
 
     Returns:
-        size(float): The required sample size.
+        size(float): The minimum sample size (rounded up to the nearest integer) required to achieve the target power.
     """
 
     def func(size: float) -> float:
@@ -208,26 +238,41 @@ def solve_null_proportion(
     continuity_correction: bool = False,
     proportion_selection: Literal["lower", "upper"] = "lower",
 ) -> float:
-    """Estimate the null proportion required for the difference test between one proportion and a null proportion.
+    """
+    Estimate the null proportion (p0) required to achieve a target power for a one-sample proportion test.
 
     Args:
-        proportion (float): Proportion under the alternative hypothesis.
-        size (int): Sample size.
-        alternative (Literal["one-sided", "two-sided"]): Specify whether the alternative hypothesis of the test is one-sided or two-sided. Default is "two-sided".
-        alpha (float): Significance level. Defaults is 0.05.
-        power (float): Power of the test. Defaults is 0.80.
-        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
-        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        proportion (float):
+            The expected proportion under the alternative hypothesis (p1).
+            Must be in the interval (0, 1).
+        size (int):
+            Total number of independent observations (sample size). Must be >= 1.
+        alternative (Literal["one-sided", "two-sided"]):
+            Direction of the test:
+
+            - "two-sided": $H1: p \\neq p_0$
+            - "one-sided": $H1: p > p_0$ or $p < p_0$
+
+            Default is "two-sided".
+        alpha (float):
+            Significance level (Type I error rate). Defaults is 0.05.
+        power (float):
+            Desired statistical power (1 - Type II error rate). Defaults is 0.80.
+        phat (bool, optional):
+            Whether to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional):
+            Whether to apply continuity correction to the normal approximation. Defaults is False.
         proportion_selection (Literal["lower", "upper"], optional):
-            If there are two solutions that meet the requirements, specify which solution to return. Defaults is "lower".
+            Selection strategy when two valid null proportions exist:
 
-            - `lower`: Return the null proportion in interval (0, `proportion`).
-            - `upper`: Return the null proportion in interval (`proportion`, 1).
+            - "lower": Returns the solution where p0 < p1.
+            - "upper": Returns the solution where p0 > p1.
 
-            If there is only one solution in the interval (0, 1), this parameter is ignored.
+            If only one solution exists in (0, 1), this parameter is ignored.
+            Defaults is "lower".
 
     Returns:
-        null_proportion(float): The required null proportion.
+        null_proportion(float): The estimated null proportion (p0).
     """
 
     def func(null_proportion: float) -> float:
@@ -262,26 +307,41 @@ def solve_proportion(
     continuity_correction: bool = False,
     proportion_selection: Literal["lower", "upper"] = "upper",
 ):
-    """Estimate the proportion required for the difference test between one proportion and a null proportion.
+    """
+    Estimate the alternative proportion (p1) required to achieve a target power for a one-sample proportion test.
 
     Args:
-        null_proportion (float): Proportion under the null hypothesis.
-        size (int): Sample size.
-        alternative (Literal["one-sided", "two-sided"]): Specify whether the alternative hypothesis of the test is one-sided or two-sided. Default is "two-sided".
-        alpha (float): Significance level. Defaults is 0.05.
-        power (float): Power of the test. Defaults is 0.80.
-        phat (bool, optional): Whether or not to use sample proportion to calculate standard deviation. Defaults is False.
-        continuity_correction (bool, optional): Whether or not to use continuity correction. Defaults is False.
+        null_proportion (float):
+            The proportion specified under the null hypothesis (p0).
+            Must be in the interval (0, 1).
+        size (int):
+            Total number of independent observations (sample size). Must be >= 1.
+        alternative (Literal["one-sided", "two-sided"]):
+            Direction of the test:
+
+            - "two-sided": $H1: p \\neq p_0$
+            - "one-sided": $H1: p > p_0$ or $p < p_0$
+
+            Default is "two-sided".
+        alpha (float):
+            Significance level (Type I error rate). Defaults is 0.05.
+        power (float):
+            Desired statistical power (1 - Type II error rate). Defaults is 0.80.
+        phat (bool, optional):
+            Whether to use sample proportion to calculate standard deviation. Defaults is False.
+        continuity_correction (bool, optional):
+            Whether to apply continuity correction to the normal approximation. Defaults is False.
         proportion_selection (Literal["lower", "upper"], optional):
-            If there are two solutions that meet the requirements, specify which solution to return. Defaults is "upper".
+            Selection strategy when two valid alternative proportions exist:
 
-            - `lower`: Return the proportion in interval (0, `null_proportion`).
-            - `upper`: Return the proportion in interval (`null_proportion`, 1).
+            - "lower": Returns the solution where p1 < p0.
+            - "upper": Returns the solution where p1 > p0.
 
-            If there is only one solution in the interval (0, 1), this parameter is ignored.
+            If only one solution exists in (0, 1), this parameter is ignored.
+            Defaults is "upper".
 
     Returns:
-        proportion(float): The required proportion.
+        proportion(float): The estimated alternative proportion (p1).
     """
 
     def func(proportion: float) -> float:
