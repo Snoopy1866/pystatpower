@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
-    
+
     name: python ${{ matrix.python }}, scipy ${{ matrix.scipy }}
     steps:
       - uses: actions/checkout@v6
@@ -49,7 +49,7 @@ jobs:
         with:
           version: "0.11.7"
           python-version: ${{ matrix.python }}
-      
+
       - name: Install the project
         run: uv sync --locked --group dev
 
