@@ -1,0 +1,60 @@
+name: PyTest for all SciPy minor versions
+
+on:
+  push:
+    branches: ["main"]
+
+defaults:
+  run:
+    shell: bash -e {0}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        name: Initialize matrix
+        run: |
+          # 使用 Shell 生成 JSON 对象列表
+          JSON_STUFF=$( (
+            # Py 3.10: 1.7 ~ 1.15
+            for v in $(seq 7 15); do echo "{\"python\":\"3.10\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.11: 1.10 ~ 1.17
+            for v in $(seq 10 17); do echo "{\"python\":\"3.11\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.12: 1.11 ~ 1.17
+            for v in $(seq 11 17); do echo "{\"python\":\"3.12\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.13: 1.15 ~ 1.17
+            for v in $(seq 15 17); do echo "{\"python\":\"3.13\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.14: 1.16 ~ 1.17
+            for v in $(seq 16 17); do echo "{\"python\":\"3.14\",\"scipy\":\"1.$v\"}"; done
+          ) | jq -sc '{"include": .}' )
+
+          echo "matrix=$JSON_STUFF" >> $GITHUB_OUTPUT
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+
+    name: python ${{ matrix.python }}, scipy ${{ matrix.scipy }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.11.7"
+          python-version: ${{ matrix.python }}
+
+      - name: Install the project
+        run: uv sync --locked --group dev
+
+      - name: Install SciPy
+        run: uv pip install scipy~=${{ matrix.scipy }}.0 --no-build
+
+      - name: Test with python ${{ matrix.python }} and SciPy ${{ matrix.scipy }}
+        run: |
+          uv run --frozen pytest --cov=pystatpower
