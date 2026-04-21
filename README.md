@@ -25,13 +25,13 @@ PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本
 - 两独立样本率非劣效检验
 - 相关系数检验
 
-## Usage
+## 使用
 
 ```bash
 pip install pystatpower
 ```
 
-## Example
+## 示例
 
 ```python
 from pystatpower.models import proportion
@@ -53,7 +53,23 @@ print(size)
 (48, 48)
 ```
 
-## Acknowlegement
+## Scipy 兼容性测试结果
+
+|            | 🐍 3.10 | 🐍 3.11 | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
+| ---------- | ------- | ------- | ------- | ------- | ------- |
+| SciPy 1.7  |         |         |         |         |         |
+| SciPy 1.8  |         |         |         |         |         |
+| SciPy 1.9  |         |         |         |         |         |
+| SciPy 1.10 |         |         |         |         |         |
+| SciPy 1.11 |         |         |         |         |         |
+| SciPy 1.12 |         |         |         |         |         |
+| SciPy 1.13 |         |         |         |         |         |
+| SciPy 1.14 |         |         |         |         |         |
+| SciPy 1.15 |         |         |         |         |         |
+| SciPy 1.16 |         |         |         |         |         |
+| SciPy 1.17 |         |         |         |         |         |
+
+## 鸣谢
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)
