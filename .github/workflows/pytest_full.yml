@@ -20,8 +20,8 @@ jobs:
         run: |
           # 使用 Shell 生成 JSON 对象列表
           JSON_STUFF=$( (
-            # Py 3.10: 1.7 ~ 1.16
-            for v in $(seq 7 16); do echo "{\"python\":\"3.10\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.10: 1.7 ~ 1.15
+            for v in $(seq 7 15); do echo "{\"python\":\"3.10\",\"scipy\":\"1.$v\"}"; done
             # Py 3.11: 1.10 ~ 1.17
             for v in $(seq 10 17); do echo "{\"python\":\"3.11\",\"scipy\":\"1.$v\"}"; done
             # Py 3.12: 1.11 ~ 1.17
@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     
-    name: test (python ${{ matrix.python }}, scipy ${{ matrix.scipy }})
+    name: python ${{ matrix.python }}, scipy ${{ matrix.scipy }}
     steps:
       - uses: actions/checkout@v6
 
