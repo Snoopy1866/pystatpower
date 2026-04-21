@@ -2,7 +2,7 @@ name: PyTest for all SciPy minor versions
 
 on:
   push:
-    branches: ["main", "ci-pytest-for-all-scipy-minor-version"]
+    branches: ["main"]
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -58,4 +58,4 @@ jobs:
 
       - name: Test with python ${{ matrix.python }} and SciPy ${{ matrix.scipy }}
         run: |
-          uv run --frozen pytest --cov=pystatpower --cov-report=xml
+          uv run --frozen pytest --cov=pystatpower
