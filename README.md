@@ -25,13 +25,11 @@ PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本
 - 两独立样本率非劣效检验
 - 相关系数检验
 
-## 使用
+## 使用示例
 
 ```bash
 pip install pystatpower
 ```
-
-## 示例
 
 ```python
 from pystatpower.models import proportion
