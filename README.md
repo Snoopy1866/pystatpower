@@ -16,27 +16,31 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
 
-PyStatPower 是一个专注于统计领域功效分析的开源的 Python 库。
+PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本量、检验效能和效应量大小的估计。
 
-[📚文档](https://pystatpower.readthedocs.io/)
+目前支持的模块如下：
 
-## 安装
+- 单样本率置信区间
+- 单样本率差异性检验
+- 两独立样本率非劣效检验
+- 相关系数检验
+
+## 使用示例
 
 ```bash
 pip install pystatpower
 ```
 
-## 使用示例
-
 ```python
 from pystatpower.models import proportion
 
-size = proportion.independent.noninferiority.size(
-    alpha=0.025,
-    power=0.8,
+size = proportion.independent.noninferiority.solve_size(
     treatment_proportion=0.95,
     reference_proportion=0.90,
     margin=-0.10,
+    ratio=1,
+    alpha=0.025,
+    power=0.8,
 )
 print(size)
 ```
@@ -44,8 +48,28 @@ print(size)
 输出:
 
 ```python
-(47.96537615435558, 47.96537615435558)
+(48, 48)
 ```
+
+## 兼容性测试结果
+
+[![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/pytest_full.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/pytest_full.yml?query=branch:main)
+
+|            | 🐍 3.10 | 🐍 3.11 | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
+| ---------- | ------- | ------- | ------- | ------- | ------- |
+| SciPy 1.7  | ✅      | -       | -       | -       | -       |
+| SciPy 1.8  | ✅      | -       | -       | -       | -       |
+| SciPy 1.9  | ✅      | -       | -       | -       | -       |
+| SciPy 1.10 | ✅      | ✅      | -       | -       | -       |
+| SciPy 1.11 | ✅      | ✅      | ✅      | -       | -       |
+| SciPy 1.12 | ✅      | ✅      | ✅      | -       | -       |
+| SciPy 1.13 | ✅      | ✅      | ✅      | -       | -       |
+| SciPy 1.14 | ✅      | ✅      | ✅      | -       | -       |
+| SciPy 1.15 | ✅      | ✅      | ✅      | ✅      | -       |
+| SciPy 1.16 | -       | ✅      | ✅      | ✅      | ✅      |
+| SciPy 1.17 | -       | ✅      | ✅      | ✅      | ✅      |
+
+注： `-` 表示该 Python 版本下不存在对应的 SciPy 发行版。
 
 ## 鸣谢
 
