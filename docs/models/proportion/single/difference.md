@@ -185,7 +185,7 @@ $$
     & = 1 - \Phi\left( \frac{z_{1-\alpha/2} \sqrt{p_0(1-p_0)} - \sqrt{n} \left(p_1-p_0-\frac{1}{2n} \right)}{\sqrt{p_1(1-p_1)}} \right) +
         1 - \Phi\left( \frac{z_{1-\alpha/2} \sqrt{p_0(1-p_0)} + \sqrt{n} \left(p_1-p_0+\frac{1}{2n} \right)}{\sqrt{p_1(1-p_1)}} \right) \\
     & = 2 - \left[
-                  \Phi\left( \frac{z_{1-\alpha/2} \sqrt{p_0(1-p_0)} - \sqrt{n} \left(p_1-p_0-\frac{1}{2n} \right)}{\sqrt{p_1(1-p_1)}} \right) + 
+                  \Phi\left( \frac{z_{1-\alpha/2} \sqrt{p_0(1-p_0)} - \sqrt{n} \left(p_1-p_0-\frac{1}{2n} \right)}{\sqrt{p_1(1-p_1)}} \right) +
                   \Phi\left( \frac{z_{1-\alpha/2} \sqrt{p_0(1-p_0)} + \sqrt{n} \left(p_1-p_0+\frac{1}{2n} \right)}{\sqrt{p_1(1-p_1)}} \right)
             \right] \\
     & = 1 - \beta
@@ -319,8 +319,8 @@ $$
 
     $$
       P\left(z' < -z_{1-\alpha} \right)
-    = \Phi\left( -z_{1-\alpha} - \frac{\sqrt{n}(p_1-p_0)}{\sqrt{p_1(1-p_1)}} \right) 
-    = 1 - \Phi\left( z_{1-\alpha} + \frac{\sqrt{n}(p_1-p_0)}{\sqrt{p_1(1-p_1)}} \right) 
+    = \Phi\left( -z_{1-\alpha} - \frac{\sqrt{n}(p_1-p_0)}{\sqrt{p_1(1-p_1)}} \right)
+    = 1 - \Phi\left( z_{1-\alpha} + \frac{\sqrt{n}(p_1-p_0)}{\sqrt{p_1(1-p_1)}} \right)
     = 1 - \beta
     $$
 
@@ -420,8 +420,8 @@ $$
 
     $$
       P\left(z' < -z_{1-\alpha} \right)
-    = \Phi\left( -z_{1-\alpha} - \frac{\sqrt{n}(p_1-p_0+\frac{1}{2n})}{\sqrt{p_1(1-p_1)}} \right) 
-    = 1 - \Phi\left( z_{1-\alpha} + \frac{\sqrt{n}(p_1-p_0+\frac{1}{2n})}{\sqrt{p_1(1-p_1)}} \right) 
+    = \Phi\left( -z_{1-\alpha} - \frac{\sqrt{n}(p_1-p_0+\frac{1}{2n})}{\sqrt{p_1(1-p_1)}} \right)
+    = 1 - \Phi\left( z_{1-\alpha} + \frac{\sqrt{n}(p_1-p_0+\frac{1}{2n})}{\sqrt{p_1(1-p_1)}} \right)
     = 1 - \beta
     $$
 

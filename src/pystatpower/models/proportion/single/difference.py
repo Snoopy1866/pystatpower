@@ -1,5 +1,5 @@
 from math import ceil, sqrt
-from typing import Literal, cast
+from typing import Literal
 
 from scipy.optimize import brentq
 from scipy.stats import norm
