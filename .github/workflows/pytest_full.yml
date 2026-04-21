@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     
-    name: test (${{ matrix.python }}, scipy ${{ matrix.scipy }})
+    name: test (py${{ matrix.python }}, scipy==${{ matrix.scipy }})
     steps:
       - uses: actions/checkout@v6
 
@@ -48,14 +48,14 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: "0.11.7"
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python }}
       
       - name: Install the project
         run: uv sync --locked --group dev
 
       - name: Install SciPy
-        run: uv pip install scipy==${{ matrix.scipy-version }} --no-build
+        run: uv pip install scipy==${{ matrix.scipy }} --no-build
 
-      - name: Test with python ${{ matrix.python-version }}
+      - name: Test with python ${{ matrix.python }}
         run: |
           uv run --frozen pytest --cov=pystatpower --cov-report=xml
