@@ -1,4 +1,4 @@
-from math import sqrt
+from math import ceil, sqrt
 
 from scipy.optimize import OptimizeResult, brentq, minimize_scalar
 from scipy.stats import f, norm
@@ -127,7 +127,7 @@ def solve_size(
     else:
         size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
 
-    return float(size)
+    return ceil(size)
 
 
 def solve_ci_width(
