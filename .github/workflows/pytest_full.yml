@@ -56,6 +56,6 @@ jobs:
       - name: Install SciPy
         run: uv pip install scipy~=${{ matrix.scipy }}.0 --no-build
 
-      - name: Test with python ${{ matrix.python }}
+      - name: Test with python ${{ matrix.python }} and SciPy ${{ matrix.scipy }}
         run: |
           uv run --frozen pytest --cov=pystatpower --cov-report=xml
