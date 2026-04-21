@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     
-    name: test (py${{ matrix.python }}, scipy==${{ matrix.scipy }})
+    name: test (python ${{ matrix.python }}, scipy ${{ matrix.scipy }})
     steps:
       - uses: actions/checkout@v6
 
@@ -54,7 +54,7 @@ jobs:
         run: uv sync --locked --group dev
 
       - name: Install SciPy
-        run: uv pip install scipy==${{ matrix.scipy }} --no-build
+        run: uv pip install scipy~=${{ matrix.scipy }}.0 --no-build
 
       - name: Test with python ${{ matrix.python }}
         run: |
