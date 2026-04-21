@@ -2,8 +2,7 @@ name: PyTest for all SciPy minor versions
 
 on:
   push:
-    branches:
-      - "main"
+    branches: ["main", "ci-pytest-for-all-scipy-minor-version"]
   pull_request:
     types: [opened, synchronize, reopened]
 
