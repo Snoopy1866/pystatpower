@@ -55,8 +55,6 @@ print(size)
 
 ## 兼容性测试结果
 
-![](https://img.shields.io/badge/SciPy-Not_Released-inactive)
-
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/pytest_full.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/pytest_full.yml?query=branch:main)
 
 |            | 🐍 3.10 | 🐍 3.11 | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
