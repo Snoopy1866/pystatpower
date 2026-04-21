@@ -306,7 +306,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.98, 0.90, 37, "two-sided", 0.05, 0.80, False, False, 0.8036),
+        TestCase(0.98, 0.90, 37, "one-sided", 0.05, 0.80, False, False, 0.8036),
+        TestCase(0.98, 0.90, 43, "two-sided", 0.05, 0.80, False, False, 0.8017),
     ]
 )
 
