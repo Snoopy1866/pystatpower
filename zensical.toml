@@ -32,6 +32,7 @@ features = [
     "content.code.copy",
     "content.code.select",
     "content.code.annotate",
+    "content.tabs.link",
     "navigation.instant",
     "navigation.instant.prefetch",
     "navigation.instant.progress",
@@ -81,6 +82,9 @@ pygments_lang_class = true
 [project.markdown_extensions.pymdownx.superfences]
 [project.markdown_extensions.pymdownx.tabbed]
 alternate_style = true
+[project.markdown_extensions.pymdownx.tabbed.slugify]
+object = "pymdownx.slugs.slugify"
+kwds = { case = "lower" }
 [project.markdown_extensions.def_list]
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
