@@ -1,6 +1,6 @@
 import pytest
 
-from pystatpower.models.correlation.difference import solve_correlation, solve_null_correlation, solve_power, solve_size
+from pystatpower.models.correlation.inequality import solve_correlation, solve_null_correlation, solve_power, solve_size
 
 
 @pytest.fixture(

@@ -1,5 +1,5 @@
-from . import difference
+from . import inequality
 
 __all__ = [
-    "difference",
+    "inequality",
 ]
