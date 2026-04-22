@@ -1,6 +1,6 @@
-from . import ci, difference
+from . import ci, inequality
 
 __all__ = [
     "ci",
-    "difference",
+    "inequality",
 ]

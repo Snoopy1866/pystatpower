@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.proportion.single.difference import solve_power, solve_size, solve_null_proportion, solve_proportion
+from pystatpower.models.proportion.single.inequality import solve_power, solve_size, solve_null_proportion, solve_proportion
 
 
 @dataclass
