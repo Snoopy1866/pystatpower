@@ -2,7 +2,6 @@
 # Module: Superiority by a Margin for the Difference Between Two Proportions
 
 from dataclasses import dataclass, asdict
-from typing import Literal
 
 import pytest
 
