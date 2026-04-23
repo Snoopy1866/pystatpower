@@ -250,8 +250,8 @@ def solve_power(
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.
 
-            - `"one-sided"`: Tests for a difference in one direction (uses $\\alpha$).
-            - `"two-sided"`: Tests for any difference (uses $\\alpha/2$ per tail).
+            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
+            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
         treatment_size (float):
             Sample size for the treatment group ($n_1$).
         reference_size (float):
@@ -301,8 +301,8 @@ def solve_size(
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.
 
-            - `"one-sided"`: Tests for a difference in one direction (uses $\\alpha$).
-            - `"two-sided"`: Tests for any difference (uses $\\alpha/2$ per tail).
+            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
+            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
         ratio (float, optional):
             Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$). Defaults to 1.
         alpha (float, optional):
@@ -387,8 +387,8 @@ def solve_treatment_proportion(
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.
 
-            - `"one-sided"`: Tests for a difference in one direction (uses $\\alpha$).
-            - `"two-sided"`: Tests for any difference (uses $\\alpha/2$ per tail).
+            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
+            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
         alpha (float, optional):
             Significance level. Defaults to 0.05.
         power (float, optional):
@@ -400,8 +400,8 @@ def solve_treatment_proportion(
         search_direction:
             Which solution to search for relative to $p_2$.
 
-            - `"lower"`: Finds $p_1$ where $p_1 < p_2$.
-            - `"upper"`: Finds $p_1$ where $p_1 > p_2$. Defaults to "upper".
+            - "lower": Finds $p_1$ where $p_1 < p_2$.
+            - "upper": Finds $p_1$ where $p_1 > p_2$. Defaults to "upper".
 
     Returns:
         float: The required proportion in the treatment group.
@@ -453,8 +453,8 @@ def solve_reference_proportion(
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.
 
-            - `"one-sided"`: Tests for a difference in one direction (uses $\\alpha$).
-            - `"two-sided"`: Tests for any difference (uses $\\alpha/2$ per tail).
+            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
+            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
         alpha (float, optional):
             If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis. Defaults to False.
         power (float, optional):
@@ -466,8 +466,8 @@ def solve_reference_proportion(
         search_direction:
             Which solution to search for relative to $p_1$.
 
-            - `"lower"`: Finds $p_2$ where $p_2 < p_1$. Defaults to "upper".
-            - `"upper"`: Finds $p_2$ where $p_2 > p_1$.
+            - "lower": Finds $p_2$ where $p_2 < p_1$. Defaults to "lower".
+            - "upper": Finds $p_2$ where $p_2 > p_1$.
 
     Returns:
         float: The required proportion in the reference group.
