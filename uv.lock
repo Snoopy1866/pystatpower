@@ -656,7 +656,7 @@ wheels = [
 
 [[package]]
 name = "pystatpower"
-version = "0.0.4"
+version = "0.0.5"
 source = { editable = "." }
 dependencies = [
     { name = "scipy", version = "1.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
