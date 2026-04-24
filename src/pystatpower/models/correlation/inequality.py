@@ -92,7 +92,7 @@ def solve_correlation(
     Estimate the alternative correlation coefficient required for the difference test between two correlation coefficients.
 
     Args:
-        nnull_correlation (float): Correlation coefficient under the null hypothesis.
+        null_correlation (float): Correlation coefficient under the null hypothesis.
         size(float): Sample size.
         alpha (float, optional): Significance level. Default is 0.05.
         power (float, optional): Power of the test. Default is 0.80.
