@@ -51,10 +51,6 @@ $$
 Var(\hat{p}_1 - \hat{p}_2) = \frac{\bar{p}(1-\bar{p})}{n_1} + \frac{\bar{p}(1-\bar{p})}{n_2} = \bar{p}(1-\bar{p}) \left(\frac{1}{n_1} + \frac{1}{n_2}\right)
 $$
 
-!!! warning "注意"
-    这种做法实际上是站不住脚的，因为在 $H_0$ 的边界条件下，两组总体率不相等，并不是来自同一个总体，强行合并两组率是不合适的，实际应用中建议使用 [Unpooled 方法](#z-test-unpooled)。
-
-
 构建 $z$ 统计量：
 
 $$
