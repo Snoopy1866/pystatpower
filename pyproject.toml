@@ -13,12 +13,10 @@ authors = [
     { name = "Snoopy1866", email = "pystatpower@gmail.com" }
 ]
 keywords = [
-    "mathematics",
     "statistics",
-    "power analysis",
     "sample size",
-    "power",
-    "hypothesis"
+    "power analysis",
+    "mathematics"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
