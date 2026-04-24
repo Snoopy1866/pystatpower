@@ -23,12 +23,12 @@ def main():
 
     # 3. 测试一个最基本的 API 调用
     try:
-        result = pystatpower.models.proportion.independent.noninferiority.size(
-            alpha=0.05,
-            power=0.8,
+        result = pystatpower.models.proportion.independent.noninferiority.solve_size(
             treatment_proportion=0.8,
             reference_proportion=0.8,
             margin=-0.10,
+            alpha=0.05,
+            power=0.8,
         )
         assert result is not None
     except Exception as e:
