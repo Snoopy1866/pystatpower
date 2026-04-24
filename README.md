@@ -145,7 +145,7 @@ print(treatment_proportion)
 
 注： `-` 表示该 Python 版本下不存在对应的 SciPy 发行版。
 
-## 🙏 鸣谢
+## 🔮 鸣谢
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)
