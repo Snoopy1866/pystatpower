@@ -18,18 +18,60 @@
 
 PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本量、检验效能和效应量大小的估计。
 
-目前支持的模块如下：
+## 📚 功能模块
 
 - 单样本率置信区间
 - 单样本率差异性检验
+- 两独立样本率差异性检验
 - 两独立样本率非劣效检验
+- 两独立样本率优效性检验
 - 相关系数检验
 
-## 使用示例
+## 📦 安装
+
+前置需求：Python 3.10+
 
 ```bash
 pip install pystatpower
 ```
+
+## 🔨 使用
+
+### 估算样本量
+
+1. 单样本率置信区间
+
+```python
+from pystatpower.models import proportion
+
+size = proportion.single.ci.solve_size(
+    proportion=0.9,
+    ci_width=0.10,
+    alpha=0.05,
+)
+print(size)
+
+# output: 158
+```
+
+2. 单样本率差异性检验（单组目标值法）
+
+```python
+from pystatpower.models import proportion
+
+size = proportion.single.inequality.solve_size(
+    null_proportion=0.80,
+    proportion=0.95,
+    alternative="one-sided",
+    alpha=0.025,
+    power=0.8,
+)
+print(size)
+
+# output: 42
+```
+
+3. 两独立样本率非劣效检验
 
 ```python
 from pystatpower.models import proportion
@@ -43,15 +85,47 @@ size = proportion.independent.noninferiority.solve_size(
     power=0.8,
 )
 print(size)
+
+# output: (48, 48)
 ```
 
-输出:
+### 计算检验效能
 
 ```python
-(48, 48)
+from pystatpower.models import proportion
+
+power = proportion.independent.noninferiority.solve_power(
+    treatment_proportion=0.95,
+    reference_proportion=0.90,
+    margin=-0.10,
+    treatment_size=48,
+    reference_size=48,
+    alpha=0.025,
+)
+print(power)
+
+# output: 0.800282915718918
 ```
 
-## 兼容性测试结果
+### 反推效应量
+
+```python
+from pystatpower.models import proportion
+
+treatment_proportion = proportion.independent.noninferiority.solve_treatment_proportion(
+    reference_proportion=0.90,
+    margin=-0.10,
+    treatment_size=48,
+    reference_size=48,
+    alpha=0.025,
+    power=0.8,
+)
+print(treatment_proportion)
+
+# output: 0.9499637015276098
+```
+
+## 🧪 兼容性测试结果
 
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/pytest_full.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/pytest_full.yml?query=branch:main)
 
@@ -71,7 +145,7 @@ print(size)
 
 注： `-` 表示该 Python 版本下不存在对应的 SciPy 发行版。
 
-## 鸣谢
+## 🔮 鸣谢
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)
