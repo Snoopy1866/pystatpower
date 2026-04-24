@@ -14,8 +14,8 @@ authors = [
 ]
 keywords = [
     "statistics",
-    "power analysis",
     "sample size",
+    "power analysis",
     "mathematics"
 ]
 classifiers = [
