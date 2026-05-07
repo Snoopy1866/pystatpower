@@ -1,10 +1,7 @@
-from math import ceil, sqrt
+from math import sqrt
 from typing import Literal
 
-from scipy.optimize import brentq
-from scipy.stats import t, nct
-
-from ...._constant import SAMPLE_SIZE_SEARCH_MAX
+from scipy.stats import nct, t
 
 
 def _power_welch(
