@@ -58,7 +58,7 @@ $$
 === "$\delta > 0$"
 
     $$
-     Power = P\left(T' < t_{1-\alpha}\right) = F\left(t_{1-\alpha, n_1 + n_2 - 2}; n_1 + n_2 - 2, \frac{\mu_1 - \mu_2 - \delta}{S_c\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
+     Power = P\left(T' < t_{\alpha}\right) = F\left(t_{\alpha, n_1 + n_2 - 2}; n_1 + n_2 - 2, \frac{\mu_1 - \mu_2 - \delta}{S_c\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
     $$
 
 ## 方差不相等
@@ -86,6 +86,8 @@ T' = \frac{\hat{\mu}_1 - \hat{\mu}_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S
    \sim t\left(v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
 $$
 
+令 $F(x;v,\lambda)$ 为自由度为 $v$、非中心参数为 $\lambda$ 的非中心 $t$ 分布的累积分布函数。
+
 === "$\delta < 0$"
 
     $$
@@ -95,7 +97,40 @@ $$
 === "$\delta > 0$"
 
     $$
-     Power = P\left(T' < t_{1-\alpha}\right) = F\left(t_{1-\alpha, v'}; v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
+     Power = P\left(T' < t_{\alpha}\right) = F\left(t_{\alpha, v'}; v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
     $$
 
 ### Satterthwaite 近似 t 检验
+
+在 $H_0$ 成立时，可构建 $T$ 统计量：
+
+$$
+T = \frac{\hat{\mu}_1 - \hat{\mu}_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}} \sim t(v')
+$$
+
+其中：
+
+$$
+v' = \frac{\left(\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}\right)^2}{\frac{S_1^4}{n_1^2(n_1 - 1)} + \frac{S_2^4}{n_2^2(n_2 - 1)}}
+$$
+
+在 $H_1$ 成立时，可构建 $T'$ 统计量：
+
+$$
+T' = \frac{\hat{\mu}_1 - \hat{\mu}_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}
+   \sim t\left(v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
+$$
+
+令 $F(x;v,\lambda)$ 为自由度为 $v$、非中心参数为 $\lambda$ 的非中心 $t$ 分布的累积分布函数。
+
+=== "$\delta < 0$"
+
+    $$
+     Power = P\left(T' > t_{1-\alpha}\right) = 1 - F\left(t_{1-\alpha, v'}; v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
+    $$
+
+=== "$\delta > 0$"
+
+    $$
+     Power = P\left(T' < t_{\alpha}\right) = F\left(t_{\alpha, v'}; v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}\right)
+    $$

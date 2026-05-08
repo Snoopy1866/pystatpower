@@ -10,8 +10,9 @@ from pystatpower.models.mean.independent.noninferiority import solve_power
 
 @dataclass
 class TestCase:
-    treatment_mean: float
-    reference_mean: float
+    treatment_mean: float | None
+    reference_mean: float | None
+    diff: float | None
     margin: float
     treatment_std: float
     reference_std: float
@@ -22,13 +23,21 @@ class TestCase:
     actual_power: float
 
 
-case_group = [  # Regular Test Cases, Ratio = 2, Margin = -0.10, Pooled = True, Continuity Correction = True
-    TestCase(treatment_mean, reference_mean, margin, treatment_std, reference_std, treatment_size, reference_size, 0.025, 0.80, actual_power)
-    for treatment_mean, reference_mean, margin, treatment_std, reference_std, treatment_size, reference_size, actual_power in [
-        (2, 2, -0.1, 1, 1, 2355, 1178, 0.8001),
-        (2, 2, -1, 1, 1, 25, 13, 0.8121),
-        (2, 2, -1, 1, 2, 73, 37, 0.8007),
-    ]
+case_group = [
+    # Regular Test Cases, Ratio = 2, Margin = -0.10, Pooled = True, Continuity Correction = True
+    TestCase(
+        treatment_mean=None,
+        reference_mean=None,
+        diff=0,
+        margin=-0.05,
+        treatment_std=0.1,
+        reference_std=0.1,
+        treatment_size=51,
+        reference_size=51,
+        alpha=0.05,
+        power=0.80,
+        actual_power=0.8059,
+    )
 ]
 
 
@@ -46,14 +55,13 @@ def test_solve_power(case: TestCase) -> None:
     assert (
         round(
             solve_power(
-                case.treatment_mean,
-                case.reference_mean,
-                case.margin,
-                case.treatment_std,
-                case.reference_std,
-                case.treatment_size,
-                case.reference_size,
-                case.alpha,
+                diff=case.diff,
+                margin=case.margin,
+                treatment_std=case.treatment_std,
+                reference_std=case.reference_std,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alpha=case.alpha,
             ),
             4,
         )

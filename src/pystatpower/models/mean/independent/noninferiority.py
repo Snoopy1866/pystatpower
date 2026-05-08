@@ -4,9 +4,29 @@ from typing import Literal
 from scipy.stats import nct, t
 
 
+def _power_general(
+    diff: float,
+    margin: float,
+    treatment_std: float,
+    reference_std: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float,
+) -> float:
+    df = treatment_size + reference_size - 2
+    var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
+    nc = (diff - margin) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
+
+    if margin < 0:
+        power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+    else:  # margin > 0
+        power = nct.cdf(t.ppf(alpha, df), df, nc)
+
+    return power
+
+
 def _power_welch(
-    treatment_mean: float,
-    reference_mean: float,
+    diff: float,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -18,21 +38,41 @@ def _power_welch(
         treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
         + reference_std**4 / (reference_size**2 * (reference_size + 1))
     ) - 2
-    nc = (treatment_mean - reference_mean - margin) / sqrt(
-        treatment_std**2 / treatment_size + reference_std**2 / reference_size
-    )
+    nc = (diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
 
     if margin < 0:
         power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
     else:  # margin > 0
-        power = nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        power = nct.cdf(t.ppf(alpha, df), df, nc)
+
+    return power
+
+
+def _power_satterthwaite(
+    diff: float,
+    margin: float,
+    treatment_std: float,
+    reference_std: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float,
+) -> float:
+    df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
+        treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
+        + reference_std**4 / (reference_size**2 * (reference_size - 1))
+    )
+    nc = (diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
+
+    if margin < 0:
+        power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+    else:  # margin > 0
+        power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return power
 
 
 def _power(
-    treatment_mean: float,
-    reference_mean: float,
+    diff: float,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -42,20 +82,12 @@ def _power(
     df_method: Literal["welch", "satterthwaite"],
 ) -> float:
     if treatment_std == reference_std:
-        df = treatment_size + reference_size - 2
-        var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
-        nc = (treatment_mean - reference_mean - margin) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
-
-        if margin < 0:
-            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
-        else:  # margin > 0
-            power = nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        power = _power_general(diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha)
     else:
         match df_method:
             case "welch":
                 power = _power_welch(
-                    treatment_mean,
-                    reference_mean,
+                    diff,
                     margin,
                     treatment_std,
                     reference_std,
@@ -64,14 +96,24 @@ def _power(
                     alpha,
                 )
             case "satterthwaite":
-                raise NotImplementedError("Satterthwaite's method is not implemented")
+                power = _power_satterthwaite(
+                    diff,
+                    margin,
+                    treatment_std,
+                    reference_std,
+                    treatment_size,
+                    reference_size,
+                    alpha,
+                )
 
     return power
 
 
 def solve_power(
-    treatment_mean: float,
-    reference_mean: float,
+    *,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -102,16 +144,23 @@ def solve_power(
         reference_size (float):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level. Defaults to 0.025.
         df_method (Literal["welch", "satterthwaite"], optional):
             The approximation method for adjusting degrees of freedom when variances are unequal ($\\sigma_1 \\neq \\sigma_2$). Defaults to "welch".
 
     Returns:
         float: Power of the test.
     """
+
+    if diff is None:
+        if treatment_mean is not None and reference_mean is not None:
+            actual_diff = treatment_mean - reference_mean
+        else:
+            raise ValueError("Either `diff` or `treatment_mean` and `reference_mean` must be provided.")
+    else:
+        actual_diff = diff
     return _power(
-        treatment_mean,
-        reference_mean,
+        actual_diff,
         margin,
         treatment_std,
         reference_std,
