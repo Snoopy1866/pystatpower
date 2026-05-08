@@ -1,7 +1,7 @@
 # 两独立样本均值非劣效检验
 
 对于高优指标（$\delta < 0$），统计学假设如下：
-alpha
+
 $$
 \begin{align}
 H_0 &: \mu_1 - \mu_2 \le \delta \\
