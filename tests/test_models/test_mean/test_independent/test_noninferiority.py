@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.mean.independent.noninferiority import solve_power
+from pystatpower.models.mean.independent.noninferiority import solve_power, solve_size
 
 
 @dataclass
@@ -22,46 +22,12 @@ class TestCase:
     actual_power: float
     method: Literal["z", "t"]
     equal_var: bool
-    df_adjust: Literal["welch", "satterthwaite"]
+    df_adjust: Literal["welch", "satterthwaite"] | None = None
 
 
 case_group = (
     [
-        # Reference: Chow, S.C.; Shao, J.; Wang, H. 2003. Sample Size Calculations in Clinical Research. Marcel Dekker. New York.
-        TestCase(
-            diff=0,
-            margin=-0.05,
-            treatment_std=0.1,
-            reference_std=0.1,
-            treatment_size=51,
-            reference_size=51,
-            alpha=0.05,
-            power=0.80,
-            actual_power=0.8059,
-            method="t",
-            equal_var=True,
-            df_adjust="welch",
-        )
-    ]
-    + [
-        # Reference: Julious, Steven A. 2004. 'Tutorial in Biostatistics. Sample sizes for clinical trials with Normal data.' Statistics in Medicine, 23:1921-1986.
-        TestCase(
-            diff=0,
-            margin=-10,
-            treatment_std=40,
-            reference_std=40,
-            treatment_size=337,
-            reference_size=337,
-            alpha=0.025,
-            power=0.90,
-            actual_power=0.8998,
-            method="t",
-            equal_var=True,
-            df_adjust="welch",
-        )
-    ]
-    + [
-        # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True, df_adjust = "welch"
+        # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
             diff=0,
             margin=margin,
@@ -74,7 +40,6 @@ case_group = (
             actual_power=actual_power,
             method="t",
             equal_var=True,
-            df_adjust="welch",
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 95, 48, 0.8007),
@@ -91,7 +56,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 0.5, alpha = 0.025, power = 0.80, method = "t", equal_var = True, df_adjust = "welch"
+        # Regular Test Cases: margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 0.5, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
             diff=0,
             margin=margin,
@@ -104,7 +69,6 @@ case_group = (
             actual_power=actual_power,
             method="t",
             equal_var=True,
-            df_adjust="welch",
         )
         for margin, treatment_size, reference_size, actual_power in [
             (10, 190, 380, 0.8020),
@@ -118,6 +82,155 @@ case_group = (
             (18, 59, 118, 0.8014),
             (19, 53, 106, 0.8013),
             (20, 48, 96, 0.8021),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (-20, 97, 49, 0.8064),
+            (-19, 107, 54, 0.8052),
+            (-18, 119, 60, 0.8049),
+            (-17, 133, 67, 0.8041),
+            (-16, 149, 75, 0.8016),
+            (-15, 169, 85, 0.8007),
+            (-14, 195, 98, 0.8031),
+            (-13, 225, 113, 0.8014),
+            (-12, 263, 132, 0.8002),
+            (-11, 313, 157, 0.8005),
+            (-10, 379, 190, 0.8010),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (10, 379, 190, 0.8010),
+            (11, 313, 157, 0.8005),
+            (12, 263, 132, 0.8002),
+            (13, 225, 113, 0.8014),
+            (14, 195, 98, 0.8031),
+            (15, 169, 85, 0.8007),
+            (16, 149, 75, 0.8016),
+            (17, 133, 67, 0.8041),
+            (18, 119, 60, 0.8049),
+            (19, 107, 54, 0.8052),
+            (20, 97, 49, 0.8064),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="satterthwaite",
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (-20, 97, 49, 0.8063),
+            (-19, 107, 54, 0.8051),
+            (-18, 119, 60, 0.8048),
+            (-17, 133, 67, 0.8041),
+            (-16, 149, 75, 0.8015),
+            (-15, 169, 85, 0.8007),
+            (-14, 195, 98, 0.8031),
+            (-13, 225, 113, 0.8014),
+            (-12, 263, 132, 0.8002),
+            (-11, 313, 157, 0.8005),
+            (-10, 379, 190, 0.8010),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="satterthwaite",
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (10, 379, 190, 0.8010),
+            (11, 313, 157, 0.8005),
+            (12, 263, 132, 0.8002),
+            (13, 225, 113, 0.8014),
+            (14, 195, 98, 0.8031),
+            (15, 169, 85, 0.8007),
+            (16, 149, 75, 0.8015),
+            (17, 133, 67, 0.8041),
+            (18, 119, 60, 0.8048),
+            (19, 107, 54, 0.8051),
+            (20, 97, 49, 0.8063),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="z",
+            equal_var=True,
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (-20, 97, 49, 0.8063),
+            (-19, 107, 54, 0.8051),
+            (-18, 119, 60, 0.8048),
+            (-17, 133, 67, 0.8041),
+            (-16, 149, 75, 0.8015),
+            (-15, 169, 85, 0.8007),
+            (-14, 195, 98, 0.8031),
+            (-13, 225, 113, 0.8014),
+            (-12, 263, 132, 0.8002),
+            (-11, 313, 157, 0.8005),
+            (-10, 379, 190, 0.8010),
         ]
     ]
 )
@@ -152,3 +265,31 @@ def test_solve_power(case: TestCase) -> None:
         )
         == case.actual_power
     )
+
+    with pytest.raises(ValueError):
+        solve_power(
+            diff=0,
+            margin=10,
+            treatment_std=10,
+            reference_std=20,
+            treatment_size=20,
+            reference_size=20,
+            method="z",
+            equal_var=True,
+        )
+
+
+def test_solve_size(case: TestCase) -> None:
+    ratio = case.treatment_size / case.reference_size
+    assert solve_size(
+        case.diff,
+        case.margin,
+        case.treatment_std,
+        case.reference_std,
+        ratio,
+        case.alpha,
+        case.power,
+        case.method,
+        case.equal_var,
+        case.df_adjust,
+    ) == (case.treatment_size, case.reference_size)

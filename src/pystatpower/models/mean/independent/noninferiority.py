@@ -1,7 +1,10 @@
-from math import sqrt
+from math import ceil, sqrt
 from typing import Literal
 
+from scipy.optimize import brentq
 from scipy.stats import nct, norm, t
+
+from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 
 
 def _power_z_equal_var(
@@ -34,7 +37,7 @@ def _power_z_unequal_var(
     return float(power)
 
 
-def _power_t(
+def _power_t_equal_var(
     diff: float,
     margin: float,
     treatment_std: float,
@@ -55,7 +58,7 @@ def _power_t(
     return power
 
 
-def _power_welch(
+def _power_unequal_var_welch(
     diff: float,
     margin: float,
     treatment_std: float,
@@ -78,7 +81,7 @@ def _power_welch(
     return power
 
 
-def _power_satterthwaite(
+def _power_unequal_var_satterthwaite(
     diff: float,
     margin: float,
     treatment_std: float,
@@ -125,15 +128,17 @@ def _power(
                 )
         case "t":
             if equal_var:
-                power = _power_t(diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha)
+                power = _power_t_equal_var(
+                    diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha
+                )
             else:
                 match df_adjust:
                     case "welch":
-                        power = _power_welch(
+                        power = _power_unequal_var_welch(
                             diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha
                         )
                     case "satterthwaite":
-                        power = _power_satterthwaite(
+                        power = _power_unequal_var_satterthwaite(
                             diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha
                         )
 
@@ -214,3 +219,119 @@ def solve_power(
         diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha, method, equal_var, df_adjust
     )
     return power
+
+
+def solve_size(
+    diff: float,
+    margin: float,
+    treatment_std: float,
+    reference_std: float,
+    ratio: float = 1,
+    alpha: float = 0.025,
+    power: float = 0.80,
+    method: Literal["z", "t"] = "t",
+    equal_var: bool = False,
+    df_adjust: Literal["welch", "satterthwaite"] = "welch",
+) -> tuple[int, int]:
+    """
+    Estimate the sample size required for a non-inferiority test of two independent means.
+
+    Args:
+        diff (float):
+            Expected mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        margin (float):
+            The non-inferiority margin ($\\delta$)
+
+            - Use a **negative** value if a higher mean indicates a better outcome
+            - Use a **positive** value if a lower mean indicates a better outcome
+        treatment_std (float):
+            Standard deviation in the treatment group ($\\sigma_1$).
+        reference_std (float):
+            Standard deviation in the reference group ($\\sigma_2$).
+        ratio (float, optional):
+            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$). Defaults to 1.
+        alpha (float, optional):
+            One-sided significance level. Defaults to 0.025.
+        power (float, optional):
+            Desired statistical power. Defaults to 0.8.
+        method (Literal["z", "t"], optional):
+            The distribution used for the test.
+
+            - "z": Standard normal distribution (large sample approximation).
+            - "t": Student's or non-central t distribution.
+
+            Defaults to "t".
+        equal_var (bool, optional):
+            Whether to assume equal variances between groups.
+
+            - If **True**: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
+              If `method="t"`, degree of freedom $df = n_1 + n_2 - 2$.
+
+            - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+              If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
+
+            Defaults to False.
+
+            If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
+        df_adjust (Literal["welch", "satterthwaite"], optional):
+            Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
+
+            - "welch": Adjustment based on Welch (1947).
+            - "satterthwaite": Adjustment based on Satterthwaite (1946).
+
+            Defaults to "welch".
+
+    Returns:
+        float: The calculated power of the test.
+
+    Raises:
+        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal `reference_std`.
+    """
+
+    if method == "z" and equal_var and treatment_std != reference_std:
+        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+
+    if ratio >= 1:
+
+        def func(reference_size: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    treatment_std,
+                    reference_std,
+                    reference_size * ratio,
+                    reference_size,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+
+        reference_size = int(ceil(brentq(func, 3 / (1 + ratio), SAMPLE_SIZE_SEARCH_MAX)))
+        treatment_size = int(ceil(reference_size * ratio))
+        return treatment_size, reference_size
+    else:
+
+        def func(treatment_size: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    treatment_std,
+                    reference_std,
+                    treatment_size,
+                    treatment_size / ratio,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+
+        treatment_size = ceil(brentq(func, 3 / (1 + 1 / ratio), SAMPLE_SIZE_SEARCH_MAX))
+        reference_size = ceil(treatment_size / ratio)
+        return treatment_size, reference_size
