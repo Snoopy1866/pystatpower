@@ -28,18 +28,21 @@ class TestCase:
 case_group = (
     [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
-        TestCase(
-            diff=0,
-            margin=margin,
-            treatment_std=40,
-            reference_std=40,
-            treatment_size=treatment_size,
-            reference_size=reference_size,
-            alpha=0.025,
-            power=0.80,
-            actual_power=actual_power,
-            method="t",
-            equal_var=True,
+        pytest.param(
+            TestCase(
+                diff=0,
+                margin=margin,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alpha=0.025,
+                power=0.80,
+                actual_power=actual_power,
+                method="t",
+                equal_var=True,
+            ),
+            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -17 else [],
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 95, 48, 0.8007),
@@ -86,25 +89,28 @@ case_group = (
     ]
     + [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
-        TestCase(
-            diff=0,
-            margin=margin,
-            treatment_std=40,
-            reference_std=40,
-            treatment_size=treatment_size,
-            reference_size=reference_size,
-            alpha=0.025,
-            power=0.80,
-            actual_power=actual_power,
-            method="t",
-            equal_var=False,
-            df_adjust="welch",
+        pytest.param(
+            TestCase(
+                diff=0,
+                margin=margin,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alpha=0.025,
+                power=0.80,
+                actual_power=actual_power,
+                method="t",
+                equal_var=False,
+                df_adjust="welch",
+            ),
+            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -17 else [],
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 97, 49, 0.8064),
             (-19, 107, 54, 0.8052),
             (-18, 119, 60, 0.8049),
-            (-17, 133, 67, 0.8041),
+            (-17, 133, 67, 0.8041),  #
             (-16, 149, 75, 0.8016),
             (-15, 169, 85, 0.8007),
             (-14, 195, 98, 0.8031),
@@ -146,19 +152,22 @@ case_group = (
     ]
     + [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
-        TestCase(
-            diff=0,
-            margin=margin,
-            treatment_std=40,
-            reference_std=40,
-            treatment_size=treatment_size,
-            reference_size=reference_size,
-            alpha=0.025,
-            power=0.80,
-            actual_power=actual_power,
-            method="t",
-            equal_var=False,
-            df_adjust="satterthwaite",
+        pytest.param(
+            TestCase(
+                diff=0,
+                margin=margin,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alpha=0.025,
+                power=0.80,
+                actual_power=actual_power,
+                method="t",
+                equal_var=False,
+                df_adjust="satterthwaite",
+            ),
+            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -12 else [],
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 97, 49, 0.8063),
@@ -169,7 +178,7 @@ case_group = (
             (-15, 169, 85, 0.8007),
             (-14, 195, 98, 0.8031),
             (-13, 225, 113, 0.8014),
-            (-12, 263, 132, 0.8002),
+            (-12, 263, 132, 0.8002),  #
             (-11, 313, 157, 0.8005),
             (-10, 379, 190, 0.8010),
         ]
