@@ -220,17 +220,46 @@ case_group = (
             equal_var=True,
         )
         for margin, treatment_size, reference_size, actual_power in [
-            (-20, 97, 49, 0.8063),
-            (-19, 107, 54, 0.8051),
-            (-18, 119, 60, 0.8048),
-            (-17, 133, 67, 0.8041),
-            (-16, 149, 75, 0.8015),
-            (-15, 169, 85, 0.8007),
-            (-14, 195, 98, 0.8031),
-            (-13, 225, 113, 0.8014),
-            (-12, 263, 132, 0.8002),
-            (-11, 313, 157, 0.8005),
-            (-10, 379, 190, 0.8010),
+            (-20, 96, 48, 0.8074),
+            (-19, 106, 53, 0.8061),
+            (-18, 118, 59, 0.8057),
+            (-17, 132, 66, 0.8049),
+            (-16, 148, 74, 0.8022),
+            (-15, 168, 84, 0.8013),
+            (-14, 194, 97, 0.8036),
+            (-13, 224, 112, 0.8019),
+            (-12, 262, 131, 0.8006),
+            (-11, 312, 156, 0.8008),
+            (-10, 378, 189, 0.8013),
+        ]
+    ]
+    + [
+        # Regular Test Cases: margin = 10 to 20 by 1, treatment_std = 40, reference_std = 30, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=30,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="z",
+            equal_var=False,
+        )
+        for margin, treatment_size, reference_size, actual_power in [
+            (10, 268, 134, 0.8017),
+            (11, 222, 111, 0.8026),
+            (12, 186, 93, 0.8014),
+            (13, 158, 79, 0.8002),
+            (14, 138, 69, 0.8053),
+            (15, 120, 60, 0.8046),
+            (16, 106, 53, 0.8065),
+            (17, 94, 47, 0.8069),
+            (18, 84, 42, 0.8077),
+            (19, 74, 37, 0.8004),
+            (20, 68, 34, 0.8074),
         ]
     ]
 )
@@ -293,3 +322,14 @@ def test_solve_size(case: TestCase) -> None:
         case.equal_var,
         case.df_adjust,
     ) == (case.treatment_size, case.reference_size)
+
+    with pytest.raises(ValueError):
+        solve_size(
+            diff=0,
+            margin=10,
+            treatment_std=10,
+            reference_std=20,
+            ratio=1,
+            method="z",
+            equal_var=True,
+        )

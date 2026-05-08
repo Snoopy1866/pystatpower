@@ -209,7 +209,7 @@ def solve_power(
         float: The calculated power of the test.
 
     Raises:
-        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal `reference_std`.
+        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
@@ -285,7 +285,7 @@ def solve_size(
         float: The calculated power of the test.
 
     Raises:
-        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal `reference_std`.
+        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
