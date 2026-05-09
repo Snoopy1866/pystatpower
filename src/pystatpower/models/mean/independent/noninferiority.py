@@ -209,7 +209,7 @@ def solve_power(
         float: The calculated power of the test.
 
     Raises:
-        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
@@ -282,10 +282,10 @@ def solve_size(
             Defaults to "welch".
 
     Returns:
-        float: The calculated power of the test.
+        float: The required sample sizes for the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If `method="z"` and `equal=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
@@ -335,3 +335,440 @@ def solve_size(
         treatment_size = ceil(brentq(func, 3 / (1 + 1 / ratio), SAMPLE_SIZE_SEARCH_MAX))
         reference_size = ceil(treatment_size / ratio)
         return treatment_size, reference_size
+
+
+def solve_diff(
+    margin: float,
+    treatment_std: float,
+    reference_std: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float = 0.025,
+    power: float = 0.80,
+    method: Literal["z", "t"] = "t",
+    equal_var: bool = False,
+    df_adjust: Literal["welch", "satterthwaite"] = "welch",
+) -> float:
+    """
+    Estimate the difference required for a non-inferiority test of two independent means.
+
+    Args:
+        margin (float):
+            The non-inferiority margin ($\\delta$)
+
+            - Use a **negative** value if a higher mean indicates a better outcome
+            - Use a **positive** value if a lower mean indicates a better outcome
+        treatment_std (float):
+            Standard deviation in the treatment group ($\\sigma_1$).
+        reference_std (float):
+            Standard deviation in the reference group ($\\sigma_2$).
+        treatment_size (float):
+            Sample size for the treatment group ($n_1$).
+        reference_size (float):
+            Sample size for the reference group ($n_2$).
+        alpha (float, optional):
+            One-sided significance level. Defaults to 0.025.
+        power (float, optional):
+            Desired statistical power. Defaults to 0.8.
+        method (Literal["z", "t"], optional):
+            The distribution used for the test.
+
+            - "z": Standard normal distribution (large sample approximation).
+            - "t": Student's or non-central t distribution.
+
+            Defaults to "t".
+        equal_var (bool, optional):
+            Whether to assume equal variances between groups.
+
+            - If **True**: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
+              If `method="t"`, degree of freedom $df = n_1 + n_2 - 2$.
+
+            - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+              If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
+
+            Defaults to False.
+
+            If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
+        df_adjust (Literal["welch", "satterthwaite"], optional):
+            Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
+
+            - "welch": Adjustment based on Welch (1947).
+            - "satterthwaite": Adjustment based on Satterthwaite (1946).
+
+            Defaults to "welch".
+
+    Returns:
+        float: The required difference between the treatment and reference means.
+
+    Raises:
+        ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+    """
+
+    if method == "z" and equal_var and treatment_std != reference_std:
+        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+
+    def func(diff: float) -> float:
+        return (
+            _power(
+                diff,
+                margin,
+                treatment_std,
+                reference_std,
+                treatment_size,
+                reference_size,
+                alpha,
+                method,
+                equal_var,
+                df_adjust,
+            )
+            - power
+        )
+
+    DIFF_SEARCH_MIN = -1000000
+    DIFF_SEARCH_MAX = 1000000
+
+    if margin < 0:
+        return float(brentq(func, margin, DIFF_SEARCH_MAX))
+    else:  # margin > 0
+        return float(brentq(func, DIFF_SEARCH_MIN, margin))
+
+
+def solve_margin(
+    diff: float,
+    treatment_std: float,
+    reference_std: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float = 0.025,
+    power: float = 0.80,
+    method: Literal["z", "t"] = "t",
+    equal_var: bool = False,
+    df_adjust: Literal["welch", "satterthwaite"] = "welch",
+    margin_selection: Literal["positive", "negative"] = "negative",
+) -> float:
+    """
+    Estimate the non-inferiority margin required for a non-inferiority test of two independent means.
+
+    Args:
+        diff (float):
+            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        treatment_std (float):
+            Standard deviation in the treatment group ($\\sigma_1$).
+        reference_std (float):
+            Standard deviation in the reference group ($\\sigma_2$).
+        treatment_size (float):
+            Sample size for the treatment group ($n_1$).
+        reference_size (float):
+            Sample size for the reference group ($n_2$).
+        alpha (float, optional):
+            One-sided significance level. Defaults to 0.025.
+        power (float, optional):
+            Desired statistical power. Defaults to 0.8.
+        method (Literal["z", "t"], optional):
+            The distribution used for the test.
+
+            - "z": Standard normal distribution (large sample approximation).
+            - "t": Student's or non-central t distribution.
+
+            Defaults to "t".
+        equal_var (bool, optional):
+            Whether to assume equal variances between groups.
+
+            - If **True**: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
+              If `method="t"`, degree of freedom $df = n_1 + n_2 - 2$.
+
+            - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+              If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
+
+            Defaults to False.
+
+            If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
+        df_adjust (Literal["welch", "satterthwaite"], optional):
+            Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
+
+            - "welch": Adjustment based on Welch (1947).
+            - "satterthwaite": Adjustment based on Satterthwaite (1946).
+
+            Defaults to "welch".
+        margin_selection (Literal["positive", "negative"], optional):
+            Selection criterion when two mathematically valid solutions exist (one for "higher is better", one for "worse")
+
+            - "positive": Returns the positive margin.
+            - "negative": Returns the negative margin.
+
+            Defaults to "negative".
+
+    Returns:
+        float: The required non-inferiority margin.
+
+    Raises:
+        ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+
+    Notes:
+        The search interval for non-inferiority margin ($\\sigma$) is constrained by the mean difference ($\\mu_1 - \\mu_2$) to ensure the alternative hypothesis remains plausible.
+
+        $$
+        \\text{Search Interval} =
+        \\begin{cases}
+        (-\\infty, \\ \\min\\left(0, \\ \\mu_1 - \\mu_2\\right)) & , \\text{if } \\delta < 0 \\\\
+        (\\max\\left(\\mu_1 - \\mu_2, \\ 0\\right), \\ \\infty) & , \\text{if } \\delta > 0 \\\\
+        \\end{cases}
+        $$
+    """
+
+    if method == "z" and equal_var and treatment_std != reference_std:
+        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+
+    def func(margin: float) -> float:
+        return (
+            _power(
+                diff,
+                margin,
+                treatment_std,
+                reference_std,
+                treatment_size,
+                reference_size,
+                alpha,
+                method,
+                equal_var,
+                df_adjust,
+            )
+            - power
+        )
+
+    MARGIN_SEARCH_MIN = -1000000
+    MARGIN_SEARCH_MAX = 1000000
+
+    match margin_selection:
+        case "negative":
+            return brentq(func, MARGIN_SEARCH_MIN, min(0, diff))
+        case "positive":
+            return brentq(func, max(diff, 0), MARGIN_SEARCH_MAX)
+
+
+def solve_treatment_std(
+    diff: float,
+    margin: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float = 0.025,
+    power: float = 0.80,
+    method: Literal["z", "t"] = "t",
+    equal_var: bool = True,
+    reference_std: float | None = None,
+    df_adjust: Literal["welch", "satterthwaite"] = "welch",
+) -> float:
+    """
+    Estimate the standard deviation required in the treatment group for a non-inferiority test of two independent means.
+
+    Args:
+        diff (float):
+            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        margin (float):
+            The non-inferiority margin ($\\delta$)
+
+            - Use a **negative** value if a higher mean indicates a better outcome
+            - Use a **positive** value if a lower mean indicates a better outcome
+        treatment_size (float):
+            Sample size for the treatment group ($n_1$).
+        reference_size (float):
+            Sample size for the reference group ($n_2$).
+        alpha (float, optional):
+            One-sided significance level. Defaults to 0.025.
+        power (float, optional):
+            Desired statistical power. Defaults to 0.8.
+        method (Literal["z", "t"], optional):
+            The distribution used for the test.
+
+            - "z": Standard normal distribution (large sample approximation).
+            - "t": Student's or non-central t distribution.
+
+            Defaults to "t".
+        equal_var (bool, optional):
+            Whether to assume equal variances between groups.
+
+            - If **True**: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
+              If `method="t"`, degree of freedom $df = n_1 + n_2 - 2$.
+
+            - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+              If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
+
+            Defaults to True.
+
+            If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
+        reference_std (float | None, optional):
+            Standard deviation in the reference group ($\\sigma_2$).
+
+            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
+        df_adjust (Literal["welch", "satterthwaite"], optional):
+            Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
+
+            - "welch": Adjustment based on Welch (1947).
+            - "satterthwaite": Adjustment based on Satterthwaite (1946).
+
+            Defaults to "welch".
+
+    Returns:
+        float: The required standard deviation in the treatment group.
+
+    Raises:
+        ValueError: If `equal_var=False` and `reference_std=None`.
+    """
+
+    if not equal_var and reference_std is None:
+        raise ValueError("reference_std must be provided when equal_var=True")
+
+    if equal_var:
+
+        def func(treatment_std: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    treatment_std,
+                    treatment_std,
+                    treatment_size,
+                    reference_size,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+    else:  # equal_var == False
+
+        def func(treatment_std: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    treatment_std,
+                    reference_std,
+                    treatment_size,
+                    reference_size,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+
+    STD_SEARCH_MAX = 1000000
+
+    return float(brentq(func, 0.000001, STD_SEARCH_MAX))
+
+
+def solve_reference_std(
+    diff: float,
+    margin: float,
+    treatment_size: float,
+    reference_size: float,
+    alpha: float = 0.025,
+    power: float = 0.80,
+    method: Literal["z", "t"] = "t",
+    equal_var: bool = True,
+    treatment_std: float | None = None,
+    df_adjust: Literal["welch", "satterthwaite"] = "welch",
+) -> float:
+    """
+    Estimate the standard deviation required in the reference group for a non-inferiority test of two independent means.
+
+    Args:
+        diff (float):
+            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        margin (float):
+            The non-inferiority margin ($\\delta$)
+
+            - Use a **negative** value if a higher mean indicates a better outcome
+            - Use a **positive** value if a lower mean indicates a better outcome
+        treatment_size (float):
+            Sample size for the treatment group ($n_1$).
+        reference_size (float):
+            Sample size for the reference group ($n_2$).
+        alpha (float, optional):
+            One-sided significance level. Defaults to 0.025.
+        power (float, optional):
+            Desired statistical power. Defaults to 0.8.
+        method (Literal["z", "t"], optional):
+            The distribution used for the test.
+
+            - "z": Standard normal distribution (large sample approximation).
+            - "t": Student's or non-central t distribution.
+
+            Defaults to "t".
+        equal_var (bool, optional):
+            Whether to assume equal variances between groups.
+
+            - If **True**: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
+              If `method="t"`, degree of freedom $df = n_1 + n_2 - 2$.
+
+            - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+              If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
+
+            Defaults to True.
+
+            If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
+        treatment_std (float | None, optional):
+            Standard deviation in the treatment group ($\\sigma_2$).
+
+            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
+        df_adjust (Literal["welch", "satterthwaite"], optional):
+            Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
+
+            - "welch": Adjustment based on Welch (1947).
+            - "satterthwaite": Adjustment based on Satterthwaite (1946).
+
+            Defaults to "welch".
+
+    Returns:
+        float: The required standard deviation in the reference group.
+
+    Raises:
+        ValueError: If `equal_var=False` and `treatment_std=None`.
+    """
+
+    if not equal_var and treatment_std is None:
+        raise ValueError("treatment_std must be provided when equal_var=True")
+
+    if equal_var:
+
+        def func(reference_std: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    reference_std,
+                    reference_std,
+                    treatment_size,
+                    reference_size,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+    else:  # equal_var == False
+
+        def func(reference_std: float) -> float:
+            return (
+                _power(
+                    diff,
+                    margin,
+                    treatment_std,
+                    reference_std,
+                    treatment_size,
+                    reference_size,
+                    alpha,
+                    method,
+                    equal_var,
+                    df_adjust,
+                )
+                - power
+            )
+
+    STD_SEARCH_MAX = 1000000
+
+    return float(brentq(func, 0.000001, STD_SEARCH_MAX))

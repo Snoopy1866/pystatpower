@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.mean.independent.noninferiority import solve_power, solve_size
+from pystatpower.models.mean.independent.noninferiority import solve_power, solve_size, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
 
 
 @dataclass
@@ -412,3 +412,177 @@ def test_solve_size(case: TestCase) -> None:
             method="z",
             equal_var=True,
         )
+
+
+def test_solve_diff(case: TestCase) -> None:
+    if case == TestCase(
+        diff=0,
+        margin=-14,
+        treatment_std=40,
+        reference_std=40,
+        treatment_size=193,
+        reference_size=97,
+        alpha=0.025,
+        power=0.8,
+        actual_power=0.8003,
+        method="t",
+        equal_var=True,
+    ) or case == TestCase(
+        diff=0,
+        margin=-14,
+        treatment_std=40,
+        reference_std=40,
+        treatment_size=195,
+        reference_size=98,
+        alpha=0.025,
+        power=0.8,
+        actual_power=0.8031,
+        method="t",
+        equal_var=False,
+        df_adjust="satterthwaite",
+    ):
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
+    assert (
+        round(
+            solve_diff(
+                case.margin,
+                case.treatment_std,
+                case.reference_std,
+                case.treatment_size,
+                case.reference_size,
+                case.alpha,
+                case.actual_power,
+                case.method,
+                case.equal_var,
+                case.df_adjust,
+            ),
+            0,
+        )
+        == case.diff
+    )
+
+    with pytest.raises(ValueError):
+        solve_diff(margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+
+
+def test_solve_margin(case: TestCase) -> None:
+    if (
+        case
+        == TestCase(
+            diff=0,
+            margin=-14,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=193,
+            reference_size=97,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8003,
+            method="t",
+            equal_var=True,
+        )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-14,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=195,
+            reference_size=98,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8031,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
+        )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-14,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=195,
+            reference_size=98,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8031,
+            method="t",
+            equal_var=False,
+            df_adjust="satterthwaite",
+        )
+    ):
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
+    margin_selection = "negative" if case.margin < 0 else "positive"
+    assert (
+        round(
+            solve_margin(
+                case.diff,
+                case.treatment_std,
+                case.reference_std,
+                case.treatment_size,
+                case.reference_size,
+                case.alpha,
+                case.actual_power,
+                case.method,
+                case.equal_var,
+                case.df_adjust,
+                margin_selection,
+            ),
+            0,
+        )
+        == case.margin
+    )
+
+    with pytest.raises(ValueError):
+        solve_margin(diff=0, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+
+
+def test_solve_treatment_std(case: TestCase) -> None:
+    assert (
+        round(
+            solve_treatment_std(
+                case.diff,
+                case.margin,
+                case.treatment_size,
+                case.reference_size,
+                case.alpha,
+                case.actual_power,
+                case.method,
+                case.equal_var,
+                case.reference_std,
+                case.df_adjust,
+            ),
+            0,
+        )
+        == case.treatment_std
+    )
+
+    with pytest.raises(ValueError):
+        solve_treatment_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+
+
+def test_solve_reference_std(case: TestCase) -> None:
+    assert (
+        round(
+            solve_reference_std(
+                case.diff,
+                case.margin,
+                case.treatment_size,
+                case.reference_size,
+                case.alpha,
+                case.actual_power,
+                case.method,
+                case.equal_var,
+                case.treatment_std,
+                case.df_adjust,
+            ),
+            0,
+        )
+        == case.reference_std
+    )
+
+    with pytest.raises(ValueError):
+        solve_reference_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
