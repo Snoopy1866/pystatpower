@@ -53,11 +53,9 @@ version = { attr = "pystatpower.__version__" }
 # pytest configuration
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-ra -q -l --tb=auto --color=yes"
+addopts = "-ra -q --verbosity=0 -l --tb=auto --color=yes"
 testpaths = ["tests"]
 pythonpath = ["src"]
-verbosity_test_cases = 2
-verbosity_assertions = 2
 
 # ruff configuration
 [tool.ruff]
