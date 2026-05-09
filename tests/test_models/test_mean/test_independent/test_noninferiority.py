@@ -30,21 +30,18 @@ class TestCase:
 case_group = (
     [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
-        pytest.param(
-            TestCase(
-                diff=0,
-                margin=margin,
-                treatment_std=40,
-                reference_std=40,
-                treatment_size=treatment_size,
-                reference_size=reference_size,
-                alpha=0.025,
-                power=0.80,
-                actual_power=actual_power,
-                method="t",
-                equal_var=True,
-            ),
-            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -17 else [],
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=True,
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 95, 48, 0.8007),
@@ -91,22 +88,19 @@ case_group = (
     ]
     + [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
-        pytest.param(
-            TestCase(
-                diff=0,
-                margin=margin,
-                treatment_std=40,
-                reference_std=40,
-                treatment_size=treatment_size,
-                reference_size=reference_size,
-                alpha=0.025,
-                power=0.80,
-                actual_power=actual_power,
-                method="t",
-                equal_var=False,
-                df_adjust="welch",
-            ),
-            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -17 else [],
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 97, 49, 0.8064),
@@ -154,22 +148,19 @@ case_group = (
     ]
     + [
         # Regular Test Cases: margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
-        pytest.param(
-            TestCase(
-                diff=0,
-                margin=margin,
-                treatment_std=40,
-                reference_std=40,
-                treatment_size=treatment_size,
-                reference_size=reference_size,
-                alpha=0.025,
-                power=0.80,
-                actual_power=actual_power,
-                method="t",
-                equal_var=False,
-                df_adjust="satterthwaite",
-            ),
-            marks=pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106") if margin == -12 else [],
+        TestCase(
+            diff=0,
+            margin=margin,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            actual_power=actual_power,
+            method="t",
+            equal_var=False,
+            df_adjust="satterthwaite",
         )
         for margin, treatment_size, reference_size, actual_power in [
             (-20, 97, 49, 0.8063),
@@ -320,6 +311,53 @@ def test_solve_power(case: TestCase) -> None:
 
 
 def test_solve_size(case: TestCase) -> None:
+    if (
+        case
+        == TestCase(
+            diff=0,
+            margin=-17,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=131,
+            reference_size=66,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8,
+            method="t",
+            equal_var=True,
+        )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-12,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=263,
+            reference_size=132,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8002,
+            method="t",
+            equal_var=False,
+            df_adjust="satterthwaite",
+        )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-12,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=263,
+            reference_size=132,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8011,
+            method="t",
+            equal_var=True,
+        )
+    ):
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
         case.diff,
