@@ -477,7 +477,7 @@ def solve_margin(
 
             - "positive": Returns the positive margin (typically for mortality).
             - "negative": Returns the negative margin (typically for cure rates).
-            
+
             Defaults to "negative".
 
             Note: If only one solution exists, this parameter is ignored.
