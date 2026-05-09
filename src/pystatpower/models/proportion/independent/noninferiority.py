@@ -475,8 +475,8 @@ def solve_margin(
         margin_selection (Literal["positive", "negative"], optional):
             Selection criterion when two mathematically valid solutions exist (one for "higher is better", one for "worse")
 
-            - "positive": Returns the negative margin (typically for cure rates).
-            - "negative": Returns the positive margin (typically for mortality). Defaults to "negative".
+            - "positive": Returns the positive margin (typically for cure rates).
+            - "negative": Returns the negative margin (typically for mortality). Defaults to "negative".
 
             Note: If only one solution exists, this parameter is ignored.
 
