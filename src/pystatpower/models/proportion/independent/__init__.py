@@ -1,4 +1,4 @@
-from . import noninferiority, superiority
+from . import inequality, noninferiority, superiority
 
 __all__ = [
     "inequality",

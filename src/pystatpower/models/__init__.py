@@ -1,6 +1,7 @@
-from . import proportion
+from . import correlation, mean, proportion
 
 __all__ = [
-    "proportion",
     "correlation",
+    "mean",
+    "proportion",
 ]

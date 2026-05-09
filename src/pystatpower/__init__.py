@@ -6,5 +6,4 @@ __version__ = version("pystatpower")
 
 __all__ = [
     "models",
-    "constant",
 ]
