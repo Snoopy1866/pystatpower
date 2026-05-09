@@ -10,6 +10,8 @@ from pystatpower.models.proportion.independent.superiority import solve_power, s
 
 @dataclass
 class TestCase:
+    __test__ = False
+
     treatment_proportion: float
     reference_proportion: float
     margin: float
