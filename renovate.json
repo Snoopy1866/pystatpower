@@ -2,5 +2,20 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "dependencyDashboard": false,
-  "labels": ["dependencies"]
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Ignore updates for required-python in pyproject.toml",
+      "matchFileNames": ["pyproject.toml"],
+      "matchDepTypes": ["requires-python"],
+      "enabled": false
+    },
+    {
+      "description": "Ignore updates for project dependencies in pyproject.toml",
+      "matchFileNames": ["pyproject.toml"],
+      "matchDepTypes": ["project.dependencies"],
+      "enabled": false
+    }
+  ]
 }
