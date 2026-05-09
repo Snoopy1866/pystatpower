@@ -1,0 +1,1 @@
+::: pystatpower.models.correlation.inequality
