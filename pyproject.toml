@@ -53,7 +53,7 @@ version = { attr = "pystatpower.__version__" }
 # pytest configuration
 [tool.pytest.ini_options]
 minversion = "8.0"
-addopts = "-ra -q --verbosity=0 -l --tb=auto --color=yes"
+addopts = "-ra --verbosity=0 -l --tb=auto --color=yes"
 testpaths = ["tests"]
 pythonpath = ["src"]
 
