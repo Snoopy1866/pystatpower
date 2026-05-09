@@ -11,6 +11,8 @@ from pystatpower.models.mean.independent.noninferiority import solve_power, solv
 
 @dataclass
 class TestCase:
+    __test__ = False
+
     diff: float
     margin: float
     treatment_std: float
