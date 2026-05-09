@@ -355,6 +355,36 @@ def test_solve_size(case: TestCase) -> None:
             method="t",
             equal_var=True,
         )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-17,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=133,
+            reference_size=67,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8041,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
+        )
+        or case
+        == TestCase(
+            diff=0,
+            margin=-12,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=263,
+            reference_size=132,
+            alpha=0.025,
+            power=0.8,
+            actual_power=0.8002,
+            method="t",
+            equal_var=False,
+            df_adjust="welch",
+        )
     ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
