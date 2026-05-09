@@ -11,6 +11,8 @@ from pystatpower.models.proportion.independent.inequality import solve_power, so
 
 @dataclass
 class TestCase:
+    __test__ = False
+
     treatment_proportion: float
     reference_proportion: float
     treatment_size: int

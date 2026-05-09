@@ -10,6 +10,8 @@ from pystatpower.models.proportion.independent.noninferiority import solve_margi
 
 @dataclass
 class TestCase:
+    __test__ = False
+
     treatment_proportion: float
     reference_proportion: float
     margin: float
