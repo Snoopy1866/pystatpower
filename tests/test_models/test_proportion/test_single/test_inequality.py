@@ -11,6 +11,8 @@ from pystatpower.models.proportion.single.inequality import solve_power, solve_s
 
 @dataclass
 class TestCase:
+    __test__ = False
+
     null_proportion: float
     proportion: float
     size: int
