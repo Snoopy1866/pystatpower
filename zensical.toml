@@ -10,7 +10,27 @@ nav = [
         { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" },
         { "相关系数" = "models/correlation/inequality.md" }
     ] },
-    { "API Reference" = "api.md" }
+    { "API Reference" = [
+        { "correlation" = [
+            { "inequality" = "api/correlation/inequality.md" }
+        ] },
+        { "mean" = [
+            { "independent" = [
+                { "noninferiority" = "api/mean/independent/noninferiority.md" }
+            ] }
+        ] },
+        { "proportion" = [
+            { "single" = [
+                { "ci" = "api/proportion/single/ci.md" },
+                { "inequality" = "api/proportion/single/inequality.md" }
+            ] },
+            { "independent" = [
+                { "inequality" = "api/proportion/independent/inequality.md" },
+                { "noninferiority" = "api/proportion/independent/noninferiority.md" },
+                { "superiority" = "api/proportion/independent/superiority.md" }
+            ] }
+        ] }
+    ] }
 ]
 site_name = "pystatpower"
 site_url = "https://pystatpower.readthedocs.io"
@@ -106,18 +126,26 @@ paths = ["src"]
 backlinks = "tree"
 docstring_options.ignore_init_summary = true
 docstring_style = "google"
-docstring_section_style = "list"
+docstring_section_style = "table"
 filters = ["!^_"]
 inherited_members = true
 heading_level = 1
 merge_init_into_class = true
-parameter_headings = true
-separate_signature = false
+parameter_headings = false
+separate_signature = true
 show_source = false
+relative_crossrefs = true
+scoped_crossrefs = true
 show_root_heading = true
+show_root_toc_entry = false
 show_root_full_path = true
 show_signature_annotations = true
 show_symbol_type_heading = true
 show_symbol_type_toc = true
 signature_crossrefs = true
-summary = true
+members_order = "source"
+
+[project.plugins.mkdocstrings.handlers.python.options.summary]
+attributes = false
+functions = true
+modules = false
