@@ -9,7 +9,8 @@ nav = [
         { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" },
         { "相关系数" = "models/correlation/inequality.md" }
     ] },
-    { "API Reference" = "api.md" }
+    { "API Reference" = "api.md" },
+    { "Theory Reference" = "theory.md" }
 ]
 site_name = "pystatpower"
 site_url = "https://pystatpower.readthedocs.io"
