@@ -73,6 +73,11 @@ features = [
 ]
 custom_dir = "docs/overrides"
 
+[project.extra]
+alternate = [
+    { name = "Chinese", link = "/zh-cn/", lang = "zh" }
+]
+
 # Palette toggle for automatic mode
 [[project.theme.palette]]
 media = "(prefers-color-scheme)"
