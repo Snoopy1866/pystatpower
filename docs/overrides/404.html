@@ -1,0 +1,77 @@
+{% extends "main.html" %} {% block left_sidebar %} {% endblock %} {% block
+right_sidebar %} {% endblock %} {% block content %}
+<div class="md-content" style="text-align: center; margin: 4rem auto">
+  <article class="md-content__inner md-typeset">
+    <div style="margin-bottom: 2rem">
+      <span
+        style="
+          font-size: 6rem;
+          font-weight: 700;
+          opacity: 0.1;
+          line-height: 1;
+          display: block;
+          font-family: &quot;JetBrains Mono&quot;, monospace;
+        "
+        >404</span
+      >
+      <h1
+        style="
+          margin-top: -2.5rem;
+          border-bottom: none;
+          color: var(--md-primary-fg-color);
+        "
+      >
+        此页面处于“不可观察”状态
+      </h1>
+    </div>
+
+    <div
+      style="
+        max-width: 32rem;
+        margin: 0 auto;
+        color: var(--md-default-fg-color--light);
+      "
+    >
+      <p style="font-size: 1.1rem; line-height: 1.8">
+        正如一个未定义的模型，你所寻找的参数已经由于显著性不足而被剔除。
+      </p>
+
+      <p style="font-style: italic; opacity: 0.8; margin: 1.5rem 0">
+        该页面当前的 p-value 远大于 0.05，<br />我们无法拒绝“它不存在”这一虚无假设。
+      </p>
+
+      <div style="font-size: 3rem; margin: 2rem 0; filter: grayscale(0.5)">
+        🍃
+      </div>
+    </div>
+
+    <a
+      href="{{ config.site_url | default(base_url ~ '/../') }}"
+      class="md-button md-button--primary"
+      style="
+        border-radius: 100px;
+        padding: 0.6rem 2.5rem;
+        text-decoration: none;
+      "
+    >
+      重置观察位
+    </a>
+  </article>
+</div>
+
+<style>
+  /* 适配 Zensical 的居中逻辑 */
+  [data-md-component="content"] {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  .md-sidebar--primary,
+  .md-sidebar--secondary {
+    display: none !important;
+  }
+  /* 确保公式美观 */
+  .md-typeset p {
+    margin-bottom: 1em;
+  }
+</style>
+{% endblock %}
