@@ -11,24 +11,26 @@ nav = [
         { "相关系数" = "models/correlation/inequality.md" }
     ] },
     { "API Reference" = [
-        { "correlation" = [
-            { "inequality" = "api/correlation/inequality.md" }
-        ] },
-        { "mean" = [
-            { "independent" = [
-                { "noninferiority" = "api/mean/independent/noninferiority.md" }
+        { "首页" = "api/index.md" },
+
+        { "均值" = [
+            { "两独立样本" = [
+                { "非劣效检验" = "api/mean/independent/noninferiority.md" }
             ] }
         ] },
-        { "proportion" = [
-            { "single" = [
-                { "ci" = "api/proportion/single/ci.md" },
-                { "inequality" = "api/proportion/single/inequality.md" }
+        { "率" = [
+            { "单样本" = [
+                { "置信区间" = "api/proportion/single/ci.md" },
+                { "差异性检验" = "api/proportion/single/inequality.md" }
             ] },
-            { "independent" = [
-                { "inequality" = "api/proportion/independent/inequality.md" },
-                { "noninferiority" = "api/proportion/independent/noninferiority.md" },
-                { "superiority" = "api/proportion/independent/superiority.md" }
+            { "两独立样本" = [
+                { "差异性检验" = "api/proportion/independent/inequality.md" },
+                { "非劣效检验" = "api/proportion/independent/noninferiority.md" },
+                { "优效性检验" = "api/proportion/independent/superiority.md" }
             ] }
+        ] },
+        { "相关系数" = [
+            { "差异性检验" = "api/correlation/inequality.md" }
         ] }
     ] }
 ]
