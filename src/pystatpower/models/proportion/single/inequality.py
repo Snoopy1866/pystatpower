@@ -1,8 +1,8 @@
-from math import ceil, sqrt
+from math import ceil, floor, sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import norm
+from scipy.stats import binom, norm
 
 from ...._constant import SAMPLE_SIZE_SEARCH_MAX
 
@@ -128,6 +128,24 @@ def _power_phat_cc(
     return float(power)
 
 
+def _power_exact(
+    null_proportion: float, proportion: float, size: float, alternative: Literal["one-sided", "two-sided"], alpha: float
+) -> float:
+    match alternative:
+        case "one-sided":
+            if proportion > null_proportion:
+                z_alpha = binom.ppf(1 - alpha, size, null_proportion)
+                power = 1 - binom.cdf(z_alpha, size, proportion)
+            else:
+                z_alpha = binom.ppf(alpha, size, null_proportion)
+                power = binom.cdf(z_alpha, size, proportion)
+        case "two-sided":
+            z_alpha_1 = binom.ppf(1 - alpha / 2, size, null_proportion)
+            z_alpha_2 = binom.ppf(alpha / 2, size, null_proportion)
+            power = 1 - binom.cdf(z_alpha_1, size, proportion) + binom.cdf(z_alpha_2, size, proportion)
+    return float(power)
+
+
 def _power(
     null_proportion: float,
     proportion: float,
@@ -136,6 +154,7 @@ def _power(
     alpha: float,
     phat: bool,
     continuity_correction: bool,
+    exact: bool,
 ) -> float:
     """Calculate the statistical power for a one-sample proportion test."""
 
@@ -160,6 +179,7 @@ def solve_power(
     alpha: float = 0.05,
     phat: bool = False,
     continuity_correction: bool = False,
+    exact: bool = True,
 ) -> float:
     """
     Calculate the statistical power for a one-sample proportion test.
@@ -189,7 +209,7 @@ def solve_power(
         (float): The calculated power of the test.
     """
 
-    return _power(null_proportion, proportion, size, alternative, alpha, phat, continuity_correction)
+    return _power(null_proportion, proportion, size, alternative, alpha, phat, continuity_correction, exact)
 
 
 def solve_size(
@@ -201,6 +221,7 @@ def solve_size(
     power: float = 0.80,
     phat: bool = False,
     continuity_correction: bool = False,
+    exact: bool = True,
 ) -> int:
     """
     Estimate the required sample size for a one-sample proportion test.
@@ -231,9 +252,19 @@ def solve_size(
     """
 
     def func(size: float) -> float:
-        return _power(null_proportion, proportion, size, alternative, alpha, phat, continuity_correction) - power
+        return _power(null_proportion, proportion, size, alternative, alpha, phat, continuity_correction, exact) - power
 
-    return ceil(brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX))
+    if exact:
+        initial_size = solve_size(null_proportion, proportion, alternative, alpha, power, exact=False)
+        search_interval_lower_bound = max(floor(0.5 * initial_size), 1)
+        search_interval_upper_bound = min(ceil(initial_size * 1.5), SAMPLE_SIZE_SEARCH_MAX)
+
+        rng = range(search_interval_lower_bound, search_interval_upper_bound)
+        dict_power = dict.fromkeys(rng)
+        for size in rng:
+            dict_power[size] = solve_power(null_proportion, proportion, size, alternative, alpha, exact)
+    else:
+        return ceil(brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX))
 
 
 def solve_null_proportion(
