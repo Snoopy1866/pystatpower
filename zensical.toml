@@ -11,7 +11,7 @@ nav = [
         { "相关系数" = "models/correlation/inequality.md" }
     ] },
     { "API Reference" = [
-        { "首页" = "api/index.md" },
+        { "概览" = "api/index.md" },
 
         { "均值" = [
             { "两独立样本" = [
