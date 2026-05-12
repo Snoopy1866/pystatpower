@@ -70,7 +70,7 @@ def _power_t_equal_var(
         case "both":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
 
-    return power
+    return float(power)
 
 
 def _power_unequal_var_satterthwaite(
@@ -100,7 +100,7 @@ def _power_unequal_var_satterthwaite(
         case "both":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
 
-    return power
+    return float(power)
 
 
 def _power_unequal_var_welch(
@@ -130,7 +130,7 @@ def _power_unequal_var_welch(
         case "both":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
 
-    return power
+    return float(power)
 
 
 def _power(
@@ -197,7 +197,7 @@ def solve_power(
     treatment_size: float,
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
@@ -233,7 +233,7 @@ def solve_power(
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_2$
             - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_2$
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
@@ -290,7 +290,7 @@ def solve_size(
     reference_std: float,
     ratio: float = 1,
     alternative: Literal["lower", "upper", "both"] = "both",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -325,7 +325,7 @@ def solve_size(
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_2$
             - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_2$
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -379,7 +379,7 @@ def solve_size(
                 - power
             )
 
-        lower_bound = max(3 / (1 + ratio), 1) + 0.000001
+        lower_bound = max(3 / (1 + ratio), 1) + 0.1
         upper_bound = SAMPLE_SIZE_SEARCH_MAX
         reference_size = int(ceil(brentq(func, lower_bound, upper_bound)))
         treatment_size = int(ceil(reference_size * ratio))
@@ -419,7 +419,7 @@ def solve_diff(
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
     search_direction: Literal["above", "below"] = "above",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -449,7 +449,7 @@ def solve_diff(
             - `'above'`: Search the difference above 0.
             - `'below'`: Search the difference below 0.
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -517,7 +517,7 @@ def solve_treatment_mean(
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
     search_direction: Literal["above", "below"] = "above",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -549,7 +549,7 @@ def solve_treatment_mean(
             - `'above'`: Search the treatment mean above the reference mean.
             - `'below'`: Search the treatment mean below the reference mean.
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -607,8 +607,7 @@ def solve_treatment_mean(
         case "above":
             return float(brentq(func, reference_mean, DIFF_SEARCH_MAX))
         case "below":
-            a = float(brentq(func, DIFF_SEARCH_MIN, reference_mean))
-            return a
+            return float(brentq(func, DIFF_SEARCH_MIN, reference_mean))
 
 
 def solve_reference_mean(
@@ -619,7 +618,7 @@ def solve_reference_mean(
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
     search_direction: Literal["above", "below"] = "below",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -651,7 +650,7 @@ def solve_reference_mean(
             - `'above'`: Search the reference mean above the treatment mean.
             - `'below'`: Search the reference mean below the treatment mean.
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -720,7 +719,7 @@ def solve_treatment_std(
     treatment_size: float,
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = True,
@@ -754,7 +753,7 @@ def solve_treatment_std(
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_2$
             - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_2$
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -848,7 +847,7 @@ def solve_reference_std(
     treatment_size: float,
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
-    alpha: float = 0.025,
+    alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
     equal_var: bool = True,
@@ -882,7 +881,7 @@ def solve_reference_std(
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_2$
             - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_2$
         alpha (float, optional):
-            One-sided significance level.
+            Significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
