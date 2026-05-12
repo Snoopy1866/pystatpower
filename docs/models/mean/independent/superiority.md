@@ -18,7 +18,7 @@ H_1 &: \mu_1 - \mu_2 \lt \delta
 \end{align}
 $$
 
-$\delta$ 为非劣效界值，两样本均值分别用 $\hat{\mu}_1$ 和 $\hat{\mu}_2$ 表示，两样本方差分别用 $S_1$ 和 $S_2$ 表示。
+$\delta$ 为优效性界值，两样本均值分别用 $\hat{\mu}_1$ 和 $\hat{\mu}_2$ 表示，两样本方差分别用 $S_1$ 和 $S_2$ 表示。
 
 $$
 E(\hat{\mu}_1 - \hat{\mu}_2) = \mu_1 - \mu_2, \ \ Var(\hat{\mu}_1 - \hat{\mu}_2) = \frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}
@@ -59,21 +59,12 @@ $$
           = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2 - \delta}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
     $$
 
-在 $H_1$ 成立时：
+!!! note "样本量公式推导"
 
-若 $\delta \geqslant 0$，则 $\mu_1 - \mu_2 - \delta > 0$；
-
-若 $\delta \leqslant 0$，则 $\mu_1 - \mu_2 - \delta < 0$。
-
-$$
-Power = 1 - \Phi\left(z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
-$$
-
-??? note "样本量公式推导"
     根据标准正态分布分位数的定义：
 
     $$
-    z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} = z_\beta
+    z_{1-\alpha} \pm \frac{\mu_1 - \mu_2 - \delta}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} = z_\beta
     $$
 
     设 $n_1 = kn_2$，由上式可解出
@@ -117,21 +108,11 @@ $$
           = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
     $$
 
-在 $H_1$ 成立时：
-
-若 $\delta \geqslant 0$，则 $\mu_1 - \mu_2 - \delta > 0$；
-
-若 $\delta \leqslant 0$，则 $\mu_1 - \mu_2 - \delta < 0$。
-
-$$
-Power = 1 - \Phi\left(z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
-$$
-
-??? note "样本量公式推导"
+!!! note "样本量公式推导"
     根据标准正态分布分位数的定义：
 
     $$
-    z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = z_\beta
+    z_{1-\alpha} \pm \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = z_\beta
     $$
 
     设 $n_1 = kn_2$，由上式可解出

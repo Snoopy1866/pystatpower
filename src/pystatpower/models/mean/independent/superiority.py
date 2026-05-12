@@ -13,12 +13,16 @@ def _power_z_equal_var(
     std: float,
     treatment_size: float,
     reference_size: float,
+    alternative: Literal["lower", "upper"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with equal variance."""
-    power = 1 - norm.cdf(
-        norm.ppf(1 - alpha) - abs(diff - margin) / (std * sqrt(1 / treatment_size + 1 / reference_size))
-    )
+    se = std * sqrt(1 / treatment_size + 1 / reference_size)
+    match alternative:
+        case "lower":
+            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
+        case "upper":
+            power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
     return float(power)
 
 
@@ -29,13 +33,16 @@ def _power_z_unequal_var(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
+    alternative: Literal["lower", "upper"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with unequal variance."""
-    power = 1 - norm.cdf(
-        norm.ppf(1 - alpha)
-        - abs(diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
-    )
+    se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
+    match alternative:
+        case "lower":
+            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
+        case "upper":
+            power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
     return float(power)
 
 
@@ -140,10 +147,10 @@ def _power(
             if equal_var:
                 assert treatment_std == reference_std
                 std = treatment_std
-                power = _power_z_equal_var(diff, margin, std, treatment_size, reference_size, alpha)
+                power = _power_z_equal_var(diff, margin, std, treatment_size, reference_size, alternative, alpha)
             else:
                 power = _power_z_unequal_var(
-                    diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha
+                    diff, margin, treatment_std, reference_std, treatment_size, reference_size, alternative, alpha
                 )
         case "t":
             if equal_var:
@@ -356,7 +363,9 @@ def solve_size(
                 - power
             )
 
-        reference_size = int(ceil(brentq(func, 3 / (1 + ratio), SAMPLE_SIZE_SEARCH_MAX)))
+        lower_bound = max(3 / (1 + ratio), 1) + 0.000001
+        upper_bound = SAMPLE_SIZE_SEARCH_MAX
+        reference_size = int(ceil(brentq(func, lower_bound, upper_bound)))
         treatment_size = int(ceil(reference_size * ratio))
         return treatment_size, reference_size
     else:
@@ -379,7 +388,9 @@ def solve_size(
                 - power
             )
 
-        treatment_size = ceil(brentq(func, 3 / (1 + 1 / ratio), SAMPLE_SIZE_SEARCH_MAX))
+        lower_bound = max(3 / (1 + 1 / ratio), 1) + 0.000001
+        upper_bound = SAMPLE_SIZE_SEARCH_MAX
+        treatment_size = ceil(brentq(func, lower_bound, upper_bound))
         reference_size = ceil(treatment_size / ratio)
         return treatment_size, reference_size
 
@@ -460,14 +471,13 @@ def solve_diff(
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
 
     Notes:
-        The search interval for mean difference ($\\mu_1 - \\mu_2$) is constrained by the superiority margin ($\\sigma$) to ensure the alternative hypothesis remains plausible.
+        The search interval for mean difference ($\\mu_1 - \\mu_2$) is constrained by the superiority margin ($\\delta$) to ensure the alternative hypothesis remains plausible.
 
         $$
         \\text{Search Interval} =
         \\begin{cases}
-        (\\delta, \\ +\\infty)  & , \\text{if } \\delta \\gt 0 \\\\
-        (-\\infty, \\ \\delta)  & , \\text{if } \\delta \\lt 0 \\\\
-        (-\\infty, \\ +\\infty) & , \\text{if } \\delta = 0
+        (\\delta, \\ +\\infty)  & , \\text{if alternative is upper} \\\\
+        (-\\infty, \\ \\delta)  & , \\text{if alternative is lower} \\\\
         \\end{cases}
         $$
     """
@@ -496,16 +506,11 @@ def solve_diff(
     DIFF_SEARCH_MIN = -1000000
     DIFF_SEARCH_MAX = 1000000
 
-    if margin > 0:
-        return float(brentq(func, margin, DIFF_SEARCH_MAX))
-    elif margin < 0:
-        return float(brentq(func, DIFF_SEARCH_MIN, margin))
-    else:  # margin == 0
-        match alternative_when_zero_margin:
-            case "positive":
-                return float(brentq(func, margin, DIFF_SEARCH_MAX))
-            case "negative":
-                return float(brentq(func, DIFF_SEARCH_MIN, margin))
+    match alternative:
+        case "lower":
+            return float(brentq(func, DIFF_SEARCH_MIN, margin))
+        case "upper":
+            return float(brentq(func, margin, DIFF_SEARCH_MAX))
 
 
 def solve_margin(
@@ -683,7 +688,7 @@ def solve_treatment_std(
     """
 
     if not equal_var and reference_std is None:
-        raise ValueError("reference_std must be provided when equal_var=True")
+        raise ValueError("reference_std must be provided when equal_var=False.")
 
     if equal_var:
 
@@ -800,7 +805,7 @@ def solve_reference_std(
     """
 
     if not equal_var and treatment_std is None:
-        raise ValueError("treatment_std must be provided when equal_var=True")
+        raise ValueError("treatment_std must be provided when equal_var=False.")
 
     if equal_var:
 
