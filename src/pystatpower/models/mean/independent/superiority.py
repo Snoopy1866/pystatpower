@@ -578,13 +578,13 @@ def solve_margin(
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
 
     Notes:
-        The search interval for superiority margin ($\\sigma$) is constrained by the mean difference ($\\mu_1 - \\mu_2$) to ensure the alternative hypothesis remains plausible.
+        The search interval for superiority margin ($\\delta$) is constrained by the mean difference ($\\mu_1 - \\mu_2$) to ensure the alternative hypothesis remains plausible.
 
         $$
         \\text{Search Interval} =
         \\begin{cases}
-        [0, \\ \\mu_1 - \\mu_2) & , \\text{if } \\delta \\geqslant 0 \\\\
-        (\\mu_1 - \\mu_2, \\ 0] & , \\text{if } \\delta \\leqslant 0 \\\\
+        [0, \\ \\mu_1 - \\mu_2) & , \\text{if alternative is upper} \\\\
+        (\\mu_1 - \\mu_2, \\ 0] & , \\text{if alternative is lower} \\\\
         \\end{cases}
         $$
     """
