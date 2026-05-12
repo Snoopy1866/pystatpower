@@ -695,6 +695,13 @@ def test_solve_power(case: TestCase) -> None:
     )
 
 
+def test_solve_power_errors() -> None:
+    with pytest.raises(ValueError):
+        solve_power(treatment_mean=None, reference_mean=30, treatment_std=40, reference_std=40, treatment_size=100, reference_size=100)
+    with pytest.raises(ValueError):
+        solve_power(treatment_mean=40, reference_mean=30, diff=None, treatment_std=40, reference_std=30, treatment_size=100, reference_size=100, method="z", equal_var=True)
+
+
 def test_solve_size(case: TestCase) -> None:
     if (
         case
@@ -856,6 +863,11 @@ def test_solve_treatment_std(case: TestCase) -> None:
     )
 
 
+def test_solve_treatment_std_error() -> None:
+    with pytest.raises(ValueError):
+        solve_treatment_std(treatment_mean=40, reference_mean=30, treatment_size=100, reference_size=100, equal_var=False)
+
+
 def test_solve_reference_std(case: TestCase) -> None:
     assert (
         round(
@@ -877,3 +889,8 @@ def test_solve_reference_std(case: TestCase) -> None:
         )
         == case.reference_std
     )
+
+
+def test_solve_reference_std_error() -> None:
+    with pytest.raises(ValueError):
+        solve_reference_std(treatment_mean=40, reference_mean=30, treatment_size=100, reference_size=100, equal_var=False)
