@@ -381,8 +381,8 @@ def solve_size(
 
         lower_bound = max(3 / (1 + ratio), 1) + 0.1
         upper_bound = SAMPLE_SIZE_SEARCH_MAX
-        reference_size = int(ceil(brentq(func, lower_bound, upper_bound)))
-        treatment_size = int(ceil(reference_size * ratio))
+        reference_size = ceil(brentq(func, lower_bound, upper_bound))
+        treatment_size = ceil(reference_size * ratio)
         return treatment_size, reference_size
     else:
 
@@ -578,7 +578,6 @@ def solve_treatment_mean(
         (float): The required mean in the treatment group.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
@@ -679,7 +678,6 @@ def solve_reference_mean(
         (float): The required mean in the treatment group.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
@@ -787,7 +785,6 @@ def solve_treatment_std(
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
         ValueError: If `equal_var=False` but `reference_std` is not provided.
     """
 
@@ -915,7 +912,6 @@ def solve_reference_std(
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
         ValueError: If `equal_var=False` but `treatment_std` is not provided.
     """
     if equal_var:
