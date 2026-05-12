@@ -8,6 +8,7 @@ hide:
 
 ## 均值
 - [两独立样本均值非劣效检验](./mean/independent/noninferiority.md)
+- [两独立样本均值优效性检验](./mean/independent/superiority.md)
 
 ## 率
 ### 单样本

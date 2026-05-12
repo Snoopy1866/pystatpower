@@ -3,6 +3,7 @@ nav = [
     { "首页" = "index.md" },
     { "算法" = [
         { "两独立样本均值非劣效检验" = "models/mean/independent/noninferiority.md" },
+        { "两独立样本均值优效性检验" = "models/mean/independent/superiority.md" },
         { "单样本率置信区间" = "models/proportion/single/ci.md" },
         { "单样本率差异性检验" = "models/proportion/single/inequality.md" },
         { "两独立样本率差异性检验" = "models/proportion/independent/inequality.md" },
@@ -15,7 +16,8 @@ nav = [
 
         { "均值" = [
             { "两独立样本" = [
-                { "非劣效检验" = "api/mean/independent/noninferiority.md" }
+                { "非劣效检验" = "api/mean/independent/noninferiority.md" },
+                { "优效性检验" = "api/mean/independent/superiority.md" }
             ] }
         ] },
         { "率" = [
