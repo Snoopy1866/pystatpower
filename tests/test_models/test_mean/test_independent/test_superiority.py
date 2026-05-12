@@ -440,6 +440,20 @@ def test_solve_diff(case: TestCase) -> None:
         method="t",
         equal_var=False,
         df_adjust="satterthwaite",
+    ) or case == TestCase(
+        diff=30,
+        margin=16,
+        treatment_std=40,
+        reference_std=40,
+        treatment_size=98,
+        reference_size=196,
+        alternative="upper",
+        alpha=0.025,
+        power=0.8,
+        actual_power=0.8038,
+        method="t",
+        equal_var=False,
+        df_adjust="welch",
     ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
