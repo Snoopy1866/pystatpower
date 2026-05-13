@@ -83,6 +83,7 @@ def _ci_wilson_cc(proportion: float, size: float, alpha: float = 0.05) -> float:
 
 
 def solve_size(
+    *,
     proportion: float,
     ci_width: float,
     alpha: float = 0.05,
@@ -131,6 +132,7 @@ def solve_size(
 
 
 def solve_ci_width(
+    *,
     proportion: float,
     size: float,
     alpha: float = 0.05,
@@ -154,6 +156,7 @@ def solve_ci_width(
 
 
 def solve_proportion(
+    *,
     size: float,
     ci_width: float,
     alpha: float = 0.05,

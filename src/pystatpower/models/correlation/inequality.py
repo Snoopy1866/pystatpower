@@ -36,7 +36,12 @@ def _power(
 
 
 def solve_power(
-    null_correlation: float, correlation: float, size: float, alpha: float = 0.05, bias_adj: bool = False
+    *,
+    null_correlation: float,
+    correlation: float,
+    size: float,
+    alpha: float = 0.05,
+    bias_adj: bool = False,
 ) -> float:
     """Calculate the power of the difference test between two correlation coefficients.
 
@@ -57,7 +62,12 @@ def solve_power(
 
 
 def solve_size(
-    null_correlation: float, correlation: float, alpha: float = 0.05, power: float = 0.80, bias_adj: bool = False
+    *,
+    null_correlation: float,
+    correlation: float,
+    alpha: float = 0.05,
+    power: float = 0.80,
+    bias_adj: bool = False,
 ) -> float:
     """Estimate the sample size required for the difference test between two correlation coefficients.
 
@@ -81,6 +91,7 @@ def solve_size(
 
 
 def solve_correlation(
+    *,
     null_correlation: float,
     size: float,
     alpha: float = 0.05,
@@ -118,6 +129,7 @@ def solve_correlation(
 
 
 def solve_null_correlation(
+    *,
     correlation: float,
     size: int,
     alpha: float = 0.05,

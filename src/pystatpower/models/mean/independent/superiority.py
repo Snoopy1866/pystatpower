@@ -186,6 +186,7 @@ def _power(
 
 
 def solve_power(
+    *,
     diff: float,
     margin: float,
     treatment_std: float,
@@ -273,6 +274,7 @@ def solve_power(
 
 
 def solve_size(
+    *,
     diff: float,
     margin: float,
     treatment_std: float,
@@ -396,6 +398,7 @@ def solve_size(
 
 
 def solve_diff(
+    *,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -514,6 +517,7 @@ def solve_diff(
 
 
 def solve_margin(
+    *,
     diff: float,
     treatment_std: float,
     reference_std: float,
@@ -618,6 +622,7 @@ def solve_margin(
 
 
 def solve_treatment_std(
+    *,
     diff: float,
     margin: float,
     treatment_size: float,
@@ -735,6 +740,7 @@ def solve_treatment_std(
 
 
 def solve_reference_std(
+    *,
     diff: float,
     margin: float,
     treatment_size: float,

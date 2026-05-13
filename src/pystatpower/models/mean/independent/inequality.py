@@ -134,10 +134,10 @@ def _power_unequal_var_welch(
 
 
 def _power(
+    *,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
     diff: float | None = None,
-    *,
     treatment_std: float,
     reference_std: float,
     treatment_size: float,
@@ -188,10 +188,10 @@ def _power(
 
 
 def solve_power(
+    *,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
     diff: float | None = None,
-    *,
     treatment_std: float,
     reference_std: float,
     treatment_size: float,
@@ -282,10 +282,10 @@ def solve_power(
 
 
 def solve_size(
+    *,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
     diff: float | None = None,
-    *,
     treatment_std: float,
     reference_std: float,
     ratio: float = 1,
@@ -413,6 +413,7 @@ def solve_size(
 
 
 def solve_diff(
+    *,
     treatment_std: float,
     reference_std: float,
     treatment_size: float,
@@ -510,6 +511,7 @@ def solve_diff(
 
 
 def solve_treatment_mean(
+    *,
     reference_mean: float,
     treatment_std: float,
     reference_std: float,
@@ -610,6 +612,7 @@ def solve_treatment_mean(
 
 
 def solve_reference_mean(
+    *,
     treatment_mean: float,
     treatment_std: float,
     reference_std: float,
@@ -710,10 +713,10 @@ def solve_reference_mean(
 
 
 def solve_treatment_std(
+    *,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
     diff: float | None = None,
-    *,
     treatment_size: float,
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
@@ -837,10 +840,10 @@ def solve_treatment_std(
 
 
 def solve_reference_std(
+    *,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
     diff: float | None = None,
-    *,
     treatment_size: float,
     reference_size: float,
     alternative: Literal["lower", "upper", "both"] = "both",
