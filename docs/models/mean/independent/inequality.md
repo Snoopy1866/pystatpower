@@ -63,7 +63,7 @@ $$
         + \Phi\left(z_{\alpha} - \frac{\mu_1 - \mu_2}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
     $$
 
-=== "$左单侧检验$"
+=== "左单侧检验"
 
     $$
     \text{Power}
@@ -72,7 +72,7 @@ $$
     = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
     $$
 
-=== "$右单侧检验$"
+=== "右单侧检验"
 
     $$
     \text{Power}
@@ -114,7 +114,7 @@ $$
 Z' = \frac{\hat{\mu}_1 - \hat{\mu}_2}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} \sim N\left(\frac{\mu_1 - \mu_2}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}, 1\right)
 $$
 
-=== "$双侧检验$"
+=== "双侧检验"
 
     $$
     \text{Power}
@@ -123,7 +123,7 @@ $$
         + \Phi\left(z_{\alpha} - \frac{\mu_1 - \mu_2}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
     $$
 
-=== "$左单侧检验$"
+=== "左单侧检验"
 
     $$
     \text{Power}
@@ -132,7 +132,7 @@ $$
     = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
     $$
 
-=== "$右单侧检验$"
+=== "右单侧检验"
 
     $$
     \text{Power}

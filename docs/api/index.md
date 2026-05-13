@@ -8,7 +8,7 @@ hide:
 
 ## 均值
 ### 单样本
-- [但样本均值差异性检验](./mean/single/inequality.md)
+- [单样本均值差异性检验](./mean/single/inequality.md)
 
 ### 两独立样本
 - [两独立样本均值差异性检验](./mean/independent/inequality.md)

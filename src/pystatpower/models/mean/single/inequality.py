@@ -174,7 +174,7 @@ def solve_null_mean(
     power: float,
     method: Literal["z", "t"],
     search_direction: Literal["below", "above"] = "below",
-) -> int:
+) -> float:
     """
     Estimate the mean under the null hypothesis required for an inequality test of one mean.
 
@@ -233,7 +233,7 @@ def solve_mean(
     power: float,
     method: Literal["z", "t"],
     search_direction: Literal["below", "above"] = "above",
-) -> int:
+) -> float:
     """
     Estimate the mean under the alternative hypothesis required for an inequality test of one mean.
 
