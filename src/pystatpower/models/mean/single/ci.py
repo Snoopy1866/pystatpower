@@ -67,7 +67,7 @@ def solve_half_width(
     Args:
         std (float):
             Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
-        size (float):
+        size (int):
             Sample size ($n$).
         conf_level (float, Optional):
             Confidence level.
@@ -126,7 +126,7 @@ def solve_std(
     Args:
         half_width (float):
             Half-width of the confidence interval ($d$).
-        size (float):
+        size (int):
             Sample size ($n$).
         conf_level (float, Optional):
             Confidence level.
@@ -136,9 +136,7 @@ def solve_std(
             The distribution used to construct the confidence interval.
     """
 
-    def func(std: float) -> float:
-        return _ci_half_width(std, size, conf_level, interval_type, method) - half_width
+    multiplier = _ci_half_width(1, size, conf_level, interval_type, method)
+    std = half_width / multiplier
 
-    STD_SAERCH_MAX = 1000000
-    std = brentq(func, 0, STD_SAERCH_MAX)
     return float(std)

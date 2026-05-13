@@ -20,11 +20,17 @@ $$
     d = \frac{z_{1-\alpha/2}\sigma}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $n$"
 
-    $$
-    n = \frac{z_{1-\alpha/2}^2\sigma^2}{d^2}
-    $$
+        $$
+        n = \frac{z_{1-\alpha/2}^2\sigma^2}{d^2}
+        $$
+
+    === "解出 $\sigma$"
+
+        $$
+        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha/2}}
+        $$
 
 === "左侧置信区间"
 
@@ -38,11 +44,17 @@ $$
     d = \frac{z_{1-\alpha}\sigma}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $n$"
 
-    $$
-    n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
-    $$
+        $$
+        n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
+        $$
+
+    === "解出 $\sigma$"
+
+        $$
+        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha}}
+        $$
 
 === "右侧置信区间"
 
@@ -56,11 +68,21 @@ $$
     d = \frac{z_{1-\alpha}\sigma}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $n$"
 
-    $$
-    n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
-    $$
+        $$
+        n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
+        $$
+
+    === "解出 $\sigma$"
+
+        $$
+        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha}}
+        $$
+
+!!! note ""
+    若已知标准差 $\sigma = 1$ 时，均值到置信限的距离为 $d'$，则当均值到置信限的距离为 $d$ 时，标准差 $\sigma' = d/d'$，
+    利用此关系可以简化 [`solve_std`](../../../api/mean/single/ci#pystatpower.models.mean.single.ci.solve_std) 函数的实现，而不必使用 `brentq` 进行反解。
 
 ## *t* 分布 {#t-dist}
 
@@ -82,16 +104,16 @@ $$
     d = \frac{t_{1-\alpha/2, \ n-1}S}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $S$"
 
-    $$
-    n = \frac{t_{1-\alpha/2, \ n-1}^2S^2}{d^2}
-    $$
+        $$
+        S = \frac{d\sqrt{n}}{t_{1-\alpha/2, \ n-1}}
+        $$
 
 === "左侧置信区间"
 
     $$
-    \text{Confidence Interval} = \left(-\infty, \ \bar{X}+\frac{t_{1-\alpha/2,\ n-1}S}{\sqrt{n}}\right)
+    \text{Confidence Interval} = \left(-\infty, \ \bar{X}+\frac{t_{1-\alpha,\ n-1}S}{\sqrt{n}}\right)
     $$
 
     设均值到置信限的距离为 $d$，则：
@@ -100,16 +122,16 @@ $$
     d = \frac{t_{1-\alpha, \ n-1}S}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $S$"
 
-    $$
-    n = \frac{t_{1-\alpha, \ n-1}^2S^2}{d^2}
-    $$
+        $$
+        S = \frac{d\sqrt{n}}{t_{1-\alpha, \ n-1}}
+        $$
 
 === "右侧置信区间"
 
     $$
-    \text{Confidence Interval} = \left(\bar{X}-\frac{t_{1-\alpha/2,\ n-1}S}{\sqrt{n}}, \ +\infty\right)
+    \text{Confidence Interval} = \left(\bar{X}-\frac{t_{1-\alpha,\ n-1}S}{\sqrt{n}}, \ +\infty\right)
     $$
 
     设均值到置信限的距离为 $d$，则：
@@ -118,8 +140,12 @@ $$
     d = \frac{t_{1-\alpha, \ n-1}S}{\sqrt{n}}
     $$
 
-    由上式可解出：
+    === "解出 $S$"
 
-    $$
-    n = \frac{t_{1-\alpha, \ n-1}^2S^2}{d^2}
-    $$
+        $$
+        S = \frac{d\sqrt{n}}{t_{1-\alpha, \ n-1}}
+        $$
+
+!!! note ""
+    若已知标准差 $S = 1$ 时，均值到置信限的距离为 $d'$，则当均值到置信限的距离为 $d$ 时，标准差 $S' = d/d'$，
+    利用此关系可以简化 [`solve_std`](../../../api/mean/single/ci#pystatpower.models.mean.single.ci.solve_std) 函数的实现，而不必使用 `brentq` 进行反解。

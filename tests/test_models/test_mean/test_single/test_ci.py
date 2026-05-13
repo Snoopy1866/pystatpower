@@ -18,7 +18,7 @@ class TestCase:
     std: float
     size: int
     conf_level: float
-    interval_type: Literal["one-sided", "twi-sided"]
+    interval_type: Literal["one-sided", "two-sided"]
     method: Literal["z", "t"]
 
 
