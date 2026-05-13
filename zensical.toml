@@ -2,6 +2,7 @@
 nav = [
     { "首页" = "index.md" },
     { "算法" = [
+        { "单样本均值置信区间" = "models/mean/single/ci.md" },
         { "单样本均值差异性检验" = "models/mean/single/inequality.md" },
         { "两独立样本均值差异性检验" = "models/mean/independent/inequality.md" },
         { "两独立样本均值非劣效检验" = "models/mean/independent/noninferiority.md" },
@@ -18,6 +19,7 @@ nav = [
 
         { "均值" = [
             { "单样本" = [
+                { "置信区间" = "api/mean/single/ci.md" },
                 { "差异性检验" = "api/mean/single/inequality.md" }
             ] },
             { "两独立样本" = [
