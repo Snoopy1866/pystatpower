@@ -659,7 +659,6 @@ name = "pystatpower"
 version = "0.0.5"
 source = { editable = "." }
 dependencies = [
-    { name = "mkdocs-autorefs" },
     { name = "scipy", version = "1.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11' and python_full_version < '3.15'" },
 ]
@@ -672,13 +671,13 @@ dev = [
     { name = "ruff" },
 ]
 docs = [
+    { name = "mkdocs-autorefs" },
     { name = "mkdocstrings-python" },
     { name = "zensical" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "mkdocs-autorefs", specifier = ">=1.4.4" },
     { name = "scipy", marker = "python_full_version == '3.10.*'", specifier = ">=1.7.2,<1.16" },
     { name = "scipy", marker = "python_full_version == '3.11.*'", specifier = ">=1.10.1" },
     { name = "scipy", marker = "python_full_version == '3.12.*'", specifier = ">=1.11.3" },
@@ -694,6 +693,7 @@ dev = [
     { name = "ruff", specifier = ">=0.15.12" },
 ]
 docs = [
+    { name = "mkdocs-autorefs", specifier = ">=1.4.4" },
     { name = "mkdocstrings-python", specifier = ">=2.0.3" },
     { name = "zensical", specifier = ">=0.0.41" },
 ]
