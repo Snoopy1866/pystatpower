@@ -35,7 +35,8 @@ dependencies = [
     "scipy>=1.10.1;python_version=='3.11'",
     "scipy>=1.11.3;python_version=='3.12'",
     "scipy>=1.15.0;python_version=='3.13'",
-    "scipy>=1.16.1;python_version=='3.14'"
+    "scipy>=1.16.1;python_version=='3.14'",
+    "mkdocs-autorefs>=1.4.4",
 ]
 readme = { file = "README.md", content-type = "text/markdown" }
 
@@ -78,5 +79,5 @@ dev = [
 ]
 docs = [
     "mkdocstrings-python>=2.0.3",
-    "zensical>=0.0.41"
+    "zensical>=0.0.41",
 ]

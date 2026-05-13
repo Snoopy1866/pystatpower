@@ -159,3 +159,8 @@ members_order = "source"
 attributes = false
 functions = true
 modules = false
+
+[project.plugins.autorefs]
+
+[project.validation]
+unresolved_references = false
