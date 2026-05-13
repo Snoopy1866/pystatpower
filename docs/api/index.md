@@ -7,6 +7,10 @@ hide:
 # API 概览
 
 ## 均值
+### 单样本
+- [单样本均值差异性检验](./mean/single/inequality.md)
+
+### 两独立样本
 - [两独立样本均值差异性检验](./mean/independent/inequality.md)
 - [两独立样本均值非劣效检验](./mean/independent/noninferiority.md)
 - [两独立样本均值优效性检验](./mean/independent/superiority.md)

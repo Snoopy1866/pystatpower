@@ -1,5 +1,6 @@
-from . import independent
+from . import independent, single
 
 __all__ = [
+    "single",
     "independent",
 ]
