@@ -154,6 +154,7 @@ def test_solve_size(case: TestCase) -> None:
     if case in [
         TestCase(null_mean=20, mean=40, std=20, size=8, alternative="upper", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
         TestCase(null_mean=20, mean=30, std=20, size=34, alternative="both", alpha=0.05, power=0.8, actual_power=0.8078, method="t"),
+        TestCase(null_mean=20, mean=31, std=20, size=28, alternative="both", alpha=0.05, power=0.8, actual_power=0.8011, method="t"),
         TestCase(null_mean=20, mean=32, std=20, size=24, alternative="both", alpha=0.05, power=0.8, actual_power=0.8037, method="t"),
         TestCase(null_mean=20, mean=33, std=20, size=21, alternative="both", alpha=0.05, power=0.8, actual_power=0.8087, method="t"),
         TestCase(null_mean=20, mean=34, std=20, size=19, alternative="both", alpha=0.05, power=0.8, actual_power=0.8225, method="t"),
