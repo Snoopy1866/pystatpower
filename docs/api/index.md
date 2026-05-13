@@ -8,6 +8,7 @@ hide:
 
 ## 均值
 ### 单样本
+- [单样本均值置信区间](./mean/single/ci.md)
 - [单样本均值差异性检验](./mean/single/inequality.md)
 
 ### 两独立样本

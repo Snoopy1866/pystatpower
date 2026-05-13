@@ -1,5 +1,6 @@
-from . import inequality
+from . import ci, inequality
 
 __all__ = [
+    "ci",
     "inequality",
 ]
