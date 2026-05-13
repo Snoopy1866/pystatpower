@@ -81,8 +81,8 @@ $$
         $$
 
 !!! note ""
-    若已知标准差 $\sigma = 1$ 时，均值到置信限的距离为 $d'$，则当均值到置信限的距离为 $d$ 时，标准差 $\sigma' = d/d'$，
-    利用此关系可以简化 [`solve_std`](../../../api/mean/single/ci#pystatpower.models.mean.single.ci.solve_std) 函数的实现，而不必使用 `brentq` 进行反解。
+    若已知标准差 $\sigma = 1$ 时，均值到置信限的距离为 $d$，则当均值到置信限的距离为 $d'$ 时，标准差 $\sigma' = d'/d$，
+    利用此关系可以简化 [`solve_std`][pystatpower.models.mean.single.ci.solve_std] 函数的实现，而不必使用 `brentq` 进行反解。
 
 ## *t* 分布 {#t-dist}
 
@@ -147,5 +147,5 @@ $$
         $$
 
 !!! note ""
-    若已知标准差 $S = 1$ 时，均值到置信限的距离为 $d'$，则当均值到置信限的距离为 $d$ 时，标准差 $S' = d/d'$，
-    利用此关系可以简化 [`solve_std`](../../../api/mean/single/ci#pystatpower.models.mean.single.ci.solve_std) 函数的实现，而不必使用 `brentq` 进行反解。
+    若已知标准差 $S = 1$ 时，均值到置信限的距离为 $d$，则当均值到置信限的距离为 $d'$ 时，标准差 $S' = d'/d$，
+    利用此关系可以简化 [`solve_std`][pystatpower.models.mean.single.ci.solve_std] 函数的实现，而不必使用 `brentq` 进行反解。
