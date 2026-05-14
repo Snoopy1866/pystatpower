@@ -11,7 +11,7 @@
     \text{Upper Limit} & = \min\left(p + z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}, 1\right)
     \end{align}
     $$
-    
+
     ??? note "样本量 $n$ 闭式解的分类讨论"
 
         ??? note "情况 1. $U \ge 1, L \gt 0$"
