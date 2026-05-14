@@ -24,10 +24,20 @@ class TestCase:
     actual_power: float
 
 
-# treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha, power, pooled, continuity_correction, actual_power
 case_group = (
-    [  # Regular Test Cases, Ratio = 2, Margin = 0, Pooled = True, Continuity Correction = True
-        TestCase(treatment_proportion, reference_proportion, 0, treatment_size, reference_size, 0.025, 0.80, True, True, actual_power)
+    [  # Regular Cases: ratio = 2, margin = 0, pooled = True, continuity_correction = True
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=0,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=True,
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 461, 231, 0.8007),
             (0.81, 0.71, 449, 225, 0.8011),
@@ -51,8 +61,19 @@ case_group = (
             (0.99, 0.89, 144, 72, 0.8013),
         ]
     ]
-    + [  # Regular Test Cases, Ratio = 2, Margin = 0, Pooled = True, Continuity Correction = False
-        TestCase(treatment_proportion, reference_proportion, 0, treatment_size, reference_size, 0.025, 0.80, True, False, actual_power)
+    + [  # Regular Cases: ratio = 2, margin = 0, pooled = True, continuity_correction = False
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=0,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=True,
+            continuity_correction=False,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 431, 216, 0.8003),
             (0.81, 0.71, 419, 210, 0.8006),
@@ -76,8 +97,19 @@ case_group = (
             (0.99, 0.89, 115, 58, 0.8010),
         ]
     ]
-    + [  # Regular Test Cases, Ratio = 2, Margin = 0, Pooled = False, Continuity Correction = True
-        TestCase(treatment_proportion, reference_proportion, 0, treatment_size, reference_size, 0.025, 0.80, False, True, actual_power)
+    + [  # Regular Cases,: ratio = 2, margin = 0, pooled = False, continuity_correction = True
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=0,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=False,
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 485, 243, 0.8008),
             (0.81, 0.71, 473, 237, 0.8002),
@@ -101,8 +133,19 @@ case_group = (
             (0.99, 0.89, 191, 96, 0.8039),
         ]
     ]
-    + [  # Regular Test Cases, Ratio = 2, Margin = 0, Pooled = False, Continuity Correction = False
-        TestCase(treatment_proportion, reference_proportion, 0, treatment_size, reference_size, 0.025, 0.80, False, False, actual_power)
+    + [  # Regular Cases: ratio = 2, margin = 0, pooled = False, continuity_correction = False
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=0,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=False,
+            continuity_correction=False,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 455, 228, 0.8004),
             (0.81, 0.71, 445, 223, 0.8015),
@@ -126,8 +169,19 @@ case_group = (
             (0.99, 0.89, 161, 81, 0.8012),
         ]
     ]
-    + [  # Test Cases for Ratio = 0.5
-        TestCase(treatment_proportion, reference_proportion, 0, treatment_size, reference_size, 0.025, 0.80, True, True, actual_power)
+    + [  # Regular Cases: ratio = 0.5, margin = 0, pooled = True, continuity_correction = True
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=0,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=True,
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 239, 478, 0.8015),
             (0.81, 0.71, 233, 466, 0.8012),
@@ -151,8 +205,19 @@ case_group = (
             (0.99, 0.89, 86, 172, 0.8042),
         ]
     ]
-    + [  # Test Cases for Margin > 0
-        TestCase(treatment_proportion, reference_proportion, margin, treatment_size, reference_size, 0.025, 0.80, True, True, actual_power)
+    + [  # Regular Cases: ratio = 0.5, margin = 0.02, 0.04, 0.06, 0.08, pooled = True, continuity_correction = True
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=margin,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=True,
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, margin, treatment_size, reference_size, actual_power in [
             (0.80, 0.70, 0.02, 368, 736, 0.8004),
             (0.80, 0.70, 0.04, 646, 1292, 0.8004),
@@ -196,8 +261,19 @@ case_group = (
             (0.89, 0.79, 0.08, 4129, 8258, 0.8000),
         ]
     ]
-    + [  # Test Cases for Margin < 0
-        TestCase(treatment_proportion, reference_proportion, margin, treatment_size, reference_size, 0.025, 0.80, True, True, actual_power)
+    + [  # Regular Cases: ratio = 0.5, margin = -0.02, -0.04, -0.06, -0.08, pooled = True, continuity_correction = True
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            margin=margin,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alpha=0.025,
+            power=0.80,
+            pooled=True,
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for treatment_proportion, reference_proportion, margin, treatment_size, reference_size, actual_power in [
             (0.60, 0.70, -0.08, 6684, 13368, 0.8000),
             (0.60, 0.70, -0.06, 1690, 3380, 0.8001),
@@ -258,14 +334,14 @@ def test_size_solve_power(case: TestCase) -> None:
     assert (
         round(
             solve_power(
-                case.treatment_proportion,
-                case.reference_proportion,
-                case.margin,
-                case.treatment_size,
-                case.reference_size,
-                case.alpha,
-                case.pooled,
-                case.continuity_correction,
+                treatment_proportion=case.treatment_proportion,
+                reference_proportion=case.reference_proportion,
+                margin=case.margin,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alpha=case.alpha,
+                pooled=case.pooled,
+                continuity_correction=case.continuity_correction,
             ),
             4,
         )
@@ -276,14 +352,14 @@ def test_size_solve_power(case: TestCase) -> None:
 def test_solve_size(case: TestCase) -> None:
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
-        case.treatment_proportion,
-        case.reference_proportion,
-        case.margin,
-        ratio,
-        case.alpha,
-        case.power,
-        case.pooled,
-        case.continuity_correction,
+        treatment_proportion=case.treatment_proportion,
+        reference_proportion=case.reference_proportion,
+        margin=case.margin,
+        ratio=ratio,
+        alpha=case.alpha,
+        power=case.power,
+        pooled=case.pooled,
+        continuity_correction=case.continuity_correction,
     ) == (case.treatment_size, case.reference_size)
 
 
@@ -291,14 +367,14 @@ def test_solve_treatment_proportion(case: TestCase) -> None:
     assert (
         round(
             solve_treatment_proportion(
-                case.reference_proportion,
-                case.margin,
-                case.treatment_size,
-                case.reference_size,
-                case.alpha,
-                case.actual_power,
-                case.pooled,
-                case.continuity_correction,
+                reference_proportion=case.reference_proportion,
+                margin=case.margin,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alpha=case.alpha,
+                power=case.actual_power,
+                pooled=case.pooled,
+                continuity_correction=case.continuity_correction,
             ),
             2,
         )
@@ -310,14 +386,14 @@ def test_solve_reference_proportion(case: TestCase) -> None:
     assert (
         round(
             solve_reference_proportion(
-                case.treatment_proportion,
-                case.margin,
-                case.treatment_size,
-                case.reference_size,
-                case.alpha,
-                case.actual_power,
-                case.pooled,
-                case.continuity_correction,
+                treatment_proportion=case.treatment_proportion,
+                margin=case.margin,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alpha=case.alpha,
+                power=case.actual_power,
+                pooled=case.pooled,
+                continuity_correction=case.continuity_correction,
             ),
             2,
         )
@@ -329,14 +405,14 @@ def test_solve_margin(case: TestCase) -> None:
     assert (
         round(
             solve_margin(
-                case.treatment_proportion,
-                case.reference_proportion,
-                case.treatment_size,
-                case.reference_size,
-                case.alpha,
-                case.actual_power,
-                case.pooled,
-                case.continuity_correction,
+                treatment_proportion=case.treatment_proportion,
+                reference_proportion=case.reference_proportion,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alpha=case.alpha,
+                power=case.actual_power,
+                pooled=case.pooled,
+                continuity_correction=case.continuity_correction,
             ),
             2,
         )

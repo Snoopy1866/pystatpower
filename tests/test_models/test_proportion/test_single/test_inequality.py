@@ -25,10 +25,10 @@ class TestCase:
     proportion_selection: Literal["lower", "upper"] | None = None
 
 
-# null_proportion, proportion, size, alternative, alpha, power, phat, continuity_correction, actual_power
 case_group = (
     [
-        TestCase(0.80, proportion, size, "two-sided", 0.05, 0.80, True, True, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, phat = True, continuity_correction = True
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 86, 0.8005),
             (0.66, 97, 0.8006),
@@ -63,7 +63,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "one-sided", 0.05, 0.80, True, True, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "one-sided", alpha = 0.05, power = 0.80, phat = True, continuity_correction = True
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="one-sided", alpha=0.05, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 70, 0.8054),
             (0.66, 78, 0.8012),
@@ -98,7 +99,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "two-sided", 0.05, 0.80, True, False, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, phat = True, continuity_correction = False
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 80, 0.8031),
             (0.66, 90, 0.8006),
@@ -133,7 +135,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "one-sided", 0.05, 0.80, True, False, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "one-sided", alpha = 0.05, power = 0.80, phat = True, continuity_correction = False
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="one-sided", alpha=0.05, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 63, 0.8027),
             (0.66, 71, 0.8011),
@@ -168,7 +171,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "two-sided", 0.05, 0.80, False, True, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, phat = False, continuity_correction = True
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 69, 0.8002),
             (0.66, 79, 0.8032),
@@ -203,7 +207,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "one-sided", 0.05, 0.80, False, True, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "one-sided", alpha = 0.05, power = 0.80, phat = False, continuity_correction = True
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="one-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 57, 0.8040),
             (0.66, 64, 0.8005),
@@ -238,7 +243,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "two-sided", 0.05, 0.80, False, False, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, phat = False, continuity_correction = False
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 63, 0.8030),
             (0.66, 72, 0.8031),
@@ -273,7 +279,8 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.80, proportion, size, "one-sided", 0.05, 0.80, False, False, actual_power)
+        # Regular Cases: null_proportion = 0.80, alternative = "one-sided", alpha = 0.05, power = 0.80, phat = False, continuity_correction = False
+        TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="one-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 50, 0.8008),
             (0.66, 57, 0.8002),
@@ -308,8 +315,9 @@ case_group = (
         ]
     ]
     + [
-        TestCase(0.98, 0.90, 37, "one-sided", 0.05, 0.80, False, False, 0.8036),
-        TestCase(0.98, 0.90, 43, "two-sided", 0.05, 0.80, False, False, 0.8017),
+        # Specific Cases
+        TestCase(null_proportion=0.98, proportion=0.90, size=37, alternative="one-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=False, actual_power=0.8036),
+        TestCase(null_proportion=0.98, proportion=0.90, size=43, alternative="two-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=False, actual_power=0.8017),
     ]
 )
 
@@ -328,13 +336,13 @@ def test_size_solve_power(case: TestCase) -> None:
     assert (
         round(
             solve_power(
-                case.null_proportion,
-                case.proportion,
-                case.size,
-                case.alternative,
-                case.alpha,
-                case.phat,
-                case.continuity_correction,
+                null_proportion=case.null_proportion,
+                proportion=case.proportion,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                phat=case.phat,
+                continuity_correction=case.continuity_correction,
             ),
             4,
         )
@@ -345,13 +353,13 @@ def test_size_solve_power(case: TestCase) -> None:
 def test_solve_size(case: TestCase) -> None:
     assert (
         solve_size(
-            case.null_proportion,
-            case.proportion,
-            case.alternative,
-            case.alpha,
-            case.power,
-            case.phat,
-            case.continuity_correction,
+            null_proportion=case.null_proportion,
+            proportion=case.proportion,
+            alternative=case.alternative,
+            alpha=case.alpha,
+            power=case.power,
+            phat=case.phat,
+            continuity_correction=case.continuity_correction,
         )
         == case.size
     )
@@ -362,14 +370,14 @@ def test_size_solve_null_proportion(case: TestCase) -> None:
     assert (
         round(
             solve_null_proportion(
-                case.proportion,
-                case.size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.phat,
-                case.continuity_correction,
-                case.proportion_selection,
+                proportion=case.proportion,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                phat=case.phat,
+                continuity_correction=case.continuity_correction,
+                proportion_selection=case.proportion_selection,
             ),
             2,
         )
@@ -382,14 +390,14 @@ def test_size_solve_proportion(case: TestCase) -> None:
     assert (
         round(
             solve_proportion(
-                case.null_proportion,
-                case.size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.phat,
-                case.continuity_correction,
-                case.proportion_selection,
+                null_proportion=case.null_proportion,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                phat=case.phat,
+                continuity_correction=case.continuity_correction,
+                proportion_selection=case.proportion_selection,
             ),
             2,
         )
