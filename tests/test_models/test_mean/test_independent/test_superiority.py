@@ -30,7 +30,7 @@ class TestCase:
 
 case_group = (
     [
-        # Regular Test Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
+        # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
             diff=-30,
             margin=margin,
@@ -60,7 +60,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 0.5, alpha = 0.025, power = 0.80, method = "t", equal_var = True
+        # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 0.5, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
             diff=30,
             margin=margin,
@@ -90,7 +90,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
+        # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
         TestCase(
             diff=-30,
             margin=margin,
@@ -121,7 +121,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
+        # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
         TestCase(
             diff=30,
             margin=margin,
@@ -152,7 +152,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
+        # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
         TestCase(
             diff=-30,
             margin=margin,
@@ -183,7 +183,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
+        # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
         TestCase(
             diff=30,
             margin=margin,
@@ -214,7 +214,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
+        # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
         TestCase(
             diff=-30,
             margin=margin,
@@ -244,7 +244,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
+        # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
         TestCase(
             diff=30,
             margin=margin,
@@ -274,7 +274,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 30, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
+        # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 30, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
         TestCase(
             diff=-30,
             margin=margin,
@@ -304,7 +304,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 30, Ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
+        # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 30, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
         TestCase(
             diff=30,
             margin=margin,
@@ -350,17 +350,17 @@ def test_solve_power(case: TestCase) -> None:
     assert (
         round(
             solve_power(
-                case.diff,
-                case.margin,
-                case.treatment_std,
-                case.reference_std,
-                case.treatment_size,
-                case.reference_size,
-                case.alternative,
-                case.alpha,
-                case.method,
-                case.equal_var,
-                case.df_adjust,
+                diff=case.diff,
+                margin=case.margin,
+                treatment_std=case.treatment_std,
+                reference_std=case.reference_std,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                method=case.method,
+                equal_var=case.equal_var,
+                df_adjust=case.df_adjust,
             ),
             4,
         )
@@ -400,17 +400,17 @@ def test_solve_size(case: TestCase) -> None:
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
-        case.diff,
-        case.margin,
-        case.treatment_std,
-        case.reference_std,
-        ratio,
-        case.alternative,
-        case.alpha,
-        case.power,
-        case.method,
-        case.equal_var,
-        case.df_adjust,
+        diff=case.diff,
+        margin=case.margin,
+        treatment_std=case.treatment_std,
+        reference_std=case.reference_std,
+        ratio=ratio,
+        alternative=case.alternative,
+        alpha=case.alpha,
+        power=case.power,
+        method=case.method,
+        equal_var=case.equal_var,
+        df_adjust=case.df_adjust,
     ) == (case.treatment_size, case.reference_size)
 
     with pytest.raises(ValueError):
@@ -460,17 +460,17 @@ def test_solve_diff(case: TestCase) -> None:
     assert (
         round(
             solve_diff(
-                case.margin,
-                case.treatment_std,
-                case.reference_std,
-                case.treatment_size,
-                case.reference_size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.method,
-                case.equal_var,
-                case.df_adjust,
+                margin=case.margin,
+                treatment_std=case.treatment_std,
+                reference_std=case.reference_std,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                method=case.method,
+                equal_var=case.equal_var,
+                df_adjust=case.df_adjust,
             ),
             0,
         )
@@ -485,17 +485,17 @@ def test_solve_margin(case: TestCase) -> None:
     assert (
         round(
             solve_margin(
-                case.diff,
-                case.treatment_std,
-                case.reference_std,
-                case.treatment_size,
-                case.reference_size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.method,
-                case.equal_var,
-                case.df_adjust,
+                diff=case.diff,
+                treatment_std=case.treatment_std,
+                reference_std=case.reference_std,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                method=case.method,
+                equal_var=case.equal_var,
+                df_adjust=case.df_adjust,
             ),
             0,
         )
@@ -510,17 +510,17 @@ def test_solve_treatment_std(case: TestCase) -> None:
     assert (
         round(
             solve_treatment_std(
-                case.diff,
-                case.margin,
-                case.treatment_size,
-                case.reference_size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.method,
-                case.equal_var,
-                case.reference_std,
-                case.df_adjust,
+                diff=case.diff,
+                margin=case.margin,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                method=case.method,
+                equal_var=case.equal_var,
+                reference_std=case.reference_std,
+                df_adjust=case.df_adjust,
             ),
             0,
         )
@@ -535,17 +535,17 @@ def test_solve_reference_std(case: TestCase) -> None:
     assert (
         round(
             solve_reference_std(
-                case.diff,
-                case.margin,
-                case.treatment_size,
-                case.reference_size,
-                case.alternative,
-                case.alpha,
-                case.actual_power,
-                case.method,
-                case.equal_var,
-                case.treatment_std,
-                case.df_adjust,
+                diff=case.diff,
+                margin=case.margin,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                method=case.method,
+                equal_var=case.equal_var,
+                treatment_std=case.treatment_std,
+                df_adjust=case.df_adjust,
             ),
             0,
         )
