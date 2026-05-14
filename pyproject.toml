@@ -41,10 +41,9 @@ readme = { file = "README.md", content-type = "text/markdown" }
 
 [project.urls]
 Homepage = "https://github.com/Snoopy1866/pystatpower"
-Documentation = "https://github.com/Snoopy1866/pystatpower/blob/main/README.md"
+Documentation = "https://pystatpower.readthedocs.io/"
 Repository = "https://github.com/Snoopy1866/pystatpower.git"
 Issues = "https://github.com/Snoopy1866/pystatpower/issues"
-Changelog = "https://github.com/Snoopy1866/pystatpower/blob/main/CHANGELOG.md"
 
 # setuptools configuration
 [tool.setuptools.dynamic]
