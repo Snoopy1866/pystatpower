@@ -19,14 +19,14 @@ class TestCase:
     actual_distance: float
     conf_level: float
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"]
-    method: Literal["clopper_pearson", "wald", "wilson"]
+    method: Literal["clopper-pearson", "wald", "wilson"]
     continuity_correction: bool | None = None
 
 
 case_group = (
     [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "clopper_pearson"
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="clopper_pearson")
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "clopper-pearson"
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="clopper-pearson")
         for size, distance, actual_distance in [
             (14029, 0.01, 0.0100),
             (3557, 0.02, 0.0200),
@@ -41,8 +41,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "clopper_pearson"
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="clopper_pearson")
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "clopper-pearson"
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="clopper-pearson")
         for size, distance, actual_distance in [
             (2704, 0.01, 0.0100),
             (742, 0.02, 0.0200),
@@ -57,8 +57,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "clopper_pearson"
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="clopper_pearson")
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "clopper-pearson"
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="clopper-pearson")
         for size, distance, actual_distance in [
             (4298, 0.01, 0.0100),
             (1065, 0.02, 0.0200),
@@ -330,7 +330,7 @@ def test_solve_distance(case: TestCase) -> None:
 
 
 def test_solve_proportion(case: TestCase) -> None:
-    side = "lower" if case.proportion < 0.5 else "upper"
+    side = "below" if case.proportion < 0.5 else "above"
     assert (
         round(
             solve_proportion(

@@ -205,12 +205,12 @@ def _distance(
     size: float,
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
-    method: Literal["clopper_pearson", "wald", "wilson"],
+    method: Literal["clopper-pearson", "wald", "wilson"],
     continuity_correction: bool = False,
 ) -> float:
 
     match method:
-        case "clopper_pearson":
+        case "clopper-pearson":
             return _distance_clopper_pearson(proportion, size, conf_level, interval_type)
         case "wald":
             if continuity_correction:
@@ -230,7 +230,7 @@ def solve_distance(
     size: int,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
-    method: Literal["clopper_pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -249,7 +249,7 @@ def solve_distance(
             - `two-sided`: Two-sided confidence interval $(L, U)$.
             - `lower one-sided`: Lower one-sided confidence interval $(L, +\\infty)$.
             - `upper one-sided`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper_pearson", "wald", "wilson"], optional):
+        method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
         continuity_correction (bool | None, optional):
             Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
@@ -270,7 +270,7 @@ def solve_size(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
-    method: Literal["clopper_pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
     continuity_correction: bool = False,
 ) -> int:
     """
@@ -290,7 +290,7 @@ def solve_size(
             - `two-sided`: Two-sided confidence interval $(L, U)$.
             - `lower one-sided`: Lower one-sided confidence interval $(L, +\\infty)$.
             - `upper one-sided`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper_pearson", "wald", "wilson"], optional):
+        method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
         continuity_correction (bool | None, optional):
             Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
@@ -306,13 +306,31 @@ def solve_size(
         return _distance(proportion, size, conf_level, interval_type, method, continuity_correction) - distance
 
     if method == "wilson" and continuity_correction:
-        # wilson score 连续性校正公式中的分子可能存在对负数开算术平方根的情况，这可能会导致置信区间宽度计算失败，因此需要先缩小 brentq 搜索范围
+        # wilson score 连续性校正公式中的分子可能存在对负数开算术平方根的情况，这可能会导致置信区间宽度计算失败，因此需要先求出根号下的定义域，缩小 brentq 搜索范围
+
+        z = norm.ppf((1 + conf_level) / 2) if interval_type == "two-sided" else norm.ppf(conf_level)
+
         a = 4 * proportion * (1 - proportion)
-        b = norm.ppf(1 - conf_level / 2) ** 2 - 4 * proportion + 2
+        b1 = z**2 + 4 * proportion - 2
+        b2 = z**2 - 4 * proportion + 2
         c = -1
-        n1 = (-b - sqrt(b**2 - 4 * a * c)) / (2 * a)
-        n2 = (-b + sqrt(b**2 - 4 * a * c)) / (2 * a)
-        lower_bound = max(n1, n2)
+
+        # 对 Lower Limit 求根号下的定义域
+        n1 = (-b1 - sqrt(b1**2 - 4 * a * c)) / (2 * a)
+        n2 = (-b1 + sqrt(b1**2 - 4 * a * c)) / (2 * a)
+
+        # 对 Upper Limit 求根号下的定义域
+        n3 = (-b2 - sqrt(b2**2 - 4 * a * c)) / (2 * a)
+        n4 = (-b2 + sqrt(b2**2 - 4 * a * c)) / (2 * a)
+
+        match interval_type:
+            case "two-sided":
+                lower_bound = max(n1, n2, n3, n4)
+            case "lower one-sided":
+                lower_bound = max(n3, n4)
+            case "upper one-sided":
+                lower_bound = max(n1, n2)
+
         upper_bound = SAMPLE_SIZE_SEARCH_MAX
 
         # wilson score 连续性校正计算出的置信区间宽度并随样本量增大而单调减小，而是在小样本区间内先增大，随着样本量继续增大，置信区间宽度逐渐减小。
@@ -336,7 +354,7 @@ def solve_proportion(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
-    method: Literal["clopper_pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
     continuity_correction: bool = False,
     search_direction: Literal["below", "above"] = "above",
 ) -> float:
@@ -356,7 +374,7 @@ def solve_proportion(
             - `two-sided`: Two-sided confidence interval $(L, U)$.
             - `lower one-sided`: Lower one-sided confidence interval $(L, +\\infty)$.
             - `upper one-sided`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper_pearson", "wald", "wilson"], optional):
+        method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
         continuity_correction (bool | None, optional):
             Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
@@ -374,9 +392,9 @@ def solve_proportion(
         return _distance(proportion, size, conf_level, interval_type, method, continuity_correction) - distance
 
     match search_direction.lower():
-        case "lower":
+        case "below":
             proportion = brentq(func, 0.000001, 0.5 + 0.000001)
-        case "upper":
+        case "above":
             proportion = brentq(func, 0.5 - 0.000001, 0.999999)
 
     return proportion
