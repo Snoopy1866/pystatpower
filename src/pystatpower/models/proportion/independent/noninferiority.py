@@ -136,6 +136,7 @@ def _power(
 
 
 def solve_power(
+    *,
     treatment_proportion: float,
     reference_proportion: float,
     margin: float,
@@ -189,6 +190,7 @@ def solve_power(
 
 
 def solve_size(
+    *,
     treatment_proportion: float,
     reference_proportion: float,
     margin: float,
@@ -282,6 +284,7 @@ def solve_size(
 
 
 def solve_treatment_proportion(
+    *,
     reference_proportion: float,
     margin: float,
     treatment_size: float,
@@ -357,6 +360,7 @@ def solve_treatment_proportion(
 
 
 def solve_reference_proportion(
+    *,
     treatment_proportion: float,
     margin: float,
     treatment_size: float,
@@ -442,6 +446,7 @@ def solve_reference_proportion(
 
 
 def solve_margin(
+    *,
     treatment_proportion: float,
     reference_proportion: float,
     treatment_size: float,

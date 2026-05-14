@@ -142,6 +142,7 @@ def _power(
 
 
 def solve_power(
+    *,
     null_proportion: float,
     proportion: float,
     size: int,
@@ -184,6 +185,7 @@ def solve_power(
 
 
 def solve_size(
+    *,
     null_proportion: float,
     proportion: float,
     alternative: Literal["one-sided", "two-sided"] = "two-sided",
@@ -229,6 +231,7 @@ def solve_size(
 
 
 def solve_null_proportion(
+    *,
     proportion: float,
     size: int,
     alternative: Literal["one-sided", "two-sided"] = "two-sided",
@@ -298,6 +301,7 @@ def solve_null_proportion(
 
 
 def solve_proportion(
+    *,
     null_proportion: float,
     size: int,
     alternative: Literal["one-sided", "two-sided"] = "two-sided",
