@@ -39,7 +39,7 @@ def solve_power(
     *,
     null_correlation: float,
     correlation: float,
-    size: float,
+    size: int,
     alpha: float = 0.05,
     bias_adj: bool = False,
 ) -> float:
@@ -48,7 +48,7 @@ def solve_power(
     Args:
         null_correlation (float): Correlation coefficient under the null hypothesis.
         correlation (float): Correlation coefficient under the alternative hypothesis.
-        size (float): Sample size.
+        size (int): Sample size.
         alpha (float, optional): Significance level. Default is 0.05.
         bias_adj (bool, optional): Specify whether or not the bias adjustment is used. Default is False.
 
@@ -93,7 +93,7 @@ def solve_size(
 def solve_correlation(
     *,
     null_correlation: float,
-    size: float,
+    size: int,
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
@@ -104,7 +104,7 @@ def solve_correlation(
 
     Args:
         null_correlation (float): Correlation coefficient under the null hypothesis.
-        size(float): Sample size.
+        size(int): Sample size.
         alpha (float, optional): Significance level. Default is 0.05.
         power (float, optional): Power of the test. Default is 0.80.
         bias_adj(bool): Specify whether or not the bias adjustment is used. Default is False.
