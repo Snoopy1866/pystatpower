@@ -233,8 +233,8 @@ def solve_power(
     *,
     treatment_proportion: float,
     reference_proportion: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["one-sided", "two-sided"],
     alpha: float = 0.05,
     pooled: bool = False,
@@ -253,9 +253,9 @@ def solve_power(
 
             - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
             - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             Significance level. Defaults to 0.05.
@@ -368,8 +368,8 @@ def solve_size(
 def solve_treatment_proportion(
     *,
     reference_proportion: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["one-sided", "two-sided"],
     alpha: float = 0.05,
     power: float = 0.80,
@@ -383,9 +383,9 @@ def solve_treatment_proportion(
     Args:
         reference_proportion (float):
             Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.
@@ -435,8 +435,8 @@ def solve_treatment_proportion(
 def solve_reference_proportion(
     *,
     treatment_proportion: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["one-sided", "two-sided"],
     alpha: float = 0.05,
     power: float = 0.80,
@@ -450,9 +450,9 @@ def solve_reference_proportion(
     Args:
         treatment_proportion (float):
             Expected proportion in the treatment group ($p_1$). Must be between 0 and 1.
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["one-sided", "two-sided"]):
             Type of alternative hypothesis.

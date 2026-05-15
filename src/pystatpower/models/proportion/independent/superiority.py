@@ -138,8 +138,8 @@ def solve_power(
     treatment_proportion: float,
     reference_proportion: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.05,
     pooled: bool = False,
     continuity_correction: bool = False,
@@ -159,9 +159,9 @@ def solve_power(
               (e.g., 0.10 for a 10% superiority margin in cure rates)
             - Use a **negative value** if a lower proportion is better
               (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.05.
@@ -285,8 +285,8 @@ def solve_treatment_proportion(
     *,
     reference_proportion: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.05,
     power: float = 0.80,
     pooled: bool = False,
@@ -305,9 +305,9 @@ def solve_treatment_proportion(
               (e.g., 0.10 for a 10% superiority margin in cure rates)
             - Use a **negative value** if a lower proportion is better
               (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.05.
@@ -365,8 +365,8 @@ def solve_reference_proportion(
     *,
     treatment_proportion: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.05,
     power: float = 0.80,
     pooled: bool = False,
@@ -385,9 +385,9 @@ def solve_reference_proportion(
               (e.g., 0.10 for a 10% superiority margin in cure rates)
             - Use a **negative value** if a lower proportion is better
               (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.05.
@@ -445,8 +445,8 @@ def solve_margin(
     *,
     treatment_proportion: float,
     reference_proportion: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.05,
     power: float = 0.80,
     pooled: bool = False,
@@ -460,9 +460,9 @@ def solve_margin(
             Expected proportion in the treatment group ($p_1$). Must be between 0 and 1.
         reference_proportion (float):
             Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.05.

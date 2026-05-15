@@ -191,8 +191,8 @@ def solve_power(
     margin: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["lower", "upper"] = "upper",
     alpha: float = 0.025,
     method: Literal["z", "t"] = "t",
@@ -214,9 +214,9 @@ def solve_power(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size in the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size in the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
             The direction of the alternative hypothesis.
@@ -402,8 +402,8 @@ def solve_diff(
     margin: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["lower", "upper"] = "upper",
     alpha: float = 0.025,
     power: float = 0.80,
@@ -425,9 +425,9 @@ def solve_diff(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
             The direction of the alternative hypothesis.
@@ -521,8 +521,8 @@ def solve_margin(
     diff: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["lower", "upper"] = "upper",
     alpha: float = 0.025,
     power: float = 0.80,
@@ -540,9 +540,9 @@ def solve_margin(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
             The direction of the alternative hypothesis.
@@ -625,8 +625,8 @@ def solve_treatment_std(
     *,
     diff: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["lower", "upper"] = "upper",
     alpha: float = 0.025,
     power: float = 0.80,
@@ -646,9 +646,9 @@ def solve_treatment_std(
 
             - Use a positive value if a higher mean indicates a better outcome
             - Use a negative value if a lower mean indicates a better outcome
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
             The direction of the alternative hypothesis.
@@ -743,8 +743,8 @@ def solve_reference_std(
     *,
     diff: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alternative: Literal["lower", "upper"] = "upper",
     alpha: float = 0.025,
     power: float = 0.80,
@@ -764,9 +764,9 @@ def solve_reference_std(
 
             - Use a positive value if a higher mean indicates a better outcome
             - Use a negative value if a lower mean indicates a better outcome
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
             The direction of the alternative hypothesis.

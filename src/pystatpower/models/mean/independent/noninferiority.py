@@ -151,8 +151,8 @@ def solve_power(
     margin: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.025,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -173,9 +173,9 @@ def solve_power(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.025.
@@ -344,8 +344,8 @@ def solve_diff(
     margin: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -365,9 +365,9 @@ def solve_diff(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.025.
@@ -441,8 +441,8 @@ def solve_margin(
     diff: float,
     treatment_std: float,
     reference_std: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -460,9 +460,9 @@ def solve_margin(
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.025.
@@ -554,8 +554,8 @@ def solve_treatment_std(
     *,
     diff: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -574,9 +574,9 @@ def solve_treatment_std(
 
             - Use a **negative** value if a higher mean indicates a better outcome
             - Use a **positive** value if a lower mean indicates a better outcome
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.025.
@@ -669,8 +669,8 @@ def solve_reference_std(
     *,
     diff: float,
     margin: float,
-    treatment_size: float,
-    reference_size: float,
+    treatment_size: int,
+    reference_size: int,
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -689,9 +689,9 @@ def solve_reference_std(
 
             - Use a **negative** value if a higher mean indicates a better outcome
             - Use a **positive** value if a lower mean indicates a better outcome
-        treatment_size (float):
+        treatment_size (int):
             Sample size for the treatment group ($n_1$).
-        reference_size (float):
+        reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
             One-sided significance level. Defaults to 0.025.
