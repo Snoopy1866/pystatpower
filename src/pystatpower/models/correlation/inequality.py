@@ -104,7 +104,7 @@ def solve_correlation(
 
     Args:
         null_correlation (float): Correlation coefficient under the null hypothesis.
-        size(int): Sample size.
+        size (int): Sample size.
         alpha (float, optional): Significance level. Default is 0.05.
         power (float, optional): Power of the test. Default is 0.80.
         bias_adj(bool): Specify whether or not the bias adjustment is used. Default is False.
