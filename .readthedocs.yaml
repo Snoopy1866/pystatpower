@@ -17,11 +17,9 @@ build:
   tools:
     python: latest
   jobs:
-    pre_build:
-      - UV_PROJECT_ENVIRONMENT=$READTHEDOCS_VIRTUALENV_PATH
     build:
       html:
-        - uv run zensical build
+        - UV_PROJECT_ENVIRONMENT=$READTHEDOCS_VIRTUALENV_PATH uv run zensical build
     post_build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/
       - cp --recursive site/* $READTHEDOCS_OUTPUT/html/
