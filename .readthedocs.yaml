@@ -17,6 +17,8 @@ build:
   tools:
     python: latest
   jobs:
+    pre_build:
+      - UV_PROJECT_ENVIRONMENT=$READTHEDOCS_VIRTUALENV_PATH
     build:
       html:
         - uv run zensical build
