@@ -4,21 +4,14 @@
 # Required
 version: 2
 
-python:
-  install:
-    - method: uv
-      command: sync
-      groups:
-        - docs
-
 # Set the OS, Python version and other tools you might need
 build:
   os: ubuntu-24.04
   tools:
-    python: latest
+    python: "3.14"
   jobs:
     pre_build:
-      - UV_PROJECT_ENVIRONMENT=$READTHEDOCS_VIRTUALENV_PATH
+      - pip install uv
       - uv sync --group docs
     build:
       html:
