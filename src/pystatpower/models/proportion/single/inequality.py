@@ -336,11 +336,11 @@ def solve_proportion(
             Whether to use sample proportion to calculate standard deviation.
         continuity_correction (bool, optional):
             Whether to apply continuity correction to the normal approximation.
-        search_direction (Literal["lower", "upper"], optional):
+        search_direction (Literal["below", "above"], optional):
             Selection strategy when two valid alternative proportions exist:
 
-            - "lower": Returns the solution where p1 < p0.
-            - "upper": Returns the solution where p1 > p0.
+            - "below": Returns the solution where p1 < p0.
+            - "above": Returns the solution where p1 > p0.
 
             If only one solution exists in (0, 1), this parameter is ignored.
 
