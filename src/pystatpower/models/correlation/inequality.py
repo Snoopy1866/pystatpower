@@ -1,4 +1,5 @@
 from math import ceil, log, sqrt
+from typing import Literal
 
 from scipy.optimize import brentq
 from scipy.stats import norm
@@ -6,21 +7,8 @@ from scipy.stats import norm
 from ..._constant import SAMPLE_SIZE_SEARCH_MAX
 
 
-def _power(
-    null_correlation: float, correlation: float, size: float, alpha: float = 0.05, bias_adj: bool = False
-) -> float:
-    """Calculate the power of the difference test between two correlation coefficients.
-
-    Args:
-        null_correlation (float): Correlation coefficient under the null hypothesis.
-        correlation (float): Correlation coefficient under the alternative hypothesis.
-        size (float): Sample size.
-        alpha (float, optional): Significance level. Default is 0.05.
-        bias_adj (bool, optional): Specify whether or not the bias adjustment is used. Default is False.
-
-    Returns:
-        power(float): Power of the test.
-    """
+def _power(null_correlation: float, correlation: float, size: float, alpha: float, bias_adj: bool) -> float:
+    """Calculate the statistical power of the difference test between two correlation coefficients."""
 
     null_zeta = 1 / 2 * log((1 + null_correlation) / (1 - null_correlation))
     zeta = 1 / 2 * log((1 + correlation) / (1 - correlation))
@@ -43,17 +31,22 @@ def solve_power(
     alpha: float = 0.05,
     bias_adj: bool = False,
 ) -> float:
-    """Calculate the power of the difference test between two correlation coefficients.
+    """Calculate the statistical power of the difference test between two correlation coefficients.
 
     Args:
-        null_correlation (float): Correlation coefficient under the null hypothesis.
-        correlation (float): Correlation coefficient under the alternative hypothesis.
-        size (int): Sample size.
-        alpha (float, optional): Significance level. Default is 0.05.
-        bias_adj (bool, optional): Specify whether or not the bias adjustment is used. Default is False.
+        null_correlation (float):
+            Correlation coefficient under the null hypothesis.
+        correlation (float):
+            Correlation coefficient under the alternative hypothesis.
+        size (int):
+            Sample size.
+        alpha (float, optional):
+            Two-sided significance level.
+        bias_adj (bool, optional):
+            Whether or not the bias adjustment is used.
 
     Returns:
-        power(float): Power of the test.
+        (float): Power of the test.
     """
 
     power = _power(null_correlation, correlation, size, alpha, bias_adj)
@@ -68,18 +61,23 @@ def solve_size(
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
-) -> float:
-    """Estimate the sample size required for the difference test between two correlation coefficients.
+) -> int:
+    """Estimate the required sample size for the difference test between two correlation coefficients.
 
     Args:
-        null_correlation (float): Correlation coefficient under the null hypothesis.
-        correlation (float): Correlation coefficient under the alternative hypothesis.
-        alpha (float, optional): Significance level. Default is 0.05.
-        power (float, optional): Power of the test. Default is 0.80.
-        bias_adj (bool, optional): Specify whether or not the bias adjustment is used. Default is False.
+        null_correlation (float):
+            Correlation coefficient under the null hypothesis.
+        correlation (float):
+            Correlation coefficient under the alternative hypothesis.
+        alpha (float, optional):
+            Two sided significance level.
+        power (float, optional):
+            Power of the test.
+        bias_adj (bool, optional):
+            Whether or not the bias adjustment is used.
 
     Returns:
-        size(float): The required sample size.
+        (int): The required sample size.
     """
 
     def func(size: float) -> float:
@@ -97,33 +95,39 @@ def solve_correlation(
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
-    search_direction: str = "upper",
+    search_direction: Literal["above", "below"] = "above",
 ) -> float:
     """
-    Estimate the alternative correlation coefficient required for the difference test between two correlation coefficients.
+    Estimate the required correlation coefficient under the alternative hypothesis for the difference test between two correlation coefficients.
 
     Args:
-        null_correlation (float): Correlation coefficient under the null hypothesis.
-        size (int): Sample size.
-        alpha (float, optional): Significance level. Default is 0.05.
-        power (float, optional): Power of the test. Default is 0.80.
-        bias_adj(bool): Specify whether or not the bias adjustment is used. Default is False.
-        search_direction(str): Specify the search direction relative to the null correlation. Default is 'upper'.
+        null_correlation (float):
+            Correlation coefficient under the null hypothesis.
+        size (int):
+            Sample size.
+        alpha (float, optional):
+            Two-sided significance level.
+        power (float, optional):
+            Power of the test.
+        bias_adj (bool, optional):
+            Whether or not the bias adjustment is used.
+        search_direction (Literal["above", "below"], optional):
+            Specify whether to search for the alternative correlation below or above the null correlation.
 
     Returns:
-        correlation(float): The required alternative correlation.
+        (float): required correlation coefficient under the alternative hypothesis.
     """
 
     def func(correlation: float) -> float:
         return _power(null_correlation, correlation, size, alpha, bias_adj) - power
 
     match search_direction.lower():
-        case "lower":
+        case "below":
             correlation = brentq(func, -0.999999, null_correlation)
-        case "upper":
+        case "above":
             correlation = brentq(func, null_correlation, 0.999999)
         case _:
-            raise ValueError("search_direction must be 'lower' or 'upper'")
+            raise ValueError("search_direction must be 'below' or 'above'")
 
     return correlation
 
@@ -133,34 +137,40 @@ def solve_null_correlation(
     correlation: float,
     size: int,
     alpha: float = 0.05,
-    power: float = 0.05,
+    power: float = 0.80,
     bias_adj: bool = False,
-    search_direction: str = "lower",
+    search_direction: Literal["above", "below"] = "above",
 ) -> float:
     """
-    Estimeta the null correlation coefficient required for the difference test between two correlation coefficients.
+    Estimeta the required correlation coefficient under the null hypothesis for the difference test between two correlation coefficients.
 
     Args:
-        correlation (float): Correlation coefficient under the alternative hypothesis.
-        size (int): Sample size.
-        alpha (float, optional): Significance level. Default is 0.05.
-        power (float, optional): Power of the test. Default is 0.05.
-        bias_adj (bool, optional): Specify whether or not the bias adjustment is used. Default is False.
-        search_direction(str): Specify the search direction relative to the alternative correlation. Default is 'lower'.
+        correlation (float):
+            Correlation coefficient under the alternative hypothesis.
+        size (int):
+            Sample size.
+        alpha (float, optional):
+            Two-sided significance level.
+        power (float, optional):
+            Power of the test.
+        bias_adj (bool, optional):
+            Whether or not the bias adjustment is used.
+        search_direction (Literal["above", "below"], optional):
+            Specify whether to search for the null correlation below or above the alternative correlation.
 
     Returns:
-        null_correlation(float): The required null correlation.
+        (float): The required correlation coefficient under the null hypothesis.
     """
 
     def func(null_correlation: float) -> float:
         return _power(null_correlation, correlation, size, alpha, bias_adj) - power
 
     match search_direction.lower():
-        case "lower":
+        case "below":
             null_correlation = brentq(func, -0.999999, correlation)
-        case "upper":
+        case "above":
             null_correlation = brentq(func, correlation, 0.999999)
         case _:
-            raise ValueError("search_direction must be 'lower' or 'upper'")
+            raise ValueError("search_direction must be 'below' or 'above'")
 
     return null_correlation

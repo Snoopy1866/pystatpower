@@ -377,7 +377,7 @@ def test_size_solve_null_proportion(case: TestCase) -> None:
                 power=case.actual_power,
                 phat=case.phat,
                 continuity_correction=case.continuity_correction,
-                proportion_selection=case.proportion_selection,
+                search_direction=case.proportion_selection,
             ),
             2,
         )
@@ -397,7 +397,7 @@ def test_size_solve_proportion(case: TestCase) -> None:
                 power=case.actual_power,
                 phat=case.phat,
                 continuity_correction=case.continuity_correction,
-                proportion_selection=case.proportion_selection,
+                search_direction=case.proportion_selection,
             ),
             2,
         )

@@ -16,6 +16,7 @@ def _power_z(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of one mean using z-test."""
+
     match alternative:
         case "lower":
             power = norm.cdf(norm.ppf(alpha) - sqrt(size) * (mean - null_mean) / std)
@@ -39,6 +40,7 @@ def _power_t(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of one mean using t-test."""
+
     df = size - 1
     nc = sqrt(size) * (mean - null_mean) / std
 
@@ -128,7 +130,7 @@ def solve_size(
     method: Literal["z", "t"],
 ) -> int:
     """
-    Estimate the sample size required for an inequality test of one mean.
+    Estimate the required sample size for an inequality test of one mean.
 
     Args:
         null_mean (float, optional):
@@ -154,7 +156,7 @@ def solve_size(
             - `'t'`: Student's *t* distribution.
 
     Returns:
-        int: The required sample size.
+        (int): The required sample size.
     """
 
     def func(size: float) -> float:
@@ -176,7 +178,7 @@ def solve_null_mean(
     search_direction: Literal["below", "above"] = "below",
 ) -> float:
     """
-    Estimate the mean under the null hypothesis required for an inequality test of one mean.
+    Estimate the required mean under the null hypothesis for an inequality test of one mean.
 
     Args:
         mean (float, optional):
@@ -207,7 +209,7 @@ def solve_null_mean(
             - `'above'`: Search the null mean above the alternative mean.
 
     Returns:
-        float: The required mean under the null hypothesis.
+        (float): The required mean under the null hypothesis.
     """
 
     def func(null_mean: float):
@@ -235,7 +237,7 @@ def solve_mean(
     search_direction: Literal["below", "above"] = "above",
 ) -> float:
     """
-    Estimate the mean under the alternative hypothesis required for an inequality test of one mean.
+    Estimate the required mean under the alternative hypothesis for an inequality test of one mean.
 
     Args:
         null_mean (float, optional):
@@ -266,7 +268,7 @@ def solve_mean(
             - `'above'`: Search the alternative mean above the null mean.
 
     Returns:
-        float: The required mean under the alternative hypothesis.
+        (float): The required mean under the alternative hypothesis.
     """
 
     def func(mean: float):
