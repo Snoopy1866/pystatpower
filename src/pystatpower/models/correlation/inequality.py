@@ -142,7 +142,7 @@ def solve_null_correlation(
     search_direction: Literal["above", "below"] = "above",
 ) -> float:
     """
-    Estimeta the required correlation coefficient under the null hypothesis for the difference test between two correlation coefficients.
+    Estimete the required correlation coefficient under the null hypothesis for the difference test between two correlation coefficients.
 
     Args:
         correlation (float):
