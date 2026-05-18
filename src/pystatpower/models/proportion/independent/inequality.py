@@ -15,7 +15,8 @@ def _power_pooled(
     alternative: Literal["one-sided", "two-sided"],
     alpha: float,
 ) -> float:
-    """Calculate the power for an inequality test of two independent proportions using pooled variance."""
+    """Calculate the statistical power for an inequality test of two independent proportions using pooled variance."""
+
     pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
         treatment_size + reference_size
     )
@@ -68,7 +69,8 @@ def _power_pooled_cc(
     alternative: Literal["one-sided", "two-sided"],
     alpha: float,
 ) -> float:
-    """Calculate the power for an inequality test of two independent proportions using pooled variance and continuity correction."""
+    """Calculate the statistical power for an inequality test of two independent proportions using pooled variance and continuity correction."""
+
     pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
         treatment_size + reference_size
     )
@@ -124,7 +126,8 @@ def _power_unpooled(
     alternative: Literal["one-sided", "two-sided"],
     alpha: float,
 ) -> float:
-    """Calculate the power for an inequality test of two independent proportions using unpooled variance."""
+    """Calculate the statistical power for an inequality test of two independent proportions using unpooled variance."""
+
     match alternative:
         case "one-sided":
             power = 1 - norm.cdf(
@@ -165,7 +168,8 @@ def _power_unpooled_cc(
     alternative: Literal["one-sided", "two-sided"],
     alpha: float,
 ) -> float:
-    """Calculate the power for an inequality test of two independent proportions using unpooled variance and continuity correction."""
+    """Calculate the statistical power for an inequality test of two independent proportions using unpooled variance and continuity correction."""
+
     match alternative:
         case "one-sided":
             power = 1 - norm.cdf(
@@ -208,7 +212,8 @@ def _power(
     pooled: bool,
     continuity_correction: bool,
 ) -> float:
-    """Calculate the power for an inequality test of two independent proportions."""
+    """Calculate the statistical power for an inequality test of two independent proportions."""
+
     if pooled:
         if continuity_correction:
             return _power_pooled_cc(
@@ -241,7 +246,7 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the power for an inequality test of two independent proportions.
+    Calculate the statistical power for an inequality test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -249,23 +254,23 @@ def solve_power(
         reference_proportion (float):
             Actual proportion in the reference group ($p_2$). Must be between 0 and 1.
         alternative (Literal["one-sided", "two-sided"]):
-            Type of alternative hypothesis.
+            Type of the alternative hypothesis.
 
-            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
-            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
+            - `'one-sided'`: Tests for a difference in one direction (uses $\\alpha$).
+            - `'two-sided'`: Tests for any difference (uses $\\alpha/2$ per tail).
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            Significance level. Defaults to 0.05.
+            Significance level.
         pooled (bool, optional):
-            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis. Defaults to False.
+            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        float: Power of the test.
+        (float): Power of the test.
     """
 
     power = _power(
@@ -293,7 +298,7 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
-    Estimate the sample size required for an inequality test of two independent proportions.
+    Estimate the required sample size for an inequality test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -301,23 +306,23 @@ def solve_size(
         reference_proportion (float):
             Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
         alternative (Literal["one-sided", "two-sided"]):
-            Type of alternative hypothesis.
+            Type of the alternative hypothesis.
 
-            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
-            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
+            - `'one-sided'`: Tests for a difference in one direction (uses $\\alpha$).
+            - `'two-sided'`: Tests for any difference (uses $\\alpha/2$ per tail).
         ratio (float, optional):
-            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$). Defaults to 1.
+            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
         alpha (float, optional):
-            Significance level. Defaults to 0.05.
+            Significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis. Defaults to False.
+            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        tuple[int, int]: The required sample sizes for the treatment and reference groups, respectively.
+        (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
     """
 
     lower_bound = 0.000001
@@ -378,7 +383,7 @@ def solve_treatment_proportion(
     search_direction: Literal["lower", "upper"] = "upper",
 ) -> float:
     """
-    Estimate the proportion required in the treatment group for an inequality test of two independent proportions.
+    Estimate the required proportion in the treatment group for an inequality test of two independent proportions.
 
     Args:
         reference_proportion (float):
@@ -388,26 +393,26 @@ def solve_treatment_proportion(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["one-sided", "two-sided"]):
-            Type of alternative hypothesis.
+            Type of the alternative hypothesis.
 
-            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
-            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
+            - `'one-sided'`: Tests for a difference in one direction (uses $\\alpha$).
+            - `'two-sided'`: Tests for any difference (uses $\\alpha/2$ per tail).
         alpha (float, optional):
-            Significance level. Defaults to 0.05.
+            Significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis. Defaults to False.
+            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
         search_direction:
             Which solution to search for relative to $p_2$.
 
             - "lower": Finds $p_1$ where $p_1 < p_2$.
-            - "upper": Finds $p_1$ where $p_1 > p_2$. Defaults to "upper".
+            - "upper": Finds $p_1$ where $p_1 > p_2$.
 
     Returns:
-        float: The required proportion in the treatment group.
+        (float): The required proportion in the treatment group.
     """
 
     def func(treatment_proportion: float) -> float:
@@ -445,7 +450,7 @@ def solve_reference_proportion(
     search_direction: Literal["lower", "upper"] = "lower",
 ) -> float:
     """
-    Estimate the proportion required in the reference group for an inequality test of two independent proportions.
+    Estimate the required proportion in the reference group for an inequality test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -455,26 +460,26 @@ def solve_reference_proportion(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["one-sided", "two-sided"]):
-            Type of alternative hypothesis.
+            Type of the alternative hypothesis.
 
-            - "one-sided": Tests for a difference in one direction (uses $\\alpha$).
-            - "two-sided": Tests for any difference (uses $\\alpha/2$ per tail).
+            - `'one-sided'`: Tests for a difference in one direction (uses $\\alpha$).
+            - `'two-sided'`: Tests for any difference (uses $\\alpha/2$ per tail).
         alpha (float, optional):
-            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis. Defaults to False.
+            If True, use the pooled variance estimator ($\\bar{p}$) under the null hypothesis.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
         search_direction:
             Which solution to search for relative to $p_1$.
 
-            - "lower": Finds $p_2$ where $p_2 < p_1$. Defaults to "lower".
+            - "lower": Finds $p_2$ where $p_2 < p_1$.
             - "upper": Finds $p_2$ where $p_2 > p_1$.
 
     Returns:
-        float: The required proportion in the reference group.
+        (float): The required proportion in the reference group.
     """
 
     def func(reference_proportion: float) -> float:

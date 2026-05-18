@@ -17,6 +17,7 @@ def _power_z_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with equal variance."""
+
     se = std * sqrt(1 / treatment_size + 1 / reference_size)
     match alternative:
         case "lower":
@@ -37,6 +38,7 @@ def _power_z_unequal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with unequal variance."""
+
     se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
     match alternative:
         case "lower":
@@ -57,6 +59,7 @@ def _power_t_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using t-test with equal variance."""
+
     df = treatment_size + reference_size - 2
     var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
     nc = (diff - margin) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
@@ -82,8 +85,9 @@ def _power_unequal_var_welch(
 ) -> float:
     """
     Calculate the statistical power for a superiority test of two independent means using t-test with unequal variance,
-    degree of freedom adjustment is based on Welch method..
+    degree of freedom adjustment is based on Welch's method.
     """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
         + reference_std**4 / (reference_size**2 * (reference_size + 1))
@@ -111,8 +115,9 @@ def _power_unequal_var_satterthwaite(
 ) -> float:
     """
     Calculate the statistical power for a superiority test of two independent means using t-test with unequal variance,
-    degree of freedom adjustment is based on Satterthwaite method.
+    degree of freedom adjustment is based on Satterthwaite's method.
     """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
         + reference_std**4 / (reference_size**2 * (reference_size - 1))
@@ -142,6 +147,7 @@ def _power(
     df_adjust: Literal["welch", "satterthwaite"],
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means."""
+
     match method:
         case "z":
             if equal_var:
@@ -208,8 +214,8 @@ def solve_power(
         margin (float):
             The superiority margin ($\\delta$)
 
-            - Use a positive value if a higher mean indicates a better outcome
-            - Use a negative value if a lower mean indicates a better outcome
+            - provide a positive value if a higher mean is better
+            - provide a negative value if a higher mean is worse
         treatment_std (float):
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
@@ -219,7 +225,7 @@ def solve_power(
         reference_size (int):
             Sample size in the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
@@ -288,7 +294,7 @@ def solve_size(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
     """
-    Estimate the sample size required for a superiority test of two independent means.
+    Estimate the required sample size for a superiority test of two independent means.
 
     Args:
         diff (float):
@@ -296,8 +302,8 @@ def solve_size(
         margin (float):
             The superiority margin ($\\delta$)
 
-            - Use a positive value if a higher mean indicates a better outcome
-            - Use a negative value if a lower mean indicates a better outcome
+            - provide a positive value if a higher mean is better
+            - provide a negative value if a higher mean is worse
         treatment_std (float):
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
@@ -305,7 +311,7 @@ def solve_size(
         ratio (float, optional):
             Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
@@ -410,17 +416,16 @@ def solve_diff(
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
-    alternative_when_zero_margin: Literal["positive", "negative"] = "positive",
 ) -> float:
     """
-    Estimate the difference required for a superiority test of two independent means.
+    Estimate the required difference for a superiority test of two independent means.
 
     Args:
         margin (float):
             The superiority margin ($\\delta$)
 
-            - Use a positive value if a higher mean indicates a better outcome
-            - Use a negative value if a lower mean indicates a better outcome
+            - provide a positive value if a higher mean is better
+            - provide a negative value if a higher mean is worse
         treatment_std (float):
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
@@ -430,7 +435,7 @@ def solve_diff(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
@@ -459,13 +464,6 @@ def solve_diff(
 
             - `'welch'`: Adjustment based on Welch (1947).
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
-        alternative_when_zero_margin (Literal["positive", "positive"], optional):
-            The direction of difference when `margin=0`.
-
-            - `'positive'`: Search for a positive difference.
-            - `'negative'`: Search for a negative difference.
-
-            If `margin` is not equal to `0`, this parameter is ignored.
 
     Returns:
         (float): The required difference between the treatment and reference means.
@@ -531,7 +529,7 @@ def solve_margin(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the superiority margin required for a superiority test of two independent means.
+    Estimate the required margin for a superiority test of two independent means.
 
     Args:
         diff (float):
@@ -545,7 +543,7 @@ def solve_margin(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
@@ -636,7 +634,7 @@ def solve_treatment_std(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the standard deviation required in the treatment group for a superiority test of two independent means.
+    Estimate the required standard deviation in the treatment group for a superiority test of two independent means.
 
     Args:
         diff (float):
@@ -644,14 +642,14 @@ def solve_treatment_std(
         margin (float):
             The superiority margin ($\\delta$)
 
-            - Use a positive value if a higher mean indicates a better outcome
-            - Use a negative value if a lower mean indicates a better outcome
+            - provide a positive value if a higher mean is better
+            - provide a negative value if a higher mean is worse
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
@@ -754,7 +752,7 @@ def solve_reference_std(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the standard deviation required in the reference group for a superiority test of two independent means.
+    Estimate the required standard deviation in the reference group for a superiority test of two independent means.
 
     Args:
         diff (float):
@@ -762,14 +760,14 @@ def solve_reference_std(
         margin (float):
             The superiority margin ($\\delta$)
 
-            - Use a positive value if a higher mean indicates a better outcome
-            - Use a negative value if a lower mean indicates a better outcome
+            - provide a positive value if a higher mean is better
+            - provide a negative value if a higher mean is worse
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alternative (Literal["lower", "upper"], optional):
-            The direction of the alternative hypothesis.
+            Type of the alternative hypothesis.
 
             - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
             - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
