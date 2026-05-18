@@ -22,7 +22,7 @@ class TestCase:
     phat: bool
     continuity_correction: bool
     actual_power: float
-    proportion_selection: Literal["lower", "upper"] | None = None
+    search_direction: Literal["below", "above"] | None = None
 
 
 case_group = (
@@ -366,7 +366,7 @@ def test_solve_size(case: TestCase) -> None:
 
 
 def test_size_solve_null_proportion(case: TestCase) -> None:
-    case.proportion_selection = "lower" if case.null_proportion < case.proportion else "upper"
+    case.search_direction = "below" if case.null_proportion < case.proportion else "above"
     assert (
         round(
             solve_null_proportion(
@@ -377,7 +377,7 @@ def test_size_solve_null_proportion(case: TestCase) -> None:
                 power=case.actual_power,
                 phat=case.phat,
                 continuity_correction=case.continuity_correction,
-                proportion_selection=case.proportion_selection,
+                search_direction=case.search_direction,
             ),
             2,
         )
@@ -386,7 +386,7 @@ def test_size_solve_null_proportion(case: TestCase) -> None:
 
 
 def test_size_solve_proportion(case: TestCase) -> None:
-    case.proportion_selection = "lower" if case.proportion < case.null_proportion else "upper"
+    case.search_direction = "below" if case.proportion < case.null_proportion else "above"
     assert (
         round(
             solve_proportion(
@@ -397,7 +397,7 @@ def test_size_solve_proportion(case: TestCase) -> None:
                 power=case.actual_power,
                 phat=case.phat,
                 continuity_correction=case.continuity_correction,
-                proportion_selection=case.proportion_selection,
+                search_direction=case.search_direction,
             ),
             2,
         )

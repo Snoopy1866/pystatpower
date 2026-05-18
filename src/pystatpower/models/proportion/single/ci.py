@@ -13,6 +13,8 @@ def _distance_wald(
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wald method."""
+
     match interval_type:
         case "two-sided":
             lower_limit = proportion - norm.ppf((1 + conf_level) / 2) * sqrt(proportion * (1 - proportion) / size)
@@ -34,6 +36,8 @@ def _distance_wald_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wald method with continuity correction."""
+
     match interval_type:
         case "two-sided":
             lower_limit = (
@@ -67,6 +71,8 @@ def _distance_wilson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wilson method."""
+
     match interval_type:
         case "two-sided":
             lower_limit = (
@@ -102,6 +108,8 @@ def _distance_wilson_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wilson method, with continuity correction."""
+
     match interval_type:
         case "two-sided":
             lower_limit = (
@@ -156,6 +164,7 @@ def _distance_clopper_pearson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Clopper-Pearson method."""
 
     match interval_type:
         case "two-sided":
@@ -208,6 +217,7 @@ def _distance(
     method: Literal["clopper-pearson", "wald", "wilson"],
     continuity_correction: bool = False,
 ) -> float:
+    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound."""
 
     match method:
         case "clopper-pearson":
@@ -251,11 +261,11 @@ def solve_distance(
             - `upper one-sided`: Upper one-sided confidence interval $(-\\infty, U)$.
         method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
-        continuity_correction (bool | None, optional):
-            Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
+        continuity_correction (bool, optional):
+            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
 
     Returns:
-        ci_width(float): The confidence interval width.
+        (float): The confidence interval width.
 
     Raises:
         ValueError: If `method='wald'` or `method='wilson'`, and `continuity_correction=None`.
@@ -293,10 +303,10 @@ def solve_size(
         method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
         continuity_correction (bool | None, optional):
-            Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
+            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
 
     Returns:
-        int: The required sample size.
+        (int): The required sample size.
 
     Raises:
         ValueError: If `method='wald'` or `method='wilson'`, and `continuity_correction=None`.
@@ -377,7 +387,7 @@ def solve_proportion(
         method (Literal["clopper-pearson", "wald", "wilson"], optional):
             Method used in calculation of the confidence interval.
         continuity_correction (bool | None, optional):
-            Whether or not to apply Yate's continuity correction. Only valid for `method='wald'` or `method='wilson'`.
+            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
         search_direction (Literal["below", "above"], optional):
             Direction of the search.
 
@@ -385,7 +395,7 @@ def solve_proportion(
             - `'above'`: search for the proportion in range [0.5, 1)
 
     Returns:
-        float: The required proportion.
+        (float): The required proportion.
     """
 
     def func(proportion: float) -> float:

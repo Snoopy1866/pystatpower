@@ -13,9 +13,10 @@ def _power_pooled(
     margin: float,
     treatment_size: float,
     reference_size: float,
-    alpha: float = 0.05,
+    alpha: float,
 ) -> float:
-    """Calculate the power for a non-inferiority test of two independent proportions using pooled variance."""
+    """Calculate the statistical power for a non-inferiority test of two independent proportions using pooled variance."""
+
     pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
         treatment_size + reference_size
     )
@@ -39,9 +40,10 @@ def _power_pooled_cc(
     margin: float,
     treatment_size: float,
     reference_size: float,
-    alpha: float = 0.05,
+    alpha: float,
 ) -> float:
-    """Calculate the power for a non-inferiority test of two independent proportions using pooled variance and continuity correction."""
+    """Calculate the statistical power for a non-inferiority test of two independent proportions using pooled variance and continuity correction."""
+
     pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
         treatment_size + reference_size
     )
@@ -66,9 +68,10 @@ def _power_unpooled(
     margin: float,
     treatment_size: float,
     reference_size: float,
-    alpha: float = 0.05,
+    alpha: float,
 ) -> float:
-    """Calculate the power for a non-inferiority test of two independent proportions using unpooled variance."""
+    """Calculate the statistical power for a non-inferiority test of two independent proportions using unpooled variance."""
+
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha)
         - abs(treatment_proportion - reference_proportion - margin)
@@ -86,9 +89,10 @@ def _power_unpooled_cc(
     margin: float,
     treatment_size: float,
     reference_size: float,
-    alpha: float = 0.05,
+    alpha: float,
 ) -> float:
-    """Calculate the power for a non-inferiority test of two independent proportions using unpooled variance and continuity correction."""
+    """Calculate the statistical power for a non-inferiority test of two independent proportions using unpooled variance and continuity correction."""
+
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha)
         - (
@@ -110,11 +114,12 @@ def _power(
     margin: float,
     treatment_size: float,
     reference_size: float,
-    alpha: float = 0.05,
-    pooled: bool = False,
-    continuity_correction: bool = False,
+    alpha: float,
+    pooled: bool,
+    continuity_correction: bool,
 ) -> float:
-    """Calculate the power for a non-inferiority test of two independent proportions."""
+    """Calculate the statistical power for a non-inferiority test of two independent proportions."""
+
     if pooled:
         if continuity_correction:
             return _power_pooled_cc(
@@ -147,7 +152,7 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the power for a non-inferiority test of two independent proportions.
+    Calculate the statistical power for a non-inferiority test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -157,23 +162,23 @@ def solve_power(
         margin (float):
             The non-inferiority margin ($\\delta$)
 
-            - Use a **negative value** if a higher proportion is better
+            - provide a negative value if a higher proportion is better
               (e.g., -0.10 for a -10% non-inferiority margin in cure rates)
-            - Use a **negative value** if a lower proportion is better
+            - provide a positive value if a higher proportion is worse
               (e.g., 0.05 for a 5% non-inferiority margin in mortality rates)
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        float: Power of the test.
+        (float): Power of the test.
     """
 
     power = _power(
@@ -201,7 +206,7 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
-    Estimate the sample size required for a non-inferiority test of two independent proportions.
+    Estimate the required sample size for a non-inferiority test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -211,27 +216,23 @@ def solve_size(
         margin (float):
             The non-inferiority margin ($\\delta$)
 
-            - Use a **negative value** if a higher proportion is better
+            - provide a negative value if a higher proportion is better
               (e.g., -0.10 for a -10% non-inferiority margin in cure rates)
-            - Use a **negative value** if a lower proportion is better
+            - provide a positive value if a higher proportion is worse
               (e.g., 0.05 for a 5% non-inferiority margin in mortality rates)
         ratio (float, optional):
-            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$). Defaults to 1.
+            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        tuple[int, int]: The required sample sizes for the treatment and reference groups, respectively.
-
-    Notes:
-        If `continuity_correction` is enabled, the power function may not be monotonic at very small sample sizes.
-        The function identifies a safe lower bound to ensure convergence of the root-finding algorithm (Brent's method).
+        (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
     """
 
     if continuity_correction:
@@ -295,7 +296,7 @@ def solve_treatment_proportion(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Estimate the proportion required in the treatment group for a non-inferiority test of two independent proportions.
+    Estimate the required proportion in the treatment group for a non-inferiority test of two independent proportions.
 
     Args:
         reference_proportion (float):
@@ -303,25 +304,25 @@ def solve_treatment_proportion(
         margin (float):
             The non-inferiority margin ($\\delta$)
 
-            - Use a **negative value** if a higher proportion is better
+            - provide a negative value if a higher proportion is better
               (e.g., -0.10 for a -10% non-inferiority margin in cure rates)
-            - Use a **negative value** if a lower proportion is better
+            - provide a positive value if a higher proportion is worse
               (e.g., 0.05 for a 5% non-inferiority margin in mortality rates)
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        float: The required proportion in the treatment group.
+        (float): The required proportion in the treatment group.
 
     Notes:
         The search interval for treatment proportion ($p_1$) is constrained by the reference proportion ($p_2$) and the
@@ -371,7 +372,7 @@ def solve_reference_proportion(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Estimate the proportion required in the reference group for a non-inferiority test of two independent proportions.
+    Estimate the required proportion in the reference group for a non-inferiority test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -379,25 +380,25 @@ def solve_reference_proportion(
         margin (float):
             The non-inferiority margin ($\\delta$)
 
-            - Use a **negative value** if a higher proportion is better
+            - provide a negative value if a higher proportion is better
               (e.g., -0.10 for a -10% non-inferiority margin in cure rates)
-            - Use a **negative value** if a lower proportion is better
+            - provide a positive value if a higher proportion is worse
               (e.g., 0.05 for a 5% non-inferiority margin in mortality rates)
         treatment_size (int):
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applies Yates' continuity correction. Defaults to False.
+            If True, applies Yates' continuity correction.
 
     Returns:
-        float: The required proportion in the reference group.
+        (float): The required proportion in the reference group.
 
     Notes:
         The search interval for reference proportion ($p_2$) is constrained by the treatment proportion ($p_1$) and the
@@ -458,7 +459,7 @@ def solve_margin(
     margin_selection: Literal["positive", "negative"] = "negative",
 ) -> float:
     """
-    Estimate the non-inferiority margin required for a non-inferiority test of two independent proportions.
+    Estimate the required margin for a non-inferiority test of two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -470,25 +471,23 @@ def solve_margin(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.05.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.80.
+            Desired statistical power.
         pooled (bool, optional):
-            If True, use the pooled variance estimator. Defaults to False.
+            If True, use the pooled variance estimator.
         continuity_correction (bool, optional):
-            If True, applied continuity correction. Defaults to False.
+            If True, applied continuity correction.
         margin_selection (Literal["positive", "negative"], optional):
             Selection criterion when two mathematically valid solutions exist (one for "higher is better", one for "worse")
 
             - "positive": Returns the positive margin (typically for mortality).
             - "negative": Returns the negative margin (typically for cure rates).
 
-            Defaults to "negative".
-
             Note: If only one solution exists, this parameter is ignored.
 
     Returns:
-        float: The required non-inferiority margin.
+        (float): The required non-inferiority margin.
 
     Notes:
         The non-inferiority margin should be negative when higher is better, otherwise positive.
@@ -501,7 +500,7 @@ def solve_margin(
         $$
         \\text{Search Interval} =
         \\begin{cases}
-        (-p_2, \\ 0)       & , \\text{if } p_1 \\ge p_2 \\\\
+        (-p_2, \\ 0)       & , \\text{if } p_1 \\geqslant p_2 \\\\
         (-p_2, \\ p_1-p_2) & , \\text{if } p_1 \\lt p_2
         \\end{cases}
         $$
@@ -512,7 +511,7 @@ def solve_margin(
         \\text{Search Interval} =
         \\begin{cases}
         (p_1-p_2, \\ 1-p_2) & , \\text{if } p_1 \\gt p_2 \\\\
-        (0, \\ 1-p_2)       & , \\text{if } p_1 \\le p_2
+        (0, \\ 1-p_2)       & , \\text{if } p_1 \\leqslant p_2
         \\end{cases}
         $$
     """
