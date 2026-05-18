@@ -75,6 +75,9 @@ def solve_half_width(
             The type of confidence interval.
         method (Literal["z", "t"], optional):
             The distribution used to construct the confidence interval.
+
+    Returns:
+        (float): The half-width of the confidence interval for one mean.
     """
 
     half_width = _ci_half_width(std, size, conf_level, interval_type, method)
@@ -90,7 +93,7 @@ def solve_size(
     method: Literal["z", "t"] = "t",
 ) -> int:
     """
-    Calculate the sample size required for the half-width of one mean confidence interval.
+    Calculate the required sample size for the half-width of one mean confidence interval.
 
     Args:
         half_width (float):
@@ -103,6 +106,9 @@ def solve_size(
             The type of confidence interval.
         method (Literal["z", "t"], optional):
             The distribution used to construct the confidence interval.
+
+    Returns:
+        (int): The required sample size.
     """
 
     def func(size: float) -> float:
@@ -121,7 +127,7 @@ def solve_std(
     method: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Calculate the standard deviation required for the half-width of one mean confidence interval.
+    Calculate the required standard deviation for the half-width of one mean confidence interval.
 
     Args:
         half_width (float):
@@ -134,6 +140,9 @@ def solve_std(
             The type of confidence interval.
         method (Literal["z", "t"], optional):
             The distribution used to construct the confidence interval.
+
+    Returns:
+        (float): The required standard deviation.
     """
 
     multiplier = _ci_half_width(1, size, conf_level, interval_type, method)

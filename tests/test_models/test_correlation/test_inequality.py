@@ -98,7 +98,7 @@ def test_solve_size(case: TestCase) -> None:
 
 
 def test_solve_null_correlation(case: TestCase) -> None:
-    search_direction = "upper" if case.null_correlation > case.correlation else "lower"
+    search_direction = "above" if case.null_correlation > case.correlation else "below"
     assert (
         round(
             solve_null_correlation(
@@ -119,7 +119,7 @@ def test_solve_null_correlation(case: TestCase) -> None:
 
 
 def test_solve_correlation(case: TestCase) -> None:
-    search_direction = "upper" if case.correlation > case.null_correlation else "lower"
+    search_direction = "above" if case.correlation > case.null_correlation else "below"
     assert (
         round(
             solve_correlation(

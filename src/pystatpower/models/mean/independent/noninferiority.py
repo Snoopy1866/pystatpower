@@ -15,6 +15,8 @@ def _power_z_equal_var(
     reference_size: float,
     alpha: float,
 ) -> float:
+    """Calculate the statistical power for a non-inferiority test of two independent means using z test with equal variance."""
+
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha) - abs(diff - margin) / (std * sqrt(1 / treatment_size + 1 / reference_size))
     )
@@ -30,6 +32,8 @@ def _power_z_unequal_var(
     reference_size: float,
     alpha: float,
 ) -> float:
+    """Calculate the statistical power for a non-inferiority test of two independent means using z test with unequal variance."""
+
     power = 1 - norm.cdf(
         norm.ppf(1 - alpha)
         - abs(diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
@@ -46,6 +50,8 @@ def _power_t_equal_var(
     reference_size: float,
     alpha: float,
 ) -> float:
+    """Calculate the statistical power for a non-inferiority test of two independent means using t test with equal variance."""
+
     df = treatment_size + reference_size - 2
     var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
     nc = (diff - margin) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
@@ -67,6 +73,11 @@ def _power_unequal_var_welch(
     reference_size: float,
     alpha: float,
 ) -> float:
+    """
+    Calculate the statistical power for a non-inferiority test of two independent means using t test with unequal variance,
+    degredde of freedom adjustment is based on Welch's method.
+    """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
         + reference_std**4 / (reference_size**2 * (reference_size + 1))
@@ -90,6 +101,11 @@ def _power_unequal_var_satterthwaite(
     reference_size: float,
     alpha: float,
 ) -> float:
+    """
+    Calculate the statistical power for a non-inferiority test of two independent means using t test with unequal variance,
+    degree of freedom adjustment is based on Satterthwaite's method.
+    """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
         + reference_std**4 / (reference_size**2 * (reference_size - 1))
@@ -116,6 +132,8 @@ def _power(
     equal_var: bool,
     df_adjust: Literal["welch", "satterthwaite"],
 ) -> float:
+    """Calculate the statistical power for a non-inferiority test of two independent means."""
+
     match method:
         case "z":
             if equal_var:
@@ -178,14 +196,12 @@ def solve_power(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
-
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -195,8 +211,6 @@ def solve_power(
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            Defaults to False.
-
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         df_adjust (Literal["welch", "satterthwaite"], optional):
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
@@ -204,10 +218,8 @@ def solve_power(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
-
     Returns:
-        float: The calculated power of the test.
+        (float): The calculated power of the test.
 
     Raises:
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
@@ -236,7 +248,7 @@ def solve_size(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
     """
-    Estimate the sample size required for a non-inferiority test of two independent means.
+    Estimate the required sample size for a non-inferiority test of two independent means.
 
     Args:
         diff (float):
@@ -251,18 +263,16 @@ def solve_size(
         reference_std (float):
             Standard deviation in the reference group ($\\sigma_2$).
         ratio (float, optional):
-            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$). Defaults to 1.
+            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.8.
+            Desired statistical power.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
-
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -272,8 +282,6 @@ def solve_size(
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            Defaults to False.
-
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         df_adjust (Literal["welch", "satterthwaite"], optional):
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
@@ -281,10 +289,8 @@ def solve_size(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
-
     Returns:
-        float: The required sample sizes for the treatment and reference groups, respectively.
+        (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
 
     Raises:
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
@@ -353,7 +359,7 @@ def solve_diff(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the difference required for a non-inferiority test of two independent means.
+    Estimate the required difference for a non-inferiority test of two independent means.
 
     Args:
         margin (float):
@@ -370,16 +376,14 @@ def solve_diff(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.8.
+            Desired statistical power.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
-
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -389,8 +393,6 @@ def solve_diff(
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            Defaults to False.
-
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         df_adjust (Literal["welch", "satterthwaite"], optional):
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
@@ -398,10 +400,8 @@ def solve_diff(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
-
     Returns:
-        float: The required difference between the treatment and reference means.
+        (float): The required difference between the treatment and reference means.
 
     Raises:
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
@@ -451,7 +451,7 @@ def solve_margin(
     margin_selection: Literal["positive", "negative"] = "negative",
 ) -> float:
     """
-    Estimate the non-inferiority margin required for a non-inferiority test of two independent means.
+    Estimate the required margin for a non-inferiority test of two independent means.
 
     Args:
         diff (float):
@@ -465,16 +465,14 @@ def solve_margin(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.8.
+            Desired statistical power.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
-
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -484,8 +482,6 @@ def solve_margin(
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            Defaults to False.
-
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         df_adjust (Literal["welch", "satterthwaite"], optional):
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
@@ -493,17 +489,14 @@ def solve_margin(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
         margin_selection (Literal["positive", "negative"], optional):
             Selection criterion when two mathematically valid solutions exist (one for "higher is better", one for "worse")
 
             - "positive": Returns the positive margin.
             - "negative": Returns the negative margin.
 
-            Defaults to "negative".
-
     Returns:
-        float: The required non-inferiority margin.
+        (float): The required non-inferiority margin.
 
     Raises:
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
@@ -564,7 +557,7 @@ def solve_treatment_std(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the standard deviation required in the treatment group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the treatment group for a non-inferiority test of two independent means.
 
     Args:
         diff (float):
@@ -579,16 +572,15 @@ def solve_treatment_std(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.8.
+            Desired statistical power.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
 
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -597,8 +589,6 @@ def solve_treatment_std(
 
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
-
-            Defaults to True.
 
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         reference_std (float | None, optional):
@@ -611,10 +601,8 @@ def solve_treatment_std(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
-
     Returns:
-        float: The required standard deviation in the treatment group.
+        (float): The required standard deviation in the treatment group.
 
     Raises:
         ValueError: If `equal_var=False` and `reference_std=None`.
@@ -679,7 +667,7 @@ def solve_reference_std(
     df_adjust: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the standard deviation required in the reference group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the reference group for a non-inferiority test of two independent means.
 
     Args:
         diff (float):
@@ -694,16 +682,14 @@ def solve_reference_std(
         reference_size (int):
             Sample size for the reference group ($n_2$).
         alpha (float, optional):
-            One-sided significance level. Defaults to 0.025.
+            One-sided significance level.
         power (float, optional):
-            Desired statistical power. Defaults to 0.8.
+            Desired statistical power.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
             - "z": Standard normal distribution (large sample approximation).
             - "t": Student's or non-central t distribution.
-
-            Defaults to "t".
         equal_var (bool, optional):
             Whether to assume equal variances between groups.
 
@@ -712,8 +698,6 @@ def solve_reference_std(
 
             - If **False**: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
-
-            Defaults to True.
 
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
         treatment_std (float | None, optional):
@@ -726,10 +710,8 @@ def solve_reference_std(
             - "welch": Adjustment based on Welch (1947).
             - "satterthwaite": Adjustment based on Satterthwaite (1946).
 
-            Defaults to "welch".
-
     Returns:
-        float: The required standard deviation in the reference group.
+        (float): The required standard deviation in the reference group.
 
     Raises:
         ValueError: If `equal_var=False` and `treatment_std=None`.

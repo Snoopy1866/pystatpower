@@ -16,6 +16,7 @@ def _power_z_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using z-test with equal variance."""
+
     se = std * sqrt(1 / treatment_size + 1 / reference_size)
     match alternative:
         case "lower":
@@ -37,6 +38,7 @@ def _power_z_unequal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using z-test with unequal variance."""
+
     se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
     match alternative:
         case "lower":
@@ -58,6 +60,7 @@ def _power_t_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using t-test with equal variance."""
+
     df = treatment_size + reference_size - 2
     var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
     nc = (diff) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
@@ -86,6 +89,7 @@ def _power_unequal_var_satterthwaite(
     Calculate the statistical power for an inequality test of two independent means using t-test with unequal variance,
     degree of freedom adjustment is based on Satterthwaite method.
     """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
         + reference_std**4 / (reference_size**2 * (reference_size - 1))
@@ -116,6 +120,7 @@ def _power_unequal_var_welch(
     Calculate the statistical power for an inequality test of two independent means using t-test with unequal variance,
     degree of freedom adjustment is based on Welch method.
     """
+
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
         + reference_std**4 / (reference_size**2 * (reference_size + 1))
@@ -297,7 +302,7 @@ def solve_size(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> tuple[int, int]:
     """
-    Estimate the sample size required for an inequality test of two independent means.
+    Estimate the required sample size for an inequality test of two independent means.
 
     Args:
         treatment_mean (float, optional):
@@ -427,7 +432,7 @@ def solve_diff(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the difference required for an inequality test of two independent means.
+    Estimate the required difference for an inequality test of two independent means.
 
     Args:
         treatment_std (float):
@@ -526,7 +531,7 @@ def solve_treatment_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the mean required in the treatment group for an inequality test of two independent means.
+    Estimate the required mean in the treatment group for an inequality test of two independent means.
 
     Args:
         reference_mean (float, optional):
@@ -627,7 +632,7 @@ def solve_reference_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the mean required in the reference group for an inequality test of two independent means.
+    Estimate the required mean in the reference group for an inequality test of two independent means.
 
     Args:
         treatment_mean (float, optional):
@@ -728,7 +733,7 @@ def solve_treatment_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the standard deviation required in the treatment group for an inequality test of two independent means.
+    Estimate the required standard deviation in the treatment group for an inequality test of two independent means.
 
     Args:
         treatment_mean (float, optional):
@@ -855,7 +860,7 @@ def solve_reference_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the standard deviation required in the reference group for an inequality test of two independent means.
+    Estimate the required standard deviation in the reference group for an inequality test of two independent means.
 
     Args:
         treatment_mean (float, optional):
