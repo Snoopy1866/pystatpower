@@ -103,7 +103,7 @@ def _power_unequal_var_satterthwaite(
 ) -> float:
     """
     Calculate the statistical power for a non-inferiority test of two independent means using t test with unequal variance,
-    degredde of freedom adjustment is based on Satterthwaite's method.
+    degree of freedom adjustment is based on Satterthwaite's method.
     """
 
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
