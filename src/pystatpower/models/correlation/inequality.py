@@ -76,7 +76,7 @@ def _power(
     null_correlation: float,
     correlation: float,
     alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
-    size: int,
+    size: float,
     alpha: float,
     bias_adj: bool,
 ) -> float:
@@ -270,7 +270,7 @@ def solve_null_correlation(
     def func(null_correlation: float) -> float:
         return _power(null_correlation, correlation, alternative, size, alpha, bias_adj) - power
 
-    match search_direction.lower():
+    match search_direction:
         case "below":
             null_correlation = brentq(func, -0.999999, correlation)
         case "above":
