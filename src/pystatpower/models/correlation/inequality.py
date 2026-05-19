@@ -38,7 +38,7 @@ def _power_adjusted(
     null_correlation: float,
     correlation: float,
     alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
-    size: int,
+    size: float,
     alpha: float,
 ) -> float:
     """Calculate the statistical power of the difference test between two correlation coefficients, adjusted for bias."""
