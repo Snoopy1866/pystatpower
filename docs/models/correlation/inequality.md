@@ -95,24 +95,24 @@ $$
     \end{aligned}
     $$
 
-对于单测检验，可利用功效函数得到样本量的闭式解：
+对于单侧检验，可利用功效函数得到样本量的闭式解：
 
 根据标准正态分布分位数的定义：
 
 $$
-z_{1-\alpha/2} \pm \left(\zeta_1 - \zeta_0\right) \sqrt{n-3} = z_{\beta}
+z_{1-\alpha} \pm \left(\zeta_1 - \zeta_0\right) \sqrt{n-3} = z_{\beta}
 $$
 
 可解出：
 
 $$
-n = \frac{\left(z_{1-\alpha/2} + z_{1-\beta}\right)^2}{\left(\zeta_1 - \zeta_0\right)^2} + 3
+n = \frac{\left(z_{1-\alpha} + z_{1-\beta}\right)^2}{\left(\zeta_1 - \zeta_0\right)^2} + 3
 $$
 
 利用 Fisher's z 转换得：
 
 $$
-n = 4 \left( \frac{z_{1-\alpha/2} + z_{1-\beta}}{\ln{\frac{\left(1+\rho_1\right) \left(1-\rho_0\right)}{\left(1-\rho_1\right) \left(1+\rho_0\right)}}} \right)^2+ 3
+n = 4 \left( \frac{z_{1-\alpha} + z_{1-\beta}}{\ln{\frac{\left(1+\rho_1\right) \left(1-\rho_0\right)}{\left(1-\rho_1\right) \left(1+\rho_0\right)}}} \right)^2+ 3
 $$
 
 ## 校正偏倚 {#bias-adj}
