@@ -343,6 +343,21 @@ def test_solve_size(case: TestCase) -> None:
             reference_size=132,
             alpha=0.025,
             power=0.8,
+            actual_power=0.8011,
+            method="t",
+            equal_var=True,
+        )
+        or case
+        == TestCase(
+            treatment_mean=10,
+            reference_mean=10,
+            margin=-12,
+            treatment_std=40,
+            reference_std=40,
+            treatment_size=263,
+            reference_size=132,
+            alpha=0.025,
+            power=0.8,
             actual_power=0.8002,
             method="t",
             equal_var=False,
@@ -359,9 +374,10 @@ def test_solve_size(case: TestCase) -> None:
             reference_size=132,
             alpha=0.025,
             power=0.8,
-            actual_power=0.8011,
+            actual_power=0.8002,
             method="t",
-            equal_var=True,
+            equal_var=False,
+            df_adjust="welch",
         )
         or case
         == TestCase(
