@@ -46,72 +46,72 @@ pip install pystatpower
 
 1. 单样本率置信区间
 
-```python
-from pystatpower.models import proportion
+   ```python
+   from pystatpower.models import proportion
 
-size = proportion.single.ci.solve_size(
-    proportion=0.9,
-    ci_width=0.10,
-    alpha=0.05,
-)
-print(size)
+   size = proportion.single.ci.solve_size(
+       proportion=0.9,
+       ci_width=0.10,
+       alpha=0.05,
+   )
+   print(size)
 
-# output: 158
-```
+   # output: 158
+   ```
 
 2. 单样本率差异性检验（单组目标值法）
 
-```python
-from pystatpower.models import proportion
+   ```python
+   from pystatpower.models import proportion
 
-size = proportion.single.inequality.solve_size(
-    null_proportion=0.80,
-    proportion=0.95,
-    alternative="one-sided",
-    alpha=0.025,
-    power=0.8,
-)
-print(size)
+   size = proportion.single.inequality.solve_size(
+       null_proportion=0.80,
+       proportion=0.95,
+       alternative="one-sided",
+       alpha=0.025,
+       power=0.8,
+   )
+   print(size)
 
-# output: 42
-```
+   # output: 42
+   ```
 
 3. 两独立样本率非劣效检验
 
-```python
-from pystatpower.models import proportion
+   ```python
+   from pystatpower.models import proportion
 
-size = proportion.independent.noninferiority.solve_size(
-    treatment_proportion=0.95,
-    reference_proportion=0.90,
-    margin=-0.10,
-    ratio=1,
-    alpha=0.025,
-    power=0.8,
-)
-print(size)
+   size = proportion.independent.noninferiority.solve_size(
+       treatment_proportion=0.95,
+       reference_proportion=0.90,
+       margin=-0.10,
+       ratio=1,
+       alpha=0.025,
+       power=0.8,
+   )
+   print(size)
 
-# output: (48, 48)
-```
+   # output: (48, 48)
+   ```
 
 4. 两独立样本均值优效性检验
 
-```python
-from pystatpower.models import mean
+   ```python
+   from pystatpower.models import mean
 
-size = mean.independent.superiority.solve_size(
-    diff=0.5,
-    margin=0.1,
-    treatment_std=1.2,
-    reference_std=1.2,
-    ratio=2,
-    alpha=0.025,
-    power=0.8,
-)
-print(size)
+   size = mean.independent.superiority.solve_size(
+       diff=0.5,
+       margin=0.1,
+       treatment_std=1.2,
+       reference_std=1.2,
+       ratio=2,
+       alpha=0.025,
+       power=0.8,
+   )
+   print(size)
 
-# output: (214, 107)
-```
+   # output: (214, 107)
+   ```
 
 ### 计算检验效能
 
