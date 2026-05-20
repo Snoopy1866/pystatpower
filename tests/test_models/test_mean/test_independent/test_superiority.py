@@ -13,7 +13,8 @@ from pystatpower.models.mean.independent.superiority import solve_power, solve_s
 class TestCase:
     __test__ = False
 
-    diff: float
+    treatment_mean: float
+    reference_mean: float
     margin: float
     treatment_std: float
     reference_std: float
@@ -32,7 +33,8 @@ case_group = (
     [
         # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
-            diff=-30,
+            treatment_mean=10,
+            reference_mean=40,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -62,7 +64,8 @@ case_group = (
     + [
         # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 0.5, alpha = 0.025, power = 0.80, method = "t", equal_var = True
         TestCase(
-            diff=30,
+            treatment_mean=40,
+            reference_mean=10,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -92,7 +95,8 @@ case_group = (
     + [
         # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
         TestCase(
-            diff=-30,
+            treatment_mean=10,
+            reference_mean=40,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -123,7 +127,8 @@ case_group = (
     + [
         # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "welch"
         TestCase(
-            diff=30,
+            treatment_mean=40,
+            reference_mean=10,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -154,7 +159,8 @@ case_group = (
     + [
         # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
         TestCase(
-            diff=-30,
+            treatment_mean=10,
+            reference_mean=40,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -185,7 +191,8 @@ case_group = (
     + [
         # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "t", equal_var = False, df_adjust = "satterthwaite"
         TestCase(
-            diff=30,
+            treatment_mean=40,
+            reference_mean=10,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -216,7 +223,8 @@ case_group = (
     + [
         # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
         TestCase(
-            diff=-30,
+            treatment_mean=10,
+            reference_mean=40,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -246,7 +254,8 @@ case_group = (
     + [
         # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 40, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = True
         TestCase(
-            diff=30,
+            treatment_mean=40,
+            reference_mean=10,
             margin=margin,
             treatment_std=40,
             reference_std=40,
@@ -276,7 +285,8 @@ case_group = (
     + [
         # Regular Cases: diff = -30, margin = -20 to -10 by 1, treatment_std = 40, reference_std = 30, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
         TestCase(
-            diff=-30,
+            treatment_mean=10,
+            reference_mean=40,
             margin=margin,
             treatment_std=40,
             reference_std=30,
@@ -306,7 +316,8 @@ case_group = (
     + [
         # Regular Cases: diff = 30, margin = 10 to 20 by 1, treatment_std = 40, reference_std = 30, ratio = 2, alpha = 0.025, power = 0.80, method = "z", equal_var = False
         TestCase(
-            diff=30,
+            treatment_mean=40,
+            reference_mean=10,
             margin=margin,
             treatment_std=40,
             reference_std=30,
@@ -350,7 +361,8 @@ def test_solve_power(case: TestCase) -> None:
     assert (
         round(
             solve_power(
-                diff=case.diff,
+                treatment_mean=case.treatment_mean,
+                reference_mean=case.reference_mean,
                 margin=case.margin,
                 treatment_std=case.treatment_std,
                 reference_std=case.reference_std,
@@ -367,22 +379,18 @@ def test_solve_power(case: TestCase) -> None:
         == case.actual_power
     )
 
+
+def test_solve_power_error() -> None:
     with pytest.raises(ValueError):
-        solve_power(
-            diff=0,
-            margin=10,
-            treatment_std=10,
-            reference_std=20,
-            treatment_size=20,
-            reference_size=20,
-            method="z",
-            equal_var=True,
-        )
+        solve_power(diff=0, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+    with pytest.raises(ValueError):
+        solve_power(treatment_mean=10, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z")
 
 
 def test_solve_size(case: TestCase) -> None:
     if case == TestCase(
-        diff=30,
+        treatment_mean=40,
+        reference_mean=10,
         margin=13,
         treatment_std=40,
         reference_std=40,
@@ -400,7 +408,8 @@ def test_solve_size(case: TestCase) -> None:
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
-        diff=case.diff,
+        treatment_mean=case.treatment_mean,
+        reference_mean=case.reference_mean,
         margin=case.margin,
         treatment_std=case.treatment_std,
         reference_std=case.reference_std,
@@ -413,6 +422,8 @@ def test_solve_size(case: TestCase) -> None:
         df_adjust=case.df_adjust,
     ) == (case.treatment_size, case.reference_size)
 
+
+def test_solve_size_error() -> None:
     with pytest.raises(ValueError):
         solve_size(
             diff=0,
@@ -427,7 +438,8 @@ def test_solve_size(case: TestCase) -> None:
 
 def test_solve_diff(case: TestCase) -> None:
     if case == TestCase(
-        diff=30,
+        treatment_mean=40,
+        reference_mean=10,
         margin=16,
         treatment_std=40,
         reference_std=40,
@@ -441,7 +453,8 @@ def test_solve_diff(case: TestCase) -> None:
         equal_var=False,
         df_adjust="satterthwaite",
     ) or case == TestCase(
-        diff=30,
+        treatment_mean=40,
+        reference_mean=10,
         margin=16,
         treatment_std=40,
         reference_std=40,
@@ -457,6 +470,7 @@ def test_solve_diff(case: TestCase) -> None:
     ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
+    diff = case.treatment_mean - case.reference_mean
     assert (
         round(
             solve_diff(
@@ -474,18 +488,21 @@ def test_solve_diff(case: TestCase) -> None:
             ),
             0,
         )
-        == case.diff
+        == diff
     )
 
+
+def test_solve_diff_error() -> None:
     with pytest.raises(ValueError):
         solve_diff(margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
 
 
 def test_solve_margin(case: TestCase) -> None:
+    diff = case.treatment_mean - case.reference_mean
     assert (
         round(
             solve_margin(
-                diff=case.diff,
+                diff=diff,
                 treatment_std=case.treatment_std,
                 reference_std=case.reference_std,
                 treatment_size=case.treatment_size,
@@ -502,6 +519,8 @@ def test_solve_margin(case: TestCase) -> None:
         == case.margin
     )
 
+
+def test_solve_margin_error() -> None:
     with pytest.raises(ValueError):
         solve_margin(diff=0, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
 
@@ -510,7 +529,8 @@ def test_solve_treatment_std(case: TestCase) -> None:
     assert (
         round(
             solve_treatment_std(
-                diff=case.diff,
+                treatment_mean=case.treatment_mean,
+                reference_mean=case.reference_mean,
                 margin=case.margin,
                 treatment_size=case.treatment_size,
                 reference_size=case.reference_size,
@@ -527,15 +547,20 @@ def test_solve_treatment_std(case: TestCase) -> None:
         == case.treatment_std
     )
 
+
+def test_solve_treatment_std_error() -> None:
     with pytest.raises(ValueError):
         solve_treatment_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+    with pytest.raises(ValueError):
+        solve_treatment_std(treatment_mean=10, margin=10, treatment_size=20, reference_size=20)
 
 
 def test_solve_reference_std(case: TestCase) -> None:
     assert (
         round(
             solve_reference_std(
-                diff=case.diff,
+                treatment_mean=case.treatment_mean,
+                reference_mean=case.reference_mean,
                 margin=case.margin,
                 treatment_size=case.treatment_size,
                 reference_size=case.reference_size,
@@ -552,5 +577,9 @@ def test_solve_reference_std(case: TestCase) -> None:
         == case.reference_std
     )
 
+
+def test_solve_reference_std_error() -> None:
     with pytest.raises(ValueError):
         solve_reference_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+    with pytest.raises(ValueError):
+        solve_reference_std(treatment_mean=10, margin=10, treatment_size=20, reference_size=20, equal_var=False)
