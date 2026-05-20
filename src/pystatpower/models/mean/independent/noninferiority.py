@@ -487,9 +487,7 @@ def solve_diff(
 
 def solve_margin(
     *,
-    treatment_mean: float | None = None,
-    reference_mean: float | None = None,
-    diff: float | None = None,
+    diff: float,
     treatment_std: float,
     reference_std: float,
     treatment_size: int,
@@ -505,18 +503,8 @@ def solve_margin(
     Estimate the required margin for a non-inferiority test of two independent means.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
-
-            If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-
-            If provided together with `treatment_mean`, `diff` is ignored.
-        diff (float, optional):
+        diff (float):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
-
-            If provided, `treatment_mean` and `reference_mean` will be ignored.
         treatment_std (float):
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
@@ -560,7 +548,6 @@ def solve_margin(
         (float): The required non-inferiority margin.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
 
     Notes:
@@ -581,8 +568,6 @@ def solve_margin(
     def func(margin: float) -> float:
         return (
             _power(
-                treatment_mean=treatment_mean,
-                reference_mean=reference_mean,
                 diff=diff,
                 margin=margin,
                 treatment_std=treatment_std,
