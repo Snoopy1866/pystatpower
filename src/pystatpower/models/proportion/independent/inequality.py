@@ -34,12 +34,12 @@ def _power_pooled(
                 )
             )
         case "two-sided":
-            power = 2 - (
+            power = 1 - (
                 norm.cdf(
                     (
                         norm.ppf(1 - alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
-                        + (treatment_proportion - reference_proportion)
+                        - (treatment_proportion - reference_proportion)
                     )
                     / sqrt(
                         treatment_proportion * (1 - treatment_proportion) / treatment_size
@@ -48,7 +48,7 @@ def _power_pooled(
                 )
                 + norm.cdf(
                     (
-                        norm.ppf(1 - alpha / 2)
+                        norm.ppf(alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
                         - (treatment_proportion - reference_proportion)
                     )
@@ -89,12 +89,12 @@ def _power_pooled_cc(
                 )
             )
         case "two-sided":
-            power = power = 2 - (
+            power = power = 1 - (
                 norm.cdf(
                     (
                         norm.ppf(1 - alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
-                        + (treatment_proportion - reference_proportion)
+                        - (treatment_proportion - reference_proportion)
                         + 1 / 2 * (1 / treatment_size + 1 / reference_size)
                     )
                     / sqrt(
@@ -104,7 +104,7 @@ def _power_pooled_cc(
                 )
                 + norm.cdf(
                     (
-                        norm.ppf(1 - alpha / 2)
+                        norm.ppf(alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
                         - (treatment_proportion - reference_proportion)
                         + 1 / 2 * (1 / treatment_size + 1 / reference_size)
@@ -139,16 +139,9 @@ def _power_unpooled(
                 )
             )
         case "two-sided":
-            power = 2 - (
-                norm.cdf(
-                    norm.ppf(1 - alpha / 2)
-                    + (treatment_proportion - reference_proportion)
-                    / sqrt(
-                        treatment_proportion * (1 - treatment_proportion) / treatment_size
-                        + reference_proportion * (1 - reference_proportion) / reference_size
-                    )
-                )
-                + norm.cdf(
+            power = (
+                1
+                - norm.cdf(
                     norm.ppf(1 - alpha / 2)
                     - (treatment_proportion - reference_proportion)
                     / sqrt(
@@ -156,7 +149,16 @@ def _power_unpooled(
                         + reference_proportion * (1 - reference_proportion) / reference_size
                     )
                 )
+                + norm.cdf(
+                    norm.ppf(alpha / 2)
+                    - (treatment_proportion - reference_proportion)
+                    / sqrt(
+                        treatment_proportion * (1 - treatment_proportion) / treatment_size
+                        + reference_proportion * (1 - reference_proportion) / reference_size
+                    )
+                )
             )
+
     return float(power)
 
 
@@ -181,18 +183,18 @@ def _power_unpooled_cc(
                 )
             )
         case "two-sided":
-            power = 2 - (
+            power = 1 - (
                 norm.cdf(
                     norm.ppf(1 - alpha / 2)
-                    + (treatment_proportion - reference_proportion + 1 / 2 * (1 / treatment_size + 1 / reference_size))
+                    - (treatment_proportion - reference_proportion - 1 / 2 * (1 / treatment_size + 1 / reference_size))
                     / sqrt(
                         treatment_proportion * (1 - treatment_proportion) / treatment_size
                         + reference_proportion * (1 - reference_proportion) / reference_size
                     )
                 )
                 + norm.cdf(
-                    norm.ppf(1 - alpha / 2)
-                    - (treatment_proportion - reference_proportion - 1 / 2 * (1 / treatment_size + 1 / reference_size))
+                    norm.ppf(alpha / 2)
+                    - (treatment_proportion - reference_proportion + 1 / 2 * (1 / treatment_size + 1 / reference_size))
                     / sqrt(
                         treatment_proportion * (1 - treatment_proportion) / treatment_size
                         + reference_proportion * (1 - reference_proportion) / reference_size
