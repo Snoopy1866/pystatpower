@@ -121,7 +121,10 @@ def _power_unequal_var_satterthwaite(
 
 
 def _power(
-    diff: float,
+    *,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -133,6 +136,11 @@ def _power(
     df_adjust: Literal["welch", "satterthwaite"],
 ) -> float:
     """Calculate the statistical power for a non-inferiority test of two independent means."""
+
+    if diff is None:
+        if treatment_mean is None or reference_mean is None:
+            raise ValueError("If 'diff' is not provided, both 'treatment_mean' and 'reference_mean' must be specified.")
+        diff = treatment_mean - reference_mean
 
     match method:
         case "z":
@@ -165,7 +173,9 @@ def _power(
 
 def solve_power(
     *,
-    diff: float,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -180,8 +190,18 @@ def solve_power(
     Calculate the statistical power for a non-inferiority test of two independent means.
 
     Args:
-        diff (float):
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If provided together with `reference_mean`, `diff` is ignored.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If provided together with `treatment_mean`, `diff` is ignored.
+        diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+
+            If provided, `treatment_mean` and `reference_mean` will be ignored.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -222,21 +242,35 @@ def solve_power(
         (float): The calculated power of the test.
 
     Raises:
+        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
-        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+        raise ValueError("If `method`='z' and `equal_var`=True, `treatment_std` must equal `reference_std`.")
 
     power = _power(
-        diff, margin, treatment_std, reference_std, treatment_size, reference_size, alpha, method, equal_var, df_adjust
+        treatment_mean=treatment_mean,
+        reference_mean=reference_mean,
+        diff=diff,
+        margin=margin,
+        treatment_std=treatment_std,
+        reference_std=reference_std,
+        treatment_size=treatment_size,
+        reference_size=reference_size,
+        alpha=alpha,
+        method=method,
+        equal_var=equal_var,
+        df_adjust=df_adjust,
     )
     return power
 
 
 def solve_size(
     *,
-    diff: float,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -251,8 +285,18 @@ def solve_size(
     Estimate the required sample size for a non-inferiority test of two independent means.
 
     Args:
-        diff (float):
-            Expected mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If provided together with `reference_mean`, `diff` is ignored.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If provided together with `treatment_mean`, `diff` is ignored.
+        diff (float, optional):
+            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+
+            If provided, `treatment_mean` and `reference_mean` will be ignored.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -293,27 +337,30 @@ def solve_size(
         (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
 
     Raises:
+        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
-        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+        raise ValueError("If `method`='z' and `equal_var`=True, `treatment_std` must equal `reference_std`.")
 
     if ratio >= 1:
 
         def func(reference_size: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    treatment_std,
-                    reference_std,
-                    reference_size * ratio,
-                    reference_size,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=treatment_std,
+                    reference_std=reference_std,
+                    treatment_size=reference_size * ratio,
+                    reference_size=reference_size,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
@@ -326,16 +373,18 @@ def solve_size(
         def func(treatment_size: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    treatment_std,
-                    reference_std,
-                    treatment_size,
-                    treatment_size / ratio,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=treatment_std,
+                    reference_std=reference_std,
+                    treatment_size=treatment_size,
+                    reference_size=treatment_size / ratio,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
@@ -408,21 +457,21 @@ def solve_diff(
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
-        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+        raise ValueError("If `method`='z' and `equal_var`=True, `treatment_std` must equal `reference_std`.")
 
     def func(diff: float) -> float:
         return (
             _power(
-                diff,
-                margin,
-                treatment_std,
-                reference_std,
-                treatment_size,
-                reference_size,
-                alpha,
-                method,
-                equal_var,
-                df_adjust,
+                diff=diff,
+                margin=margin,
+                treatment_std=treatment_std,
+                reference_std=reference_std,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alpha=alpha,
+                method=method,
+                equal_var=equal_var,
+                df_adjust=df_adjust,
             )
             - power
         )
@@ -438,7 +487,9 @@ def solve_diff(
 
 def solve_margin(
     *,
-    diff: float,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     treatment_std: float,
     reference_std: float,
     treatment_size: int,
@@ -454,8 +505,18 @@ def solve_margin(
     Estimate the required margin for a non-inferiority test of two independent means.
 
     Args:
-        diff (float):
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If provided together with `reference_mean`, `diff` is ignored.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If provided together with `treatment_mean`, `diff` is ignored.
+        diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+
+            If provided, `treatment_mean` and `reference_mean` will be ignored.
         treatment_std (float):
             Standard deviation in the treatment group ($\\sigma_1$).
         reference_std (float):
@@ -499,6 +560,7 @@ def solve_margin(
         (float): The required non-inferiority margin.
 
     Raises:
+        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `method="z"` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
 
     Notes:
@@ -514,21 +576,23 @@ def solve_margin(
     """
 
     if method == "z" and equal_var and treatment_std != reference_std:
-        raise ValueError("If method='z' and equal_var=True, treatment_std must equal reference_std.")
+        raise ValueError("If `method`='z' and `equal_var`=True, `treatment_std` must equal `reference_std`.")
 
     def func(margin: float) -> float:
         return (
             _power(
-                diff,
-                margin,
-                treatment_std,
-                reference_std,
-                treatment_size,
-                reference_size,
-                alpha,
-                method,
-                equal_var,
-                df_adjust,
+                treatment_mean=treatment_mean,
+                reference_mean=reference_mean,
+                diff=diff,
+                margin=margin,
+                treatment_std=treatment_std,
+                reference_std=reference_std,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alpha=alpha,
+                method=method,
+                equal_var=equal_var,
+                df_adjust=df_adjust,
             )
             - power
         )
@@ -545,7 +609,9 @@ def solve_margin(
 
 def solve_treatment_std(
     *,
-    diff: float,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_size: int,
     reference_size: int,
@@ -560,8 +626,18 @@ def solve_treatment_std(
     Estimate the required standard deviation in the treatment group for a non-inferiority test of two independent means.
 
     Args:
-        diff (float):
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If provided together with `reference_mean`, `diff` is ignored.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If provided together with `treatment_mean`, `diff` is ignored.
+        diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+
+            If provided, `treatment_mean` and `reference_mean` will be ignored.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -605,6 +681,7 @@ def solve_treatment_std(
         (float): The required standard deviation in the treatment group.
 
     Raises:
+        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `equal_var=False` and `reference_std=None`.
     """
 
@@ -616,16 +693,18 @@ def solve_treatment_std(
         def func(treatment_std: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    treatment_std,
-                    treatment_std,
-                    treatment_size,
-                    reference_size,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=treatment_std,
+                    reference_std=treatment_std,
+                    treatment_size=treatment_size,
+                    reference_size=reference_size,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
@@ -634,16 +713,18 @@ def solve_treatment_std(
         def func(treatment_std: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    treatment_std,
-                    reference_std,
-                    treatment_size,
-                    reference_size,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=treatment_std,
+                    reference_std=reference_std,
+                    treatment_size=treatment_size,
+                    reference_size=reference_size,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
@@ -655,7 +736,9 @@ def solve_treatment_std(
 
 def solve_reference_std(
     *,
-    diff: float,
+    treatment_mean: float | None = None,
+    reference_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     treatment_size: int,
     reference_size: int,
@@ -670,8 +753,18 @@ def solve_reference_std(
     Estimate the required standard deviation in the reference group for a non-inferiority test of two independent means.
 
     Args:
-        diff (float):
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If provided together with `reference_mean`, `diff` is ignored.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If provided together with `treatment_mean`, `diff` is ignored.
+        diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+
+            If provided, `treatment_mean` and `reference_mean` will be ignored.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -714,6 +807,7 @@ def solve_reference_std(
         (float): The required standard deviation in the reference group.
 
     Raises:
+        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
         ValueError: If `equal_var=False` and `treatment_std=None`.
     """
 
@@ -725,16 +819,18 @@ def solve_reference_std(
         def func(reference_std: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    reference_std,
-                    reference_std,
-                    treatment_size,
-                    reference_size,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=reference_std,
+                    reference_std=reference_std,
+                    treatment_size=treatment_size,
+                    reference_size=reference_size,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
@@ -743,16 +839,18 @@ def solve_reference_std(
         def func(reference_std: float) -> float:
             return (
                 _power(
-                    diff,
-                    margin,
-                    treatment_std,
-                    reference_std,
-                    treatment_size,
-                    reference_size,
-                    alpha,
-                    method,
-                    equal_var,
-                    df_adjust,
+                    treatment_mean=treatment_mean,
+                    reference_mean=reference_mean,
+                    diff=diff,
+                    margin=margin,
+                    treatment_std=treatment_std,
+                    reference_std=reference_std,
+                    treatment_size=treatment_size,
+                    reference_size=reference_size,
+                    alpha=alpha,
+                    method=method,
+                    equal_var=equal_var,
+                    df_adjust=df_adjust,
                 )
                 - power
             )
