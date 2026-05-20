@@ -122,9 +122,9 @@ def _power_unequal_var_satterthwaite(
 
 def _power(
     *,
+    diff: float | None = None,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
-    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -173,9 +173,9 @@ def _power(
 
 def solve_power(
     *,
+    diff: float | None = None,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
-    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -190,18 +190,18 @@ def solve_power(
     Calculate the statistical power for a non-inferiority test of two independent means.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
-
-            If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-
-            If provided together with `treatment_mean`, `diff` is ignored.
         diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If `diff` is not provided, this must be specified along with `reference_mean`.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If `diff` is not provided, this must be specified along with `treatment_mean`.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -268,9 +268,9 @@ def solve_power(
 
 def solve_size(
     *,
+    diff: float | None = None,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
-    diff: float | None = None,
     margin: float,
     treatment_std: float,
     reference_std: float,
@@ -285,18 +285,18 @@ def solve_size(
     Estimate the required sample size for a non-inferiority test of two independent means.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
-
-            If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-
-            If provided together with `treatment_mean`, `diff` is ignored.
         diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If `diff` is not provided, this must be specified along with `reference_mean`.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If `diff` is not provided, this must be specified along with `treatment_mean`.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -594,9 +594,9 @@ def solve_margin(
 
 def solve_treatment_std(
     *,
+    diff: float | None = None,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
-    diff: float | None = None,
     margin: float,
     treatment_size: int,
     reference_size: int,
@@ -611,18 +611,18 @@ def solve_treatment_std(
     Estimate the required standard deviation in the treatment group for a non-inferiority test of two independent means.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
-
-            If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-
-            If provided together with `treatment_mean`, `diff` is ignored.
         diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If `diff` is not provided, this must be specified along with `reference_mean`.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If `diff` is not provided, this must be specified along with `treatment_mean`.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
@@ -721,9 +721,9 @@ def solve_treatment_std(
 
 def solve_reference_std(
     *,
+    diff: float | None = None,
     treatment_mean: float | None = None,
     reference_mean: float | None = None,
-    diff: float | None = None,
     margin: float,
     treatment_size: int,
     reference_size: int,
@@ -738,18 +738,18 @@ def solve_reference_std(
     Estimate the required standard deviation in the reference group for a non-inferiority test of two independent means.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
-
-            If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-
-            If provided together with `treatment_mean`, `diff` is ignored.
         diff (float, optional):
             Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
+        treatment_mean (float, optional):
+            Mean in the treatment group ($\\mu_1$).
+
+            If `diff` is not provided, this must be specified along with `reference_mean`.
+        reference_mean (float, optional):
+            Mean in the reference group ($\\mu_2$).
+
+            If `diff` is not provided, this must be specified along with `treatment_mean`.
         margin (float):
             The non-inferiority margin ($\\delta$)
 
