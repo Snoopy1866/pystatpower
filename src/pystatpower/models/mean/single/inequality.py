@@ -12,22 +12,23 @@ def _power_z(
     mean: float,
     std: float,
     size: float,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of one mean using z-test."""
 
     match alternative:
-        case "lower":
-            power = norm.cdf(norm.ppf(alpha) - sqrt(size) * (mean - null_mean) / std)
-        case "upper":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - sqrt(size) * (mean - null_mean) / std)
-        case "both":
+        case "two-sided":
             power = (
                 1
                 - norm.cdf(norm.ppf(1 - alpha / 2) - sqrt(size) * (mean - null_mean) / std)
                 + norm.cdf(norm.ppf(alpha / 2) - sqrt(size) * (mean - null_mean) / std)
             )
+        case "lower one-sided":
+            power = norm.cdf(norm.ppf(alpha) - sqrt(size) * (mean - null_mean) / std)
+        case "upper one-sided":
+            power = 1 - norm.cdf(norm.ppf(1 - alpha) - sqrt(size) * (mean - null_mean) / std)
+
     return float(power)
 
 
@@ -36,7 +37,7 @@ def _power_t(
     mean: float,
     std: float,
     size: float,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of one mean using t-test."""
@@ -45,12 +46,12 @@ def _power_t(
     nc = sqrt(size) * (mean - null_mean) / std
 
     match alternative:
-        case "lower":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper":
-            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
-        case "both":
+        case "two-sided":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
+        case "lower one-sided":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
+        case "upper one-sided":
+            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
 
     return float(power)
 
@@ -60,7 +61,7 @@ def _power(
     mean: float,
     std: float,
     size: float,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
     method: Literal["z", "t"],
 ) -> float:
@@ -81,7 +82,7 @@ def solve_power(
     mean: float,
     std: float,
     size: int,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
     method: Literal["z", "t"],
 ) -> float:
@@ -94,17 +95,22 @@ def solve_power(
         mean (float, optional):
             Mean under the alternative hypothesis ($\\mu_1$).
         std (float, optional):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
+            Standard deviation ($\\sigma$).
+
+            - If `method='t'`, provide the sample standard deviation ($S$).
         size (int):
             Sample size ($n$).
-        alternative (Literal["lower", "upper", "both"], optional):
+        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 < \\mu_0$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_0$
-            - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_0$
+            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
+            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
+            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
             Significance level.
+
+            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
+            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         method (Literal["z", "t"], optional):
             The distribution used for the test.
 
@@ -124,7 +130,7 @@ def solve_size(
     null_mean: float,
     mean: float,
     std: float,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
     power: float,
     method: Literal["z", "t"],
@@ -138,15 +144,20 @@ def solve_size(
         mean (float, optional):
             Mean under the alternative hypothesis ($\\mu_1$).
         std (float, optional):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
-        alternative (Literal["lower", "upper", "both"], optional):
+            Standard deviation ($\\sigma$).
+
+            - If `method='t'`, provide the sample standard deviation ($S$).
+        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 < \\mu_0$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_0$
-            - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_0$
+            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
+            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
+            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
             Significance level.
+
+            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
+            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -171,7 +182,7 @@ def solve_null_mean(
     mean: float,
     std: float,
     size: int,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
     power: float,
     method: Literal["z", "t"],
@@ -184,17 +195,22 @@ def solve_null_mean(
         mean (float, optional):
             Mean under the alternative hypothesis ($\\mu_1$).
         std (float, optional):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
+            Standard deviation ($\\sigma$).
+
+            - If `method='t'`, provide the sample standard deviation ($S$).
         size (int):
             Sample size ($n$).
-        alternative (Literal["lower", "upper", "both"], optional):
+        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 < \\mu_0$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_0$
-            - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_0$
+            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
+            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
+            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
             Significance level.
+
+            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
+            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -212,7 +228,7 @@ def solve_null_mean(
         (float): The required mean under the null hypothesis.
     """
 
-    def func(null_mean: float):
+    def func(null_mean: float) -> float:
         return _power(null_mean, mean, std, size, alternative, alpha, method) - power
 
     NULL_MEAN_SEARCH_MIN = -1000000
@@ -230,7 +246,7 @@ def solve_mean(
     null_mean: float,
     std: float,
     size: int,
-    alternative: Literal["lower", "upper", "both"],
+    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
     alpha: float,
     power: float,
     method: Literal["z", "t"],
@@ -243,17 +259,22 @@ def solve_mean(
         null_mean (float, optional):
             Mean under the null hypothesis ($\\mu_0$).
         std (float, optional):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
+            Standard deviation ($\\sigma$).
+
+            - If `method='t'`, provide the sample standard deviation ($S$).
         size (int):
             Sample size ($n$).
-        alternative (Literal["lower", "upper", "both"], optional):
+        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 < \\mu_0$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 > \\mu_0$
-            - `'both'`: two-tailed alternative hypothesis: $H_1: \\mu_1 \\neq \\mu_0$
+            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
+            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
+            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
             Significance level.
+
+            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
+            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -271,7 +292,7 @@ def solve_mean(
         (float): The required mean under the alternative hypothesis.
     """
 
-    def func(mean: float):
+    def func(mean: float) -> float:
         return _power(null_mean, mean, std, size, alternative, alpha, method) - power
 
     MEAN_SEARCH_MIN = -1000000
