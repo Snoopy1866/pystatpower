@@ -154,6 +154,8 @@ def solve_size(
             - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
             - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
+            Significance level.
+
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
@@ -205,6 +207,8 @@ def solve_null_mean(
             - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
             - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
+            Significance level.
+
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
@@ -267,6 +271,8 @@ def solve_mean(
             - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
             - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
         alpha (float, optional):
+            Significance level.
+
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
         power (float, optional):
