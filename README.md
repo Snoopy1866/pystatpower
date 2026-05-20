@@ -40,7 +40,7 @@ PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本
 pip install pystatpower
 ```
 
-## 🔨 使用
+## 🔨 使用示例
 
 ### 估算样本量
 
@@ -92,6 +92,25 @@ size = proportion.independent.noninferiority.solve_size(
 print(size)
 
 # output: (48, 48)
+```
+
+4. 两独立样本均值优效性检验
+
+```python
+from pystatpower.models import mean
+
+size = mean.independent.superiority.solve_size(
+    diff=0.5,
+    margin=0.1,
+    treatment_std=1.2,
+    reference_std=1.2,
+    ratio=2,
+    alpha=0.025,
+    power=0.8,
+)
+print(size)
+
+# output: (214, 107)
 ```
 
 ### 计算检验效能
