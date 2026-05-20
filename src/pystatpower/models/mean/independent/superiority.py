@@ -277,7 +277,7 @@ def solve_power(
         (float): The calculated statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
+        ValueError: If `diff` is not provided, and either `treatment_mean` or `reference_mean` is not provided.
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
@@ -380,7 +380,7 @@ def solve_size(
         (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
+        ValueError: If `diff` is not provided, and either `treatment_mean` or `reference_mean` is not provided.
         ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
     """
 
@@ -739,7 +739,7 @@ def solve_treatment_std(
         (float): The required standard deviation in the treatment group.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
+        ValueError: If `diff` is not provided, and either `treatment_mean` or `reference_mean` is not provided.
         ValueError: If `equal_var=False` and `reference_std=None`.
     """
 
@@ -874,7 +874,7 @@ def solve_reference_std(
         (float): The required standard deviation in the reference group.
 
     Raises:
-        ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
+        ValueError: If `diff` is not provided, and either `treatment_mean` or `reference_mean` is not provided.
         ValueError: If `equal_var=False` and `treatment_std=None`.
     """
 
