@@ -44,7 +44,7 @@ pip install pystatpower
 
 ### 估算样本量
 
-1. 单样本率置信区间
+- 单样本率置信区间
 
    ```python
    from pystatpower.models import proportion
@@ -59,7 +59,7 @@ pip install pystatpower
    # output: 158
    ```
 
-2. 单样本率差异性检验（单组目标值法）
+- 单样本率差异性检验（单组目标值法）
 
    ```python
    from pystatpower.models import proportion
@@ -76,7 +76,7 @@ pip install pystatpower
    # output: 42
    ```
 
-3. 两独立样本率非劣效检验
+- 两独立样本率非劣效检验
 
    ```python
    from pystatpower.models import proportion
@@ -94,7 +94,7 @@ pip install pystatpower
    # output: (48, 48)
    ```
 
-4. 两独立样本均值优效性检验
+- 两独立样本均值优效性检验
 
    ```python
    from pystatpower.models import mean
