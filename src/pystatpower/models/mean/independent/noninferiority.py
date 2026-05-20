@@ -323,7 +323,7 @@ def solve_size(
             - `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
               If `method='t'`, degree of freedom $df = n_1 + n_2 - 2$.
 
-            - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
+            - `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
             If `method` is `'z'` and `equal_var` is `True`, the standard deviation of the two groups must be equal.
