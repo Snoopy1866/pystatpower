@@ -34,8 +34,9 @@ def _power_pooled(
                 )
             )
         case "two-sided":
-            power = 1 - (
-                norm.cdf(
+            power = (
+                1
+                - norm.cdf(
                     (
                         norm.ppf(1 - alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
@@ -58,6 +59,7 @@ def _power_pooled(
                     )
                 )
             )
+
     return float(power)
 
 
@@ -89,8 +91,9 @@ def _power_pooled_cc(
                 )
             )
         case "two-sided":
-            power = power = 1 - (
-                norm.cdf(
+            power = power = (
+                1
+                - norm.cdf(
                     (
                         norm.ppf(1 - alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
@@ -183,8 +186,9 @@ def _power_unpooled_cc(
                 )
             )
         case "two-sided":
-            power = 1 - (
-                norm.cdf(
+            power = (
+                1
+                - norm.cdf(
                     norm.ppf(1 - alpha / 2)
                     - (treatment_proportion - reference_proportion - 1 / 2 * (1 / treatment_size + 1 / reference_size))
                     / sqrt(
