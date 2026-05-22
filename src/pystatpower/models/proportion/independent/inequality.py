@@ -110,7 +110,7 @@ def _power_pooled_cc(
                         norm.ppf(alpha / 2)
                         * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
                         - (treatment_proportion - reference_proportion)
-                        + 1 / 2 * (1 / treatment_size + 1 / reference_size)
+                        - 1 / 2 * (1 / treatment_size + 1 / reference_size)
                     )
                     / sqrt(
                         treatment_proportion * (1 - treatment_proportion) / treatment_size
