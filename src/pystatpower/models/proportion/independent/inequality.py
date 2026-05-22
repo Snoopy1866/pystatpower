@@ -91,7 +91,7 @@ def _power_pooled_cc(
                 )
             )
         case "two-sided":
-            power = power = (
+            power = (
                 1
                 - norm.cdf(
                     (
