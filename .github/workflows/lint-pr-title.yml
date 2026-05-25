@@ -8,8 +8,6 @@ on:
       - edited
       - synchronize
 
-
-
 jobs:
   main:
     name: Validate PR Title
