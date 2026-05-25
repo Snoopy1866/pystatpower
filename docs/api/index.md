@@ -20,6 +20,7 @@ hide:
 ### 单样本
 - [单样本率置信区间](./proportion/single/ci.md)
 - [单样本率差异性检验](./proportion/single/inequality.md)
+- [单样本率非劣效检验](./proportion/single/noninferiority.md)
 
 ### 两独立样本
 - [两独立样本率差异性检验](./proportion/independent/inequality.md)
