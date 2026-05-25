@@ -4,7 +4,7 @@
 from dataclasses import dataclass, asdict
 from typing import Literal
 
-import pytest
+import pytest3
 
 from pystatpower.models.proportion.single.noninferiority import solve_power, solve_size, solve_null_proportion, solve_proportion, solve_margin
 
