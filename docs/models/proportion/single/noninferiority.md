@@ -185,7 +185,7 @@ n = \frac{\left(z_{1-\alpha}+z_{1-\beta}\right)^2 p(1-p)}{\left(p-p_0-\delta\rig
 $$
 
 
-## Z-test using S(Phat) 连续性校正 {z-test-phat-cc}
+## Z-test using S(Phat) 连续性校正 {#z-test-phat-cc}
 
 在 [Z-test using S(Phat)](#z-test-phat) 的基础上加入校正项 $c$：
 
