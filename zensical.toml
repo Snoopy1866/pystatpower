@@ -14,6 +14,7 @@ nav = [
             { "单样本率差异性检验" = "models/proportion/single/inequality.md" },
             { "单样本率非劣效检验" = "models/proportion/single/noninferiority.md" },
             { "单样本率优效性检验" = "models/proportion/single/superiority.md" },
+            { "单样本率等效性检验" = "models/proportion/single/equivalence.md" },
             { "两独立样本率差异性检验" = "models/proportion/independent/inequality.md" },
             { "两独立样本率非劣效检验" = "models/proportion/independent/noninferiority.md" },
             { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" }
