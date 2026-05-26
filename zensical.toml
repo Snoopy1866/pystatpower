@@ -10,6 +10,7 @@ nav = [
         { "单样本率置信区间" = "models/proportion/single/ci.md" },
         { "单样本率差异性检验" = "models/proportion/single/inequality.md" },
         { "单样本率非劣效检验" = "models/proportion/single/noninferiority.md" },
+        { "单样本率优效性检验" = "models/proportion/single/superiority.md" },
         { "两独立样本率差异性检验" = "models/proportion/independent/inequality.md" },
         { "两独立样本率非劣效检验" = "models/proportion/independent/noninferiority.md" },
         { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" },
@@ -33,7 +34,8 @@ nav = [
             { "单样本" = [
                 { "置信区间" = "api/proportion/single/ci.md" },
                 { "差异性检验" = "api/proportion/single/inequality.md" },
-                { "非劣效检验" = "api/proportion/single/noninferiority.md" }
+                { "非劣效检验" = "api/proportion/single/noninferiority.md" },
+                { "优效性检验" = "api/proportion/single/superiority.md" }
             ] },
             { "两独立样本" = [
                 { "差异性检验" = "api/proportion/independent/inequality.md" },
