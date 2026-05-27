@@ -6,6 +6,12 @@ on:
       - "main"
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "codecov.yml"
+      - ".github/workflows/pytest.yml"
 
 defaults:
   run:
