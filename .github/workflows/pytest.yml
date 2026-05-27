@@ -31,8 +31,6 @@ jobs:
 
   test-core:
     needs: check-paths
-    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -42,6 +40,13 @@ jobs:
     name: test-core (${{ matrix.os }}, ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Check if compliance run is needed
+        run: |
+          if [ "${{ needs.check-paths.outputs.should_run }}" != 'true' ]; then
+            echo "No code changes detected. Skipping tests gracefully."
+            exit 0
+          fi
+
       - uses: actions/checkout@v6
 
       - name: Install uv
@@ -66,7 +71,6 @@ jobs:
 
   test-minimum-scipy:
     needs: check-paths
-    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
 
     strategy:
       fail-fast: false
@@ -88,6 +92,13 @@ jobs:
     name: test-minimum-scipy (${{ matrix.os }}, ${{ matrix.deps.python-version }}, scipy == ${{ matrix.deps.scipy-version }})
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Check if compliance run is needed
+        run: |
+          if [ "${{ needs.check-paths.outputs.should_run }}" != 'true' ]; then
+            echo "No code changes detected. Skipping tests gracefully."
+            exit 0
+          fi
+          
       - uses: actions/checkout@v6
 
       - name: Install uv
