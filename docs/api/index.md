@@ -22,6 +22,7 @@ hide:
 - [单样本率差异性检验](./proportion/single/inequality.md)
 - [单样本率非劣效检验](./proportion/single/noninferiority.md)
 - [单样本率优效性检验](./proportion/single/superiority.md)
+- [单样本率等效性检验](./proportion/single/equivalence.md)
 
 ### 两独立样本
 - [两独立样本率差异性检验](./proportion/independent/inequality.md)
