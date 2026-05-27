@@ -6,19 +6,33 @@ on:
       - "main"
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "pyproject.toml"
-      - "codecov.yml"
-      - ".github/workflows/pytest.yml"
 
 defaults:
   run:
     shell: bash -e {0}
 
 jobs:
+  check-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.filter.outputs.code}}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - "src/**"
+              - "tests/**"
+              - "pyproject.toml"
+              - "codecov.yml"
+              - ".github/workflows/pytest.yml"
+
   test-core:
+    needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -51,6 +65,9 @@ jobs:
           flags: test-core-${{ matrix.os }}-py${{ matrix.python-version }}
 
   test-minimum-scipy:
+    needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
+
     strategy:
       fail-fast: false
       matrix:
