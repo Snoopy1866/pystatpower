@@ -43,18 +43,21 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.1.0
         with:
           version: "0.11.16"
           python-version: ${{ matrix.python }}
 
-      - name: Install the project
-        run: uv sync --locked --group dev
-
-      - name: Install SciPy
-        run: uv pip install scipy~=${{ matrix.scipy }}.0 --no-build
-
-      - name: Test with python ${{ matrix.python }} and SciPy ${{ matrix.scipy }}
+      - name: Update the environment and test with python ${{ matrix.python }} and SciPy ${{ matrix.scipy }}
         run: |
-          uv run --frozen pytest --cov=pystatpower
+          uv sync --locked --group dev
+          uv pip install scipy~=${{ matrix.scipy }}.0 --no-build
+          uv run --frozen pytest --cov=pystatpower --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: test-full-py${{ matrix.python }}-scipy${{ matrix.scipy }}
+
