@@ -30,6 +30,7 @@ jobs:
 
   test-core:
     needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
 
     strategy:
       fail-fast: false
@@ -61,6 +62,7 @@ jobs:
 
   test-minimum-scipy:
     needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
 
     strategy:
       fail-fast: false
