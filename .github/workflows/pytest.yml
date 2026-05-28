@@ -6,18 +6,30 @@ on:
       - "main"
   pull_request:
     types: [opened, synchronize, reopened]
-    paths: 
-      - "src/**"
-      - "tests/**"
-      - "pyproject.toml"
-      - "codecov.yml"
 
 defaults:
   run:
     shell: bash -e {0}
 
 jobs:
+  check-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.filter.outputs.code}}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            code:
+              - "src/**"
+              - "tests/**"
+              - "pyproject.toml"
+              - "codecov.yml"
+
   test-core:
+    needs: check-paths
 
     strategy:
       fail-fast: false
@@ -48,6 +60,7 @@ jobs:
           flags: test-core-${{ matrix.os }}-py${{ matrix.python-version }}
 
   test-minimum-scipy:
+    needs: check-paths
 
     strategy:
       fail-fast: false
@@ -90,17 +103,24 @@ jobs:
           flags: test-minimum-scipy-${{ matrix.os }}-py${{ matrix.deps.python-version }}-scipy${{ matrix.deps.scipy-version }}
 
   check-pytest-status:
-    needs: [test-core, test-minimum-scipy]
+    needs: [check-paths, test-core, test-minimum-scipy]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Check Jobs Status
         run: |
+          CHECK_PATH_RESULT="${{ needs.check-paths.result }}"
           PYTEST_CORE_RESULT="${{ needs.test-core.result }}"
           PYTEST_MINIMUM_SCIPY_RESULT="${{ needs.test-minimum-scipy.result }}"
 
+          echo "check-paths status: ${CHECK_PATH_RESULT}"
           echo "test-core status: ${PYTEST_CORE_RESULT}"
           echo "test-minimum-scipy: ${PYTEST_MINIMUM_SCIPY_RESULT}"
+
+          if [ "$CHECK_PATH_RESULT" = "failure" ] || [ "$CHECK_PATH_RESULT" = "cancelled" ]; then
+            echo "❌ Path check failed or cancelled."
+            exit 1
+          fi
 
           if [ "$PYTEST_CORE_RESULT" = "failure" ] || [ "$PYTEST_CORE_RESULT" = "cancelled" ]; then
             echo "❌ PyTest core test failed or cancelled."
