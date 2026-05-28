@@ -60,4 +60,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           flags: test-full-py${{ matrix.python }}-scipy${{ matrix.scipy }}
-
