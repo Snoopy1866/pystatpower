@@ -27,7 +27,7 @@ jobs:
               - "tests/**"
               - "pyproject.toml"
               - "codecov.yml"
-              - ".github/workflows/pytest.yml"
+              
 
   test-core:
     needs: check-paths
