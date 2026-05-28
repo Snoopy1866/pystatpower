@@ -31,6 +31,8 @@ jobs:
 
   test-core:
     needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -40,26 +42,16 @@ jobs:
     name: test-core (${{ matrix.os }}, ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check if compliance run is needed
-        run: |
-          if [ "${{ needs.check-paths.outputs.should_run }}" != 'true' ]; then
-            echo "No code changes detected. Skipping tests gracefully."
-            exit 0
-          fi
-
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.1.0
         with:
           version: "0.11.16"
           python-version: ${{ matrix.python-version }}
 
-      - name: Install the project
-        run: uv sync --locked --group dev
-
-      - name: Test with python ${{ matrix.python-version }}
+      - name: Update the environment and test with python ${{ matrix.python-version }}
         run: |
+          uv sync --locked --group dev
           uv run --frozen pytest --cov=pystatpower --cov-report=xml
 
       - name: Upload coverage to Codecov
@@ -71,6 +63,7 @@ jobs:
 
   test-minimum-scipy:
     needs: check-paths
+    if: ${{ needs.check-paths.outputs.should_run == 'true' }}
 
     strategy:
       fail-fast: false
@@ -92,29 +85,17 @@ jobs:
     name: test-minimum-scipy (${{ matrix.os }}, ${{ matrix.deps.python-version }}, scipy == ${{ matrix.deps.scipy-version }})
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check if compliance run is needed
-        run: |
-          if [ "${{ needs.check-paths.outputs.should_run }}" != 'true' ]; then
-            echo "No code changes detected. Skipping tests gracefully."
-            exit 0
-          fi
-
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.1.0
         with:
           version: "0.11.16"
           python-version: ${{ matrix.deps.python-version }}
 
-      - name: Install the project
-        run: uv sync --locked --group dev
-
-      - name: Install SciPy
-        run: uv pip install scipy==${{ matrix.deps.scipy-version }} --no-build
-
-      - name: Test with python ${{ matrix.deps.python-version }}
+      - name: Update the environment and test with python ${{ matrix.deps.python-version }}
         run: |
+          uv sync --locked --group dev
+          uv pip install scipy==${{ matrix.deps.scipy-version }} --no-build
           uv run --frozen pytest --cov=pystatpower --cov-report=xml
 
       - name: Upload coverage to Codecov
@@ -123,3 +104,35 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           flags: test-minimum-scipy-${{ matrix.os }}-py${{ matrix.deps.python-version }}-scipy${{ matrix.deps.scipy-version }}
+
+  check-pytest-status:
+    needs: [check-paths, test-core, test-minimum-scipy]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check Jobs Status
+        run: |
+          CHECK_PATH_RESULT="${{ needs.check-paths.result }}"
+          PYTEST_CORE_RESULT="${{ needs.test-core.result }}"
+          PYTEST_MINIMUM_SCIPY_RESULT="${{ needs.test-minimum-scipy.result }}"
+
+          echo "check-paths status: ${CHECK_PATH_RESULT}"
+          echo "test-core status: ${PYTEST_CORE_RESULT}"
+          echo "test-minimum-scipy: ${PYTEST_MINIMUM_SCIPY_RESULT}"
+
+          if [ "$CHECK_PATH_RESULT" = "failure" ] || [ "$CHECK_PATH_RESULT" = "cancelled" ]; then
+            echo "❌ Path check failed or cancelled."
+            exit 1
+          fi
+
+          if [ "$PYTEST_CORE_RESULT" = "failure" ] || [ "$PYTEST_CORE_RESULT" = "cancelled" ]; then
+            echo "❌ PyTest core test failed or cancelled."
+            exit 1
+          fi
+
+          if [ "$PYTEST_MINIMUM_SCIPY_RESULT" = "failure" ] || [ "$PYTEST_MINIMUM_SCIPY_RESULT" = "cancelled" ]; then
+            echo "❌ PyTest minimum SciPy test failed or cancelled."
+            exit 1
+          fi
+
+          echo "✅ All tests passed or gracefully skipped!"
