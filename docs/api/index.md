@@ -25,6 +25,7 @@ hide:
 - [单样本率等效性检验](./proportion/single/equivalence.md)
 
 ### 两独立样本
+- [两独立样本率差置信区间](./proportion/independent/ci.md)
 - [两独立样本率差异性检验](./proportion/independent/inequality.md)
 - [两独立样本率非劣效检验](./proportion/independent/noninferiority.md)
 - [两独立样本率优效性检验](./proportion/independent/superiority.md)
