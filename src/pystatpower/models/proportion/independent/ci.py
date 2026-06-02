@@ -123,9 +123,9 @@ def solve_distance(
             Actual proportion in the treatment group ($p_1$). Must be between 0 and 1.
         reference_proportion (float):
             Actual proportion in the reference group ($p_2$). Must be between 0 and 1.
-        treatment_size (float):
+        treatment_size (int):
             Sample size in the treatment group ($n_1$). Must be greater than 0.
-        reference_size (float):
+        reference_size (int):
             Sample size in the reference group ($n_2$). Must be greater than 0.
         conf_level (float, optional):
             Confidence level.
