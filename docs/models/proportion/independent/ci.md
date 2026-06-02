@@ -5,7 +5,7 @@
 ## Pearson's Chi-Square {#pearson-chi-square}
 
 === "双侧置信区间"
-    
+
     $$
     \begin{align}
     \text{L} & = \hat{p}_1 - \hat{p}_2 - z_{1 - \alpha/2} \sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1} + \frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} \\
@@ -20,7 +20,7 @@
     $$
 
     ??? note "样本量的闭式解的分类讨论"
-        
+
         设 $k = n_1 / n_2$
 
         ??? note "$\text{L} < -1, \text{U} \leqslant 1$"
@@ -92,7 +92,7 @@
     $$
 
     ??? note "样本量的闭式解的分类讨论"
-        
+
         设 $k = n_1 / n_2$
 
         ??? note "$\text{U} \leqslant 1$"
