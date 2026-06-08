@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.proportion.independent.ci import solve_distance
+from pystatpower.models.proportion.independent.ci import solve_distance, solve_size, solve_treatment_proportion
 
 
 @dataclass
@@ -704,4 +704,37 @@ def test_size_solve_distance(case: TestCase) -> None:
             6,
         )
         == case.actual_distance
+    )
+
+
+def test_solve_size(case: TestCase) -> None:
+    ratio = case.treatment_size / case.reference_size
+    assert solve_size(
+        treatment_proportion=case.treatment_proportion,
+        reference_proportion=case.reference_proportion,
+        distance=case.distance,
+        ratio=ratio,
+        conf_level=case.conf_level,
+        interval_type=case.interval_type,
+        method=case.method,
+    ) == (case.treatment_size, case.reference_size)
+
+
+def test_solve_treatment_proportion(case: TestCase) -> None:
+    search_direction = "below" if case.treatment_proportion < case.reference_proportion else "above"
+    assert (
+        round(
+            solve_treatment_proportion(
+                reference_proportion=case.reference_proportion,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                distance=case.actual_distance,
+                conf_level=case.conf_level,
+                interval_type=case.interval_type,
+                method=case.method,
+                search_direction=search_direction,
+            ),
+            2,
+        )
+        == case.treatment_proportion
     )
