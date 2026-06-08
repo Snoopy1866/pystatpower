@@ -488,7 +488,7 @@ def solve_distance(
             - `'two-sided'`: Two-sided confidence interval.
             - `'lower one-sided'`: Lower one-sided confidence interval.
             - `'upper one-sided'`: Upper one-sided confidence interval.
-        method (Literal["chisq", "chisq_cc"], optional):
+        method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
             Method to calculate the confidence interval width or the distance from the proportion to the confidence bound.
 
             - `'chisq'`: Pearson's chi-square method.
