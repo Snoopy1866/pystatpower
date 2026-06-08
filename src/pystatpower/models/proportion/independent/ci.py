@@ -1,4 +1,4 @@
-from math import acos, copysign, cos, isclose, pi, sqrt
+from math import acos, ceil, copysign, cos, isclose, pi, sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
@@ -14,7 +14,7 @@ def _distance_chisq(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
     for difference between two independent proportions, using Pearson's chi-square method.
     """
 
@@ -40,7 +40,7 @@ def _distance_chisq(
             U = diff + z * sd
             distance = min(U, 1) - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance_chisq_cc(
@@ -52,8 +52,8 @@ def _distance_chisq_cc(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
-    using Yate's chi-square with continuity correction method.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions, using Yate's chi-square with continuity correction method.
     """
 
     alpha = 1 - conf_level
@@ -79,7 +79,7 @@ def _distance_chisq_cc(
             U = diff + z * sd + c
             distance = min(U, 1) - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance_newcombe_wilson(
@@ -91,8 +91,8 @@ def _distance_newcombe_wilson(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
-    using Newcombe-Wilson method.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions, using Newcombe-Wilson method.
     """
 
     alpha = 1 - conf_level
@@ -179,7 +179,7 @@ def _distance_newcombe_wilson(
             )
             distance = U - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance_newcombe_wilson_cc(
@@ -191,8 +191,8 @@ def _distance_newcombe_wilson_cc(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
-    using Newcombe-Wilson with continuity correction method.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions, using Newcombe-Wilson with continuity correction method.
     """
 
     alpha = 1 - conf_level
@@ -291,7 +291,7 @@ def _distance_newcombe_wilson_cc(
             )
             distance = U - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance_farrington_manning(
@@ -303,8 +303,8 @@ def _distance_farrington_manning(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
-    using Farrington and Manning's score method.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions, using Farrington and Manning's score method.
     """
 
     alpha = 1 - conf_level
@@ -351,7 +351,7 @@ def _distance_farrington_manning(
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance_miettinen_nurminen(
@@ -363,8 +363,8 @@ def _distance_miettinen_nurminen(
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
-    using Miettinen and Nurminen's score method.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions, using Miettinen and Nurminen's score method.
     """
 
     alpha = 1 - conf_level
@@ -411,7 +411,7 @@ def _distance_miettinen_nurminen(
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
 
-    return distance
+    return float(distance)
 
 
 def _distance(
@@ -425,7 +425,10 @@ def _distance(
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ],
 ) -> float:
-    """Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions."""
+    """
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions.
+    """
 
     match method:
         case "chisq":
@@ -469,7 +472,8 @@ def solve_distance(
     ] = "chisq",
 ) -> float:
     """
-    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions.
+    Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
+    for the difference between two independent proportions.
 
     Args:
         treatment_proportion (float):
@@ -489,7 +493,7 @@ def solve_distance(
             - `'lower one-sided'`: Lower one-sided confidence interval.
             - `'upper one-sided'`: Upper one-sided confidence interval.
         method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
-            Method to calculate the confidence interval width or the distance from the proportion to the confidence bound.
+            Method to calculate the confidence interval.
 
             - `'chisq'`: Pearson's chi-square method.
             - `'chisq_cc'`: Yate's chi-square with continuity correction method.
@@ -500,7 +504,7 @@ def solve_distance(
 
 
     Returns:
-        (float): The confidence interval width or the distance from the proportion to the confidence bound.
+        (float): The confidence interval width or the distance from the proportion difference to the confidence bound.
     """
 
     distance = _distance(
@@ -508,3 +512,176 @@ def solve_distance(
     )
 
     return distance
+
+
+def solve_size(
+    *,
+    treatment_proportion: float,
+    reference_proportion: float,
+    distance: float,
+    ratio: float = 1,
+    conf_level: float = 0.95,
+    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    method: Literal[
+        "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
+    ] = "chisq",
+) -> float:
+    """
+    Estimate the required sample size, given either the confidence interval width or the distance from the proportion
+    to the confidence bound for the difference between two independent proportions.
+
+    Args:
+        treatment_proportion (float):
+            Actual proportion in the treatment group ($p_1$). Must be between 0 and 1.
+        reference_proportion (float):
+            Actual proportion in the reference group ($p_2$). Must be between 0 and 1.
+        distance (float):
+            Confidence interval width or the distance from the proportion difference to the confidence bound.
+
+            - If `interval_type='two-sided'`, provide confidence interval width.
+            - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
+            - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
+        ratio (float, optional):
+            Ratio of the sample size in the treatment group to the sample size in the reference group ($k = n_1 / n_2$).
+        conf_level (float, optional):
+            Confidence level.
+        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+            Type of the confidence interval.
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'lower one-sided'`: Lower one-sided confidence interval.
+            - `'upper one-sided'`: Upper one-sided confidence interval.
+        method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
+            Method to calculate the confidence interval.
+
+            - `'chisq'`: Pearson's chi-square method.
+            - `'chisq_cc'`: Yate's chi-square with continuity correction method.
+            - `'newcombe_wilson'`: Newcombe-Wilson method.
+            - `'newcombe_wilson_cc'`: Newcombe-Wilson with continuity correction method.
+            - `'farrington_manning'`: Farrington and Manning's score method.
+            - `'miettinen_nurminen'`: Miettinen and Nurminen's score method.
+
+
+    Returns:
+        (tuple[int, int]): The required sample size.
+    """
+
+    if ratio >= 1:
+
+        def func(reference_size: float) -> float:
+            return (
+                _distance(
+                    treatment_proportion,
+                    reference_proportion,
+                    reference_size * ratio,
+                    reference_size,
+                    conf_level,
+                    interval_type,
+                    method,
+                )
+                - distance
+            )
+
+        reference_size = int(ceil(brentq(func, 1, 1e12)))
+        treatment_size = int(ceil(reference_size * ratio))
+    else:  # ratio < 1
+
+        def func(treatment_size: float) -> float:
+            return (
+                _distance(
+                    treatment_proportion,
+                    reference_proportion,
+                    treatment_size,
+                    treatment_size / ratio,
+                    conf_level,
+                    interval_type,
+                    method,
+                )
+                - distance
+            )
+
+        treatment_size = int(ceil(brentq(func, 1, 1e12)))
+        reference_size = int(ceil(treatment_size / ratio))
+
+    return treatment_size, reference_size
+
+
+def solve_treatment_proportion(
+    *,
+    reference_proportion: float,
+    treatment_size: int,
+    reference_size: int,
+    distance: float,
+    conf_level: float = 0.95,
+    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    method: Literal[
+        "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
+    ] = "chisq",
+    search_direction: Literal["below", "above"] = "above",
+) -> float:
+    """
+    Estimate the required proportion in the treatment group ($p_1$), given either the confidence interval width or the
+    distance from the proportion to the confidence bound for the difference between two independent proportions.
+
+    Args:
+        reference_proportion (float):
+            Actual proportion in the reference group ($p_2$). Must be between 0 and 1.
+        treatment_size (int):
+            Sample size in the treatment group ($n_1$). Must be greater than 0.
+        reference_size (int):
+            Sample size in the reference group ($n_2$). Must be greater than 0.
+        distance (float):
+            Confidence interval width or the distance from the proportion difference to the confidence bound.
+
+            - If `interval_type='two-sided'`, provide confidence interval width.
+            - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
+            - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
+        ratio (float, optional):
+            Ratio of the sample size in the treatment group to the sample size in the reference group ($k = n_1 / n_2$).
+        conf_level (float, optional):
+            Confidence level.
+        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+            Type of the confidence interval.
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'lower one-sided'`: Lower one-sided confidence interval.
+            - `'upper one-sided'`: Upper one-sided confidence interval.
+        method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
+            Method to calculate the confidence interval.
+
+            - `'chisq'`: Pearson's chi-square method.
+            - `'chisq_cc'`: Yate's chi-square with continuity correction method.
+            - `'newcombe_wilson'`: Newcombe-Wilson method.
+            - `'newcombe_wilson_cc'`: Newcombe-Wilson with continuity correction method.
+            - `'farrington_manning'`: Farrington and Manning's score method.
+            - `'miettinen_nurminen'`: Miettinen and Nurminen's score method.
+        search_direction: Literal["below", "above"] = "above",
+            - `'below'`: Search for the required proportion in the treatment group ($p_1$) below the proportion in the reference group ($p_2$).
+            - `'above'`: Search for the required proportion in the treatment group ($p_1$) above the proportion in the reference group ($p_2$).
+
+
+    Returns:
+        (float): The required proportion in the treatment group ($p_1$).
+    """
+
+    def func(treatment_proportion: float) -> float:
+        return (
+            _distance(
+                treatment_proportion,
+                reference_proportion,
+                treatment_size,
+                reference_size,
+                conf_level,
+                interval_type,
+                method,
+            )
+            - distance
+        )
+
+    match search_direction:
+        case "below":
+            treatment_proportion = brentq(func, 1e-12, reference_proportion)
+        case "above":
+            treatment_proportion = brentq(func, reference_proportion, 1 - 1e-12)
+
+    return float(treatment_proportion)
