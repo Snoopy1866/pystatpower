@@ -19,7 +19,7 @@ class TestCase:
     reference_size: int
     conf_level: float
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"]
-    method: Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning"]
+    method: Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"]
     distance: float
     actual_distance: float
 
