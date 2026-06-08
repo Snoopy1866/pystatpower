@@ -567,8 +567,116 @@ case_group_farrington_manning = (
     ]
 )
 
+case_group_miettinen_nurminen = (
+    [
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "two-sided", method = "miettinen_nurminen"
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            conf_level=0.95,
+            interval_type="two-sided",
+            method="miettinen_nurminen",
+            distance=distance,
+            actual_distance=actual_distance,
+        )
+        for treatment_proportion, reference_proportion, treatment_size, reference_size, distance, actual_distance in [
+            (0.05, 0.50, 836, 418, 0.10, 0.100000),
+            (0.10, 0.50, 903, 452, 0.10, 0.099911),
+            (0.15, 0.50, 961, 481, 0.10, 0.099926),
+            (0.20, 0.50, 1011, 506, 0.10, 0.099943),
+            (0.25, 0.50, 1053, 527, 0.10, 0.099967),
+            (0.30, 0.50, 1088, 544, 0.10, 0.099986),
+            (0.35, 0.50, 1115, 558, 0.10, 0.099954),
+            (0.40, 0.50, 1134, 567, 0.10, 0.099995),
+            (0.45, 0.50, 1145, 573, 0.10, 0.099989),
+            (0.50, 0.50, 1149, 575, 0.10, 0.099983),
+            (0.55, 0.50, 1145, 573, 0.10, 0.099989),
+            (0.60, 0.50, 1134, 567, 0.10, 0.099995),
+            (0.65, 0.50, 1115, 558, 0.10, 0.099954),
+            (0.70, 0.50, 1088, 544, 0.10, 0.099986),
+            (0.75, 0.50, 1053, 527, 0.10, 0.099967),
+            (0.80, 0.50, 1011, 506, 0.10, 0.099943),
+            (0.85, 0.50, 961, 481, 0.10, 0.099926),
+            (0.90, 0.50, 903, 452, 0.10, 0.099911),
+            (0.95, 0.50, 836, 418, 0.10, 0.100000),
+        ]
+    ]
+    + [
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "miettinen_nurminen"
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            conf_level=0.95,
+            interval_type="lower one-sided",
+            method="miettinen_nurminen",
+            distance=distance,
+            actual_distance=actual_distance,
+        )
+        for treatment_proportion, reference_proportion, treatment_size, reference_size, distance, actual_distance in [
+            (0.05, 0.50, 143, 72, 0.10, 0.099449),
+            (0.10, 0.50, 153, 77, 0.10, 0.099795),
+            (0.15, 0.50, 163, 82, 0.10, 0.099816),
+            (0.20, 0.50, 173, 87, 0.10, 0.099543),
+            (0.25, 0.50, 180, 90, 0.10, 0.099999),
+            (0.30, 0.50, 187, 94, 0.10, 0.099729),
+            (0.35, 0.50, 193, 97, 0.10, 0.099608),
+            (0.40, 0.50, 197, 99, 0.10, 0.099673),
+            (0.45, 0.50, 199, 100, 0.10, 0.099908),
+            (0.50, 0.50, 201, 101, 0.10, 0.099813),
+            (0.55, 0.50, 201, 101, 0.10, 0.099872),
+            (0.60, 0.50, 200, 100, 0.10, 0.099994),
+            (0.65, 0.50, 197, 99, 0.10, 0.099930),
+            (0.70, 0.50, 193, 97, 0.10, 0.099904),
+            (0.75, 0.50, 187, 94, 0.10, 0.099994),
+            (0.80, 0.50, 181, 91, 0.10, 0.099637),
+            (0.85, 0.50, 171, 86, 0.10, 0.099886),
+            (0.90, 0.50, 161, 81, 0.10, 0.099552),
+            (0.95, 0.50, 147, 74, 0.10, 0.099708),
+        ]
+    ]
+    + [
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "miettinen_nurminen"
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            conf_level=0.95,
+            interval_type="upper one-sided",
+            method="miettinen_nurminen",
+            distance=distance,
+            actual_distance=actual_distance,
+        )
+        for treatment_proportion, reference_proportion, treatment_size, reference_size, distance, actual_distance in [
+            (0.05, 0.50, 56, 112, 0.10, 0.099803),
+            (0.10, 0.50, 69, 138, 0.10, 0.099591),
+            (0.15, 0.50, 79, 158, 0.10, 0.099529),
+            (0.20, 0.50, 87, 174, 0.10, 0.099457),
+            (0.25, 0.50, 93, 186, 0.10, 0.099545),
+            (0.30, 0.50, 97, 194, 0.10, 0.099841),
+            (0.35, 0.50, 100, 200, 0.10, 0.099864),
+            (0.40, 0.50, 102, 204, 0.10, 0.099674),
+            (0.45, 0.50, 102, 204, 0.10, 0.099787),
+            (0.50, 0.50, 101, 202, 0.10, 0.099728),
+            (0.55, 0.50, 99, 198, 0.10, 0.099512),
+            (0.60, 0.50, 95, 190, 0.10, 0.099653),
+            (0.65, 0.50, 90, 180, 0.10, 0.099683),
+            (0.70, 0.50, 84, 168, 0.10, 0.099627),
+            (0.75, 0.50, 77, 154, 0.10, 0.099524),
+            (0.80, 0.50, 69, 138, 0.10, 0.099450),
+            (0.85, 0.50, 60, 120, 0.10, 0.099578),
+            (0.90, 0.50, 51, 102, 0.10, 0.099389),
+            (0.95, 0.50, 42, 84, 0.10, 0.099174),
+        ]
+    ]
+)
 
-case_group = case_group_chisq + case_group_chisq_cc + case_group_newcombe_wilson + case_group_newcombe_wilson_cc + case_group_farrington_manning
+
+case_group = case_group_chisq + case_group_chisq_cc + case_group_newcombe_wilson + case_group_newcombe_wilson_cc + case_group_farrington_manning + case_group_miettinen_nurminen
 
 
 def get_id(case: TestCase) -> str:

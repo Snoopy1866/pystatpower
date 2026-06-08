@@ -330,8 +330,69 @@ def _distance_farrington_manning(
 
         p1 = p2 + delta
 
-        z_fmd = (diff - delta) / sqrt(p1 * (1 - p1) / treatment_size + p2 * (1 - p2) / reference_size)
-        return z_fmd
+        variance = p1 * (1 - p1) / treatment_size + p2 * (1 - p2) / reference_size
+
+        return (diff - delta) / sqrt(variance)
+
+    eps = 1e-12
+
+    match interval_type:
+        case "two-sided":
+            # z = norm.ppf(1 - alpha / 2)
+            L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha / 2), -1 + eps, diff)
+            U = brentq(lambda delta: func(delta) - norm.ppf(alpha / 2), diff, 1 - eps)
+            distance = U - L
+        case "lower one-sided":
+            # z = norm.ppf(1 - alpha)
+            L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha), -1 + eps, diff)
+            distance = diff - L
+        case "upper one-sided":
+            # z = norm.ppf(1 - alpha)
+            U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
+            distance = U - diff
+
+    return distance
+
+
+def _distance_miettinen_nurminen(
+    treatment_proportion: float,
+    reference_proportion: float,
+    treatment_size: float,
+    reference_size: float,
+    conf_level: float,
+    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+) -> float:
+    """
+    Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions,
+    using Miettinen and Nurminen's score method.
+    """
+
+    alpha = 1 - conf_level
+    diff = treatment_proportion - reference_proportion
+
+    x11 = treatment_size * treatment_proportion
+    x21 = reference_size * reference_proportion
+    m_1 = x11 + x21
+    N = treatment_size + reference_size
+
+    def func(delta: float) -> float:
+        L3 = N
+        L2 = (N + reference_size) * delta - N - m_1
+        L1 = (reference_size * delta - N - 2 * x21) * delta + m_1
+        L0 = x21 * delta * (1 - delta)
+        C = L2**3 / (27 * L3**3) - L1 * L2 / (6 * L3**2) + L0 / (2 * L3)
+        if isclose(C, 0, abs_tol=1e-12):
+            p2 = -L2 / (3 * L3)
+        else:
+            B = copysign(1, C) * sqrt(L2**2 / (9 * L3**2) - L1 / (3 * L3))
+            A = 1 / 3 * (pi + acos(C / B**3))
+            p2 = 2 * B * cos(A) - L2 / (3 * L3)
+
+        p1 = p2 + delta
+
+        variance = (p1 * (1 - p1) / treatment_size + p2 * (1 - p2) / reference_size) * (N / (N - 1))
+
+        return (diff - delta) / sqrt(variance)
 
     eps = 1e-12
 
@@ -360,7 +421,9 @@ def _distance(
     reference_size: float,
     conf_level: float,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
-    method: Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning"],
+    method: Literal[
+        "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
+    ],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions."""
 
@@ -385,6 +448,10 @@ def _distance(
             distance = _distance_farrington_manning(
                 treatment_proportion, reference_proportion, treatment_size, reference_size, conf_level, interval_type
             )
+        case "miettinen_nurminen":
+            distance = _distance_miettinen_nurminen(
+                treatment_proportion, reference_proportion, treatment_size, reference_size, conf_level, interval_type
+            )
 
     return distance
 
@@ -397,7 +464,9 @@ def solve_distance(
     reference_size: int,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
-    method: Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning"] = "chisq",
+    method: Literal[
+        "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
+    ] = "chisq",
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion to the confidence bound for the difference between two independent proportions.
@@ -427,6 +496,7 @@ def solve_distance(
             - `'newcombe_wilson'`: Newcombe-Wilson method.
             - `'newcombe_wilson_cc'`: Newcombe-Wilson with continuity correction method.
             - `'farrington_manning'`: Farrington and Manning's score method.
+            - `'miettinen_nurminen'`: Miettinen and Nurminen's score method.
 
 
     Returns:
