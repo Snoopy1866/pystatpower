@@ -1,8 +1,8 @@
-from math import sqrt, copysign, isclose, pi, cos, acos
+from math import acos, copysign, cos, isclose, pi, sqrt
 from typing import Literal
 
-from scipy.stats import norm
 from scipy.optimize import brentq
+from scipy.stats import norm
 
 
 def _distance_chisq(
