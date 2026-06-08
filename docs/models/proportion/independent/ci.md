@@ -98,7 +98,7 @@
         ??? note "$\text{L} < -1$"
 
             $$
-            d = \hat{p_1} - \hat{p}_2 - (-1)
+            d = \hat{p}_1 - \hat{p}_2 - (-1)
             $$
 
             $d$ 与样本量无关，无法确定样本量。
@@ -213,7 +213,7 @@
 
 先使用 [Wilson Score][wilson-score] 方法计算两组各自的 Wilson 区间，再代入 Newcombe 混合误差框架构建率差的置信区间。
 
-设 $\hat{p}_1$ 的 Wilson 区间为 $(L_1, U_1)$，$\hat{p_2}$ 的 Wilson 区间为 $(L_2, U_2)$。
+设 $\hat{p}_1$ 的 Wilson 区间为 $(L_1, U_1)$，$\hat{p}_2$ 的 Wilson 区间为 $(L_2, U_2)$。
 
 === "双侧置信区间"
 
@@ -265,7 +265,7 @@
 
 先使用 [Wilson Score 连续性校正][wilson-score-cc] 方法计算两组各自的 Wilson 区间，再代入 Newcombe 混合误差框架构建率差的置信区间。
 
-设 $\hat{p}_1$ 的 Wilson 区间为 $(L_1, U_1)$，$\hat{p_2}$ 的 Wilson 区间为 $(L_2, U_2)$。
+设 $\hat{p}_1$ 的 Wilson 区间为 $(L_1, U_1)$，$\hat{p}_2$ 的 Wilson 区间为 $(L_2, U_2)$。
 
 !!! note "Wilson Score 连续性校正置信区间溢出问题"
 
