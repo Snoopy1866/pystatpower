@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.proportion.independent.ci import solve_distance, solve_size, solve_treatment_proportion
+from pystatpower.models.proportion.independent.ci import solve_distance, solve_size, solve_treatment_proportion, solve_reference_proportion
 
 
 @dataclass
@@ -128,6 +128,41 @@ case_group_chisq = (
             (0.85, 0.50, 69, 138, 0.10, 0.099502),
             (0.90, 0.50, 59, 118, 0.10, 0.099293),
             (0.95, 0.50, 47, 94, 0.10, 0.099649),
+        ]
+    ]
+    + [
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.05, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "two-sided", method = "chisq"
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            conf_level=0.95,
+            interval_type="two-sided",
+            method="chisq",
+            distance=distance,
+            actual_distance=actual_distance,
+        )
+        for treatment_proportion, reference_proportion, treatment_size, reference_size, distance, actual_distance in [
+            (0.05, 0.05, 110, 220, 0.10, 0.099764),
+            (0.10, 0.05, 175, 350, 0.10, 0.099939),
+            (0.15, 0.05, 233, 466, 0.10, 0.099873),
+            (0.20, 0.05, 283, 566, 0.10, 0.099885),
+            (0.25, 0.05, 325, 650, 0.10, 0.099939),
+            (0.30, 0.05, 360, 720, 0.10, 0.099886),
+            (0.35, 0.05, 387, 774, 0.10, 0.099879),
+            (0.40, 0.05, 406, 812, 0.10, 0.099911),
+            (0.45, 0.05, 417, 834, 0.10, 0.099976),
+            (0.50, 0.05, 421, 842, 0.10, 0.099957),
+            (0.55, 0.05, 417, 834, 0.10, 0.099976),
+            (0.60, 0.05, 406, 812, 0.10, 0.099911),
+            (0.65, 0.05, 387, 774, 0.10, 0.099879),
+            (0.70, 0.05, 360, 720, 0.10, 0.099886),
+            (0.75, 0.05, 325, 650, 0.10, 0.099939),
+            (0.80, 0.05, 283, 566, 0.10, 0.099885),
+            (0.85, 0.05, 233, 466, 0.10, 0.099873),
+            (0.90, 0.05, 175, 350, 0.10, 0.099939),
+            (0.95, 0.05, 110, 220, 0.10, 0.099764),
         ]
     ]
 )
@@ -345,6 +380,41 @@ case_group_newcombe_wilson = (
             (0.85, 0.50, 55, 110, 0.10, 0.099618),
             (0.90, 0.50, 46, 92, 0.10, 0.099172),
             (0.95, 0.50, 37, 74, 0.10, 0.099858),
+        ]
+    ]
+    + [
+        # Regular Cases: treatment_proportion = 0.90, reference_proportion = 0.05 to 0.95 by 0.01, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "newcombe_wilson"
+        TestCase(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            conf_level=0.95,
+            interval_type="upper one-sided",
+            method="newcombe_wilson",
+            distance=distance,
+            actual_distance=actual_distance,
+        )
+        for treatment_proportion, reference_proportion, treatment_size, reference_size, distance, actual_distance in [
+            (0.90, 0.05, 4, 8, 0.10, 0.098767),
+            (0.90, 0.10, 11, 22, 0.10, 0.099786),
+            (0.90, 0.15, 18, 36, 0.10, 0.099886),
+            (0.90, 0.20, 25, 50, 0.10, 0.098805),
+            (0.90, 0.25, 30, 60, 0.10, 0.099437),
+            (0.90, 0.30, 35, 70, 0.10, 0.099055),
+            (0.90, 0.35, 39, 78, 0.10, 0.098968),
+            (0.90, 0.40, 42, 84, 0.10, 0.099128),
+            (0.90, 0.45, 44, 88, 0.10, 0.099517),
+            (0.90, 0.50, 46, 92, 0.10, 0.099172),
+            (0.90, 0.55, 47, 94, 0.10, 0.099077),
+            (0.90, 0.60, 47, 94, 0.10, 0.099217),
+            (0.90, 0.65, 46, 92, 0.10, 0.099604),
+            (0.90, 0.70, 45, 90, 0.10, 0.099226),
+            (0.90, 0.75, 43, 86, 0.10, 0.099041),
+            (0.90, 0.80, 40, 80, 0.10, 0.099041),
+            (0.90, 0.85, 36, 72, 0.10, 0.099212),
+            (0.90, 0.90, 31, 62, 0.10, 0.099505),
+            (0.90, 0.95, 25, 50, 0.10, 0.099651),
         ]
     ]
 )
@@ -721,20 +791,38 @@ def test_solve_size(case: TestCase) -> None:
 
 
 def test_solve_treatment_proportion(case: TestCase) -> None:
-    search_direction = "below" if case.treatment_proportion < case.reference_proportion else "above"
-    assert (
-        round(
-            solve_treatment_proportion(
-                reference_proportion=case.reference_proportion,
-                treatment_size=case.treatment_size,
-                reference_size=case.reference_size,
-                distance=case.actual_distance,
-                conf_level=case.conf_level,
-                interval_type=case.interval_type,
-                method=case.method,
-                search_direction=search_direction,
-            ),
-            2,
-        )
-        == case.treatment_proportion
+    res = solve_treatment_proportion(
+        reference_proportion=case.reference_proportion,
+        treatment_size=case.treatment_size,
+        reference_size=case.reference_size,
+        distance=case.actual_distance,
+        conf_level=case.conf_level,
+        interval_type=case.interval_type,
+        method=case.method,
     )
+
+    if isinstance(res, float):
+        assert round(res, 2) == case.treatment_proportion
+    elif isinstance(res, tuple):
+        assert round(res[0], 2) == case.treatment_proportion or round(res[1], 2) == case.treatment_proportion
+    else:
+        assert False
+
+
+def test_solve_reference_proportion(case: TestCase) -> None:
+    res = solve_reference_proportion(
+        treatment_proportion=case.treatment_proportion,
+        treatment_size=case.treatment_size,
+        reference_size=case.reference_size,
+        distance=case.actual_distance,
+        conf_level=case.conf_level,
+        interval_type=case.interval_type,
+        method=case.method,
+    )
+
+    if isinstance(res, float):
+        assert round(res, 2) == case.reference_proportion
+    elif isinstance(res, tuple):
+        assert round(res[0], 2) == case.reference_proportion or round(res[1], 2) == case.reference_proportion
+    else:
+        assert False
