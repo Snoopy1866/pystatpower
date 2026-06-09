@@ -1,5 +1,6 @@
 # PyStatPower
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b851e9d202b413d982d2bfe3c6a160a)](https://app.codacy.com/gh/Snoopy1866/pystatpower?utm_source=github.com&utm_medium=referral&utm_content=Snoopy1866/pystatpower&utm_campaign=Badge_Grade)
 [![PyPI - Version](https://img.shields.io/pypi/v/pystatpower)](https://badge.fury.io/py/pystatpower)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystatpower)
 ![GitHub License](https://img.shields.io/github/license/Snoopy1866/pystatpower)
