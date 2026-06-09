@@ -78,5 +78,5 @@ dev = [
 docs = [
     "mkdocs-autorefs>=1.4.4",
     "mkdocstrings-python>=2.0.4",
-    "zensical>=0.0.44"
+    "zensical>=0.0.45"
 ]
