@@ -524,7 +524,7 @@ def solve_size(
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ] = "chisq",
-) -> float:
+) -> tuple[int, int]:
     """
     Estimate the required sample size, given either the confidence interval width or the distance from the proportion difference to the confidence bound for the difference between two independent proportions.
 
@@ -632,8 +632,6 @@ def solve_treatment_proportion(
             - If `interval_type='two-sided'`, provide confidence interval width.
             - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
             - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
-        ratio (float, optional):
-            Ratio of the sample size in the treatment group to the sample size in the reference group ($k = n_1 / n_2$).
         conf_level (float, optional):
             Confidence level.
         interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
@@ -704,7 +702,7 @@ def solve_reference_proportion(
 
     Args:
         treatment_proportion (float):
-            Actual proportion in the treatment group ($p_2$). Must be between 0 and 1.
+            Actual proportion in the treatment group ($p_1$). Must be between 0 and 1.
         treatment_size (int):
             Sample size in the treatment group ($n_1$). Must be greater than 0.
         reference_size (int):
@@ -715,8 +713,6 @@ def solve_reference_proportion(
             - If `interval_type='two-sided'`, provide confidence interval width.
             - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
             - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
-        ratio (float, optional):
-            Ratio of the sample size in the treatment group to the sample size in the reference group ($k = n_1 / n_2$).
         conf_level (float, optional):
             Confidence level.
         interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):

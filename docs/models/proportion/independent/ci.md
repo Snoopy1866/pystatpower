@@ -395,7 +395,7 @@ $$
     $$
 
 
-## Miettinen and Nurminen's Score {miettinen-nurminen}
+## Miettinen and Nurminen's Score {#miettinen-nurminen}
 
 在 [Farrington and Maning's Score][farrington-manning] 的基础上增加校正因子 $N/(N-1)$，降低方差估计的偏倚。
 
