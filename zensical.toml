@@ -21,7 +21,10 @@ nav = [
             { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" }
         ] },
         { "其他" = [
-            { "相关系数" = "models/correlation/inequality.md" }
+            { "相关系数" = [
+                { "置信区间" = "models/correlation/ci.md" },
+                { "差异性检验" = "models/correlation/inequality.md" }
+            ] }
         ] }
     ] },
     { "API Reference" = [
@@ -54,6 +57,7 @@ nav = [
             ] }
         ] },
         { "相关系数" = [
+            { "置信区间" = "api/correlation/ci.md" },
             { "差异性检验" = "api/correlation/inequality.md" }
         ] }
     ] }
