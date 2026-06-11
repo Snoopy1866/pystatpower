@@ -494,3 +494,5 @@ $$
     $$
     n = \frac{n'}{4} \left( 1 + \sqrt{1 + \frac{2}{|p_1 - p_0| n'}}\right)^2
     $$
+
+## 精确检验 {exact-test}
