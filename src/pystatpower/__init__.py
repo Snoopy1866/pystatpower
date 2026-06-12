@@ -1,9 +1,11 @@
 from importlib.metadata import version
 
-from . import models
+from .models import correlation, mean, proportion
 
 __version__ = version("pystatpower")
 
 __all__ = [
-    "models",
+    "correlation",
+    "mean",
+    "proportion",
 ]
