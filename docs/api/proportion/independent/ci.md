@@ -1,1 +1,1 @@
-::: pystatpower.models.proportion.independent.ci
+::: pystatpower.proportion.independent.ci

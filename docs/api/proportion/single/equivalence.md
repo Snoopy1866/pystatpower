@@ -1,1 +1,1 @@
-::: pystatpower.models.proportion.single.equivalence
+::: pystatpower.proportion.single.equivalence

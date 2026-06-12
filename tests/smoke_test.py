@@ -23,7 +23,7 @@ def main():
 
     # 3. 测试一个最基本的 API 调用
     try:
-        result = pystatpower.models.proportion.independent.noninferiority.solve_size(
+        result = pystatpower.proportion.independent.noninferiority.solve_size(
             treatment_proportion=0.8,
             reference_proportion=0.8,
             margin=-0.10,

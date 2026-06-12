@@ -1,1 +1,1 @@
-::: pystatpower.models.mean.single.ci
+::: pystatpower.mean.single.ci

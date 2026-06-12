@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 
 import pytest
 
-from pystatpower.models.proportion.independent.superiority import solve_power, solve_size, solve_treatment_proportion, solve_reference_proportion, solve_margin
+from pystatpower.proportion.independent.superiority import solve_power, solve_size, solve_treatment_proportion, solve_reference_proportion, solve_margin
 
 
 @dataclass

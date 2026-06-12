@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.proportion.single.superiority import solve_power, solve_size, solve_null_proportion, solve_proportion, solve_margin
+from pystatpower.proportion.single.superiority import solve_power, solve_size, solve_null_proportion, solve_proportion, solve_margin
 
 
 @dataclass

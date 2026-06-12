@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 
 import pytest
 
-from pystatpower.models.proportion.single.equivalence import solve_power, solve_size, solve_null_proportion, solve_proportion
+from pystatpower.proportion.single.equivalence import solve_power, solve_size, solve_null_proportion, solve_proportion
 
 
 @dataclass

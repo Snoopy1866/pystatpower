@@ -1,1 +1,1 @@
-::: pystatpower.models.proportion.independent.inequality
+::: pystatpower.proportion.independent.inequality
