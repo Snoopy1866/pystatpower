@@ -1,7 +1,7 @@
 from math import atanh, ceil, sqrt, tanh
 from typing import Literal
 
-from scipy.optimize import brentq
+from scipy.optimize import OptimizeResult, brentq, minimize_scalar
 from scipy.stats import norm
 
 
@@ -135,10 +135,73 @@ def solve_size(
             Whether to adjust for bias.
 
     Returns:
-        (float): The required sample size.
+        (float): The required sample size $n$.
     """
 
     def func(size: float) -> float:
         return _distance(correlation, size, conf_level, interval_type, bias_adj) - distance
 
-    return ceil(brentq(func, 3 + 1e-12, 1e12))
+    lower_bound = 3 + 1e-12
+    upper_bound = 1e12
+    if func(lower_bound) < 0:
+        # func is monotonically decreasing. If func(lower_bound) < 0, it means the required sample size is less than lower_bound.
+        # Considering realistic factors, the sample size should not be lower than ceil(lower_bound)
+        return ceil(lower_bound)
+    else:
+        return ceil(brentq(func, lower_bound, upper_bound))
+
+
+def solve_correlation(
+    *,
+    distance: float,
+    size: int,
+    conf_level: float = 0.95,
+    interval_type: Literal["two-sided", "upper", "lower"] = "two-sided",
+    bias_adj: bool = False,
+) -> float | tuple[float, float]:
+    """Estimate the required correlation coefficient, given the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound
+
+    Args:
+        distance (float):
+            Correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound.
+
+            - If `interval_type = 'two-sided'`, specify the correlation coefficient two-sided confidence interval width.
+            - If `interval_type = 'upper'`, specify the distance from the correlation coefficient to the upper one-sided confidence bound.
+            - If `interval_type = 'lower'`, specify the distance from the correlation coefficient to the lower one-sided confidence bound.
+        size (int):
+            Sample size $n$.
+        conf_level (float, optional):
+            Condidence level.
+        interval_type (Literal["two-sided", "upper", "lower"], optional):
+            Type of the confidence interval.
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+        bias_adj (bool, optional):
+            Whether to adjust for bias.
+
+    Returns:
+        (float | tuple[float, float]):
+            The required correlation coefficient $r$, or a tuple of correlation coefficient if two solutions found.
+            Note that this function only returns positive correlation coefficient.
+    """
+
+    def func(correlation: float) -> float:
+        return _distance(correlation, size, conf_level, interval_type, bias_adj) - distance
+
+    lower_bound = 1e-12
+    upper_bound = 1 - 1e-12
+
+    if func(lower_bound) * func(upper_bound) < 0:
+        return float(brentq(func, lower_bound, upper_bound))
+    else:
+        optimize_res: OptimizeResult = minimize_scalar(
+            lambda correlation: -func(correlation), bounds=(lower_bound, upper_bound)
+        )
+        if optimize_res.success:
+            x = float(optimize_res.x)
+            if func(x) < 0:
+                raise SolutionNotFoundError("Solution not found")
+            else:
+                return float(brentq(func, lower_bound, x)), float(brentq(func, x, upper_bound))
