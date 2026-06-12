@@ -19,7 +19,7 @@ r = \operatorname{tanh}r = \frac{e^{2 z_r} - 1}{e^{2 z_r} + 1}
 $$
 
 以下仅给出 $z_{\hat{r}}$ 的置信限。
-         
+
 ## 未校正偏倚 {#bias-not-adj}
 
 === "双侧置信区间"
