@@ -1,0 +1,16 @@
+/* 扩大侧边栏文字的承载宽度 */
+@supports selector(::-webkit-scrollbar) {
+  [dir="ltr"] .md-sidebar__inner {
+    padding-right: calc(100% - 20rem);
+  }
+}
+
+/* 扩大侧边栏宽度 */
+.md-sidebar {
+  width: 15rem;
+}
+
+/* 扩大整个页面的宽度 */
+.md-grid {
+  max-width: 80rem;
+}
