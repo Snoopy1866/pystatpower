@@ -141,6 +141,7 @@ permalink = true
 permalink_title = "指向本节的链接"
 [project.markdown_extensions.footnotes]
 [project.markdown_extensions.attr_list]
+[project.markdown_extensions.tables]
 
 [project.plugins.mkdocstrings.handlers.python]
 inventories = [
