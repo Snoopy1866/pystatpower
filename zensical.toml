@@ -60,6 +60,7 @@ edit_uri = "edit/main/docs/"
 copyright = "copyright &copy; 2024 - 2026 Snoopy1866"
 docs_dir = "docs"
 site_dir = "site"
+extra_css = ["stylesheets/extra.css"]
 extra_javascript = [
     "javascripts/mathjax.js",
     "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"

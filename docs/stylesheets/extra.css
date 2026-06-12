@@ -1,0 +1,10 @@
+@supports selector(::-webkit-scrollbar) {
+  /* 扩大侧边栏文字的承载宽度 */
+  [dir="ltr"] .md-sidebar__inner {
+    padding-right: calc(100% - 20rem);
+  }
+}
+
+.md-sidebar {
+  width: 15rem;
+}
