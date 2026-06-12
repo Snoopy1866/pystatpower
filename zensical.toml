@@ -41,7 +41,7 @@ nav = [
         { "proportion.independent.noninferiority" = "api/proportion/independent/noninferiority.md" },
         { "proportion.independent.superiority" = "api/proportion/independent/superiority.md" },
         { "correlation.inequality" = "api/correlation/inequality.md" },
-        { "Exceptions" = "api/exceptions.md" }
+        { "exceptions" = "api/exceptions.md" }
     ] }
 ]
 site_name = "pystatpower"
