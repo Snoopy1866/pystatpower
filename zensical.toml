@@ -25,36 +25,31 @@ nav = [
         ] }
     ] },
     { "API Reference" = [
-        { "概览" = "api/index.md" },
-
-        { "均值" = [
-            { "单样本" = [
-                { "置信区间" = "api/mean/single/ci.md" },
-                { "差异性检验" = "api/mean/single/inequality.md" }
-            ] },
-            { "两独立样本" = [
-                { "差异性检验" = "api/mean/independent/inequality.md" },
-                { "非劣效检验" = "api/mean/independent/noninferiority.md" },
-                { "优效性检验" = "api/mean/independent/superiority.md" }
-            ] }
+        { "Overview" = "api/index.md" },
+        { "One Mean" = [
+            { "Confidence Interval" = "api/mean/single/ci.md" },
+            { "Inequality Test" = "api/mean/single/inequality.md" }
         ] },
-        { "率" = [
-            { "单样本" = [
-                { "置信区间" = "api/proportion/single/ci.md" },
-                { "差异性检验" = "api/proportion/single/inequality.md" },
-                { "非劣效检验" = "api/proportion/single/noninferiority.md" },
-                { "优效性检验" = "api/proportion/single/superiority.md" },
-                { "等效性检验" = "api/proportion/single/equivalence.md" }
-            ] },
-            { "两独立样本" = [
-                { "置信区间" = "api/proportion/independent/ci.md" },
-                { "差异性检验" = "api/proportion/independent/inequality.md" },
-                { "非劣效检验" = "api/proportion/independent/noninferiority.md" },
-                { "优效性检验" = "api/proportion/independent/superiority.md" }
-            ] }
+        { "Two Independent Mean" = [
+            { "Inequality Test" = "api/mean/independent/inequality.md" },
+            { "Non-Inferiority Test" = "api/mean/independent/noninferiority.md" },
+            { "Superiority Test" = "api/mean/independent/superiority.md" }
         ] },
-        { "相关系数" = [
-            { "差异性检验" = "api/correlation/inequality.md" }
+        { "One Proportion" = [
+            { "Confidence Interval" = "api/proportion/single/ci.md" },
+            { "Inequality Test" = "api/proportion/single/inequality.md" },
+            { "Non-Inferiority Test" = "api/proportion/single/noninferiority.md" },
+            { "Equivalence Test" = "api/proportion/single/superiority.md" },
+            { "Superiority Test" = "api/proportion/single/equivalence.md" }
+        ] },
+        { "Two Independent Proportion" = [
+            { "Confidence Interval" = "api/proportion/independent/ci.md" },
+            { "Inequality Test" = "api/proportion/independent/inequality.md" },
+            { "Non-Inferiority Test" = "api/proportion/independent/noninferiority.md" },
+            { "Superiority Test" = "api/proportion/independent/superiority.md" }
+        ] },
+        { "Correlation" = [
+            { "Inequality" = "api/correlation/inequality.md" }
         ] }
     ] }
 ]
