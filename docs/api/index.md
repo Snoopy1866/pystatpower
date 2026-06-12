@@ -6,44 +6,28 @@ hide:
 
 # Submodules
 
-| Submodule                        | Description |
-| -------------------------------- | ----------- |
-| [pystatpower.models.correlation](pystatpower.models.correlation) | Correlation |
+## Models
 
-- [pystatpower.models]()
+| Submodule                                                                                           | Description                                                                |
+| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [**pystatpower.correlation.inequality**](./correlation/inequality.md)                               | Inequality Test for Correlation                                            |
+| [**pystatpower.mean.single.ci**](.//mean/single/ci.md)                                              | Confidence Interval for One Mean                                           |
+| [**pystatpower.mean.single.inequality**](./mean/single/inequality.md)                               | Inequality Test for One Mean                                               |
+| [**pystatpower.mean.independent.inequality**](./mean/independent/inequality.md)                     | Inequality Test for Two Independent Means                                  |
+| [**pystatpower.mean.independent.noninferiority**](./mean/independent/noninferiority.md)             | Non-Inferiority Test for Two Independent Means                             |
+| [**pystatpower.mean.independent.superiority**](./mean/independent/superiority.md)                   | Superiority Test for Two Independent Means                                 |
+| [**pystatpower.proportion.single.ci**](./proportion/single/ci.md)                                   | Confidence Interval for One Proportion                                     |
+| [**pystatpower.proportion.single.inequality**](./proportion/single/inequality.md)                   | Inequality Test for One Proportion                                         |
+| [**pystatpower.proportion.single.noninferiority**](./proportion/single/noninferiority.md)           | Non-Inferiority Test for One Proportion                                    |
+| [**pystatpower.proportion.single.superiority**](./proportion/single/superiority.md)                 | Superiority Test for One Proportion                                        |
+| [**pystatpower.proportion.single.equivalence**](./proportion/single/equivalence.md)                 | Equivalence Test for One Proportion                                        |
+| [**pystatpower.proportion.independent.ci**](./proportion/independent/ci.md)                         | Confidence Interval for the Difference Between Two Independent Proportions |
+| [**pystatpower.proportion.independent.inequality**](./proportion/independent/inequality.md)         | Inequality Test for Two Independent Proportions                            |
+| [**pystatpower.proportion.independent.noninferiority**](./proportion/independent/noninferiority.md) | Non-Inferiority Test for Two Independent Proportions                       |
+| [**pystatpower.proportion.independent.superiority**](./proportion/independent/superiority.md)       | Superiority Test for Two Independent Proportions                           |
 
-### 均值
+## Exceptions
 
-#### 单样本
-
-- [单样本均值置信区间](./mean/single/ci.md)
-- [单样本均值差异性检验](./mean/single/inequality.md)
-
-#### 两独立样本
-
-- [两独立样本均值差异性检验](./mean/independent/inequality.md)
-- [两独立样本均值非劣效检验](./mean/independent/noninferiority.md)
-- [两独立样本均值优效性检验](./mean/independent/superiority.md)
-
-### 率
-
-#### 单样本
-
-- [单样本率置信区间](./proportion/single/ci.md)
-- [单样本率差异性检验](./proportion/single/inequality.md)
-- [单样本率非劣效检验](./proportion/single/noninferiority.md)
-- [单样本率优效性检验](./proportion/single/superiority.md)
-- [单样本率等效性检验](./proportion/single/equivalence.md)
-
-#### 两独立样本
-
-- [两独立样本率差置信区间](./proportion/independent/ci.md)
-- [两独立样本率差异性检验](./proportion/independent/inequality.md)
-- [两独立样本率非劣效检验](./proportion/independent/noninferiority.md)
-- [两独立样本率优效性检验](./proportion/independent/superiority.md)
-
-### 相关系数
-
-- [相关系数检验](./correlation/inequality.md)
-
-## exceptions
+| Submodule                                     | Description |
+| --------------------------------------------- | ----------- |
+| [**pystatpower.exceptions**](./exceptions.md) | Exceptions  |
