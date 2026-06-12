@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.mean.independent.noninferiority import solve_power, solve_size, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
+from pystatpower.mean.independent.noninferiority import solve_power, solve_size, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
 
 
 @dataclass

@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.mean.single.inequality import solve_power, solve_size, solve_null_mean, solve_mean
+from pystatpower.mean.single.inequality import solve_power, solve_size, solve_null_mean, solve_mean
 
 
 @dataclass

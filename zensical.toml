@@ -3,25 +3,25 @@ nav = [
     { "首页" = "index.md" },
     { "算法" = [
         { "均值模型" = [
-            { "单样本均值置信区间" = "models/mean/single/ci.md" },
-            { "单样本均值差异性检验" = "models/mean/single/inequality.md" },
-            { "两独立样本均值差异性检验" = "models/mean/independent/inequality.md" },
-            { "两独立样本均值非劣效检验" = "models/mean/independent/noninferiority.md" },
-            { "两独立样本均值优效性检验" = "models/mean/independent/superiority.md" }
+            { "单样本均值置信区间" = "algorithms/mean/single/ci.md" },
+            { "单样本均值差异性检验" = "algorithms/mean/single/inequality.md" },
+            { "两独立样本均值差异性检验" = "algorithms/mean/independent/inequality.md" },
+            { "两独立样本均值非劣效检验" = "algorithms/mean/independent/noninferiority.md" },
+            { "两独立样本均值优效性检验" = "algorithms/mean/independent/superiority.md" }
         ] },
         { "比例模型" = [
-            { "单样本率置信区间" = "models/proportion/single/ci.md" },
-            { "单样本率差异性检验" = "models/proportion/single/inequality.md" },
-            { "单样本率非劣效检验" = "models/proportion/single/noninferiority.md" },
-            { "单样本率优效性检验" = "models/proportion/single/superiority.md" },
-            { "单样本率等效性检验" = "models/proportion/single/equivalence.md" },
-            { "两独立样本率差置信区间" = "models/proportion/independent/ci.md" },
-            { "两独立样本率差异性检验" = "models/proportion/independent/inequality.md" },
-            { "两独立样本率非劣效检验" = "models/proportion/independent/noninferiority.md" },
-            { "两独立样本率优效性检验" = "models/proportion/independent/superiority.md" }
+            { "单样本率置信区间" = "algorithms/proportion/single/ci.md" },
+            { "单样本率差异性检验" = "algorithms/proportion/single/inequality.md" },
+            { "单样本率非劣效检验" = "algorithms/proportion/single/noninferiority.md" },
+            { "单样本率优效性检验" = "algorithms/proportion/single/superiority.md" },
+            { "单样本率等效性检验" = "algorithms/proportion/single/equivalence.md" },
+            { "两独立样本率差置信区间" = "algorithms/proportion/independent/ci.md" },
+            { "两独立样本率差异性检验" = "algorithms/proportion/independent/inequality.md" },
+            { "两独立样本率非劣效检验" = "algorithms/proportion/independent/noninferiority.md" },
+            { "两独立样本率优效性检验" = "algorithms/proportion/independent/superiority.md" }
         ] },
         { "其他" = [
-            { "相关系数" = "models/correlation/inequality.md" }
+            { "相关系数" = "algorithms/correlation/inequality.md" }
         ] }
     ] },
     { "API Reference" = [

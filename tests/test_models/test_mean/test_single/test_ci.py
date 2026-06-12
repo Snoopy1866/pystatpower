@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.mean.single.ci import solve_half_width, solve_size, solve_std
+from pystatpower.mean.single.ci import solve_half_width, solve_size, solve_std
 
 
 @dataclass

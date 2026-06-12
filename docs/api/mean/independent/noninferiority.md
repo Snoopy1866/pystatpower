@@ -1,1 +1,1 @@
-::: pystatpower.models.mean.independent.noninferiority
+::: pystatpower.mean.independent.noninferiority

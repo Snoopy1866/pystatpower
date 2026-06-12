@@ -1,1 +1,1 @@
-::: pystatpower.models.proportion.single.ci
+::: pystatpower.proportion.single.ci

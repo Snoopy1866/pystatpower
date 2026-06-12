@@ -1,1 +1,1 @@
-::: pystatpower.models.proportion.independent.superiority
+::: pystatpower.proportion.independent.superiority

@@ -1,1 +1,1 @@
-::: pystatpower.models.mean.single.inequality
+::: pystatpower.mean.single.inequality

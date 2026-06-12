@@ -1,6 +1,6 @@
 from importlib.metadata import version
 
-from .models import correlation, mean, proportion
+from . import correlation, mean, proportion
 
 __version__ = version("pystatpower")
 

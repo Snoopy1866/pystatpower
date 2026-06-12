@@ -1,1 +1,1 @@
-::: pystatpower.models.mean.independent.inequality
+::: pystatpower.mean.independent.inequality

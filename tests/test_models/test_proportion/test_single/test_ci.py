@@ -6,7 +6,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.proportion.single.ci import solve_distance, solve_proportion, solve_size
+from pystatpower.proportion.single.ci import solve_distance, solve_proportion, solve_size
 
 
 @dataclass

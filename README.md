@@ -50,7 +50,7 @@ pip install pystatpower
 - 单样本率置信区间
 
   ```python
-  from pystatpower.models import proportion
+  from pystatpower import proportion
 
   size = proportion.single.ci.solve_size(
       proportion=0.9,
@@ -66,7 +66,7 @@ pip install pystatpower
 - 单样本率差异性检验（单组目标值法）
 
   ```python
-  from pystatpower.models import proportion
+  from pystatpower import proportion
 
   size = proportion.single.inequality.solve_size(
       null_proportion=0.80,
@@ -83,7 +83,7 @@ pip install pystatpower
 - 两独立样本率非劣效检验
 
   ```python
-  from pystatpower.models import proportion
+  from pystatpower import proportion
 
   size = proportion.independent.noninferiority.solve_size(
       treatment_proportion=0.95,
@@ -101,7 +101,7 @@ pip install pystatpower
 - 两独立样本均值优效性检验
 
   ```python
-  from pystatpower.models import mean
+  from pystatpower import mean
 
   size = mean.independent.superiority.solve_size(
       diff=0.5,
@@ -120,7 +120,7 @@ pip install pystatpower
 ### 计算检验效能
 
 ```python
-from pystatpower.models import proportion
+from pystatpower import proportion
 
 power = proportion.independent.noninferiority.solve_power(
     treatment_proportion=0.95,
@@ -138,7 +138,7 @@ print(power)
 ### 反推效应量
 
 ```python
-from pystatpower.models import proportion
+from pystatpower import proportion
 
 treatment_proportion = proportion.independent.noninferiority.solve_treatment_proportion(
     reference_proportion=0.90,
