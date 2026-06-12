@@ -25,37 +25,23 @@ nav = [
         ] }
     ] },
     { "API Reference" = [
-        { "概览" = "api/index.md" },
-
-        { "均值" = [
-            { "单样本" = [
-                { "置信区间" = "api/mean/single/ci.md" },
-                { "差异性检验" = "api/mean/single/inequality.md" }
-            ] },
-            { "两独立样本" = [
-                { "差异性检验" = "api/mean/independent/inequality.md" },
-                { "非劣效检验" = "api/mean/independent/noninferiority.md" },
-                { "优效性检验" = "api/mean/independent/superiority.md" }
-            ] }
-        ] },
-        { "率" = [
-            { "单样本" = [
-                { "置信区间" = "api/proportion/single/ci.md" },
-                { "差异性检验" = "api/proportion/single/inequality.md" },
-                { "非劣效检验" = "api/proportion/single/noninferiority.md" },
-                { "优效性检验" = "api/proportion/single/superiority.md" },
-                { "等效性检验" = "api/proportion/single/equivalence.md" }
-            ] },
-            { "两独立样本" = [
-                { "置信区间" = "api/proportion/independent/ci.md" },
-                { "差异性检验" = "api/proportion/independent/inequality.md" },
-                { "非劣效检验" = "api/proportion/independent/noninferiority.md" },
-                { "优效性检验" = "api/proportion/independent/superiority.md" }
-            ] }
-        ] },
-        { "相关系数" = [
-            { "差异性检验" = "api/correlation/inequality.md" }
-        ] }
+        { "overview" = "api/index.md" },
+        { "mean.single.ci" = "api/mean/single/ci.md" },
+        { "mean.single.inequality" = "api/mean/single/inequality.md" },
+        { "mean.independent.inequality" = "api/mean/independent/inequality.md" },
+        { "mean.independent.noninferiority" = "api/mean/independent/noninferiority.md" },
+        { "mean.independent.superiority" = "api/mean/independent/superiority.md" },
+        { "proportion.single.ci" = "api/proportion/single/ci.md" },
+        { "proportion.single.inequality" = "api/proportion/single/inequality.md" },
+        { "proportion.single.noninferiority" = "api/proportion/single/noninferiority.md" },
+        { "proportion.single.superiority" = "api/proportion/single/superiority.md" },
+        { "proportion.single.equivalence" = "api/proportion/single/equivalence.md" },
+        { "proportion.independent.ci" = "api/proportion/single/equivalence.md" },
+        { "proportion.independent.inequality" = "api/proportion/independent/ci.md" },
+        { "proportion.independent.noninferiority" = "api/proportion/independent/noninferiority.md" },
+        { "proportion.independent.superiority" = "api/proportion/independent/superiority.md" },
+        { "correlation.inequality" = "api/correlation/inequality.md" },
+        { "exceptions" = "api/exceptions.md" }
     ] }
 ]
 site_name = "pystatpower"
@@ -141,6 +127,7 @@ permalink = true
 permalink_title = "指向本节的链接"
 [project.markdown_extensions.footnotes]
 [project.markdown_extensions.attr_list]
+[project.markdown_extensions.tables]
 
 [project.plugins.mkdocstrings.handlers.python]
 inventories = [
