@@ -1,1 +1,1 @@
-::: pystatpower.models.correlation.ci
+::: pystatpower.correlation.ci
