@@ -4,6 +4,8 @@ from typing import Literal
 from scipy.optimize import OptimizeResult, brentq, minimize_scalar
 from scipy.stats import norm
 
+from ..exceptions import SolutionNotFoundError
+
 
 def _distance_not_adjusted(
     correlation: float, size: float, conf_level: float, interval_type: Literal["two-sided", "upper", "lower"]

@@ -3,7 +3,8 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.models.correlation.ci import solve_distance, solve_size, solve_correlation
+from pystatpower.correlation.ci import solve_distance, solve_size, solve_correlation
+from pystatpower.exceptions import SolutionNotFoundError
 
 
 @dataclass
@@ -157,3 +158,8 @@ def test_solve_correlation(case: TestCase) -> None:
         assert round(res[0], 2) == case.correlation or round(res[1], 2) == case.correlation
     else:
         assert False
+
+
+def test_solve_correlation_exception() -> None:
+    with pytest.raises(SolutionNotFoundError):
+        solve_correlation(distance=0.1, size=274, conf_level=0.95, interval_type="lower", bias_adj=False)
