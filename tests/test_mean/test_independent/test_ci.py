@@ -6,8 +6,6 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.independent.ci import solve_precision, solve_size
-
 
 @dataclass
 class TestCase:
