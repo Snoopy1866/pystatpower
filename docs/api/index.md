@@ -2,9 +2,9 @@
 
 ## Models
 
-| Submodule                                                                                           | Description                                                                |
-| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [**mean.single.ci**](./mean/single/ci.md)                                              | Confidence Interval for One Mean                                           |
+| Submodule                                                                               | Description                                                                |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [**mean.single.ci**](./mean/single/ci.md)                                               | Confidence Interval for One Mean                                           |
 | [**mean.single.inequality**](./mean/single/inequality.md)                               | Inequality Test for One Mean                                               |
 | [**mean.independent.inequality**](./mean/independent/inequality.md)                     | Inequality Test for Two Independent Means                                  |
 | [**mean.independent.noninferiority**](./mean/independent/noninferiority.md)             | Non-Inferiority Test for Two Independent Means                             |
@@ -18,10 +18,11 @@
 | [**proportion.independent.inequality**](./proportion/independent/inequality.md)         | Inequality Test for Two Independent Proportions                            |
 | [**proportion.independent.noninferiority**](./proportion/independent/noninferiority.md) | Non-Inferiority Test for Two Independent Proportions                       |
 | [**proportion.independent.superiority**](./proportion/independent/superiority.md)       | Superiority Test for Two Independent Proportions                           |
+| [**correlation.ci**](./correlation/ci.md)                                               | Confidence Interval for Correlation                                        |
 | [**correlation.inequality**](./correlation/inequality.md)                               | Inequality Test for Correlation                                            |
 
 ## Exceptions
 
-| Submodule                                     | Description |
-| --------------------------------------------- | ----------- |
+| Submodule                         | Description |
+| --------------------------------- | ----------- |
 | [**exceptions**](./exceptions.md) | Exceptions  |
