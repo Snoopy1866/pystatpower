@@ -78,7 +78,7 @@ $$
 
     $$
     \begin{align}
-    L & = \hat{\mu}_1 - \hat{\mu}_2 - t_{1-\alpha/2, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}} \\
+    L & = \hat{\mu}_1 - \hat{\mu}_2 - t_{1-\alpha, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}} \\
     U & = + \infty
     \end{align}
     $$
@@ -86,7 +86,7 @@ $$
     定义均值差到置信限的距离为 $d$，则：
 
     $$
-    d = t_{1-\alpha/2, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
+    d = t_{1-\alpha, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
     $$
 
 === "单侧置信上限区间"
@@ -94,12 +94,12 @@ $$
     $$
     \begin{align}
     L & = - \infty \\
-    U & = \hat{\mu}_1 - \hat{\mu}_2 + t_{1-\alpha/2, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
+    U & = \hat{\mu}_1 - \hat{\mu}_2 + t_{1-\alpha, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
     \end{align}
     $$
 
     定义均值差到置信限的距离为 $d$，则：
 
     $$
-    d = t_{1-\alpha/2, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
+    d = t_{1-\alpha, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
     $$
