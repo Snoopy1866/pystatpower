@@ -6,6 +6,7 @@
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | [**mean.single.ci**](./mean/single/ci.md)                                               | Confidence Interval for One Mean                                           |
 | [**mean.single.inequality**](./mean/single/inequality.md)                               | Inequality Test for One Mean                                               |
+| [**mean.single.noninferiority**](./mean/single/noninferiority.md)                       | Non-Inferiority Test for One Mean                                          |
 | [**mean.independent.ci**](./mean/independent/ci.md)                                     | Confidence Interval for the Difference Between Two Independent Means       |
 | [**mean.independent.inequality**](./mean/independent/inequality.md)                     | Inequality Test for Two Independent Means                                  |
 | [**mean.independent.noninferiority**](./mean/independent/noninferiority.md)             | Non-Inferiority Test for Two Independent Means                             |
