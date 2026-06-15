@@ -5,6 +5,7 @@ from dataclasses import dataclass, asdict
 from typing import Literal
 
 import pytest
+import sys
 
 from pystatpower.mean.single.noninferiority import solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
 
@@ -120,15 +121,15 @@ def test_solve_power_not_specify_diff() -> None:
                 null_mean=20,
                 mean=20,
                 diff=None,
-                margin=-10.0,
+                margin=-9.5,
                 std=10,
-                size=10,
+                size=11,
                 alternative="greater",
                 alpha=0.025,
             ),
             9,
         )
-        == 0.803096209
+        == 0.810039281
     )
 
 
@@ -149,6 +150,15 @@ def test_solve_size(case: TestCase) -> None:
         TestCase(null_mean=None, mean=None, diff=0, margin=-3.5, std=10, size=67, alternative="greater", alpha=0.025, power=0.80, actual_power=0.805928876),
         TestCase(null_mean=None, mean=None, diff=0, margin=-2.5, std=10, size=128, alternative="greater", alpha=0.025, power=0.80, actual_power=0.801506203),
     ]:
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
+    if (
+        case
+        in [
+            TestCase(null_mean=None, mean=None, diff=0, margin=-10.0, std=10, size=10, alternative="greater", alpha=0.025, power=0.80, actual_power=0.803096209),
+        ]
+        and sys.platform == "darwin"
+    ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     if case in [
@@ -177,13 +187,13 @@ def test_solve_size_not_specify_diff() -> None:
             null_mean=20,
             mean=20,
             diff=None,
-            margin=-10.0,
+            margin=-9.5,
             std=10,
             alternative="greater",
             alpha=0.025,
             power=0.80,
         )
-        == 10
+        == 11
     )
 
 
@@ -291,11 +301,11 @@ def test_solve_std_not_specify_diff() -> None:
                 null_mean=20,
                 mean=20,
                 diff=None,
-                margin=-10.0,
-                size=10,
+                margin=-9.5,
+                size=11,
                 alternative="greater",
                 alpha=0.025,
-                power=0.803096209,
+                power=0.810039281,
             ),
             0,
         )
@@ -347,14 +357,14 @@ def test_solve_margin_not_specify_diff() -> None:
                 mean=20,
                 diff=None,
                 std=10,
-                size=10,
+                size=11,
                 alternative="greater",
                 alpha=0.025,
-                power=0.803096209,
+                power=0.810039281,
             ),
-            0,
+            1,
         )
-        == -10.0
+        == -9.5
     )
 
 
