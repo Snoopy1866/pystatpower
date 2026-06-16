@@ -2,7 +2,7 @@ from math import ceil, sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import norm, t
+from scipy.stats import t
 
 
 def _precision(
