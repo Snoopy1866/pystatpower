@@ -16,7 +16,7 @@ class TestCase(BaseTestCase):
     treatment_size: int
     reference_size: int
     conf_level: float
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"]
+    interval_type: Literal["two-sided", "lower", "upper"]
     method: Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"]
     distance: float
     actual_distance: float
@@ -59,14 +59,14 @@ case_group_chisq = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "chisq"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "chisq"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="chisq",
             distance=distance,
             actual_distance=actual_distance,
@@ -94,14 +94,14 @@ case_group_chisq = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "chisq"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "chisq"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="chisq",
             distance=distance,
             actual_distance=actual_distance,
@@ -202,14 +202,14 @@ case_group_chisq_cc = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "chisq_cc"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "chisq_cc"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="chisq_cc",
             distance=distance,
             actual_distance=actual_distance,
@@ -237,14 +237,14 @@ case_group_chisq_cc = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "chisq_cc"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "chisq_cc"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="chisq_cc",
             distance=distance,
             actual_distance=actual_distance,
@@ -311,14 +311,14 @@ case_group_newcombe_wilson = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "newcombe_wilson"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "newcombe_wilson"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="newcombe_wilson",
             distance=distance,
             actual_distance=actual_distance,
@@ -346,14 +346,14 @@ case_group_newcombe_wilson = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "newcombe_wilson"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "newcombe_wilson"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="newcombe_wilson",
             distance=distance,
             actual_distance=actual_distance,
@@ -381,14 +381,14 @@ case_group_newcombe_wilson = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.90, reference_proportion = 0.05 to 0.95 by 0.01, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "newcombe_wilson"
+        # Regular Cases: treatment_proportion = 0.90, reference_proportion = 0.05 to 0.95 by 0.01, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "newcombe_wilson"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="newcombe_wilson",
             distance=distance,
             actual_distance=actual_distance,
@@ -455,14 +455,14 @@ case_group_newcombe_wilson_cc = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "newcombe_wilson_cc"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "newcombe_wilson_cc"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="newcombe_wilson_cc",
             distance=distance,
             actual_distance=actual_distance,
@@ -490,14 +490,14 @@ case_group_newcombe_wilson_cc = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "newcombe_wilson_cc"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "newcombe_wilson_cc"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="newcombe_wilson_cc",
             distance=distance,
             actual_distance=actual_distance,
@@ -564,14 +564,14 @@ case_group_farrington_manning = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "farrington_manning"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "farrington_manning"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="farrington_manning",
             distance=distance,
             actual_distance=actual_distance,
@@ -599,14 +599,14 @@ case_group_farrington_manning = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "farrington_manning"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "farrington_manning"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="farrington_manning",
             distance=distance,
             actual_distance=actual_distance,
@@ -672,14 +672,14 @@ case_group_miettinen_nurminen = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower one-sided", method = "miettinen_nurminen"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 2, distance = 0.1, conf_level = 0.95, interval_type = "lower", method = "miettinen_nurminen"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="lower one-sided",
+            interval_type="lower",
             method="miettinen_nurminen",
             distance=distance,
             actual_distance=actual_distance,
@@ -707,14 +707,14 @@ case_group_miettinen_nurminen = (
         ]
     ]
     + [
-        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper one-sided", method = "miettinen_nurminen"
+        # Regular Cases: treatment_proportion = 0.05 to 0.95 by 0.05, reference_proportion = 0.50, ratio = 0.5, distance = 0.1, conf_level = 0.95, interval_type = "upper", method = "miettinen_nurminen"
         TestCase(
             treatment_proportion=treatment_proportion,
             reference_proportion=reference_proportion,
             treatment_size=treatment_size,
             reference_size=reference_size,
             conf_level=0.95,
-            interval_type="upper one-sided",
+            interval_type="upper",
             method="miettinen_nurminen",
             distance=distance,
             actual_distance=actual_distance,

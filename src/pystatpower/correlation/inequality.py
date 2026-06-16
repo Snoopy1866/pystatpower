@@ -10,7 +10,7 @@ from .._constant import SAMPLE_SIZE_SEARCH_MAX
 def _power_not_adjusted(
     null_correlation: float,
     correlation: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     size: float,
     alpha: float,
 ) -> float:
@@ -26,10 +26,10 @@ def _power_not_adjusted(
                 - norm.cdf(norm.ppf(1 - alpha / 2) - (zeta - null_zeta) * sqrt(size - 3))
                 + norm.cdf(norm.ppf(alpha / 2) - (zeta - null_zeta) * sqrt(size - 3))
             )
-        case "lower one-sided":
-            power = norm.cdf(norm.ppf(alpha) - (zeta - null_zeta) * sqrt(size - 3))
-        case "upper one-sided":
+        case "greater":
             power = 1 - norm.cdf(norm.ppf(1 - alpha) - (zeta - null_zeta) * sqrt(size - 3))
+        case "less":
+            power = norm.cdf(norm.ppf(alpha) - (zeta - null_zeta) * sqrt(size - 3))
 
     return float(power)
 
@@ -37,7 +37,7 @@ def _power_not_adjusted(
 def _power_adjusted(
     null_correlation: float,
     correlation: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     size: float,
     alpha: float,
 ) -> float:
@@ -58,14 +58,14 @@ def _power_adjusted(
                     - (zeta - null_zeta + 1 / 2 * (correlation - null_correlation) / (size - 1)) * sqrt(size - 3)
                 )
             )
-        case "lower one-sided":
-            power = norm.cdf(
-                norm.ppf(alpha)
-                - (zeta - null_zeta + 1 / 2 * (correlation - null_correlation) / (size - 1)) * sqrt(size - 3)
-            )
-        case "upper one-sided":
+        case "greater":
             power = 1 - norm.cdf(
                 norm.ppf(1 - alpha)
+                - (zeta - null_zeta + 1 / 2 * (correlation - null_correlation) / (size - 1)) * sqrt(size - 3)
+            )
+        case "less":
+            power = norm.cdf(
+                norm.ppf(alpha)
                 - (zeta - null_zeta + 1 / 2 * (correlation - null_correlation) / (size - 1)) * sqrt(size - 3)
             )
 
@@ -75,7 +75,7 @@ def _power_adjusted(
 def _power(
     null_correlation: float,
     correlation: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     size: float,
     alpha: float,
     bias_adj: bool,
@@ -93,7 +93,7 @@ def solve_power(
     null_correlation: float,
     correlation: float,
     size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     bias_adj: bool = False,
 ) -> float:
@@ -106,17 +106,17 @@ def solve_power(
             Correlation coefficient under the alternative hypothesis.
         size (int):
             Sample size.
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\rho_1 \\neq \\rho_0$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         bias_adj (bool, optional):
             Specify whether the bias adjustment is used or not.
 
@@ -133,7 +133,7 @@ def solve_size(
     *,
     null_correlation: float,
     correlation: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
@@ -145,17 +145,17 @@ def solve_size(
             Correlation coefficient under the null hypothesis.
         correlation (float):
             Correlation coefficient under the alternative hypothesis.
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\rho_1 \\neq \\rho_0$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Power of the test.
         bias_adj (bool, optional):
@@ -177,7 +177,7 @@ def solve_correlation(
     *,
     null_correlation: float,
     size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
@@ -191,17 +191,17 @@ def solve_correlation(
             Correlation coefficient under the null hypothesis.
         size (int):
             Sample size.
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\rho_1 \\neq \\rho_0$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Power of the test.
         bias_adj (bool, optional):
@@ -231,7 +231,7 @@ def solve_null_correlation(
     *,
     correlation: float,
     size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     bias_adj: bool = False,
@@ -245,17 +245,17 @@ def solve_null_correlation(
             Correlation coefficient under the alternative hypothesis.
         size (int):
             Sample size.
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\rho_1 \\neq \\rho_0$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\rho_1 > \\rho_0$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\rho_1 < \\rho_0$
         alpha (float, optional):
             Two-sided significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'less'` or `'greater'`, provide the one-sided significance level.
         power (float, optional):
             Power of the test.
         bias_adj (bool, optional):

@@ -11,7 +11,7 @@ def _distance_chisq(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -31,11 +31,11 @@ def _distance_chisq(
             L = diff - z * sd
             U = diff + z * sd
             distance = min(U, 1) - max(L, -1)
-        case "lower one-sided":
+        case "lower":
             z = norm.ppf(1 - alpha)
             L = diff - z * sd
             distance = diff - max(L, -1)
-        case "upper one-sided":
+        case "upper":
             z = norm.ppf(1 - alpha)
             U = diff + z * sd
             distance = min(U, 1) - diff
@@ -49,7 +49,7 @@ def _distance_chisq_cc(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -70,11 +70,11 @@ def _distance_chisq_cc(
             L = diff - z * sd - c
             U = diff + z * sd + c
             distance = min(U, 1) - max(L, -1)
-        case "lower one-sided":
+        case "lower":
             z = norm.ppf(1 - alpha)
             L = diff - z * sd - c
             distance = diff - max(L, -1)
-        case "upper one-sided":
+        case "upper":
             z = norm.ppf(1 - alpha)
             U = diff + z * sd + c
             distance = min(U, 1) - diff
@@ -88,7 +88,7 @@ def _distance_newcombe_wilson(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -128,7 +128,7 @@ def _distance_newcombe_wilson(
                 + sqrt((U_1 - treatment_proportion) ** 2 + (reference_proportion - L_2) ** 2)
             )
             distance = U - L
-        case "lower one-sided":
+        case "lower":
             z = norm.ppf(1 - alpha)
 
             # calculate the wilson interval of the treatment proportion
@@ -153,7 +153,7 @@ def _distance_newcombe_wilson(
             )
             # U = 1
             distance = diff - L
-        case "upper one-sided":
+        case "upper":
             z = norm.ppf(1 - alpha)
 
             # calculate the wilson interval of the treatment proportion
@@ -188,7 +188,7 @@ def _distance_newcombe_wilson_cc(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -232,7 +232,7 @@ def _distance_newcombe_wilson_cc(
                 + sqrt((U_1 - treatment_proportion) ** 2 + (reference_proportion - L_2) ** 2)
             )
             distance = U - L
-        case "lower one-sided":
+        case "lower":
             z = norm.ppf(1 - alpha)
 
             # calculate the wilson interval of the treatment proportion
@@ -261,7 +261,7 @@ def _distance_newcombe_wilson_cc(
             )
             # U = 1
             distance = diff - L
-        case "upper one-sided":
+        case "upper":
             z = norm.ppf(1 - alpha)
 
             # calculate the wilson interval of the treatment proportion
@@ -300,7 +300,7 @@ def _distance_farrington_manning(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -342,11 +342,11 @@ def _distance_farrington_manning(
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha / 2), -1 + eps, diff)
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha / 2), diff, 1 - eps)
             distance = U - L
-        case "lower one-sided":
+        case "lower":
             # z = norm.ppf(1 - alpha)
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha), -1 + eps, diff)
             distance = diff - L
-        case "upper one-sided":
+        case "upper":
             # z = norm.ppf(1 - alpha)
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
@@ -360,7 +360,7 @@ def _distance_miettinen_nurminen(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """
     Calculate the confidence interval width or the distance from the proportion difference to the confidence bound
@@ -402,11 +402,11 @@ def _distance_miettinen_nurminen(
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha / 2), -1 + eps, diff)
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha / 2), diff, 1 - eps)
             distance = U - L
-        case "lower one-sided":
+        case "lower":
             # z = norm.ppf(1 - alpha)
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha), -1 + eps, diff)
             distance = diff - L
-        case "upper one-sided":
+        case "upper":
             # z = norm.ppf(1 - alpha)
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
@@ -420,7 +420,7 @@ def _distance(
     treatment_size: float,
     reference_size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    interval_type: Literal["two-sided", "lower", "upper"],
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ],
@@ -466,7 +466,7 @@ def solve_distance(
     treatment_size: int,
     reference_size: int,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ] = "chisq",
@@ -485,12 +485,12 @@ def solve_distance(
             Sample size in the reference group ($n_2$). Must be greater than 0.
         conf_level (float, optional):
             Confidence level.
-        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'lower one-sided'`: Lower one-sided confidence interval.
-            - `'upper one-sided'`: Upper one-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
             Method to calculate the confidence interval.
 
@@ -520,7 +520,7 @@ def solve_size(
     distance: float,
     ratio: float = 1,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ] = "chisq",
@@ -536,19 +536,19 @@ def solve_size(
         distance (float):
             Confidence interval width or the distance from the proportion difference to the confidence bound.
 
-            - If `interval_type='two-sided'`, provide confidence interval width.
-            - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
-            - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
+            - If `interval_type` = `'two-sided'`, provide confidence interval width.
+            - If `interval_type` = `'lower'`, provide the distance from the proportion difference to the lower one-side confidence bound.
+            - If `interval_type` = `'upper'`, provide the distance from the proportion difference to the upper one-side confidence bound.
         ratio (float, optional):
             Ratio of the sample size in the treatment group to the sample size in the reference group ($k = n_1 / n_2$).
         conf_level (float, optional):
             Confidence level.
-        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'lower one-sided'`: Lower one-sided confidence interval.
-            - `'upper one-sided'`: Upper one-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
             Method to calculate the confidence interval.
 
@@ -611,7 +611,7 @@ def solve_treatment_proportion(
     reference_size: int,
     distance: float,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ] = "chisq",
@@ -629,17 +629,17 @@ def solve_treatment_proportion(
         distance (float):
             Confidence interval width or the distance from the proportion difference to the confidence bound.
 
-            - If `interval_type='two-sided'`, provide confidence interval width.
-            - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
-            - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
+            - If `interval_type` = `'two-sided'`, provide confidence interval width.
+            - If `interval_type` = `'lower'`, provide the distance from the proportion difference to the lower one-side confidence bound.
+            - If `interval_type` = `'upper'`, provide the distance from the proportion difference to the upper one-side confidence bound.
         conf_level (float, optional):
             Confidence level.
-        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'lower one-sided'`: Lower one-sided confidence interval.
-            - `'upper one-sided'`: Upper one-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
             Method to calculate the confidence interval.
 
@@ -692,7 +692,7 @@ def solve_reference_proportion(
     reference_size: int,
     distance: float,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     method: Literal[
         "chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"
     ] = "chisq",
@@ -710,17 +710,17 @@ def solve_reference_proportion(
         distance (float):
             Confidence interval width or the distance from the proportion difference to the confidence bound.
 
-            - If `interval_type='two-sided'`, provide confidence interval width.
-            - If `interval_type='lower one-sided'`, provide the distance from the proportion difference to the lower one-side confidence bound.
-            - If `interval_type='upper one-sided'`, provide the distance from the proportion difference to the upper one-side confidence bound.
+            - If `interval_type` = `'two-sided'`, provide confidence interval width.
+            - If `interval_type` = `'lower'`, provide the distance from the proportion difference to the lower one-side confidence bound.
+            - If `interval_type` = `'upper'`, provide the distance from the proportion difference to the upper one-side confidence bound.
         conf_level (float, optional):
             Confidence level.
-        interval_type (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'lower one-sided'`: Lower one-sided confidence interval.
-            - `'upper one-sided'`: Upper one-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         method (Literal["chisq", "chisq_cc", "newcombe_wilson", "newcombe_wilson_cc", "farrington_manning", "miettinen_nurminen"], optional):
             Method to calculate the confidence interval.
 

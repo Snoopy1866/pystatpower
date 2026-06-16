@@ -12,7 +12,7 @@ def _power_p0(
     proportion: float,
     margin: float,
     size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a one-sample proportion superiority test, using $p_0$ to calculate variance."""
@@ -20,19 +20,19 @@ def _power_p0(
     proportion_sup = null_proportion + margin
 
     match alternative:
-        case "lower":
-            power = 1 - norm.cdf(
-                (
-                    norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
-                    + (proportion - proportion_sup) * sqrt(size)
-                )
-                / sqrt(proportion * (1 - proportion))
-            )
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(
                 (
                     norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
                     - (proportion - proportion_sup) * sqrt(size)
+                )
+                / sqrt(proportion * (1 - proportion))
+            )
+        case "less":
+            power = 1 - norm.cdf(
+                (
+                    norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
+                    + (proportion - proportion_sup) * sqrt(size)
                 )
                 / sqrt(proportion * (1 - proportion))
             )
@@ -45,7 +45,7 @@ def _power_p0_cc(
     proportion: float,
     margin: float,
     size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a one-sample proportion superiority test with continuity correction, using $p_0$ to calculate variance."""
@@ -60,19 +60,19 @@ def _power_p0_cc(
         c = 1 / (2 * size)
 
     match alternative:
-        case "lower":
-            power = 1 - norm.cdf(
-                (
-                    norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
-                    + (proportion - proportion_sup + c) * sqrt(size)
-                )
-                / sqrt(proportion * (1 - proportion))
-            )
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(
                 (
                     norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
                     - (proportion - proportion_sup + c) * sqrt(size)
+                )
+                / sqrt(proportion * (1 - proportion))
+            )
+        case "less":
+            power = 1 - norm.cdf(
+                (
+                    norm.ppf(1 - alpha) * sqrt(proportion_sup * (1 - proportion_sup))
+                    + (proportion - proportion_sup + c) * sqrt(size)
                 )
                 / sqrt(proportion * (1 - proportion))
             )
@@ -85,7 +85,7 @@ def _power_phat(
     proportion: float,
     margin: float,
     size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a one-sample proportion superiority test, using $\\hat{p}$ to calculate variance."""
@@ -93,13 +93,13 @@ def _power_phat(
     proportion_sup = null_proportion + margin
 
     match alternative:
-        case "lower":
-            power = 1 - norm.cdf(
-                norm.ppf(1 - alpha) + (proportion - proportion_sup) * sqrt(size) / sqrt(proportion * (1 - proportion))
-            )
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(
                 norm.ppf(1 - alpha) - (proportion - proportion_sup) * sqrt(size) / sqrt(proportion * (1 - proportion))
+            )
+        case "less":
+            power = 1 - norm.cdf(
+                norm.ppf(1 - alpha) + (proportion - proportion_sup) * sqrt(size) / sqrt(proportion * (1 - proportion))
             )
 
     return float(power)
@@ -110,7 +110,7 @@ def _power_phat_cc(
     proportion: float,
     margin: float,
     size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a one-sample proportion superiority test with continuity correction, using $\\hat{p}$ to calculate variance."""
@@ -125,15 +125,15 @@ def _power_phat_cc(
         c = 1 / (2 * size)
 
     match alternative:
-        case "lower":
-            power = 1 - norm.cdf(
-                norm.ppf(1 - alpha)
-                + (proportion - proportion_sup + c) * sqrt(size) / sqrt(proportion * (1 - proportion))
-            )
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(
                 norm.ppf(1 - alpha)
                 - (proportion - proportion_sup + c) * sqrt(size) / sqrt(proportion * (1 - proportion))
+            )
+        case "less":
+            power = 1 - norm.cdf(
+                norm.ppf(1 - alpha)
+                + (proportion - proportion_sup + c) * sqrt(size) / sqrt(proportion * (1 - proportion))
             )
 
     return float(power)
@@ -144,7 +144,7 @@ def _power(
     proportion: float,
     margin: float,
     size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
     phat: bool,
     continuity_correction: bool,
@@ -170,7 +170,7 @@ def solve_power(
     proportion: float,
     margin: float,
     size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     phat: bool = True,
     continuity_correction: bool = False,
@@ -190,11 +190,11 @@ def solve_power(
             - If `alternative` is `upper`, a positive value must be specified.
         size (int):
             Sample size.
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis:
 
-            - `'lower'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
-            - `'upper'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'greater'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'less'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
         alpha (float, optional):
             One-sided significance level.
         phat (bool, optional):
@@ -214,7 +214,7 @@ def solve_size(
     null_proportion: float,
     proportion: float,
     margin: float,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
     phat: bool = True,
@@ -231,13 +231,13 @@ def solve_size(
         margin (float):
             superiority margin ($\\delta$).
 
-            - If `alternative` is `lower`, a negative value must be specified.
-            - If `alternative` is `upper`, a positive value must be specified.
+            - If `alternative` is `greater`, a positive value must be specified.
+            - If `alternative` is `less`, a negative value must be specified.
         alternative (Literal["lower", "upper"], optional):
             Type of the alternative hypothesis:
 
-            - `'lower'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
-            - `'upper'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'greater'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'less'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -264,7 +264,7 @@ def solve_null_proportion(
     proportion: float,
     margin: float,
     size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
     phat: bool = True,
@@ -279,15 +279,15 @@ def solve_null_proportion(
         margin (float):
             superiority margin ($\\delta$).
 
-            - If `alternative` is `lower`, a negative value must be specified.
-            - If `alternative` is `upper`, a positive value must be specified.
+            - If `alternative` is `greater`, a positive value must be specified.
+            - If `alternative` is `less`, a negative value must be specified.
         size (int):
             Sample size.
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis:
 
-            - `'lower'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
-            - `'upper'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'greater'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'less'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -318,10 +318,10 @@ def solve_null_proportion(
         )
 
     match alternative:
-        case "lower":
-            null_proportion = brentq(func, max(proportion - margin, -margin), 0.999999)
-        case "upper":
+        case "greater":
             null_proportion = brentq(func, 0.000001, min(proportion - margin, 1 - margin))
+        case "less":
+            null_proportion = brentq(func, max(proportion - margin, -margin), 0.999999)
 
     return float(null_proportion)
 
@@ -331,7 +331,7 @@ def solve_proportion(
     null_proportion: float,
     margin: float,
     size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
     phat: bool = True,
@@ -346,15 +346,15 @@ def solve_proportion(
         margin (float):
             superiority margin ($\\delta$).
 
-            - If `alternative` is `lower`, a negative value must be specified.
-            - If `alternative` is `upper`, a positive value must be specified.
+            - If `alternative` is `greater`, a positive value must be specified.
+            - If `alternative` is `less`, a negative value must be specified.
         size (int):
             Sample size.
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis:
 
-            - `'lower'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
-            - `'upper'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'greater'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'less'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -385,10 +385,10 @@ def solve_proportion(
         )
 
     match alternative:
-        case "lower":
-            proportion = brentq(func, 0.000001, null_proportion + margin)
-        case "upper":
+        case "greater":
             proportion = brentq(func, null_proportion + margin, 0.999999)
+        case "less":
+            proportion = brentq(func, 0.000001, null_proportion + margin)
 
     return float(proportion)
 
@@ -398,7 +398,7 @@ def solve_margin(
     null_proportion: float,
     proportion: float,
     size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
     phat: bool = True,
@@ -414,11 +414,11 @@ def solve_margin(
             Proportion under the alternative hypothesis ($p$).
         size (int):
             Sample size.
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis:
 
-            - `'lower'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
-            - `'upper'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'greater'`: Upper one-tailed test ($p - p_0 > \\delta$), usually used when higher proportions are better.
+            - `'less'`: Lower one-tailed test ($p - p_0 < \\delta$), usually used when higher proportions are worse.
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -453,9 +453,9 @@ def solve_margin(
         margin = 0
     else:
         match alternative:
-            case "lower":
-                margin = brentq(func, proportion - null_proportion, 0)
-            case "upper":
+            case "greater":
                 margin = brentq(func, 0, proportion - null_proportion)
+            case "less":
+                margin = brentq(func, proportion - null_proportion, 0)
 
     return float(margin)

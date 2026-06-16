@@ -12,7 +12,7 @@ from tests.models import BaseTestCase
 class TestCase(BaseTestCase):
     null_correlation: float
     correlation: float
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"]
+    alternative: Literal["two-sided", "greater", "less"]
     size: int
     alpha: float
     power: float
@@ -34,8 +34,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="upper one-sided", alpha = 0.05, power = 0.80, bias_adj = False
-        TestCase(null_correlation=0.70, correlation=correlation, alternative="upper one-sided", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater", alpha = 0.05, power = 0.80, bias_adj = False
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
         for correlation, size, actual_power in [
             (0.80, 119, 0.8013),
             (0.81, 95, 0.8013),
@@ -46,8 +46,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="lower one-sided", alpha = 0.05, power = 0.80, bias_adj = False
-        TestCase(null_correlation=0.70, correlation=correlation, alternative="lower one-sided", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less", alpha = 0.05, power = 0.80, bias_adj = False
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
         for correlation, size, actual_power in [
             (0.50, 65, 0.8048),
             (0.51, 70, 0.8018),
@@ -70,8 +70,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="upper one-sided", alpha = 0.05, power = 0.80, bias_adj = True
-        TestCase(null_correlation=0.70, correlation=correlation, alternative="upper one-sided", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater", alpha = 0.05, power = 0.80, bias_adj = True
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
         for correlation, size, actual_power in [
             (0.80, 119, 0.8026),
             (0.81, 95, 0.8029),
@@ -82,8 +82,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="lower one-sided", alpha = 0.05, power = 0.80, bias_adj = True
-        TestCase(null_correlation=0.70, correlation=correlation, alternative="lower one-sided", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less", alpha = 0.05, power = 0.80, bias_adj = True
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
         for correlation, size, actual_power in [
             (0.50, 64, 0.8027),
             (0.51, 70, 0.8049),

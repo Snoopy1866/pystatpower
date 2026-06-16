@@ -17,7 +17,7 @@ class TestCase(BaseTestCase):
     mean: float
     std: float
     size: int
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"]
+    alternative: Literal["two-sided", "less", "greater"]
     alpha: float
     power: float
     actual_power: float
@@ -26,8 +26,8 @@ class TestCase(BaseTestCase):
 
 case_group = (
     [
-        # Regular Test Cases: null_mean = 30 to 40 by 1, mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "z"
-        TestCase(null_mean=null_mean, mean=20, std=20, size=size, alternative="lower one-sided", alpha=0.05, power=0.80, actual_power=actual_power, method="z")
+        # Regular Test Cases: null_mean = 30 to 40 by 1, mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "less", method = "z"
+        TestCase(null_mean=null_mean, mean=20, std=20, size=size, alternative="less", alpha=0.05, power=0.80, actual_power=actual_power, method="z")
         for null_mean, size, actual_power in [
             (30, 25, 0.8038),
             (31, 21, 0.8094),
@@ -43,8 +43,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_mean = 20, mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "z"
-        TestCase(null_mean=20, mean=mean, std=20, size=size, alternative="upper one-sided", alpha=0.05, power=0.80, actual_power=actual_power, method="z")
+        # Regular Test Cases: null_mean = 20, mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "greater", method = "z"
+        TestCase(null_mean=20, mean=mean, std=20, size=size, alternative="greater", alpha=0.05, power=0.80, actual_power=actual_power, method="z")
         for mean, size, actual_power in [
             (30, 25, 0.8038),
             (31, 21, 0.8094),
@@ -77,8 +77,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_mean = 30 to 40 by 1, mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "t"
-        TestCase(null_mean=null_mean, mean=20, std=20, size=size, alternative="lower one-sided", alpha=0.05, power=0.80, actual_power=actual_power, method="t")
+        # Regular Test Cases: null_mean = 30 to 40 by 1, mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "less", method = "t"
+        TestCase(null_mean=null_mean, mean=20, std=20, size=size, alternative="less", alpha=0.05, power=0.80, actual_power=actual_power, method="t")
         for null_mean, size, actual_power in [
             (30, 27, 0.8118),
             (31, 22, 0.8024),
@@ -94,8 +94,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: null_mean = 20, mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "t"
-        TestCase(null_mean=20, mean=mean, std=20, size=size, alternative="upper one-sided", alpha=0.05, power=0.80, actual_power=actual_power, method="t")
+        # Regular Test Cases: null_mean = 20, mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "greater", method = "t"
+        TestCase(null_mean=20, mean=mean, std=20, size=size, alternative="greater", alpha=0.05, power=0.80, actual_power=actual_power, method="t")
         for mean, size, actual_power in [
             (30, 27, 0.8118),
             (31, 22, 0.8024),
@@ -142,7 +142,7 @@ def test_solve_power(case: TestCase) -> None:
 
 def test_solve_size(case: TestCase) -> None:
     if case in [
-        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
+        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="greater", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
         TestCase(null_mean=20, mean=30, std=20, size=34, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8078, method="t"),
         TestCase(null_mean=20, mean=31, std=20, size=28, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8011, method="t"),
         TestCase(null_mean=20, mean=32, std=20, size=24, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8037, method="t"),
@@ -161,9 +161,9 @@ def test_solve_size(case: TestCase) -> None:
 
 def test_solve_null_mean(case: TestCase) -> None:
     if case in [
-        TestCase(null_mean=20, mean=33, std=20, size=17, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.821, method="t"),
-        TestCase(null_mean=20, mean=34, std=20, size=15, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8243, method="t"),
-        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
+        TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.821, method="t"),
+        TestCase(null_mean=20, mean=34, std=20, size=15, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8243, method="t"),
+        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="greater", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
         TestCase(null_mean=20, mean=30, std=20, size=34, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8078, method="t"),
         TestCase(null_mean=20, mean=31, std=20, size=28, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8011, method="t"),
         TestCase(null_mean=20, mean=32, std=20, size=24, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8037, method="t"),
@@ -190,9 +190,9 @@ def test_solve_null_mean(case: TestCase) -> None:
 
 def test_solve_mean(case: TestCase) -> None:
     if case in [
-        TestCase(null_mean=20, mean=33, std=20, size=17, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.821, method="t"),
-        TestCase(null_mean=20, mean=34, std=20, size=15, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8243, method="t"),
-        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
+        TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.821, method="t"),
+        TestCase(null_mean=20, mean=34, std=20, size=15, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8243, method="t"),
+        TestCase(null_mean=20, mean=40, std=20, size=8, alternative="greater", alpha=0.05, power=0.8, actual_power=0.815, method="t"),
         TestCase(null_mean=20, mean=30, std=20, size=34, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8078, method="t"),
         TestCase(null_mean=20, mean=31, std=20, size=28, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8011, method="t"),
         TestCase(null_mean=20, mean=32, std=20, size=24, alternative="two-sided", alpha=0.05, power=0.8, actual_power=0.8037, method="t"),
