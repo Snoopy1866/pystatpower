@@ -1,16 +1,16 @@
 # Validation Software: PASS 15
 # Module: Confidence Intervals for the Difference Between Two Means
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     treatment_std: float
     reference_std: float
     treatment_size: int
@@ -95,16 +95,6 @@ case_group_unequal_var = [
 ]
 
 case_group = case_group_equal_var + case_group_unequal_var
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_distance(case: TestCase) -> None:

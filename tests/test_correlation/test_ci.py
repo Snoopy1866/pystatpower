@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
@@ -6,11 +6,11 @@ import pytest
 from pystatpower.correlation.ci import solve_distance, solve_size, solve_correlation
 from pystatpower.exceptions import SolutionNotFoundError
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     correlation: float
     size: int
     conf_level: float
@@ -181,14 +181,9 @@ case_group_bias_adj = (
 case_group = case_group_not_bias_adj + case_group_bias_adj
 
 
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
+# @pytest.fixture(params=case_group, ids=generate_id)
+# def case(request: pytest.FixtureRequest) -> TestCase:
+#     return request.param
 
 
 def test_solve_distance(case: TestCase) -> None:

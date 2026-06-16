@@ -1,7 +1,7 @@
 # Validation Software: PASS 15
 # Module: Superiority by a Margin Tests for One Mean (One-Sample or Paired T-Test)
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
@@ -9,11 +9,11 @@ import sys
 
 from pystatpower.mean.single.superiority import solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     null_mean: float | None
     mean: float | None
     diff: float | None
@@ -79,16 +79,6 @@ case_group = [
         (0.0, 16, 0.800555580),
     ]
 ]
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_power(case: TestCase) -> None:

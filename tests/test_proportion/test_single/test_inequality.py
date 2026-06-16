@@ -1,18 +1,16 @@
 # Validation Software: PASS 15
 # Module: Tests for One Proportions
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
-
-import pytest
 
 from pystatpower.proportion.single.inequality import solve_power, solve_size, solve_null_proportion, solve_proportion
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     null_proportion: float
     proportion: float
     size: int
@@ -320,16 +318,6 @@ case_group = (
         TestCase(null_proportion=0.98, proportion=0.90, size=43, alternative="two-sided", alpha=0.05, power=0.80, phat=False, continuity_correction=False, actual_power=0.8017),
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_size_solve_power(case: TestCase) -> None:

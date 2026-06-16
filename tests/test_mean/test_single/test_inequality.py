@@ -1,18 +1,18 @@
 # Validation Software: PASS 15
 # Module: Tests for One Mean
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
 
 from pystatpower.mean.single.inequality import solve_power, solve_size, solve_null_mean, solve_mean
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     null_mean: float
     mean: float
     std: float
@@ -128,16 +128,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_power(case: TestCase) -> None:
