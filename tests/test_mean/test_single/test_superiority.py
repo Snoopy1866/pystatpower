@@ -230,13 +230,9 @@ def test_solve_null_mean(case: TestCase) -> None:
     ]:
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
-    if (
-        case
-        in [
-            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
-        ]
-        and sys.platform == "darwin"
-    ):
+    if case in [
+        TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+    ] and sys.platform in ("linux", "darwin"):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert round(
@@ -264,13 +260,9 @@ def test_solve_mean(case: TestCase) -> None:
     ]:
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
-    if (
-        case
-        in [
-            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
-        ]
-        and sys.platform == "darwin"
-    ):
+    if case in [
+        TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+    ] and sys.platform in ("linux", "darwin"):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert round(
@@ -342,13 +334,9 @@ def test_solve_margin(case: TestCase) -> None:
     ]:
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
-    if (
-        case
-        in [
-            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
-        ]
-        and sys.platform == "darwin"
-    ):
+    if case in [
+        TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+    ] and sys.platform in ("linux", "darwin"):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert (

@@ -13,7 +13,7 @@ def _power(
     alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a non-inferiority test of one sample mean."""
+    """Calculate the statistical power for a superiority test of one sample mean."""
 
     df = size - 1
     nc = (diff - margin) * sqrt(size) / std
@@ -38,7 +38,7 @@ def solve_power(
     alpha: float = 0.025,
 ) -> float:
     """
-    Calculate the statistical power for a non-inferiority test of one sample mean.
+    Calculate the statistical power for a superiority test of one sample mean.
 
     Args:
         null_mean (float, optional):
@@ -54,13 +54,13 @@ def solve_power(
 
             If both `null_mean` and `mean` are not provided, `diff` must be provided.
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
         std (float):
             Standard deviation.
-        size (float):
+        size (int):
             Sample size.
         alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
@@ -97,7 +97,7 @@ def solve_size(
     power: float = 0.80,
 ) -> int:
     """
-    Estimate the required sample size for a non-inferiority test of one sample mean.
+    Estimate the required sample size for a superiority test of one sample mean.
 
     Args:
         null_mean (float, optional):
@@ -113,7 +113,7 @@ def solve_size(
 
             If both `null_mean` and `mean` are not provided, `diff` must be provided.
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
@@ -157,11 +157,11 @@ def solve_diff(
     power: float = 0.80,
 ) -> float:
     """
-    Estimete the required difference between the mean under the null hypothesis and the mean under the alternative hypothesis for a non-inferiority test of one sample mean.
+    Estimete the required difference between the mean under the null hypothesis and the mean under the alternative hypothesis for a superiority test of one sample mean.
 
     Args:
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
@@ -204,13 +204,13 @@ def solve_null_mean(
     power: float = 0.80,
 ) -> float:
     """
-    Estimate the required mean under the null hypothesis for a non-inferiority test of one sample mean.
+    Estimate the required mean under the null hypothesis for a superiority test of one sample mean.
 
     Args:
         mean (float):
             Mean under the alternative hypothesis.
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
@@ -253,13 +253,13 @@ def solve_mean(
     power: float = 0.80,
 ) -> float:
     """
-    Estimate the required mean under the alternative hypothesis for a non-inferiority test of one sample mean.
+    Estimate the required mean under the alternative hypothesis for a superiority test of one sample mean.
 
     Args:
         null_mean (float):
             Mean under the null hypothesis.
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
@@ -303,7 +303,7 @@ def solve_std(
     power: float = 0.80,
 ) -> float:
     """
-    Estimate the required standard deviation for a non-inferiority test of one sample mean.
+    Estimate the required standard deviation for a superiority test of one sample mean.
 
     Args:
         null_mean (float, optional):
@@ -319,7 +319,7 @@ def solve_std(
 
             If both `null_mean` and `mean` are not provided, `diff` must be provided.
         margin (float):
-            Non-inferiority margin.
+            Superiority margin.
 
             - If `alternative` is `'greater'`, `margin` must be a positive value.
             - If `alternative` is `'less'`, `margin` must be a negative value.
@@ -365,7 +365,7 @@ def solve_margin(
     power: float = 0.80,
 ) -> float:
     """
-    Estimate the required margin for a non-inferiority test of one sample mean.
+    Estimate the required margin for a superiority test of one sample mean.
 
     Args:
         null_mean (float, optional):
@@ -395,7 +395,7 @@ def solve_margin(
             Desired statistical power.
 
     Returns:
-        float: The required non-inferiority margin.
+        float: The required superiority margin.
 
     Raises:
         ValueError: If `diff` is None, and `null_mean` or `mean` is None.
