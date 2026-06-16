@@ -1,18 +1,16 @@
 # Validation Software: PASS 15
 # Module: Non-Inferiority Tests for One Proportion
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
-
-import pytest
 
 from pystatpower.proportion.single.noninferiority import solve_power, solve_size, solve_null_proportion, solve_proportion, solve_margin
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     null_proportion: float
     proportion: float
     margin: float
@@ -203,16 +201,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_size_solve_power(case: TestCase) -> None:

@@ -1,17 +1,15 @@
 # Validation Software: PASS 15
 # Module: Superiority by a Margin for the Difference Between Two Proportions
 
-from dataclasses import dataclass, asdict
-
-import pytest
+from dataclasses import dataclass
 
 from pystatpower.proportion.independent.superiority import solve_power, solve_size, solve_treatment_proportion, solve_reference_proportion, solve_margin
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     treatment_proportion: float
     reference_proportion: float
     margin: float
@@ -318,16 +316,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_size_solve_power(case: TestCase) -> None:

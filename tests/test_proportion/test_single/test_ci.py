@@ -1,18 +1,18 @@
 # Validation Software: PASS 15
 # Module: Confidence Interval for One Proportion
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
 
 from pystatpower.proportion.single.ci import solve_distance, solve_proportion, solve_size
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     proportion: float
     size: int
     distance: float
@@ -281,16 +281,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_size(case: TestCase) -> None:

@@ -5,18 +5,18 @@
 #         Two-Sample T-Tests Assuming Unequal Variance
 # Two-Sample T-Test Assuming Unequal Variance with Degree of Freedom Adjusted by Welch's Methos is not available in PASS.
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
 
 from pystatpower.mean.independent.inequality import solve_power, solve_size, solve_diff, solve_treatment_mean, solve_reference_mean, solve_treatment_std, solve_reference_std
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     treatment_mean: float | None
     reference_mean: float | None
     diff: float | None
@@ -660,16 +660,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_power(case: TestCase) -> None:

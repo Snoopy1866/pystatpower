@@ -1,18 +1,16 @@
 # Validation Software: PASS 15
 # Module: Confidence Intervals for One Mean
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
-
-import pytest
 
 from pystatpower.mean.single.ci import solve_half_width, solve_size, solve_std
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     target_half_width: float
     actual_half_width: float
     std: float
@@ -88,16 +86,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_half_width(case: TestCase) -> None:

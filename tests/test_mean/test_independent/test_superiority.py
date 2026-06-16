@@ -1,18 +1,18 @@
 # Validation Software: PASS 15
 # Module: Superiority by a Margin Tests for the Difference Between Two Means
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 import pytest
 
 from pystatpower.mean.independent.superiority import solve_power, solve_size, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
 
+from tests.models import BaseTestCase
+
 
 @dataclass
-class TestCase:
-    __test__ = False
-
+class TestCase(BaseTestCase):
     treatment_mean: float
     reference_mean: float
     margin: float
@@ -345,16 +345,6 @@ case_group = (
         ]
     ]
 )
-
-
-def get_id(case: TestCase) -> str:
-    parts = [f"{k}={v}" for k, v in asdict(case).items() if v is not None]
-    return ", ".join(parts)
-
-
-@pytest.fixture(params=case_group, ids=get_id)
-def case(request: pytest.FixtureRequest) -> TestCase:
-    return request.param
 
 
 def test_solve_power(case: TestCase) -> None:
