@@ -25,7 +25,11 @@ repos:
       - id: forbid-submodules
       - id: name-tests-test
         args: [--pytest-test-first]
-        exclude: ^tests/smoke_test\.py$
+        exclude: |
+          (?x)^(
+              tests/smoke_test\.py|
+              tests/models\.py
+          )$
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
