@@ -1,23 +1,110 @@
+changed-files-labels-limit: 5
+max-files-changed: 20
+
+enhancement:
+  - head-branch: "^feat"
+
+bug:
+  - head-branch: "^fix"
+
 documentation:
+  - head-branch: "^docs"
   - changed-files:
       - any-glob-to-any-file:
+          - "**/*.md"
           - "docs/**"
-          - "README.md"
-          - "README-*.md"
+          - "zensical.toml"
 
 tests:
+  - head-branch: "^test"
   - changed-files:
       - any-glob-to-any-file:
           - "tests/**"
 
 ci:
+  - head-branch: "ci"
   - changed-files:
       - any-glob-to-any-file:
           - ".github/**"
-          - ".pre-commit-config.yaml"
-          - ".readthedocs.yaml"
-          - "codedev.yml"
-build:
+
+chore:
   - changed-files:
       - any-glob-to-any-file:
-          - "src/pystatpower/__init__.py"
+          - "pyproject.toml"
+          - "codedev.yml"
+          - "bandit.yml"
+          - "renovate.json"
+          - ".pre-commit-config.yaml"
+          - ".readthedocs.yaml"
+
+mean.single.ci:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/single/ci.py"
+
+mean.single.inequality:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/single/inequality.py"
+
+mean.single.noninferiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/single/noninferiority.py"
+
+mean.independent.ci:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/independent/ci.py"
+
+mean.independent.inequality:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/independent/inequality.py"
+
+mean.independent.noninferiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/independent/noninferiority.py"
+
+mean.independent.superiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/mean/independent/superiority.py"
+
+proportion.single.ci:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/single/ci.py"
+
+proportion.single.inequality:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/single/inequality.py"
+
+proportion.single.noninferiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/single/noninferiority.py"
+
+proportion.single.superiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/single/superiority.py"
+
+proportion.single.equivalence:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/single/equivalence.py"
+
+proportion.independent.ci:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/independent/ci.py"
+
+proportion.independent.inequality:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/independent/inequality.py"
+
+proportion.independent.noninferiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/independent/noninferiority.py"
+
+proportion.independent.superiority:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/proportion/independent/superiority.py"
+
+correlation.ci:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/correlation/ci.py"
+
+correlation.inequality:
+  - changed-files:
+      - any-glob-to-any-file: "src/pystatpower/correlation/inequality.py"
