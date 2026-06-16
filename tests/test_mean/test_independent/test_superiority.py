@@ -20,7 +20,7 @@ class TestCase(BaseTestCase):
     reference_std: float
     treatment_size: int
     reference_size: int
-    alternative: Literal["lower", "upper"]
+    alternative: Literal["greater", "less"]
     alpha: float
     power: float
     actual_power: float
@@ -40,7 +40,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower",
+            alternative="less",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -71,7 +71,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper",
+            alternative="greater",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -102,7 +102,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower",
+            alternative="less",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -134,7 +134,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper",
+            alternative="greater",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -166,7 +166,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower",
+            alternative="less",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -198,7 +198,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper",
+            alternative="greater",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -230,7 +230,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower",
+            alternative="less",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -261,7 +261,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper",
+            alternative="greater",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -292,7 +292,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower",
+            alternative="less",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -323,7 +323,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper",
+            alternative="greater",
             alpha=0.025,
             power=0.80,
             actual_power=actual_power,
@@ -372,9 +372,9 @@ def test_solve_power(case: TestCase) -> None:
 
 def test_solve_power_error() -> None:
     with pytest.raises(ValueError):
-        solve_power(diff=0, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+        solve_power(diff=0, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="greater", method="z", equal_var=True)
     with pytest.raises(ValueError):
-        solve_power(treatment_mean=10, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z")
+        solve_power(treatment_mean=10, margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="greater", method="z")
 
 
 def test_solve_size(case: TestCase) -> None:
@@ -386,7 +386,7 @@ def test_solve_size(case: TestCase) -> None:
         reference_std=40,
         treatment_size=67,
         reference_size=134,
-        alternative="upper",
+        alternative="greater",
         alpha=0.025,
         power=0.8,
         actual_power=0.8051,
@@ -415,15 +415,7 @@ def test_solve_size(case: TestCase) -> None:
 
 def test_solve_size_error() -> None:
     with pytest.raises(ValueError):
-        solve_size(
-            diff=0,
-            margin=10,
-            treatment_std=10,
-            reference_std=20,
-            ratio=1,
-            method="z",
-            equal_var=True,
-        )
+        solve_size(diff=0, margin=10, treatment_std=10, reference_std=20, ratio=1, alternative="greater", method="z", equal_var=True)
 
 
 def test_solve_diff(case: TestCase) -> None:
@@ -435,7 +427,7 @@ def test_solve_diff(case: TestCase) -> None:
         reference_std=40,
         treatment_size=98,
         reference_size=196,
-        alternative="upper",
+        alternative="greater",
         alpha=0.025,
         power=0.8,
         actual_power=0.8037,
@@ -450,7 +442,7 @@ def test_solve_diff(case: TestCase) -> None:
         reference_std=40,
         treatment_size=98,
         reference_size=196,
-        alternative="upper",
+        alternative="greater",
         alpha=0.025,
         power=0.8,
         actual_power=0.8038,
@@ -484,7 +476,7 @@ def test_solve_diff(case: TestCase) -> None:
 
 def test_solve_diff_error() -> None:
     with pytest.raises(ValueError):
-        solve_diff(margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+        solve_diff(margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="greater", method="z", equal_var=True)
 
 
 def test_solve_margin(case: TestCase) -> None:
@@ -512,7 +504,7 @@ def test_solve_margin(case: TestCase) -> None:
 
 def test_solve_margin_error() -> None:
     with pytest.raises(ValueError):
-        solve_margin(diff=0, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, method="z", equal_var=True)
+        solve_margin(diff=0, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="greater", method="z", equal_var=True)
 
 
 def test_solve_treatment_std(case: TestCase) -> None:
@@ -540,9 +532,9 @@ def test_solve_treatment_std(case: TestCase) -> None:
 
 def test_solve_treatment_std_error() -> None:
     with pytest.raises(ValueError):
-        solve_treatment_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+        solve_treatment_std(diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False)
     with pytest.raises(ValueError):
-        solve_treatment_std(treatment_mean=10, margin=10, treatment_size=20, reference_size=20)
+        solve_treatment_std(treatment_mean=10, margin=10, treatment_size=20, alternative="greater", reference_size=20)
 
 
 def test_solve_reference_std(case: TestCase) -> None:
@@ -570,6 +562,6 @@ def test_solve_reference_std(case: TestCase) -> None:
 
 def test_solve_reference_std_error() -> None:
     with pytest.raises(ValueError):
-        solve_reference_std(diff=0, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+        solve_reference_std(diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False)
     with pytest.raises(ValueError):
-        solve_reference_std(treatment_mean=10, margin=10, treatment_size=20, reference_size=20, equal_var=False)
+        solve_reference_std(treatment_mean=10, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False)

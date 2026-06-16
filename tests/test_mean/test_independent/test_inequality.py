@@ -24,7 +24,7 @@ class TestCase(BaseTestCase):
     reference_std: float
     treatment_size: int
     reference_size: int
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"]
+    alternative: Literal["two-sided", "less", "greater"]
     alpha: float
     power: float
     actual_power: float
@@ -39,7 +39,7 @@ class TestCase(BaseTestCase):
 
 case_group = (
     [
-        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "z", equal_var = True
+        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "less", method = "z", equal_var = True
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -48,7 +48,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower one-sided",
+            alternative="less",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -80,7 +80,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "z", equal_var = True
+        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "greater", method = "z", equal_var = True
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -89,7 +89,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper one-sided",
+            alternative="greater",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -162,7 +162,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "z", equal_var = False
+        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "less", method = "z", equal_var = False
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -171,7 +171,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower one-sided",
+            alternative="less",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -203,7 +203,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "z", equal_var = False
+        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "greater", method = "z", equal_var = False
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -212,7 +212,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper one-sided",
+            alternative="greater",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -285,7 +285,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "t", equal_var = True
+        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "less", method = "t", equal_var = True
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -294,7 +294,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower one-sided",
+            alternative="less",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -326,7 +326,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "t", equal_var = True
+        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 40, Ratio = 2, alpha = 0.05, power = 0.80, alternative = "greater", method = "t", equal_var = True
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -335,7 +335,7 @@ case_group = (
             reference_std=40,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper one-sided",
+            alternative="greater",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -408,7 +408,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "t", equal_var = False, df_adjust="satterthwaite",
+        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "less", method = "t", equal_var = False, df_adjust="satterthwaite",
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -417,7 +417,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower one-sided",
+            alternative="less",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -450,7 +450,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "t", equal_var = False, df_adjust="satterthwaite",
+        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "greater", method = "t", equal_var = False, df_adjust="satterthwaite",
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -459,7 +459,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper one-sided",
+            alternative="greater",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -534,7 +534,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "lower one-sided", method = "t", equal_var = False, df_adjust="welch",
+        # Regular Test Cases: treatment_mean = 0 to 20 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "less", method = "t", equal_var = False, df_adjust="welch",
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -543,7 +543,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="lower one-sided",
+            alternative="less",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -576,7 +576,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "upper one-sided", method = "t", equal_var = False, df_adjust="welch",
+        # Regular Test Cases: treatment_mean = 40 to 60 by 1, reference_mean = 30, treatment_std = 40, reference_std = 30, Ratio = 0.5, alpha = 0.05, power = 0.80, alternative = "greater", method = "t", equal_var = False, df_adjust="welch",
         TestCase(
             treatment_mean=treatment_mean,
             reference_mean=reference_mean,
@@ -585,7 +585,7 @@ case_group = (
             reference_std=30,
             treatment_size=treatment_size,
             reference_size=reference_size,
-            alternative="upper one-sided",
+            alternative="greater",
             alpha=0.05,
             power=0.80,
             actual_power=actual_power,
@@ -696,15 +696,9 @@ def test_solve_size(case: TestCase) -> None:
     if (
         case
         in [
-            TestCase(
-                treatment_mean=42, reference_mean=30, diff=12, treatment_std=40, reference_std=40, treatment_size=207, reference_size=104, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8011, method="t", equal_var=True
-            ),
-            TestCase(
-                treatment_mean=47, reference_mean=30, diff=17, treatment_std=40, reference_std=40, treatment_size=103, reference_size=52, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8002, method="t", equal_var=True
-            ),
-            TestCase(
-                treatment_mean=54, reference_mean=30, diff=24, treatment_std=40, reference_std=40, treatment_size=53, reference_size=27, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.808, method="t", equal_var=True
-            ),
+            TestCase(treatment_mean=42, reference_mean=30, diff=12, treatment_std=40, reference_std=40, treatment_size=207, reference_size=104, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8011, method="t", equal_var=True),
+            TestCase(treatment_mean=47, reference_mean=30, diff=17, treatment_std=40, reference_std=40, treatment_size=103, reference_size=52, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8002, method="t", equal_var=True),
+            TestCase(treatment_mean=54, reference_mean=30, diff=24, treatment_std=40, reference_std=40, treatment_size=53, reference_size=27, alternative="greater", alpha=0.05, power=0.8, actual_power=0.808, method="t", equal_var=True),
             TestCase(
                 treatment_mean=52,
                 reference_mean=30,
@@ -713,7 +707,7 @@ def test_solve_size(case: TestCase) -> None:
                 reference_std=30,
                 treatment_size=28,
                 reference_size=56,
-                alternative="upper one-sided",
+                alternative="greater",
                 alpha=0.05,
                 power=0.8,
                 actual_power=0.812,
@@ -746,10 +740,7 @@ def test_solve_size(case: TestCase) -> None:
 
 def test_solve_diff(case: TestCase) -> None:
     if (
-        case
-        == TestCase(
-            treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True
-        )
+        case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
@@ -779,10 +770,7 @@ def test_solve_diff(case: TestCase) -> None:
 
 def test_solve_treatment_mean(case: TestCase) -> None:
     if (
-        case
-        == TestCase(
-            treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True
-        )
+        case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
@@ -813,10 +801,7 @@ def test_solve_treatment_mean(case: TestCase) -> None:
 
 def test_solve_reference_mean(case: TestCase) -> None:
     if (
-        case
-        == TestCase(
-            treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="upper one-sided", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True
-        )
+        case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):

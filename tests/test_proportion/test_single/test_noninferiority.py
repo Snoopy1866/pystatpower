@@ -15,7 +15,7 @@ class TestCase(BaseTestCase):
     proportion: float
     margin: float
     size: int
-    alternative: Literal["lower", "upper"]
+    alternative: Literal["greater", "less"]
     alpha: float
     power: float
     phat: bool
@@ -25,8 +25,8 @@ class TestCase(BaseTestCase):
 
 case_group = (
     [
-        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "upper", alpha = 0.025, power = 0.80, phat = False, continuity_correction = False
-        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="upper", alpha=0.025, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "greater", alpha = 0.025, power = 0.80, phat = False, continuity_correction = False
+        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="greater", alpha=0.025, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.80, 563, 0.8007),
             (0.81, 387, 0.8011),
@@ -47,8 +47,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "lower", alpha = 0.025, power = 0.80, phat = False, continuity_correction = False
-        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="lower", alpha=0.025, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "less", alpha = 0.025, power = 0.80, phat = False, continuity_correction = False
+        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="less", alpha=0.025, power=0.80, phat=False, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 31, 0.8071),
             (0.66, 34, 0.8055),
@@ -69,8 +69,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "upper", alpha = 0.025, power = 0.80, phat = False, continuity_correction = True
-        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="upper", alpha=0.025, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "greater", alpha = 0.025, power = 0.80, phat = False, continuity_correction = True
+        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="greater", alpha=0.025, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.80, 582, 0.8001),
             (0.81, 403, 0.8005),
@@ -91,8 +91,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "lower", alpha = 0.025, power = 0.80, phat = False, continuity_correction = True
-        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="lower", alpha=0.025, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "less", alpha = 0.025, power = 0.80, phat = False, continuity_correction = True
+        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="less", alpha=0.025, power=0.80, phat=False, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 36, 0.8089),
             (0.66, 39, 0.8047),
@@ -113,8 +113,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "upper", alpha = 0.025, power = 0.80, phat = True, continuity_correction = False
-        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="upper", alpha=0.025, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "greater", alpha = 0.025, power = 0.80, phat = True, continuity_correction = False
+        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="greater", alpha=0.025, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.80, 503, 0.8005),
             (0.81, 336, 0.8005),
@@ -135,8 +135,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "lower", alpha = 0.025, power = 0.80, phat = True, continuity_correction = False
-        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="lower", alpha=0.025, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "less", alpha = 0.025, power = 0.80, phat = True, continuity_correction = False
+        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="less", alpha=0.025, power=0.80, phat=True, continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 45, 0.8031),
             (0.66, 49, 0.8017),
@@ -157,8 +157,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "upper", alpha = 0.025, power = 0.80, phat = True, continuity_correction = True
-        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="upper", alpha=0.025, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.85, proportion = 0.80 to 0.95 by 0.01, margin = -0.10, alternative = "greater", alpha = 0.025, power = 0.80, phat = True, continuity_correction = True
+        TestCase(null_proportion=0.85, proportion=proportion, margin=-0.10, size=size, alternative="greater", alpha=0.025, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.80, 523, 0.8007),
             (0.81, 353, 0.8012),
@@ -179,8 +179,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "lower", alpha = 0.025, power = 0.80, phat = True, continuity_correction = True
-        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="lower", alpha=0.025, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
+        # Regular Cases: null_proportion = 0.75, proportion = 0.65 to 0.80 by 0.01, margin = 0.10, alternative = "less", alpha = 0.025, power = 0.80, phat = True, continuity_correction = True
+        TestCase(null_proportion=0.75, proportion=proportion, margin=0.10, size=size, alternative="less", alpha=0.025, power=0.80, phat=True, continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 50, 0.8042),
             (0.66, 54, 0.8006),

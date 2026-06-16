@@ -8,7 +8,10 @@ from ..exceptions import SolutionNotFoundError
 
 
 def _distance_not_adjusted(
-    correlation: float, size: float, conf_level: float, interval_type: Literal["two-sided", "upper", "lower"]
+    correlation: float,
+    size: float,
+    conf_level: float,
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound"""
 
@@ -20,20 +23,23 @@ def _distance_not_adjusted(
             L = zr - norm.ppf(1 - alpha / 2) / sqrt(size - 3)
             U = zr + norm.ppf(1 - alpha / 2) / sqrt(size - 3)
             distance = tanh(U) - tanh(L)
-        case "upper":
-            # L = -1
-            U = zr + norm.ppf(1 - alpha) / sqrt(size - 3)
-            distance = tanh(U) - correlation
         case "lower":
             L = zr - norm.ppf(1 - alpha) / sqrt(size - 3)
             # U = 1
             distance = correlation - tanh(L)
+        case "upper":
+            # L = -1
+            U = zr + norm.ppf(1 - alpha) / sqrt(size - 3)
+            distance = tanh(U) - correlation
 
     return float(distance)
 
 
 def _distance_adjusted(
-    correlation: float, size: float, conf_level: float, interval_type: Literal["two-sided", "upper", "lower"]
+    correlation: float,
+    size: float,
+    conf_level: float,
+    interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound, adjusted for bias."""
 
@@ -46,14 +52,14 @@ def _distance_adjusted(
             L = zr - bias - norm.ppf(1 - alpha / 2) / sqrt(size - 3)
             U = zr - bias + norm.ppf(1 - alpha / 2) / sqrt(size - 3)
             distance = tanh(U) - tanh(L)
-        case "upper":
-            # L = -1
-            U = zr - bias + norm.ppf(1 - alpha) / sqrt(size - 3)
-            distance = tanh(U) - correlation
         case "lower":
             L = zr - bias - norm.ppf(1 - alpha) / sqrt(size - 3)
             # U = 1
             distance = correlation - tanh(L)
+        case "upper":
+            # L = -1
+            U = zr - bias + norm.ppf(1 - alpha) / sqrt(size - 3)
+            distance = tanh(U) - correlation
 
     return float(distance)
 
@@ -62,7 +68,7 @@ def _distance(
     correlation: float,
     size: float,
     conf_level: float,
-    interval_type: Literal["two-sided", "upper", "lower"],
+    interval_type: Literal["two-sided", "lower", "upper"],
     bias_adj: bool,
 ) -> float:
     """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound"""
@@ -78,7 +84,7 @@ def solve_distance(
     correlation: float,
     size: int,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "upper", "lower"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     bias_adj: bool = False,
 ) -> float:
     """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound
@@ -90,12 +96,12 @@ def solve_distance(
             Sample size $n$.
         conf_level (float, optional):
             Condidence level.
-        interval_type (Literal["two-sided", "upper", "lower"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'upper'`: Upper one-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         bias_adj (bool, optional):
             Whether to adjust for bias.
 
@@ -111,7 +117,7 @@ def solve_size(
     correlation: float,
     distance: float,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "upper", "lower"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     bias_adj: bool = False,
 ) -> int:
     """Estimate the required sample size, given the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound
@@ -122,17 +128,17 @@ def solve_size(
         distance (float):
             Correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound.
 
-            - If `interval_type = 'two-sided'`, specify the correlation coefficient two-sided confidence interval width.
-            - If `interval_type = 'upper'`, specify the distance from the correlation coefficient to the upper one-sided confidence bound.
-            - If `interval_type = 'lower'`, specify the distance from the correlation coefficient to the lower one-sided confidence bound.
+            - If `interval_type` = `'two-sided'`, specify the correlation coefficient two-sided confidence interval width.
+            - If `interval_type` = `'lower'`, specify the distance from the correlation coefficient to the lower one-sided confidence bound.
+            - If `interval_type` = `'upper'`, specify the distance from the correlation coefficient to the upper one-sided confidence bound.
         conf_level (float, optional):
             Condidence level.
-        interval_type (Literal["two-sided", "upper", "lower"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'upper'`: Upper one-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         bias_adj (bool, optional):
             Whether to adjust for bias.
 
@@ -158,7 +164,7 @@ def solve_correlation(
     distance: float,
     size: int,
     conf_level: float = 0.95,
-    interval_type: Literal["two-sided", "upper", "lower"] = "two-sided",
+    interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     bias_adj: bool = False,
 ) -> float | tuple[float, float]:
     """Estimate the required correlation coefficient, given the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound
@@ -167,19 +173,19 @@ def solve_correlation(
         distance (float):
             Correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound.
 
-            - If `interval_type = 'two-sided'`, specify the correlation coefficient two-sided confidence interval width.
-            - If `interval_type = 'upper'`, specify the distance from the correlation coefficient to the upper one-sided confidence bound.
-            - If `interval_type = 'lower'`, specify the distance from the correlation coefficient to the lower one-sided confidence bound.
+            - If `interval_type` = `'two-sided'`, specify the correlation coefficient two-sided confidence interval width.
+            - If `interval_type` = `'lower'`, specify the distance from the correlation coefficient to the lower one-sided confidence bound.
+            - If `interval_type` = `'upper'`, specify the distance from the correlation coefficient to the upper one-sided confidence bound.
         size (int):
             Sample size $n$.
         conf_level (float, optional):
             Condidence level.
-        interval_type (Literal["two-sided", "upper", "lower"], optional):
+        interval_type (Literal["two-sided", "lower", "upper"], optional):
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
-            - `'upper'`: Upper one-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         bias_adj (bool, optional):
             Whether to adjust for bias.
 

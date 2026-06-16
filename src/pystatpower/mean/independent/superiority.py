@@ -13,17 +13,17 @@ def _power_z_equal_var(
     std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with equal variance."""
 
     se = std * sqrt(1 / treatment_size + 1 / reference_size)
     match alternative:
-        case "lower":
-            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
+        case "less":
+            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
     return float(power)
 
 
@@ -34,17 +34,17 @@ def _power_z_unequal_var(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using z-test with unequal variance."""
 
     se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
     match alternative:
-        case "lower":
-            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
-        case "upper":
+        case "greater":
             power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
+        case "less":
+            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
     return float(power)
 
 
@@ -55,7 +55,7 @@ def _power_t_equal_var(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for a superiority test of two independent means using t-test with equal variance."""
@@ -65,10 +65,10 @@ def _power_t_equal_var(
     nc = (diff - margin) / sqrt(var_c * (1 / treatment_size + 1 / reference_size))
 
     match alternative:
-        case "lower":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return power
 
@@ -80,7 +80,7 @@ def _power_unequal_var_welch(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """
@@ -95,10 +95,10 @@ def _power_unequal_var_welch(
     nc = (diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
 
     match alternative:
-        case "lower":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return power
 
@@ -110,7 +110,7 @@ def _power_unequal_var_satterthwaite(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
     """
@@ -125,10 +125,10 @@ def _power_unequal_var_satterthwaite(
     nc = (diff - margin) / sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
 
     match alternative:
-        case "lower":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return power
 
@@ -143,7 +143,7 @@ def _power(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["lower", "upper"],
+    alternative: Literal["greater", "less"],
     alpha: float,
     method: Literal["z", "t"],
     equal_var: bool,
@@ -209,7 +209,7 @@ def solve_power(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -244,11 +244,11 @@ def solve_power(
             Sample size in the treatment group ($n_1$).
         reference_size (int):
             Sample size in the reference group ($n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $\\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $\\mu_1 - \\mu_2 > \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $\\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $\\mu_1 - \\mu_2 < \\delta$
         alpha (float, optional):
             One-sided significance level.
         method (Literal["z", "t"], optional):
@@ -311,7 +311,7 @@ def solve_size(
     treatment_std: float,
     reference_std: float,
     ratio: float = 1,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -345,11 +345,11 @@ def solve_size(
             Standard deviation in the reference group ($\\sigma_2$).
         ratio (float, optional):
             Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $\\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $\\mu_1 - \\mu_2 > \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $\\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $\\mu_1 - \\mu_2 < \\delta$
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -450,7 +450,7 @@ def solve_diff(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -474,11 +474,11 @@ def solve_diff(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -548,9 +548,9 @@ def solve_diff(
     DIFF_SEARCH_MAX = 1000000
 
     match alternative:
-        case "lower":
+        case "less":
             return float(brentq(func, DIFF_SEARCH_MIN, margin))
-        case "upper":
+        case "greater":
             return float(brentq(func, margin, DIFF_SEARCH_MAX))
 
 
@@ -561,7 +561,7 @@ def solve_margin(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -582,11 +582,11 @@ def solve_margin(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -653,10 +653,10 @@ def solve_margin(
         )
 
     match alternative:
-        case "lower":
-            return brentq(func, diff, 0.000001)
-        case "upper":
+        case "greater":
             return brentq(func, -0.000001, diff)
+        case "less":
+            return brentq(func, diff, 0.000001)
 
 
 def solve_treatment_std(
@@ -667,7 +667,7 @@ def solve_treatment_std(
     margin: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -700,11 +700,11 @@ def solve_treatment_std(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):
@@ -802,7 +802,7 @@ def solve_reference_std(
     margin: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["lower", "upper"] = "upper",
+    alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -835,11 +835,11 @@ def solve_reference_std(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["lower", "upper"], optional):
+        alternative (Literal["greater", "less"]):
             Type of the alternative hypothesis.
 
-            - `'lower'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
-            - `'upper'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'greater'`: upper-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 > \\delta$
+            - `'less'`: lower-tailed alternative hypothesis: $H_1: \\mu_1 - \\mu_2 < \\delta$
         alpha (float, optional):
             One-sided significance level.
         power (float, optional):

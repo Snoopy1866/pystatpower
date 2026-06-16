@@ -14,7 +14,7 @@ class TestCase(BaseTestCase):
     correlation: float
     size: int
     conf_level: float
-    interval_type: Literal["two-sided", "upper", "lower"]
+    interval_type: Literal["two-sided", "lower", "upper"]
     bias_adj: bool
     distance: float
     actual_distance: float
@@ -179,11 +179,6 @@ case_group_bias_adj = (
 
 
 case_group = case_group_not_bias_adj + case_group_bias_adj
-
-
-# @pytest.fixture(params=case_group, ids=generate_id)
-# def case(request: pytest.FixtureRequest) -> TestCase:
-#     return request.param
 
 
 def test_solve_distance(case: TestCase) -> None:

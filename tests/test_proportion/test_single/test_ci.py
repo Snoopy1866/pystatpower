@@ -18,7 +18,7 @@ class TestCase(BaseTestCase):
     distance: float
     actual_distance: float
     conf_level: float
-    interval_type: Literal["two-sided", "lower one-sided", "upper one-sided"]
+    interval_type: Literal["two-sided", "lower", "upper"]
     method: Literal["clopper-pearson", "wald", "wilson"]
     continuity_correction: bool | None = None
 
@@ -41,8 +41,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "clopper-pearson"
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="clopper-pearson")
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "clopper-pearson"
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="clopper-pearson")
         for size, distance, actual_distance in [
             (2704, 0.01, 0.0100),
             (742, 0.02, 0.0200),
@@ -57,8 +57,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "clopper-pearson"
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="clopper-pearson")
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "clopper-pearson"
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="clopper-pearson")
         for size, distance, actual_distance in [
             (4298, 0.01, 0.0100),
             (1065, 0.02, 0.0200),
@@ -89,8 +89,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "wald", continuity_correction = False
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="wald", continuity_correction=False)
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = False
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wald", continuity_correction=False)
         for size, distance, actual_distance in [
             (2435, 0.01, 0.0100),
             (609, 0.02, 0.0200),
@@ -105,8 +105,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "wald", continuity_correction = False
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="wald", continuity_correction=False)
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = False
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wald", continuity_correction=False)
         for size, distance, actual_distance in [
             (4329, 0.01, 0.0100),
             (1083, 0.02, 0.0200),
@@ -137,8 +137,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "wald", continuity_correction = True
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="wald", continuity_correction=True)
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = True
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wald", continuity_correction=True)
         for size, distance, actual_distance in [
             (2535, 0.01, 0.0100),
             (658, 0.02, 0.0200),
@@ -153,8 +153,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "wald", continuity_correction = True
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="wald", continuity_correction=True)
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = True
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wald", continuity_correction=True)
         for size, distance, actual_distance in [
             (4429, 0.01, 0.0100),
             (1132, 0.02, 0.0200),
@@ -185,8 +185,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "wilson", continuity_correction = False
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="wilson", continuity_correction=False)
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = False
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wilson", continuity_correction=False)
         for size, distance, actual_distance in [
             (2649, 0.01, 0.0100),
             (715, 0.02, 0.0200),
@@ -201,8 +201,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "wilson", continuity_correction = False
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="wilson", continuity_correction=False)
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = False
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wilson", continuity_correction=False)
         for size, distance, actual_distance in [
             (4164, 0.01, 0.0100),
             (999, 0.02, 0.0200),
@@ -233,8 +233,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower one-sided", method = "wilson", continuity_correction = True
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower one-sided", method="wilson", continuity_correction=True)
+        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = True
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (2748, 0.01, 0.0100),
             (764, 0.02, 0.0200),
@@ -249,8 +249,8 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper one-sided", method = "wilson", continuity_correction = True
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper one-sided", method="wilson", continuity_correction=True)
+        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = True
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (4264, 0.01, 0.0100),
             (1048, 0.02, 0.0200),

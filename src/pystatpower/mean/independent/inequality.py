@@ -12,7 +12,7 @@ def _power_z_equal_var(
     std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using z-test with equal variance."""
@@ -21,10 +21,10 @@ def _power_z_equal_var(
     match alternative:
         case "two-sided":
             power = 1 - norm.cdf(norm.ppf(1 - alpha / 2) - (diff) / se) + norm.cdf(norm.ppf(alpha / 2) - (diff) / se)
-        case "lower one-sided":
-            power = norm.cdf(norm.ppf(alpha) - (diff) / se)
-        case "upper one-sided":
+        case "greater":
             power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff) / se)
+        case "less":
+            power = norm.cdf(norm.ppf(alpha) - (diff) / se)
 
     return float(power)
 
@@ -35,7 +35,7 @@ def _power_z_unequal_var(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using z-test with unequal variance."""
@@ -44,10 +44,10 @@ def _power_z_unequal_var(
     match alternative:
         case "two-sided":
             power = 1 - norm.cdf(norm.ppf(1 - alpha / 2) - (diff) / se) + norm.cdf(norm.ppf(alpha / 2) - (diff) / se)
-        case "lower one-sided":
-            power = norm.cdf(norm.ppf(alpha) - (diff) / se)
-        case "upper one-sided":
+        case "greater":
             power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff) / se)
+        case "less":
+            power = norm.cdf(norm.ppf(alpha) - (diff) / se)
 
     return float(power)
 
@@ -58,7 +58,7 @@ def _power_t_equal_var(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for an inequality test of two independent means using t-test with equal variance."""
@@ -70,10 +70,10 @@ def _power_t_equal_var(
     match alternative:
         case "two-sided":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
-        case "lower one-sided":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper one-sided":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return float(power)
 
@@ -84,7 +84,7 @@ def _power_unequal_var_satterthwaite(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """
@@ -101,10 +101,10 @@ def _power_unequal_var_satterthwaite(
     match alternative:
         case "two-sided":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
-        case "lower one-sided":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper one-sided":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return float(power)
 
@@ -115,7 +115,7 @@ def _power_unequal_var_welch(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """
@@ -132,10 +132,10 @@ def _power_unequal_var_welch(
     match alternative:
         case "two-sided":
             power = 1 - nct.cdf(t.ppf(1 - alpha / 2, df), df, nc) + nct.cdf(t.ppf(alpha / 2, df), df, nc)
-        case "lower one-sided":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-        case "upper one-sided":
+        case "greater":
             power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
+        case "less":
+            power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return float(power)
 
@@ -149,7 +149,7 @@ def _power(
     reference_std: float,
     treatment_size: float,
     reference_size: float,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"],
+    alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
     method: Literal["z", "t"],
     equal_var: bool,
@@ -203,7 +203,7 @@ def solve_power(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     method: Literal["z", "t"] = "t",
     equal_var: bool = False,
@@ -233,17 +233,17 @@ def solve_power(
             Sample size in the treatment group ($n_1$).
         reference_size (int):
             Sample size in the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
 
         method (Literal["z", "t"], optional):
             The distribution used for the test.
@@ -300,7 +300,7 @@ def solve_size(
     treatment_std: float,
     reference_std: float,
     ratio: float = 1,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -329,17 +329,17 @@ def solve_size(
             Standard deviation in the reference group ($\\sigma_2$).
         ratio (float, optional):
             Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -432,7 +432,7 @@ def solve_diff(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     search_direction: Literal["above", "below"] = "above",
     alpha: float = 0.05,
     power: float = 0.80,
@@ -452,12 +452,12 @@ def solve_diff(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
         search_direction (Literal["above", "below"], optional):
             Specify whether to search for the mean difference above or below 0.
 
@@ -467,7 +467,7 @@ def solve_diff(
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -534,7 +534,7 @@ def solve_treatment_mean(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     search_direction: Literal["above", "below"] = "above",
     alpha: float = 0.05,
     power: float = 0.80,
@@ -556,12 +556,12 @@ def solve_treatment_mean(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
         search_direction (Literal["above", "below"], optional):
             Specify whether to search for the treatment mean above or below the reference mean.
 
@@ -571,7 +571,7 @@ def solve_treatment_mean(
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -638,7 +638,7 @@ def solve_reference_mean(
     reference_std: float,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     search_direction: Literal["above", "below"] = "below",
     alpha: float = 0.05,
     power: float = 0.80,
@@ -660,12 +660,12 @@ def solve_reference_mean(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
         search_direction (Literal["above", "below"], optional):
             Specify whether to search for the reference mean above or below the treatment mean.
 
@@ -675,7 +675,7 @@ def solve_reference_mean(
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -742,7 +742,7 @@ def solve_treatment_std(
     diff: float | None = None,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -770,17 +770,17 @@ def solve_treatment_std(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
@@ -872,7 +872,7 @@ def solve_reference_std(
     diff: float | None = None,
     treatment_size: int,
     reference_size: int,
-    alternative: Literal["two-sided", "lower one-sided", "upper one-sided"] = "two-sided",
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.80,
     method: Literal["z", "t"] = "t",
@@ -900,17 +900,17 @@ def solve_reference_std(
             Sample size for the treatment group ($n_1$).
         reference_size (int):
             Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "lower one-sided", "upper one-sided"], optional):
+        alternative (Literal["two-sided", "greater", "less"], optional):
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
-            - `'lower one-sided'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-            - `'upper one-sided'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
+            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
+            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
         alpha (float, optional):
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'lower one-sided'` or `'upper one-sided'`, provide the one-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
         power (float, optional):
             Desired statistical power.
         method (Literal["z", "t"], optional):
