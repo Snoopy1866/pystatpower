@@ -5,7 +5,6 @@ from dataclasses import dataclass, asdict
 from typing import Literal
 
 import pytest
-import sys
 
 from pystatpower.mean.single.superiority import solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
 
