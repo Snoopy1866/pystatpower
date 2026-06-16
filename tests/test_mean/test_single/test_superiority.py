@@ -5,6 +5,7 @@ from dataclasses import dataclass, asdict
 from typing import Literal
 
 import pytest
+import sys
 
 from pystatpower.mean.single.superiority import solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
 
@@ -145,14 +146,14 @@ def test_solve_size(case: TestCase) -> None:
     ]:
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
-    # if (
-    #     case
-    #     in [
-    #         TestCase(null_mean=None, mean=None, diff=0, margin=-10.0, std=10, size=10, alternative="greater", alpha=0.025, power=0.80, actual_power=0.803096209),
-    #     ]
-    #     and sys.platform == "darwin"
-    # ):
-    #     pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+    if (
+        case
+        in [
+            TestCase(null_mean=None, mean=None, diff=15, margin=0.0, std=15, size=10, alternative="greater", alpha=0.025, power=0.80, actual_power=0.803096209),
+        ]
+        and sys.platform == "darwin"
+    ):
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert (
         solve_size(
@@ -229,6 +230,15 @@ def test_solve_null_mean(case: TestCase) -> None:
     ]:
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
+    if (
+        case
+        in [
+            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+        ]
+        and sys.platform == "darwin"
+    ):
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
     assert round(
         solve_null_mean(
             mean=mean,
@@ -252,6 +262,15 @@ def test_solve_mean(case: TestCase) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.80, actual_power=0.804464986),
     ]:
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
+    if (
+        case
+        in [
+            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+        ]
+        and sys.platform == "darwin"
+    ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert round(
@@ -321,6 +340,15 @@ def test_solve_margin(case: TestCase) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.80, actual_power=0.804464986),
     ]:
+        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+
+    if (
+        case
+        in [
+            TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
+        ]
+        and sys.platform == "darwin"
+    ):
         pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
 
     assert (
