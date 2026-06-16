@@ -1,0 +1,52 @@
+name: PR Agent
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, review_requested]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  pr_agent_job:
+    if: ${{ github.event.sender.type != 'Bot' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+    name: Run pr agent on every pull request, respond to user comments
+    steps:
+      - name: PR Agent action step
+        id: pragent
+        uses: the-pr-agent/pr-agent@v0.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Model configuration
+          config.model: "deepseek/deepseek-v4-pro"
+          config.fallback_models: '["deepseek/deepseek-v4-flash"]'
+          deepseek.key: ${{ secrets.DEEPSEEK_KEY }}
+          config.custom_model_max_tokens: 64000
+          config.language: "zh-CN"
+
+          # Github Action configuration
+          github_action_config.auto_describe: "true"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_improve: "true"
+          github_action_config.pr_actions: '["opened", "reopened", "ready_for_review", "review_requested"]'
+
+          # /describe configuration
+          pr_description.publish_labels: "false"
+          pr_description.generate_ai_title: "false"
+
+          # /review configuration
+          pr_reviewer.extra_instructions: "Focus on Python best practices, type hints, and docstrings."
+          pr_reviewer.enable_review_labels_effort: "false"
+
+          # /improve configuration
+          pr_code_suggestions.commitable_code_suggestions: "true"
+          pr_code_suggestions.enable_chat_text: "true"
+
+          # /add_docs configuration
+          pr_add_docs.docs_style: "Google Style with Args, Returns, Attributes...etc"
+          pr_add_docs.extra_instructions: "Focus on documenting public methods"
