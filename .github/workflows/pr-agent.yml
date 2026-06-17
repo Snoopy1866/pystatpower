@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: PR Agent action step
         id: pragent
-        uses: the-pr-agent/pr-agent@v0.36.1
+        uses: the-pr-agent/pr-agent@e639d10a4df023b90668ec35796c2457c5f5db8d # v0.36.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
