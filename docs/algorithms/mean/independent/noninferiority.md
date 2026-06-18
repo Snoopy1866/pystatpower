@@ -22,6 +22,8 @@ $\delta$ 为非劣效界值，两样本均值分别用 $\hat{\mu}_1$ 和 $\hat{\
 
 以下推导过程在边界条件 $\mu_1 - \mu_2 = \delta$ 下进行。
 
+--8<-- [start:algorithm]
+
 ## *z* 检验 {#z-test}
 
 ### 假设两组方差相等 {#z-test-equal-var}
@@ -250,3 +252,5 @@ $$
     $$
     \text{Power} = P\left(t' < t_{\alpha}\right) = T\left(t_{\alpha, v'}; v', \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
     $$
+
+--8<-- [end:algorithm]
