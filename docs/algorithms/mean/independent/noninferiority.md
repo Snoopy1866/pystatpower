@@ -61,21 +61,11 @@ $$
     = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2 - \delta}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
     $$
 
-在 $H_1$ 成立时：
-
-若 $\delta < 0$，则 $\mu_1 - \mu_2 - \delta > 0$；
-
-若 $\delta > 0$，则 $\mu_1 - \mu_2 - \delta < 0$。
-
-$$
-\text{Power} = 1 - \Phi\left(z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\right)
-$$
-
 ??? note "样本量公式推导"
     根据标准正态分布分位数的定义：
 
     $$
-    z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} = z_\beta
+    z_{1-\alpha} \pm \frac{\mu_1 - \mu_2 - \delta}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} = z_\beta
     $$
 
     设 $n_1 = kn_2$，由上式可解出
@@ -124,21 +114,11 @@ $$
     = 1 - \Phi\left(z_{1-\alpha} + \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
     $$
 
-在 $H_1$ 成立时：
-
-若 $\delta < 0$，则 $\mu_1 - \mu_2 - \delta > 0$；
-
-若 $\delta > 0$，则 $\mu_1 - \mu_2 - \delta < 0$。
-
-$$
-\text{Power} = 1 - \Phi\left(z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}}\right)
-$$
-
 ??? note "样本量公式推导"
     根据标准正态分布分位数的定义：
 
     $$
-    z_{1-\alpha} - \frac{\left|\mu_1 - \mu_2 - \delta\right|}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = z_\beta
+    z_{1-\alpha} \pm \frac{\mu_1 - \mu_2 - \delta}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = z_\beta
     $$
 
     设 $n_1 = kn_2$，由上式可解出
