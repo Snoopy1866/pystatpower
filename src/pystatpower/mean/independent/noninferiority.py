@@ -13,9 +13,7 @@ def _verify_mean_and_get_diff(
 
     if diff is None:
         if treatment_mean is None or reference_mean is None:
-            raise ValueError(
-                "If 'diff' is not specified, both 'treatment_mean' and 'reference_mean' must be specified."
-            )
+            raise ValueError("When 'diff' is omitted, both 'treatment_mean' and 'reference_mean' must be provided.")
         diff = treatment_mean - reference_mean
 
     return diff
@@ -29,23 +27,32 @@ def _verify_std_and_get_std(
     equal_var: bool,
 ) -> float:
 
-    if dist == "z" and equal_var:
-        if std is None:
-            if treatment_std is None and reference_std is None:
-                raise ValueError(
-                    "If 'method' is 'z' and 'equal_var' is True, one of 'std', 'treatment_std', or 'reference_std' must be specified."
-                )
-            elif treatment_std is not None and reference_std is not None:
-                if treatment_std != reference_std:
+    if dist == "z":
+        if equal_var:
+            if std is None:
+                if treatment_std is None and reference_std is None:
                     raise ValueError(
-                        "If 'method' is 'z' and 'equal_var' is True without specifying 'std', 'treatment_std' and 'reference_std' must be equal if both are provided."
+                        "For 'z' test with equal variance, at least one of 'std', 'treatment_std', or 'reference_std' must be specified."
                     )
-                else:  # treatment_std == reference_std
+                elif treatment_std is not None and reference_std is not None:
+                    if treatment_std != reference_std:
+                        raise ValueError(
+                            "For 'z' test with equal variance, when 'std' is omitted and both 'treatment_std' and 'reference_std' are supplied, they must be equal."
+                        )
+                    else:  # treatment_std == reference_std
+                        std = treatment_std
+                elif treatment_std is None and reference_std is not None:
+                    std = reference_std
+                else:  # treatment_std is not None and reference_std is None:
                     std = treatment_std
-            elif treatment_std is None and reference_std is not None:
-                std = reference_std
-            elif treatment_std is not None and reference_std is None:
-                std = treatment_std
+        else:  # equal_var == False
+            if treatment_std is None or reference_std is None:
+                raise ValueError(
+                    "For z-test with unequal variance, both 'treatment_std' and 'reference_std' must be specified."
+                )
+    else:  # dist == "t"
+        if treatment_std is None or reference_std is None:
+            raise ValueError("For t-test, both 'treatment_std' and 'reference_std' must be specified.")
 
     return std
 
@@ -300,9 +307,9 @@ def solve_power(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
             Sample size for the treatment group.
@@ -329,7 +336,7 @@ def solve_power(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -339,8 +346,8 @@ def solve_power(
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -413,9 +420,9 @@ def solve_size(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         ratio:
             Ratio of sample size in the treatment and reference group.
@@ -443,7 +450,7 @@ def solve_size(
             - `True`: Variances are assumed equal.
             - `False`: Variances are assumed unequal.
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -453,8 +460,8 @@ def solve_size(
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -549,9 +556,9 @@ def solve_treatment_mean(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
             Sample size for the treatment group.
@@ -582,7 +589,7 @@ def solve_treatment_mean(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -591,8 +598,8 @@ def solve_treatment_mean(
         float: The required mean in the treatment group.
 
     Raises:
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
@@ -662,9 +669,9 @@ def solve_reference_mean(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
             Sample size for the treatment group.
@@ -695,7 +702,7 @@ def solve_reference_mean(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -704,8 +711,8 @@ def solve_reference_mean(
         float: The required mean in the reference group.
 
     Raises:
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
@@ -772,9 +779,9 @@ def solve_diff(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
             Sample size for the treatment group.
@@ -805,7 +812,7 @@ def solve_diff(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -814,8 +821,8 @@ def solve_diff(
         float: The required difference between the mean in treatment and reference groups.
 
     Raises:
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
@@ -888,9 +895,9 @@ def solve_margin(
         std:
             Standard deviation in both groups.
 
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `method` is `z` and `equal_var` is `True`.
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
 
-            If you specify `method` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
             Sample size for the treatment group.
@@ -916,7 +923,7 @@ def solve_margin(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -930,8 +937,8 @@ def solve_margin(
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `method` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
+        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -1039,7 +1046,7 @@ def solve_treatment_std(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
@@ -1213,7 +1220,7 @@ def solve_reference_std(
             - `False`: Variances are assumed unequal.
 
         approx_t_method:
-            Approximate t-test method. It is used when `method` is `'t'` and `equal_var` = `False`.
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
             - `'welch'`: Welch's approximate t-test (1947).
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).

@@ -367,6 +367,62 @@ case_group_t_unequal_var_satterthwaite = [
 case_group = case_group_z_equal_var + case_group_z_unequal_var + case_group_t_equal_var + case_group_t_unequal_var_welch + case_group_t_unequal_var_satterthwaite
 
 
+def test_verify_mean_and_get_diff() -> None:
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(diff=None, treatment_mean=None, reference_mean=None)
+
+    _verify_mean_and_get_diff(diff=None, treatment_mean=20, reference_mean=10)
+
+
+def test_verify_std_and_get_std() -> None:
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=None, dist="z", equal_var=True)
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=10, reference_std=20, dist="z", equal_var=True)
+
+    _verify_std_and_get_std(std=None, treatment_std=10, reference_std=None, dist="z", equal_var=True)
+    _verify_std_and_get_std(std=None, treatment_std=None, reference_std=20, dist="z", equal_var=True)
+
+    # dist = "z" and equal_var = False
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=None, dist="z", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=10, reference_std=None, dist="z", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=10, dist="z", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=10, treatment_std=None, reference_std=None, dist="z", equal_var=False)
+
+    # dist = "t" and equal_var = True
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=None, dist="t", equal_var=True)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=10, reference_std=None, dist="t", equal_var=True)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=10, dist="t", equal_var=True)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=10, treatment_std=None, reference_std=None, dist="t", equal_var=True)
+
+    # dist = "t" and equal_var = False
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=None, dist="t", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=10, reference_std=None, dist="t", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=None, treatment_std=None, reference_std=10, dist="t", equal_var=False)
+
+    with pytest.raises(ValueError):
+        _verify_std_and_get_std(std=10, treatment_std=None, reference_std=None, dist="t", equal_var=False)
+
+
 def test_solve_power(case: TestCase) -> None:
     assert round(
         solve_power(
@@ -386,20 +442,6 @@ def test_solve_power(case: TestCase) -> None:
         ),
         4,
     ) == round(case.actual_power, 4)
-
-
-def test_solve_power_error() -> None:
-    with pytest.raises(ValueError):
-        solve_power(treatment_mean=10, margin=10, treatment_std=20, reference_std=30, treatment_size=20, reference_size=20, alternative="less", dist="z")
-    with pytest.raises(ValueError):
-        solve_power(diff=0, margin=10, treatment_std=20, reference_std=30, treatment_size=20, reference_size=20, alternative="less", dist="z", equal_var=True)
-    with pytest.raises(ValueError):
-        solve_power(diff=0, margin=10, treatment_size=20, reference_size=20, alternative="less", dist="z", equal_var=True)
-
-
-def test_solve_power_not_error(case: TestCase) -> None:
-    solve_power(diff=0, margin=10, treatment_std=20, treatment_size=20, reference_size=20, alternative="less", dist="z", equal_var=True)
-    solve_power(diff=0, margin=10, reference_std=20, treatment_size=20, reference_size=20, alternative="less", dist="z", equal_var=True)
 
 
 def test_solve_size(case: TestCase) -> None:
@@ -489,11 +531,6 @@ def test_solve_size(case: TestCase) -> None:
         equal_var=case.equal_var,
         approx_t_method=case.approx_t_method,
     ) == (case.treatment_size, case.reference_size)
-
-
-def test_solve_size_error() -> None:
-    with pytest.raises(ValueError):
-        solve_size(diff=0, margin=10, treatment_std=30, reference_std=20, ratio=1, alternative="less", alpha=0.05, power=0.80, dist="z", equal_var=True)
 
 
 def test_solve_treatment_mean(case: TestCase) -> None:
@@ -692,11 +729,6 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_diff_error() -> None:
-    with pytest.raises(ValueError):
-        solve_diff(margin=10, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="less", dist="z", equal_var=True)
-
-
 def test_solve_margin(case: TestCase) -> None:
 
     if case in [
@@ -789,11 +821,6 @@ def test_solve_margin(case: TestCase) -> None:
         )
         == case.margin
     )
-
-
-def test_solve_margin_error() -> None:
-    with pytest.raises(ValueError):
-        solve_margin(diff=0, treatment_std=10, reference_std=20, treatment_size=20, reference_size=20, alternative="greater", dist="z", equal_var=True)
 
 
 def test_solve_treatment_std(case: TestCase) -> None:
