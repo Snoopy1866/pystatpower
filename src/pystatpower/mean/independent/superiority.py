@@ -56,8 +56,8 @@ def solve_power(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -76,8 +76,8 @@ def solve_power(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -169,8 +169,8 @@ def solve_size(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -187,8 +187,8 @@ def solve_size(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -309,8 +309,8 @@ def solve_treatment_mean(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -329,8 +329,8 @@ def solve_treatment_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -422,8 +422,8 @@ def solve_reference_mean(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -442,8 +442,8 @@ def solve_reference_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -532,8 +532,8 @@ def solve_diff(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -552,8 +552,8 @@ def solve_diff(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -668,8 +668,8 @@ def solve_margin(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -775,8 +775,8 @@ def solve_treatment_std(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         reference_std:
             Standard deviation in the reference group.
 
@@ -791,8 +791,8 @@ def solve_treatment_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
@@ -953,8 +953,8 @@ def solve_reference_std(
             Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `altarnative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `altarnative` is `less`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
 
@@ -965,8 +965,8 @@ def solve_reference_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
-            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta \\geqslant 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta \\leqslant 0$)
         alpha:
             Significance level.
 
