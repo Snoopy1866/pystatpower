@@ -6,18 +6,8 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.independent.noninferiority import (
-    _verify_mean_and_get_diff,
-    _verify_std_and_get_std,
-    solve_power,
-    solve_size,
-    solve_treatment_mean,
-    solve_reference_mean,
-    solve_diff,
-    solve_margin,
-    solve_treatment_std,
-    solve_reference_std,
-)
+from pystatpower.mean.independent._verify import _verify_mean_and_get_diff, _verify_std_and_get_std
+from pystatpower.mean.independent.noninferiority import solve_power, solve_size, solve_treatment_mean, solve_reference_mean, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
 
 from tests.models import BaseTestCase
 
