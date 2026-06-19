@@ -1,60 +1,10 @@
-from math import ceil, sqrt
+from math import ceil
 from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import nct, norm, t
 
-
-def _verify_mean_and_get_diff(
-    treatment_mean: float | None,
-    reference_mean: float | None,
-    diff: float | None,
-) -> float:
-
-    if diff is None:
-        if treatment_mean is None or reference_mean is None:
-            raise ValueError("When 'diff' is omitted, both 'treatment_mean' and 'reference_mean' must be provided.")
-        diff = treatment_mean - reference_mean
-
-    return diff
-
-
-def _verify_std_and_get_std(
-    treatment_std: float | None,
-    reference_std: float | None,
-    std: float | None,
-    dist: Literal["z", "t"],
-    equal_var: bool,
-) -> float:
-
-    if dist == "z":
-        if equal_var:
-            if std is None:
-                if treatment_std is None and reference_std is None:
-                    raise ValueError(
-                        "For 'z' test with equal variance, at least one of 'std', 'treatment_std', or 'reference_std' must be specified."
-                    )
-                elif treatment_std is not None and reference_std is not None:
-                    if treatment_std != reference_std:
-                        raise ValueError(
-                            "For 'z' test with equal variance, when 'std' is omitted and both 'treatment_std' and 'reference_std' are supplied, they must be equal."
-                        )
-                    else:  # treatment_std == reference_std
-                        std = treatment_std
-                elif treatment_std is None and reference_std is not None:
-                    std = reference_std
-                else:  # treatment_std is not None and reference_std is None:
-                    std = treatment_std
-        else:  # equal_var == False
-            if treatment_std is None or reference_std is None:
-                raise ValueError(
-                    "For z-test with unequal variance, both 'treatment_std' and 'reference_std' must be specified."
-                )
-    else:  # dist == "t"
-        if treatment_std is None or reference_std is None:
-            raise ValueError("For t-test, both 'treatment_std' and 'reference_std' must be specified.")
-
-    return std
+from ._power import _power
+from ._verify import _verify_mean_and_get_diff, _verify_std_and_get_std
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
@@ -65,198 +15,6 @@ def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
             return -abs(margin)
         case "less":
             return abs(margin)
-
-
-def _power_z_equal_var(
-    diff: float,
-    margin: float,
-    std: float,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a non-inferiority test of two independent means using z test with equal variance."""
-
-    se = std * sqrt(1 / treatment_size + 1 / reference_size)
-
-    match alternative:
-        case "greater":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
-        case "less":
-            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
-
-    return float(power)
-
-
-def _power_z_unequal_var(
-    diff: float,
-    margin: float,
-    treatment_std: float,
-    reference_std: float,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a non-inferiority test of two independent means using z test with unequal variance."""
-
-    se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
-
-    match alternative:
-        case "greater":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - (diff - margin) / se)
-        case "less":
-            power = norm.cdf(norm.ppf(alpha) - (diff - margin) / se)
-
-    return float(power)
-
-
-def _power_t_equal_var(
-    diff: float,
-    margin: float,
-    treatment_std: float,
-    reference_std: float,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a non-inferiority test of two independent means using t test with equal variance."""
-
-    df = treatment_size + reference_size - 2
-    se = sqrt(
-        ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2)
-        / df
-        * (1 / treatment_size + 1 / reference_size)
-    )
-    nc = (diff - margin) / se
-
-    match alternative:
-        case "greater":
-            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
-        case "less":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-
-    return power
-
-
-def _power_t_unequal_var_welch(
-    diff: float,
-    margin: float,
-    treatment_std: float,
-    reference_std: float,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-) -> float:
-    """
-    Calculate the statistical power for a non-inferiority test of two independent means using t test with unequal variance, degredde of freedom adjustment is based on Welch's method.
-    """
-
-    df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
-        treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
-        + reference_std**4 / (reference_size**2 * (reference_size + 1))
-    ) - 2
-    se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
-    nc = (diff - margin) / se
-
-    match alternative:
-        case "greater":
-            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
-        case "less":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-
-    return power
-
-
-def _power_t_unequal_var_satterthwaite(
-    diff: float,
-    margin: float,
-    treatment_std: float,
-    reference_std: float,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-) -> float:
-    """
-    Calculate the statistical power for a non-inferiority test of two independent means using t test with unequal variance, degree of freedom adjustment is based on Satterthwaite's method.
-    """
-
-    df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
-        treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
-        + reference_std**4 / (reference_size**2 * (reference_size - 1))
-    )
-    se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
-    nc = (diff - margin) / se
-
-    match alternative:
-        case "greater":
-            power = 1 - nct.cdf(t.ppf(1 - alpha, df), df, nc)
-        case "less":
-            power = nct.cdf(t.ppf(alpha, df), df, nc)
-
-    return power
-
-
-def _power(
-    *,
-    diff: float | None = None,
-    margin: float,
-    treatment_std: float | None = None,
-    reference_std: float | None = None,
-    std: float | None = None,
-    treatment_size: float,
-    reference_size: float,
-    alternative: Literal["greater", "less"],
-    alpha: float,
-    dist: Literal["z", "t"],
-    equal_var: bool,
-    approx_t_method: Literal["welch", "satterthwaite"],
-) -> float:
-    """Calculate the statistical power for a non-inferiority test of two independent means."""
-
-    match dist:
-        case "z":
-            if equal_var:
-                power = _power_z_equal_var(diff, margin, std, treatment_size, reference_size, alternative, alpha)
-            else:
-                power = _power_z_unequal_var(
-                    diff, margin, treatment_std, reference_std, treatment_size, reference_size, alternative, alpha
-                )
-        case "t":
-            if equal_var:
-                power = _power_t_equal_var(
-                    diff, margin, treatment_std, reference_std, treatment_size, reference_size, alternative, alpha
-                )
-            else:
-                match approx_t_method:
-                    case "welch":
-                        power = _power_t_unequal_var_welch(
-                            diff,
-                            margin,
-                            treatment_std,
-                            reference_std,
-                            treatment_size,
-                            reference_size,
-                            alternative,
-                            alpha,
-                        )
-                    case "satterthwaite":
-                        power = _power_t_unequal_var_satterthwaite(
-                            diff,
-                            margin,
-                            treatment_std,
-                            reference_std,
-                            treatment_size,
-                            reference_size,
-                            alternative,
-                            alpha,
-                        )
-
-    return power
 
 
 def solve_power(
@@ -490,7 +248,9 @@ def solve_size(
                 - power
             )
 
-        reference_size = int(ceil(brentq(func, 3 / (1 + ratio), 1e12)))
+        lb = max(1 + 1e-12, 3 / (1 + ratio))
+        ub = 1e12
+        reference_size = int(ceil(brentq(func, lb, ub)))
         treatment_size = int(ceil(reference_size * ratio))
         return treatment_size, reference_size
     else:
@@ -514,7 +274,9 @@ def solve_size(
                 - power
             )
 
-        treatment_size = ceil(brentq(func, 3 / (1 + 1 / ratio), 1e12))
+        lb = max(1 + 1e-12, 3 / (1 + 1 / ratio))
+        ub = 1e12
+        treatment_size = ceil(brentq(func, lb, ub))
         reference_size = ceil(treatment_size / ratio)
         return treatment_size, reference_size
 
