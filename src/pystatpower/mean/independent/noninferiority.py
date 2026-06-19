@@ -141,7 +141,7 @@ def _power_t_equal_var(
     return power
 
 
-def _power_unequal_var_welch(
+def _power_t_unequal_var_welch(
     diff: float,
     margin: float,
     treatment_std: float,
@@ -171,7 +171,7 @@ def _power_unequal_var_welch(
     return power
 
 
-def _power_unequal_var_satterthwaite(
+def _power_t_unequal_var_satterthwaite(
     diff: float,
     margin: float,
     treatment_std: float,
@@ -234,7 +234,7 @@ def _power(
             else:
                 match approx_t_method:
                     case "welch":
-                        power = _power_unequal_var_welch(
+                        power = _power_t_unequal_var_welch(
                             diff,
                             margin,
                             treatment_std,
@@ -245,7 +245,7 @@ def _power(
                             alpha,
                         )
                     case "satterthwaite":
-                        power = _power_unequal_var_satterthwaite(
+                        power = _power_t_unequal_var_satterthwaite(
                             diff,
                             margin,
                             treatment_std,
@@ -903,6 +903,11 @@ def solve_margin(
             Sample size for the treatment group.
         reference_size:
             Sample size for the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `altarnative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta < 0$)
+            - If `altarnative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta > 0$)
         alpha:
             Significance level.
 
