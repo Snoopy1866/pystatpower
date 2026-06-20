@@ -692,7 +692,7 @@ def test_solve_power_errors() -> None:
         solve_power(treatment_mean=40, reference_mean=30, diff=None, treatment_std=40, reference_std=30, treatment_size=100, reference_size=100, method="z", equal_var=True)
 
 
-def test_solve_size(case: TestCase) -> None:
+def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     if (
         case
         in [
@@ -719,7 +719,7 @@ def test_solve_size(case: TestCase) -> None:
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
@@ -738,13 +738,13 @@ def test_solve_size(case: TestCase) -> None:
     ) == (case.treatment_size, case.reference_size)
 
 
-def test_solve_diff(case: TestCase) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if (
         case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     search_direction = "above" if case.diff > 0 else "below"
     assert (
@@ -768,13 +768,13 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_treatment_mean(case: TestCase) -> None:
+def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if (
         case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     search_direction = "above" if case.treatment_mean > case.reference_mean else "below"
     assert (
@@ -799,13 +799,13 @@ def test_solve_treatment_mean(case: TestCase) -> None:
     )
 
 
-def test_solve_reference_mean(case: TestCase) -> None:
+def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if (
         case == TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, method="t", equal_var=True)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and case.equal_var)
         or (case.treatment_mean in range(40, 61) and case.alternative == "two-sided" and case.method == "t" and not case.equal_var)
     ):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     search_direction = "above" if case.reference_mean > case.treatment_mean else "below"
     assert (

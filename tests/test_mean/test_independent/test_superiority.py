@@ -377,7 +377,7 @@ def test_solve_power(case: TestCase) -> None:
     ) == round(case.actual_power, 4)
 
 
-def test_solve_size(case: TestCase) -> None:
+def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=40,
@@ -444,7 +444,7 @@ def test_solve_size(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
@@ -465,7 +465,7 @@ def test_solve_size(case: TestCase) -> None:
     ) == (case.treatment_size, case.reference_size)
 
 
-def test_solve_treatment_mean(case: TestCase) -> None:
+def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=40,
@@ -484,7 +484,7 @@ def test_solve_treatment_mean(case: TestCase) -> None:
             approx_t_method="welch",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -509,7 +509,7 @@ def test_solve_treatment_mean(case: TestCase) -> None:
     )
 
 
-def test_solve_reference_mean(case: TestCase) -> None:
+def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=40,
@@ -528,7 +528,7 @@ def test_solve_reference_mean(case: TestCase) -> None:
             approx_t_method="welch",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -553,7 +553,7 @@ def test_solve_reference_mean(case: TestCase) -> None:
     )
 
 
-def test_solve_diff(case: TestCase) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=40,
@@ -604,7 +604,7 @@ def test_solve_diff(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -628,7 +628,7 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_margin(case: TestCase) -> None:
+def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=40,
@@ -647,7 +647,7 @@ def test_solve_margin(case: TestCase) -> None:
             approx_t_method="welch",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(

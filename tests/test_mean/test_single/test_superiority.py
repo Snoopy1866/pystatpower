@@ -130,11 +130,11 @@ def test_solve_power_raise_error() -> None:
         solve_power(null_mean=None, mean=None, diff=None, margin=2, std=5, size=20, alternative="greater", alpha=0.025)
 
 
-def test_solve_size(case: TestCase) -> None:
+def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.80, actual_power=0.807776686),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     if (
         case
@@ -143,7 +143,7 @@ def test_solve_size(case: TestCase) -> None:
         ]
         and sys.platform == "darwin"
     ):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         solve_size(
@@ -187,11 +187,11 @@ def test_solve_size_raise_error() -> None:
         solve_size(null_mean=None, mean=None, diff=None, margin=2, std=5, alternative="greater", alpha=0.025, power=0.8)
 
 
-def test_solve_diff(case: TestCase) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=1.5, std=15, size=12, alternative="greater", alpha=0.025, power=0.80, actual_power=0.809784845),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -209,7 +209,7 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_null_mean(case: TestCase) -> None:
+def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.mean is None and case.null_mean is None and case.diff is not None:
         null_mean = case.size
@@ -218,12 +218,12 @@ def test_solve_null_mean(case: TestCase) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.80, actual_power=0.804464986),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
     ] and sys.platform in ("linux", "darwin"):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert round(
         solve_null_mean(
@@ -239,7 +239,7 @@ def test_solve_null_mean(case: TestCase) -> None:
     ) == round(null_mean, 2)
 
 
-def test_solve_mean(case: TestCase) -> None:
+def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.mean is None and case.null_mean is None and case.diff is not None:
         null_mean = case.size
@@ -248,12 +248,12 @@ def test_solve_mean(case: TestCase) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.80, actual_power=0.804464986),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
     ] and sys.platform in ("linux", "darwin"):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert round(
         solve_mean(
@@ -318,16 +318,16 @@ def test_solve_std_raise_error() -> None:
         solve_std(null_mean=None, mean=None, diff=None, margin=2, size=20, alternative="greater", alpha=0.025, power=0.8)
 
 
-def test_solve_margin(case: TestCase) -> None:
+def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.80, actual_power=0.804464986),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     if case in [
         TestCase(null_mean=None, mean=None, diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.80, actual_power=0.817438156),
     ] and sys.platform in ("linux", "darwin"):
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
