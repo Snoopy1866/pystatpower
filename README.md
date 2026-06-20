@@ -157,21 +157,26 @@ print(treatment_proportion)
 
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/pytest_full.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/pytest_full.yml?query=branch:main)
 
-|            | 🐍 3.10 | 🐍 3.11 | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
-| ---------- | ------- | ------- | ------- | ------- | ------- |
-| SciPy 1.7  | ✅      | -       | -       | -       | -       |
-| SciPy 1.8  | ✅      | -       | -       | -       | -       |
-| SciPy 1.9  | ✅      | -       | -       | -       | -       |
-| SciPy 1.10 | ✅      | ✅      | -       | -       | -       |
-| SciPy 1.11 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.12 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.13 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.14 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.15 | ✅      | ✅      | ✅      | ✅      | -       |
-| SciPy 1.16 | -       | ✅      | ✅      | ✅      | ✅      |
-| SciPy 1.17 | -       | ✅      | ✅      | ✅      | ✅      |
+|            | 🐍 3.10<sup>*</sup> | 🐍 3.11<sup>*</sup> | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
+| ---------- | ------------------- | ------------------- | ------- | ------- | ------- |
+| SciPy 1.7  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.8  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.9  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.10 | ✅                  | ✅                  | -       | -       | -       |
+| SciPy 1.11 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.12 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.13 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.14 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.15 | ✅                  | ✅                  | ✅      | ✅      | -       |
+| SciPy 1.16 | -                   | ✅                  | ✅      | ✅      | ✅      |
+| SciPy 1.17 | -                   | ✅                  | ✅      | ✅      | ✅      |
+| SciPy 1.18 | -                   | -                   | ✅      | ✅      | ✅      |
 
-注： `-` 表示该 Python 版本下不存在对应的 SciPy 发行版。
+> [!NOTE]
+>
+> `-` : Python 与 SciPy 版本组合不存在。
+>
+> `*` : Python 3.10 仅兼容 `scipy<=1.15.3`，Python 3.11 仅兼容 `scipy<=1.17.1`，这些版本的 Scipy 在非中心 _t_ 分布的计算上存在问题（[gh-25106](https://github.com/scipy/scipy/issues/25106), [gh-25470](https://github.com/scipy/scipy/issues/25470)），可能会导致均值模块在部分参数组合下求解失败。
 
 ## 🔮 鸣谢
 

@@ -1,6 +1,9 @@
+import sys
+
 import pytest
 
 from dataclasses import asdict
+
 
 from .models import BaseTestCase
 
@@ -21,3 +24,17 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
         case_group = getattr(metafunc.module, "case_group", None)
         if case_group is not None:
             metafunc.parametrize("case", case_group, ids=generate_id)
+
+
+def pytest_configure(config: pytest.Config):
+    """Mount the current OS information and Python version information to config"""
+
+    config.is_linux = sys.platform == "linux"
+    config.is_macos = sys.platform == "darwin"
+    config.is_windows = sys.platform == "win32"
+
+    config.is_py310 = sys.version_info[:2] == (3, 10)
+    config.is_py311 = sys.version_info[:2] == (3, 11)
+    config.is_py312 = sys.version_info[:2] == (3, 12)
+    config.is_py313 = sys.version_info[:2] == (3, 13)
+    config.is_py314 = sys.version_info[:2] == (3, 14)
