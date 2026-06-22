@@ -434,7 +434,7 @@ def test_solve_power(case: TestCase) -> None:
     ) == round(case.actual_power, 4)
 
 
-def test_solve_size(case: TestCase) -> None:
+def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(treatment_mean=10, reference_mean=10, margin=-17, treatment_std=40, reference_std=40, treatment_size=131, reference_size=66, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8, dist="t", equal_var=True),
         TestCase(treatment_mean=10, reference_mean=10, margin=-12, treatment_std=40, reference_std=40, treatment_size=263, reference_size=132, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8011, dist="t", equal_var=True),
@@ -503,7 +503,7 @@ def test_solve_size(case: TestCase) -> None:
             approx_t_method="welch",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
@@ -523,7 +523,7 @@ def test_solve_size(case: TestCase) -> None:
     ) == (case.treatment_size, case.reference_size)
 
 
-def test_solve_treatment_mean(case: TestCase) -> None:
+def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=10,
@@ -558,7 +558,7 @@ def test_solve_treatment_mean(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -583,7 +583,7 @@ def test_solve_treatment_mean(case: TestCase) -> None:
     )
 
 
-def test_solve_reference_mean(case: TestCase) -> None:
+def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(
             treatment_mean=10,
@@ -618,7 +618,7 @@ def test_solve_reference_mean(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -643,7 +643,7 @@ def test_solve_reference_mean(case: TestCase) -> None:
     )
 
 
-def test_solve_diff(case: TestCase) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case in [
         TestCase(treatment_mean=10, reference_mean=10, margin=-14, treatment_std=40, reference_std=40, treatment_size=193, reference_size=97, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8003, dist="t", equal_var=True),
         TestCase(
@@ -695,7 +695,7 @@ def test_solve_diff(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
@@ -719,7 +719,7 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_margin(case: TestCase) -> None:
+def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case in [
         TestCase(treatment_mean=10, reference_mean=10, margin=-14, treatment_std=40, reference_std=40, treatment_size=193, reference_size=97, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8003, dist="t", equal_var=True),
@@ -788,7 +788,7 @@ def test_solve_margin(case: TestCase) -> None:
             approx_t_method="satterthwaite",
         ),
     ]:
-        pytest.xfail("SciPy upstream bug: https://github.com/scipy/scipy/issues/25106")
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25106"))
 
     assert (
         round(
