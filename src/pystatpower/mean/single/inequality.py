@@ -108,8 +108,8 @@ def solve_power(
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
         dist:
             The distribution used for the test.
 
@@ -358,8 +358,8 @@ def solve_std(
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
         power:
             Expected statistical power.
 
