@@ -108,8 +108,8 @@ def solve_power(
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level must be specified.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level must be specified.
+            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
+            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
         dist:
             The distribution used for the test.
 
@@ -153,8 +153,8 @@ def solve_size(
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level must be specified.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level must be specified.
+            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
+            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
         power:
             Expected statistical power.
 
@@ -205,8 +205,8 @@ def solve_null_mean(
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level must be specified.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level must be specified.
+            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
+            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
         power:
             Expected statistical power.
 
@@ -229,14 +229,14 @@ def solve_null_mean(
         ValueError: If `alternative` is `two-sided` but `direction` is not specified.
 
     Notes:
-        - If `direction` is `'greater'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
-        - If `direction` is `'less'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
-        - If `direction` is `two-sided`, the parameter `direction` must be specified.
+        - If `alternative` is `two-sided`, the parameter `direction` is required.
+        - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
+        - If `alternative` is `'less'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
     """
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' must be specified when 'alternative' is 'two-sided'.")
+            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"
@@ -276,14 +276,14 @@ def solve_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0
+            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level must be specified.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level must be specified.
+            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
+            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
         power:
             Expected statistical power.
 
@@ -306,14 +306,14 @@ def solve_mean(
         ValueError: If `alternative` is `two-sided` but `direction` is not specified.
 
     Notes:
-        - If `direction` is `'greater'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
-        - If `direction` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
-        - If `direction` is `two-sided`, the parameter `direction` must be specified.
+        - If `alternative` is `two-sided`, the parameter `direction` is required.
+        - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
+        - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
     """
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' must be specified when 'alternative' is 'two-sided'.")
+            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -352,14 +352,14 @@ def solve_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0
+            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level must be specified.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level must be specified.
+            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
+            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
         power:
             Expected statistical power.
 
