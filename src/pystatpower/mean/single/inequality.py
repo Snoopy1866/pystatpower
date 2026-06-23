@@ -102,9 +102,9 @@ def solve_power(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -113,8 +113,8 @@ def solve_power(
         dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
 
     Returns:
         float: The statistical power of the test.
@@ -147,14 +147,14 @@ def solve_size(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
         power:
             Expected statistical power.
 
@@ -162,8 +162,8 @@ def solve_size(
         dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
 
     Returns:
         int: The required sample size.
@@ -199,14 +199,14 @@ def solve_null_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
         power:
             Expected statistical power.
 
@@ -214,8 +214,8 @@ def solve_null_mean(
         dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
         direction:
             The search direction for the mean under the null hypothesis relative to the mean under the alternative hypothesis.
 
@@ -226,10 +226,10 @@ def solve_null_mean(
         float: The required mean under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `two-sided` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
 
     Notes:
-        - If `alternative` is `two-sided`, the parameter `direction` is required.
+        - If `alternative` is `'two-sided'`, the parameter `direction` is required.
         - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
         - If `alternative` is `'less'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
     """
@@ -276,14 +276,14 @@ def solve_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, a two-sided significance level is required.
-            - If `alternative` is `'greater'` or `'less'`, a one-sided significance level is required.
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
         power:
             Expected statistical power.
 
@@ -291,8 +291,8 @@ def solve_mean(
         dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
         direction:
             The search direction for the mean under the alternative hypothesis relative to the mean under the null hypothesis.
 
@@ -303,10 +303,10 @@ def solve_mean(
         float: The required mean under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `two-sided` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
 
     Notes:
-        - If `alternative` is `two-sided`, the parameter `direction` is required.
+        - If `alternative` is `'two-sided'`, the parameter `direction` is required.
         - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
         - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
     """
@@ -352,9 +352,9 @@ def solve_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `two-sided`, the alternative hypothesis is $\\mu \\neq \\mu_0$
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu < \\mu_0$
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -367,8 +367,8 @@ def solve_std(
         dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
 
     Returns:
         float: The required standard deviation.
