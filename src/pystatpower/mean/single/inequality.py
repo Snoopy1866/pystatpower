@@ -4,8 +4,6 @@ from typing import Literal
 from scipy.optimize import brentq
 from scipy.stats import nct, norm, t
 
-from ..._constant import SAMPLE_SIZE_SEARCH_MAX
-
 
 def _power_z(
     null_mean: float,
@@ -15,19 +13,21 @@ def _power_z(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of one mean using z-test."""
+    """Calculate the statistical power for an inequality test of one mean, using z-test."""
+
+    se = std / sqrt(size)
 
     match alternative:
         case "two-sided":
             power = (
                 1
-                - norm.cdf(norm.ppf(1 - alpha / 2) - sqrt(size) * (mean - null_mean) / std)
-                + norm.cdf(norm.ppf(alpha / 2) - sqrt(size) * (mean - null_mean) / std)
+                - norm.cdf(norm.ppf(1 - alpha / 2) - (mean - null_mean) / se)
+                + norm.cdf(norm.ppf(alpha / 2) - (mean - null_mean) / se)
             )
         case "greater":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - sqrt(size) * (mean - null_mean) / std)
+            power = 1 - norm.cdf(norm.ppf(1 - alpha) - (mean - null_mean) / se)
         case "less":
-            power = norm.cdf(norm.ppf(alpha) - sqrt(size) * (mean - null_mean) / std)
+            power = norm.cdf(norm.ppf(alpha) - (mean - null_mean) / se)
 
     return float(power)
 
@@ -40,10 +40,11 @@ def _power_t(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of one mean using t-test."""
+    """Calculate the statistical power for an inequality test of one mean, using t-test."""
 
     df = size - 1
-    nc = sqrt(size) * (mean - null_mean) / std
+    se = std / sqrt(size)
+    nc = (mean - null_mean) / se
 
     match alternative:
         case "two-sided":
@@ -63,11 +64,11 @@ def _power(
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
-    method: Literal["z", "t"],
+    dist: Literal["z", "t"],
 ) -> float:
     """Calculate the statistical power for an inequality test of one mean."""
 
-    match method:
+    match dist:
         case "z":
             power = _power_z(null_mean, mean, std, size, alternative, alpha)
         case "t":
@@ -84,44 +85,42 @@ def solve_power(
     size: int,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
-    method: Literal["z", "t"],
+    dist: Literal["z", "t"] = "t",
 ) -> float:
     """
     Calculate the statistical power for an inequality test of one mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis ($\\mu_0$).
-        mean (float, optional):
-            Mean under the alternative hypothesis ($\\mu_1$).
-        std (float, optional):
-            Standard deviation ($\\sigma$).
-
-            - If `method='t'`, provide the sample standard deviation ($S$).
-        size (int):
-            Sample size ($n$).
-        alternative (Literal["two-sided", "greater", "less"]):
+        null_mean:
+            Mean under the null hypothesis.
+        mean:
+            Mean under the alternative hypothesis.
+        std:
+            Standard deviation.
+        size:
+            Sample size.
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
-            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
-            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
-        alpha (float):
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        method (Literal["z", "t"], optional):
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution (large sample approximation).
-            - `'t'`: Student's *t* distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
 
     Returns:
-        (float): The calculated statistical power of the test.
+        float: The statistical power of the test.
     """
 
-    power = _power(null_mean, mean, std, size, alternative, alpha, method)
+    power = _power(null_mean, mean, std, size, alternative, alpha, dist)
     return power
 
 
@@ -132,49 +131,48 @@ def solve_size(
     std: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
-    power: float,
-    method: Literal["z", "t"],
+    power: float = 0.80,
+    dist: Literal["z", "t"] = "t",
 ) -> int:
     """
     Estimate the required sample size for an inequality test of one mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis ($\\mu_0$).
-        mean (float, optional):
-            Mean under the alternative hypothesis ($\\mu_1$).
-        std (float, optional):
-            Standard deviation ($\\sigma$).
-
-            - If `method='t'`, provide the sample standard deviation ($S$).
-        alternative (Literal["two-sided", "greater", "less"]):
+        null_mean:
+            Mean under the null hypothesis.
+        mean:
+            Mean under the alternative hypothesis.
+        std:
+            Standard deviation.
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
-            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
-            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
-        alpha (float):
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        method (Literal["z", "t"], optional):
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution (large sample approximation).
-            - `'t'`: Student's *t* distribution.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
 
     Returns:
-        (int): The required sample size.
+        int: The required sample size.
     """
 
     def func(size: float) -> float:
-        return _power(null_mean, mean, std, size, alternative, alpha, method) - power
+        return _power(null_mean, mean, std, size, alternative, alpha, dist) - power
 
-    size = ceil(brentq(func, 1.1, SAMPLE_SIZE_SEARCH_MAX))
-    return size
+    return ceil(brentq(func, 1 + 0.1, 1e12))
 
 
 def solve_null_mean(
@@ -184,61 +182,74 @@ def solve_null_mean(
     size: int,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
-    power: float,
-    method: Literal["z", "t"],
-    search_direction: Literal["below", "above"] = "below",
+    power: float = 0.80,
+    dist: Literal["z", "t"] = "t",
+    direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
     Estimate the required mean under the null hypothesis for an inequality test of one mean.
 
     Args:
-        mean (float, optional):
-            Mean under the alternative hypothesis ($\\mu_1$).
-        std (float, optional):
-            Standard deviation ($\\sigma$).
-
-            - If `method='t'`, provide the sample standard deviation ($S$).
-        size (int):
-            Sample size ($n$).
-        alternative (Literal["two-sided", "greater", "less"]):
+        mean:
+            Mean under the alternative hypothesis.
+        std:
+            Standard deviation.
+        size:
+            Sample size.
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
-            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
-            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
-        alpha (float):
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        method (Literal["z", "t"], optional):
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution (large sample approximation).
-            - `'t'`: Student's *t* distribution.
-        search_direction (Literal["below", "above"], optional):
-            Specify whether to search for the null mean below or above the alternative mean.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
+        direction:
+            The search direction for the mean under the null hypothesis relative to the mean under the alternative hypothesis.
 
-            - `'below'`: Search the null mean below the alternative mean.
-            - `'above'`: Search the null mean above the alternative mean.
+            - `'greater'`: Search for the null mean that is greater than the alternative mean.
+            - `'less'`: Search for the null mean that is less than the alternative mean.
 
     Returns:
-        (float): The required mean under the null hypothesis.
+        float: The required mean under the null hypothesis.
+
+    Raises:
+        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+
+    Notes:
+        - If `alternative` is `'two-sided'`, the parameter `direction` is required.
+        - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
+        - If `alternative` is `'less'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
     """
 
+    if alternative == "two-sided":
+        if direction is None:
+            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+    elif alternative == "greater":
+        direction = "less"
+    else:  # alternative == "less"
+        direction = "greater"
+
     def func(null_mean: float) -> float:
-        return _power(null_mean, mean, std, size, alternative, alpha, method) - power
+        return _power(null_mean, mean, std, size, alternative, alpha, dist) - power
 
-    NULL_MEAN_SEARCH_MIN = -1000000
-    NULL_MEAN_SEARCH_MAX = 1000000
-
-    match search_direction:
-        case "below":
-            return float(brentq(func, NULL_MEAN_SEARCH_MIN, mean))
-        case "above":
-            return float(brentq(func, mean, NULL_MEAN_SEARCH_MAX))
+    match direction:
+        case "greater":
+            return float(brentq(func, mean, 1e9))
+        case "less":
+            return float(brentq(func, -1e9, mean))
 
 
 def solve_mean(
@@ -249,57 +260,121 @@ def solve_mean(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
     power: float,
-    method: Literal["z", "t"],
-    search_direction: Literal["below", "above"] = "above",
+    dist: Literal["z", "t"],
+    direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
     Estimate the required mean under the alternative hypothesis for an inequality test of one mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis ($\\mu_0$).
-        std (float, optional):
-            Standard deviation ($\\sigma$).
-
-            - If `method='t'`, provide the sample standard deviation ($S$).
-        size (int):
-            Sample size ($n$).
-        alternative (Literal["two-sided", "greater", "less"]):
+        null_mean:
+            Mean under the null hypothesis.
+        std:
+            Standard deviation.
+        size:
+            Sample size.
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_0$
-            - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_0$
-            - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_0$
-        alpha (float):
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
             Significance level.
 
-            - If `alternative` is `'two-sided'`, provide the two-sided significance level.
-            - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        method (Literal["z", "t"], optional):
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
             The distribution used for the test.
 
-            - `'z'`: Standard normal distribution (large sample approximation).
-            - `'t'`: Student's *t* distribution.
-        search_direction (Literal["below", "above"], optional):
-            Specify whether to search for the alternative mean below or above the null mean.
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
+        direction:
+            The search direction for the mean under the alternative hypothesis relative to the mean under the null hypothesis.
 
-            - `'below'`: Search the alternative mean below the null mean.
-            - `'above'`: Search the alternative mean above the null mean.
+            - `'greater'`: Search for the alternative mean that is greater than the null mean.
+            - `'less'`: Search for the alternative mean that is less than the null mean.
 
     Returns:
-        (float): The required mean under the alternative hypothesis.
+        float: The required mean under the alternative hypothesis.
+
+    Raises:
+        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+
+    Notes:
+        - If `alternative` is `'two-sided'`, the parameter `direction` is required.
+        - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
+        - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
     """
 
+    if alternative == "two-sided":
+        if direction is None:
+            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+    elif alternative == "greater":
+        direction = "greater"
+    else:  # alternative == "less"
+        direction = "less"
+
     def func(mean: float) -> float:
-        return _power(null_mean, mean, std, size, alternative, alpha, method) - power
+        return _power(null_mean, mean, std, size, alternative, alpha, dist) - power
 
-    MEAN_SEARCH_MIN = -1000000
-    MEAN_SEARCH_MAX = 1000000
+    match direction:
+        case "greater":
+            return float(brentq(func, null_mean, 1e9))
+        case "less":
+            return float(brentq(func, -1e9, null_mean))
 
-    match search_direction:
-        case "below":
-            return float(brentq(func, MEAN_SEARCH_MIN, null_mean))
-        case "above":
-            return float(brentq(func, null_mean, MEAN_SEARCH_MAX))
+
+def solve_std(
+    *,
+    null_mean: float,
+    mean: float,
+    size: int,
+    alternative: Literal["two-sided", "greater", "less"],
+    alpha: float,
+    power: float,
+    dist: Literal["z", "t"],
+) -> float:
+    """
+    Estimate the required standard deviation for an inequality test of one mean.
+
+    Args:
+        null_mean:
+            Mean under the null hypothesis.
+        mean:
+            Mean under the alternative hypothesis.
+        size:
+            Sample size.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
+            Significance level.
+
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
+            The distribution used for the test.
+
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
+
+    Returns:
+        float: The required standard deviation.
+    """
+
+    def func(std: float) -> float:
+        return _power(null_mean, mean, std, size, alternative, alpha, dist) - power
+
+    return float(brentq(func, 1e-6, 1e12))
