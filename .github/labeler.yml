@@ -22,7 +22,7 @@ tests:
           - "tests/**"
 
 ci:
-  - head-branch: "ci"
+  - head-branch: "^ci"
   - changed-files:
       - any-glob-to-any-file:
           - ".github/**"
