@@ -209,6 +209,80 @@ def solve_size(
     return ceil(brentq(func, 1 + 0.1, 1e12))
 
 
+def solve_diff(
+    *,
+    std: float,
+    size: int,
+    alternative: Literal["two-sided", "greater", "less"],
+    alpha: float,
+    power: float,
+    dist: Literal["z", "t"],
+    direction: Literal["greater", "less"] | None = None,
+) -> float:
+    """
+    Estimate the required mean difference between the alternative hypothesis and the null hypothesis for an inequality test of one mean.
+
+    Args:
+        std:
+            Standard deviation.
+        size:
+            Sample size.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'two-sided'`, the alternative hypothesis is $\\mu \\neq \\mu_0$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
+        alpha:
+            Significance level.
+
+            - If `alternative` is `'two-sided'`, `alpha` represents the two-sided significance level.
+            - If `alternative` is `'greater'` or `'less'`, `alpha` represents the one-sided significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
+            The distribution used for the test.
+
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t distribution.
+        direction:
+            The search direction for the mean difference relative to zero.
+
+            - `'greater'`: Search for the mean difference that is greater than zero.
+            - `'less'`: Search for the mean difference that is less than zero.
+
+            !!! note
+                - If `alternative` is `'two-sided'`, the parameter `direction` is required.
+                - If `alternative` is `'greater'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
+                - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
+
+    Returns:
+        int: The required mean difference between the alternative hypothesis and the null hypothesis.
+
+    Raises:
+        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+    """
+
+    if alternative == "two-sided":
+        if direction is None:
+            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+    elif alternative == "greater":
+        direction = "greater"
+    else:  # alternative == "less"
+        direction = "less"
+
+    def func(diff: float) -> float:
+        return _power(diff, std, size, alternative, alpha, dist) - power
+
+    match direction:
+        case "greater":
+            return float(brentq(func, 0, 1e9))
+        case "less":
+            return float(brentq(func, -1e9, 0))
+
+
 def solve_mean(
     *,
     null_mean: float,
