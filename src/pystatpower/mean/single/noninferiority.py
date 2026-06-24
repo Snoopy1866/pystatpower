@@ -93,7 +93,7 @@ def solve_power(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -154,7 +154,7 @@ def solve_size(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -210,7 +210,7 @@ def solve_diff(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -270,7 +270,7 @@ def solve_mean(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -330,7 +330,7 @@ def solve_null_mean(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -389,7 +389,7 @@ def solve_margin(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
@@ -463,7 +463,7 @@ def solve_std(
             Type of the alternative hypothesis.
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$
         alpha:
             Significance level.
 
