@@ -5,6 +5,7 @@
 样本率 $\hat{p}$ 服从二项分布，$E(\hat{p}) = p$，$Var(\hat{p}) = p(1-p)/n$，渐进正态法计算的置信限可能超出 $[0, 1]$。
 
 === "双侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = \max\left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}, 0\right) \\
@@ -100,6 +101,7 @@
         $$
 
 === "左侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = 0 \\
@@ -108,6 +110,7 @@
     $$
 
 === "右侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = \max\left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}}, 0\right) \\
@@ -115,12 +118,12 @@
     \end{align}
     $$
 
-
 ## 渐进正态法（连续性校正） {#normal-approx-cc}
 
 在 [渐进正态法](#normal-approx) 的基础上添加校正项 $\frac{1}{2n}$，置信限仍可能超出 $[0, 1]$：
 
 === "双侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = \max\left(p - z_{1-\alpha/2} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n}, 0\right) \\
@@ -278,6 +281,7 @@
         其中，$A = z_{1 - \alpha/2}\sqrt{p(1-p)}$ 。
 
 === "左侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = 0 \\
@@ -286,6 +290,7 @@
     $$
 
 === "右侧置信区间"
+
     $$
     \begin{align}
     \text{Lower Limit} & = \max\left(p - z_{1-\alpha} \sqrt{\frac{p(1-p)}{n}} - \frac{1}{2n}, 0\right) \\
@@ -381,6 +386,7 @@
     $$
 
 ??? note "Wilson Score 连续性校正置信区间宽度随样本量 $n$ 的变化"
+
     以 $p = 0.9$ 为例，绘制双侧 95% 置信区间宽度随样本量 $n$ 变化的图像如下：
     ![Wilson Score 连续性校正置信区间宽度图像](./figure-wilson-score-cc-ci.png)
 
@@ -388,4 +394,4 @@
 
     若设定置信区间宽度为 $0.8$，则理论上存在两个数值解，实际应取较大的解作为样本量估算结果。
 
-    `brentq` 要求求根区间左右两端点处的函数值异号，此时可先用 `minimize_scalar` 求出区间内的极大值，将极大值点作为求根区间下限，再应用 `brentq` 进行数值求解。
+    [brentq][scipy.optimize.brentq] 要求求根区间左右两端点处的函数值异号，此时可先用 [minimize_scalar][scipy.optimize.minimize_scalar] 求出区间内的极大值，将极大值点作为求根区间下限，再应用 [brentq][scipy.optimize.brentq] 进行数值求解。

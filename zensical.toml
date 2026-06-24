@@ -139,7 +139,8 @@ permalink_title = "指向本节的链接"
 
 [project.plugins.mkdocstrings.handlers.python]
 inventories = [
-    "https://docs.python.org/3/objects.inv"
+    "https://docs.python.org/3/objects.inv",
+    "https://docs.scipy.org/doc/scipy/objects.inv"
 ]
 paths = ["src"]
 
