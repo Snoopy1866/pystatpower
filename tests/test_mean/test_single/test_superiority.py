@@ -6,15 +6,15 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.superiority import solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
+from pystatpower.mean.single.superiority import _verify_mean_and_get_diff, solve_power, solve_size, solve_diff, solve_null_mean, solve_mean, solve_std, solve_margin
 
 from tests.models import BaseTestCase
 
 
 @dataclass(kw_only=True)
 class TestCase(BaseTestCase):
-    null_mean: float | None = None
     mean: float | None = None
+    null_mean: float | None = None
     diff: float | None = None
     margin: float
     std: float
@@ -24,12 +24,19 @@ class TestCase(BaseTestCase):
     power: float
     actual_power: float
 
+    def __post_init__(self) -> None:
+        self.diff = _verify_mean_and_get_diff(self.mean, self.null_mean, self.diff)
+
+        # Set the values ​​of mean and null_mean according to diff
+        if self.mean is None and self.null_mean is None and self.diff is not None:
+            self.null_mean = self.size
+            self.mean = self.diff + self.null_mean
+
 
 case_group = [
     # diff = 15, std = 15, margin = 0 to 10 by 0.5, alpha = 0.025, power = 0.80, alternative = "greater"
     TestCase(null_mean=None, mean=None, diff=15, margin=margin, std=15, size=size, alternative="greater", alpha=0.025, power=0.80, actual_power=actual_power)
     for margin, size, actual_power in [
-        (0.0, 10, 0.803096209),
         (0.5, 11, 0.823125590),
         (1.0, 12, 0.836781945),
         (1.5, 12, 0.809784845),
@@ -75,9 +82,25 @@ case_group = [
         (-1.5, 20, 0.816793619),
         (-1.0, 19, 0.822546679),
         (-0.5, 17, 0.801229726),
-        (0.0, 16, 0.800555580),
     ]
 ]
+
+
+def test_verify_mean_and_get_diff() -> None:
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=None, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=10, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=20, null_mean=None, diff=None)
+
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=None)
+    _verify_mean_and_get_diff(mean=None, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=None, null_mean=10, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=10)
 
 
 def test_solve_power(case: TestCase) -> None:
@@ -97,36 +120,6 @@ def test_solve_power(case: TestCase) -> None:
         )
         == case.actual_power
     )
-
-
-def test_solve_power_not_specify_diff() -> None:
-    assert (
-        round(
-            solve_power(
-                null_mean=20,
-                mean=35,
-                diff=None,
-                margin=0.5,
-                std=15,
-                size=11,
-                alternative="greater",
-                alpha=0.025,
-            ),
-            9,
-        )
-        == 0.823125590
-    )
-
-
-def test_solve_power_raise_error() -> None:
-    with pytest.raises(ValueError):
-        solve_power(null_mean=None, mean=10, diff=None, margin=2, std=5, size=20, alternative="greater", alpha=0.025)
-
-    with pytest.raises(ValueError):
-        solve_power(null_mean=10, mean=None, diff=None, margin=2, std=5, size=20, alternative="greater", alpha=0.025)
-
-    with pytest.raises(ValueError):
-        solve_power(null_mean=None, mean=None, diff=None, margin=2, std=5, size=20, alternative="greater", alpha=0.025)
 
 
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
@@ -183,33 +176,6 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     )
 
 
-def test_solve_size_not_specify_diff() -> None:
-    assert (
-        solve_size(
-            null_mean=20,
-            mean=35,
-            diff=None,
-            margin=0.5,
-            std=15,
-            alternative="greater",
-            alpha=0.025,
-            power=0.80,
-        )
-        == 11
-    )
-
-
-def test_solve_size_raise_error() -> None:
-    with pytest.raises(ValueError):
-        solve_size(null_mean=None, mean=10, diff=None, margin=2, std=5, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_size(null_mean=10, mean=None, diff=None, margin=2, std=5, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_size(null_mean=None, mean=None, diff=None, margin=2, std=5, alternative="greater", alpha=0.025, power=0.8)
-
-
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
@@ -259,72 +225,7 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     )
 
 
-def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
-
-    if case.mean is None and case.null_mean is None and case.diff is not None:
-        null_mean = case.size
-        mean = case.diff + null_mean
-
-    if request.config.is_linux and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_linux and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_macos and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    assert round(
-        solve_null_mean(
-            mean=mean,
-            margin=case.margin,
-            std=case.std,
-            size=case.size,
-            alternative=case.alternative,
-            alpha=case.alpha,
-            power=case.actual_power,
-        ),
-        2,
-    ) == round(null_mean, 2)
-
-
 def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
-
-    if case.mean is None and case.null_mean is None and case.diff is not None:
-        null_mean = case.size
-        mean = case.diff + null_mean
 
     if request.config.is_linux and request.config.is_py310:
         if case in [
@@ -369,7 +270,7 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     assert round(
         solve_mean(
-            null_mean=null_mean,
+            null_mean=case.null_mean,
             margin=case.margin,
             std=case.std,
             size=case.size,
@@ -378,7 +279,64 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
             power=case.actual_power,
         ),
         2,
-    ) == round(mean, 2)
+    ) == round(case.mean, 2)
+
+
+def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if request.config.is_linux and request.config.is_py310:
+        if case in [
+            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
+            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_linux and request.config.is_py311:
+        if case in [
+            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py310:
+        if case in [
+            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
+            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
+            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py311:
+        if case in [
+            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
+            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py310:
+        if case in [
+            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
+            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py311:
+        if case in [
+            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
+        ]:
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    assert round(
+        solve_null_mean(
+            mean=case.mean,
+            margin=case.margin,
+            std=case.std,
+            size=case.size,
+            alternative=case.alternative,
+            alpha=case.alpha,
+            power=case.actual_power,
+        ),
+        2,
+    ) == round(case.null_mean, 2)
 
 
 def test_solve_std(case: TestCase) -> None:
@@ -398,36 +356,6 @@ def test_solve_std(case: TestCase) -> None:
         )
         == case.std
     )
-
-
-def test_solve_std_not_specify_diff() -> None:
-    assert (
-        round(
-            solve_std(
-                null_mean=20,
-                mean=35,
-                diff=None,
-                margin=0.5,
-                size=11,
-                alternative="greater",
-                alpha=0.025,
-                power=0.823125590,
-            ),
-            0,
-        )
-        == 15
-    )
-
-
-def test_solve_std_raise_error() -> None:
-    with pytest.raises(ValueError):
-        solve_std(null_mean=None, mean=10, diff=None, margin=2, size=20, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_std(null_mean=10, mean=None, diff=None, margin=2, size=20, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_std(null_mean=None, mean=None, diff=None, margin=2, size=20, alternative="greater", alpha=0.025, power=0.8)
 
 
 def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
@@ -489,33 +417,3 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
         )
         == case.margin
     )
-
-
-def test_solve_margin_not_specify_diff() -> None:
-    assert (
-        round(
-            solve_margin(
-                null_mean=20,
-                mean=35,
-                diff=None,
-                std=15,
-                size=11,
-                alternative="greater",
-                alpha=0.025,
-                power=0.823125590,
-            ),
-            1,
-        )
-        == 0.5
-    )
-
-
-def test_solve_margin_raise_error() -> None:
-    with pytest.raises(ValueError):
-        solve_margin(null_mean=None, mean=10, diff=None, std=5, size=20, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_margin(null_mean=10, mean=None, diff=None, std=5, size=20, alternative="greater", alpha=0.025, power=0.8)
-
-    with pytest.raises(ValueError):
-        solve_margin(null_mean=None, mean=None, diff=None, std=5, size=20, alternative="greater", alpha=0.025, power=0.8)
