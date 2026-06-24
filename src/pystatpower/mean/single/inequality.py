@@ -259,7 +259,7 @@ def solve_diff(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
 
     Returns:
-        int: The required mean difference between the alternative hypothesis and the null hypothesis.
+        float: The required mean difference between the alternative hypothesis and the null hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
