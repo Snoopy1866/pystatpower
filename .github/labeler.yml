@@ -22,20 +22,13 @@ tests:
           - "tests/**"
 
 ci:
-  - head-branch: "ci"
+  - head-branch: "^ci"
   - changed-files:
       - any-glob-to-any-file:
           - ".github/**"
 
-chore:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "pyproject.toml"
-          - "codedev.yml"
-          - "bandit.yml"
-          - "renovate.json"
-          - ".pre-commit-config.yaml"
-          - ".readthedocs.yaml"
+refactor:
+  - head-branch: "^refactor"
 
 mean.single.ci:
   - changed-files:
