@@ -26,11 +26,35 @@ def _power(
     return float(power)
 
 
+def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
+    """Convert margin to standard form based on alternative hypothesis"""
+
+    match alternative:
+        case "greater":
+            return -abs(margin)
+        case "less":
+            return abs(margin)
+
+
+def _verify_mean_and_get_diff(
+    mean: float | None,
+    null_mean: float | None,
+    diff: float | None,
+) -> float:
+
+    if diff is None:
+        if mean is None or null_mean is None:
+            raise ValueError("When 'diff' is omitted, both 'mean' and 'null_mean' must be provided.")
+        diff = mean - null_mean
+
+    return diff
+
+
 def solve_power(
     *,
-    null_mean: float | None,
-    mean: float | None,
-    diff: float | None,
+    mean: float | None = None,
+    null_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     std: float,
     size: int,
@@ -41,110 +65,120 @@ def solve_power(
     Calculate the statistical power for a non-inferiority test of one sample mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis.
-
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        mean (float, optional):
+        mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        diff (float, optional):
-            Difference between the mean under the null hypothesis and the mean under the alternative hypothesis.
+            If `diff` is not specified, this parameter and `null_mean` are required.
+        null_mean:
+            Mean under the null hypothesis.
 
-            If both `null_mean` and `mean` are not provided, `diff` must be provided.
-        margin (float):
-            Non-inferiority margin.
+            If `diff` is not specified, this parameter and `mean` are required.
+        diff:
+            Mean difference between the alternative hypothesis and the null hypothesis.
 
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        std (float):
+            If both `mean` and `null_mean` are not specified, this parameter is required.
+        margin:
+            The non-inferiority margin.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        std:
             Standard deviation.
-        size (float):
+        size:
             Sample size.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
 
     Returns:
-        float: The calculated statistical power of the test.
+        float: The statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is None, and `null_mean` or `mean` is None.
+        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
     """
 
-    if diff is None:
-        if null_mean is None or mean is None:
-            raise ValueError("`null_mean` and `mean` must be provided when `diff` is not provided.")
-        diff = mean - null_mean
+    diff = _verify_mean_and_get_diff(mean, null_mean, diff)
+
+    margin = _margin(margin, alternative)
 
     return _power(diff, margin, std, size, alternative, alpha)
 
 
 def solve_size(
     *,
-    null_mean: float | None,
-    mean: float | None,
-    diff: float | None,
+    mean: float | None = None,
+    null_mean: float | None = None,
+    diff: float | None = None,
     margin: float,
     std: float,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
 ) -> int:
     """
     Estimate the required sample size for a non-inferiority test of one sample mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis.
-
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        mean (float, optional):
+        mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        diff (float, optional):
-            Difference between the mean under the null hypothesis and the mean under the alternative hypothesis.
+            If `diff` is not specified, this parameter and `null_mean` are required.
+        null_mean:
+            Mean under the null hypothesis.
 
-            If both `null_mean` and `mean` are not provided, `diff` must be provided.
-        margin (float):
-            Non-inferiority margin.
+            If `diff` is not specified, this parameter and `mean` are required.
+        diff:
+            Mean difference between the alternative hypothesis and the null hypothesis.
 
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        std (float):
+            If both `mean` and `null_mean` are not specified, this parameter is required.
+        margin:
+            The non-inferiority margin.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        std:
             Standard deviation.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
 
     Returns:
-        (int): The required sample size.
+        int: The required sample size.
 
     Raises:
-        ValueError: If `diff` is None, and `null_mean` or `mean` is None.
+        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
     """
 
-    if diff is None:
-        if null_mean is None or mean is None:
-            raise ValueError("`null_mean` and `mean` must be provided when `diff` is not provided.")
-        diff = mean - null_mean
+    diff = _verify_mean_and_get_diff(mean, null_mean, diff)
+
+    margin = _margin(margin, alternative)
 
     def func(size: float) -> float:
         return _power(diff, margin, std, size, alternative, alpha) - power
 
-    return ceil(brentq(func, 2, 1e12))
+    return ceil(brentq(func, 1 + 0.1, 1e12))
 
 
 def solve_diff(
@@ -154,92 +188,52 @@ def solve_diff(
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
 ) -> float:
     """
-    Estimete the required difference between the mean under the null hypothesis and the mean under the alternative hypothesis for a non-inferiority test of one sample mean.
+    Estimete the required mean difference between the alternative hypothesis and the null hypothesis for a non-inferiority test of one sample mean.
 
     Args:
-        margin (float):
-            Non-inferiority margin.
+        margin:
+            The non-inferiority margin.
 
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        std (float):
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        std:
             Standard deviation.
-        size (float):
+        size:
             Sample size.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required difference between the the mean under the null hypothesis and the mean under the alternative hypothesis.
+        float: The required mean difference between the alternative hypothesis and the null hypothesis.
     """
+
+    margin = _margin(margin, alternative)
 
     def func(diff: float) -> float:
         return _power(diff, margin, std, size, alternative, alpha) - power
 
     match alternative:
         case "greater":
-            return float(brentq(func, margin, 1e6))
+            return float(brentq(func, margin, 1e8))
         case "less":
-            return float(brentq(func, -1e6, margin))
-
-
-def solve_null_mean(
-    *,
-    mean: float,
-    margin: float,
-    std: float,
-    size: int,
-    alternative: Literal["greater", "less"],
-    alpha: float = 0.025,
-    power: float = 0.80,
-) -> float:
-    """
-    Estimate the required mean under the null hypothesis for a non-inferiority test of one sample mean.
-
-    Args:
-        mean (float):
-            Mean under the alternative hypothesis.
-        margin (float):
-            Non-inferiority margin.
-
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        std (float):
-            Standard deviation.
-        size (float):
-            Sample size.
-        alternative (Literal["greater", "less"]):
-            Type of the alternative hypothesis.
-
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-
-    Returns:
-        float: The required mean under the null hypothesis.
-    """
-
-    def func(null_mean: float) -> float:
-        return _power(mean - null_mean, margin, std, size, alternative, alpha) - power
-
-    match alternative:
-        case "greater":
-            return float(brentq(func, -1e8, mean - margin))
-        case "less":
-            return float(brentq(func, mean - margin, 1e8))
+            return float(brentq(func, -1e8, margin))
 
 
 def solve_mean(
@@ -250,107 +244,114 @@ def solve_mean(
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
 ) -> float:
     """
     Estimate the required mean under the alternative hypothesis for a non-inferiority test of one sample mean.
 
     Args:
-        null_mean (float):
+        null_mean:
             Mean under the null hypothesis.
-        margin (float):
-            Non-inferiority margin.
 
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        std (float):
+            If `diff` is not specified, this parameter and `mean` are required.
+        margin:
+            The non-inferiority margin.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        std:
             Standard deviation.
-        size (float):
+        size:
             Sample size.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
 
     Returns:
         float: The required mean under the alternative hypothesis.
     """
+
+    margin = _margin(margin, alternative)
 
     def func(mean: float) -> float:
         return _power(mean - null_mean, margin, std, size, alternative, alpha) - power
 
     match alternative:
         case "greater":
-            return float(brentq(func, null_mean + margin, 1e8))
+            return float(brentq(func, null_mean + margin, 1e6))
         case "less":
-            return float(brentq(func, -1e8, null_mean + margin))
+            return float(brentq(func, -1e6, null_mean + margin))
 
 
-def solve_std(
+def solve_null_mean(
     *,
-    null_mean: float | None,
-    mean: float | None,
-    diff: float | None,
+    mean: float,
     margin: float,
+    std: float,
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
 ) -> float:
     """
-    Estimate the required standard deviation for a non-inferiority test of one sample mean.
+    Estimate the required mean under the null hypothesis for a non-inferiority test of one sample mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis.
-
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        mean (float, optional):
+        mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        diff (float, optional):
-            Difference between the mean under the null hypothesis and the mean under the alternative hypothesis.
+            If `diff` is not specified, this parameter and `null_mean` are required.
+        margin:
+            The non-inferiority margin.
 
-            If both `null_mean` and `mean` are not provided, `diff` must be provided.
-        margin (float):
-            Non-inferiority margin.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
 
-            - If `alternative` is `'greater'`, `margin` must be a negative value.
-            - If `alternative` is `'less'`, `margin` must be a positive value.
-        size (float):
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        std:
+            Standard deviation.
+        size:
             Sample size.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required standard deviation.
-
-    Raises:
-        ValueError: If `diff` is None, and `null_mean` or `mean` is None.
+        float: The required mean under the null hypothesis.
     """
 
-    if diff is None:
-        if null_mean is None or mean is None:
-            raise ValueError("`null_mean` and `mean` must be provided when `diff` is not provided.")
-        diff = mean - null_mean
+    def func(null_mean: float) -> float:
+        return _power(mean - null_mean, margin, std, size, alternative, alpha) - power
 
-    def func(std: float) -> float:
-        return _power(diff, margin, std, size, alternative, alpha) - power
-
-    return float(brentq(func, 1e-7, 1e12))
+    match alternative:
+        case "greater":
+            return float(brentq(func, -1e6, mean - margin))
+        case "less":
+            return float(brentq(func, mean - margin, 1e6))
 
 
 def solve_margin(
@@ -362,55 +363,128 @@ def solve_margin(
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
 ) -> float:
     """
     Estimate the required margin for a non-inferiority test of one sample mean.
 
     Args:
-        null_mean (float, optional):
-            Mean under the null hypothesis.
-
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        mean (float, optional):
+        mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter must be specified, otherwise, this parameter is ignored.
-        diff (float, optional):
-            Difference between the mean under the null hypothesis and the mean under the alternative hypothesis.
+            If `diff` is not specified, this parameter and `null_mean` are required.
+        null_mean:
+            Mean under the null hypothesis.
 
-            If both `null_mean` and `mean` are not provided, `diff` must be provided.
-        std (float):
+            If `diff` is not specified, this parameter and `mean` are required.
+        diff:
+            Mean difference between the alternative hypothesis and the null hypothesis.
+
+            If both `mean` and `null_mean` are not specified, this parameter is required.
+        std:
             Standard deviation.
-        size (float):
+        size:
             Sample size.
-        alternative (Literal["greater", "less"]):
+        alternative:
             Type of the alternative hypothesis.
 
-            - `'greater'`: upper-tailed alternative hypothesis, used when higher means are better.
-            - `'less'`: lower-tailed alternative hypothesis, used when higher means are worse.
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required non-inferiority margin.
+        float:
+            The required non-inferiority margin.
+
+            - If `alternative` is `'greater'`, the returned value is in the range $(-\\infty, \\hat{\\mu} - \\hat{\\mu}_0)$
+            - If `alternative` is `'less'`, the returned value is in the range $(\\hat{\\mu} - \\hat{\\mu}_0, +\\infty)$
 
     Raises:
         ValueError: If `diff` is None, and `null_mean` or `mean` is None.
     """
 
-    if diff is None:
-        if null_mean is None or mean is None:
-            raise ValueError("`null_mean` and `mean` must be provided when `diff` is not provided.")
-        diff = mean - null_mean
+    diff = _verify_mean_and_get_diff(mean, null_mean, diff)
 
     def func(margin: float) -> float:
         return _power(diff, margin, std, size, alternative, alpha) - power
 
     match alternative:
         case "greater":
-            return float(brentq(func, -1e8, diff))
+            return float(brentq(func, -1e6, diff))
         case "less":
-            return float(brentq(func, diff, 1e8))
+            return float(brentq(func, diff, 1e6))
+
+
+def solve_std(
+    *,
+    null_mean: float | None = None,
+    mean: float | None = None,
+    diff: float | None = None,
+    margin: float,
+    size: int,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+) -> float:
+    """
+    Estimate the required standard deviation for a non-inferiority test of one sample mean.
+
+    Args:
+        mean:
+            Mean under the alternative hypothesis.
+
+            If `diff` is not specified, this parameter and `null_mean` are required.
+        null_mean:
+            Mean under the null hypothesis.
+
+            If `diff` is not specified, this parameter and `mean` are required.
+        diff:
+            Mean difference between the alternative hypothesis and the null hypothesis.
+
+            If both `mean` and `null_mean` are not specified, this parameter is required.
+        margin:
+            The non-inferiority margin.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        size:
+            Sample size.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu > \\mu_0$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu < \\mu_0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+
+    Returns:
+        float: The required standard deviation.
+
+    Raises:
+        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
+    """
+
+    diff = _verify_mean_and_get_diff(mean, null_mean, diff)
+
+    margin = _margin(margin, alternative)
+
+    def func(std: float) -> float:
+        return _power(diff, margin, std, size, alternative, alpha) - power
+
+    return float(brentq(func, 1e-6, 1e12))
