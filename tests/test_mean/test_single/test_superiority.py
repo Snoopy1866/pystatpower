@@ -125,40 +125,27 @@ def test_solve_power(case: TestCase) -> None:
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_linux and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=0.0, std=15, size=10, alternative="greater", alpha=0.025, power=0.8, actual_power=0.803096209),
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=7.5, std=15, size=34, alternative="greater", alpha=0.025, power=0.8, actual_power=0.807776686),
-        ]:
+        if case.alternative == "greater" and case.margin in [4.5, 7.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert (
@@ -228,44 +215,23 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_linux and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
@@ -285,44 +251,23 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_linux and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_macos and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
+        if case.alternative == "greater" and case.margin in [1.5]:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
@@ -359,47 +304,6 @@ def test_solve_std(case: TestCase) -> None:
 
 
 def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
-
-    if request.config.is_linux and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_linux and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_macos and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=3.5, std=15, size=16, alternative="greater", alpha=0.025, power=0.8, actual_power=0.817438156),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(diff=15, margin=4.0, std=15, size=17, alternative="greater", alpha=0.025, power=0.8, actual_power=0.810070484),
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
-
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(diff=15, margin=9.5, std=15, size=61, alternative="greater", alpha=0.025, power=0.8, actual_power=0.804464986),
-        ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert (
         round(
