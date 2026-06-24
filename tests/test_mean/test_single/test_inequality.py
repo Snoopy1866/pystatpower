@@ -230,7 +230,7 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py310:
-        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (34) and case.alternative == "greater" and case.dist == "t"):
+        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (34,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
