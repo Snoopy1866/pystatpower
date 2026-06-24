@@ -6,15 +6,16 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.inequality import solve_power, solve_size, solve_null_mean, solve_mean, solve_std
+from pystatpower.mean.single.inequality import _verify_mean_and_get_diff, solve_power, solve_size, solve_null_mean, solve_mean, solve_std
 
 from tests.models import BaseTestCase
 
 
 @dataclass(kw_only=True)
 class TestCase(BaseTestCase):
-    null_mean: float
-    mean: float
+    mean: float | None = None
+    null_mean: float | None = None
+    diff: float | None = None
     std: float
     size: int
     alternative: Literal["two-sided", "greater", "less"]
@@ -23,6 +24,14 @@ class TestCase(BaseTestCase):
     actual_power: float
     dist: Literal["z", "t"]
     direction: Literal["greater", "less"] | None = None
+
+    def __post_init__(self) -> None:
+        self.diff = _verify_mean_and_get_diff(self.mean, self.null_mean, self.diff)
+
+        # Set the values ​​of mean and null_mean according to diff
+        if self.mean is None and self.null_mean is None and self.diff is not None:
+            self.null_mean = self.size
+            self.mean = self.diff + self.null_mean
 
 
 case_group_z = (
@@ -135,6 +144,23 @@ case_group_t = (
 )
 
 case_group = case_group_z + case_group_t
+
+
+def test_verify_mean_and_get_diff() -> None:
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=None, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=10, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=20, null_mean=None, diff=None)
+
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=None)
+    _verify_mean_and_get_diff(mean=None, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=None, null_mean=10, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=10)
 
 
 def test_solve_power(case: TestCase) -> None:
