@@ -80,7 +80,7 @@ def solve_power(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
@@ -143,7 +143,7 @@ def solve_size(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
@@ -197,7 +197,7 @@ def solve_diff(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
@@ -257,7 +257,7 @@ def solve_mean(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
@@ -317,7 +317,7 @@ def solve_null_mean(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
@@ -452,7 +452,7 @@ def solve_std(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
