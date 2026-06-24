@@ -6,15 +6,16 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.inequality import solve_power, solve_size, solve_null_mean, solve_mean, solve_std
+from pystatpower.mean.single.inequality import _verify_mean_and_get_diff, solve_power, solve_size, solve_diff, solve_mean, solve_null_mean, solve_std
 
 from tests.models import BaseTestCase
 
 
 @dataclass(kw_only=True)
 class TestCase(BaseTestCase):
-    null_mean: float
-    mean: float
+    mean: float | None = None
+    null_mean: float | None = None
+    diff: float | None = None
     std: float
     size: int
     alternative: Literal["two-sided", "greater", "less"]
@@ -23,6 +24,14 @@ class TestCase(BaseTestCase):
     actual_power: float
     dist: Literal["z", "t"]
     direction: Literal["greater", "less"] | None = None
+
+    def __post_init__(self) -> None:
+        self.diff = _verify_mean_and_get_diff(self.mean, self.null_mean, self.diff)
+
+        # Set the values ​​of mean and null_mean according to diff
+        if self.mean is None and self.null_mean is None and self.diff is not None:
+            self.null_mean = self.size
+            self.mean = self.diff + self.null_mean
 
 
 case_group_z = (
@@ -137,6 +146,23 @@ case_group_t = (
 case_group = case_group_z + case_group_t
 
 
+def test_verify_mean_and_get_diff() -> None:
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=None, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=None, null_mean=10, diff=None)
+
+    with pytest.raises(ValueError):
+        _verify_mean_and_get_diff(mean=20, null_mean=None, diff=None)
+
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=None)
+    _verify_mean_and_get_diff(mean=None, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=None, null_mean=10, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=None, diff=10)
+    _verify_mean_and_get_diff(mean=20, null_mean=10, diff=10)
+
+
 def test_solve_power(case: TestCase) -> None:
     assert (
         round(
@@ -204,7 +230,7 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py310:
-        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (34, 40) and case.alternative == "greater" and case.dist == "t"):
+        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (34,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
@@ -237,10 +263,10 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
     )
 
 
-def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
-        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
+        if (case.mean in (31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_linux and request.config.is_py311:
@@ -280,15 +306,11 @@ def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py310:
-        if case in [
-            TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8210, dist="t"),
-        ] or (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t"):
+        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py311:
-        if case in [
-            TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8210, dist="t"),
-        ] or (case.mean in (30, 31, 33, 34, 35, 36, 37, 38) and case.alternative == "two-sided" and case.dist == "t"):
+        if (case.mean in (30, 31, 33, 34, 35, 36, 37, 38) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_windows and request.config.is_py312:
@@ -303,11 +325,10 @@ def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None
         if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
-    direction = "greater" if case.null_mean > case.mean else "less"
+    direction = "greater" if case.mean > case.null_mean else "less"
     assert (
         round(
-            solve_null_mean(
-                mean=case.mean,
+            solve_diff(
                 std=case.std,
                 size=case.size,
                 alternative=case.alternative,
@@ -318,19 +339,19 @@ def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None
             ),
             0,
         )
-        == case.null_mean
+        == case.diff
     )
 
 
-def test_solve_null_mean_raise_error() -> None:
+def test_solve_diff_raise_error() -> None:
     with pytest.raises(ValueError):
-        solve_null_mean(mean=20, std=20, size=17, alternative="two-sided", alpha=0.05, power=0.8, dist="t")
+        solve_diff(std=20, size=17, alternative="two-sided", alpha=0.05, power=0.8, dist="t")
 
 
 def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if request.config.is_linux and request.config.is_py310:
-        if (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
+        if (case.mean in (31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
             request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if request.config.is_linux and request.config.is_py311:
@@ -415,6 +436,96 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_mean_raise_error() -> None:
     with pytest.raises(ValueError):
         solve_mean(null_mean=20, std=20, size=17, alternative="two-sided", alpha=0.05, power=0.8, dist="t")
+
+
+def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if request.config.is_linux and request.config.is_py310:
+        if (case.mean in (31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t") or (case.mean in (33,) and case.alternative == "greater" and case.dist == "t"):
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_linux and request.config.is_py311:
+        if case.mean in (31, 33, 34, 35, 36, 37) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_linux and request.config.is_py312:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_linux and request.config.is_py313:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_linux and request.config.is_py314:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py310:
+        if case.mean in (32, 33, 34, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py311:
+        if case.mean in (31, 34, 35, 36, 37) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py312:
+        if case.mean in (31, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py313:
+        if case.mean in (31, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_macos and request.config.is_py314:
+        if case.mean in (31, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py310:
+        if case in [
+            TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8210, dist="t"),
+        ] or (case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t"):
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py311:
+        if case in [
+            TestCase(null_mean=20, mean=33, std=20, size=17, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8210, dist="t"),
+        ] or (case.mean in (30, 31, 33, 34, 35, 36, 37, 38) and case.alternative == "two-sided" and case.dist == "t"):
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py312:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py313:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if request.config.is_windows and request.config.is_py314:
+        if case.mean in (31, 33, 34, 35, 36) and case.alternative == "two-sided" and case.dist == "t":
+            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    direction = "greater" if case.null_mean > case.mean else "less"
+    assert (
+        round(
+            solve_null_mean(
+                mean=case.mean,
+                std=case.std,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                dist=case.dist,
+                direction=direction,
+            ),
+            0,
+        )
+        == case.null_mean
+    )
+
+
+def test_solve_null_mean_raise_error() -> None:
+    with pytest.raises(ValueError):
+        solve_null_mean(mean=20, std=20, size=17, alternative="two-sided", alpha=0.05, power=0.8, dist="t")
 
 
 def test_solve_std(case: TestCase, request: pytest.FixtureRequest) -> None:
