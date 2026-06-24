@@ -5,6 +5,30 @@ from scipy.optimize import brentq
 from scipy.stats import nct, t
 
 
+def _verify_mean_and_get_diff(
+    mean: float | None,
+    null_mean: float | None,
+    diff: float | None,
+) -> float:
+
+    if diff is None:
+        if mean is None or null_mean is None:
+            raise ValueError("When 'diff' is omitted, both 'mean' and 'null_mean' are required.")
+        diff = mean - null_mean
+
+    return diff
+
+
+def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
+    """Convert margin to standard form based on alternative hypothesis"""
+
+    match alternative:
+        case "greater":
+            return -abs(margin)
+        case "less":
+            return abs(margin)
+
+
 def _power(
     diff: float,
     margin: float,
@@ -24,30 +48,6 @@ def _power(
             power = nct.cdf(t.ppf(alpha, df), df, nc)
 
     return float(power)
-
-
-def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to standard form based on alternative hypothesis"""
-
-    match alternative:
-        case "greater":
-            return -abs(margin)
-        case "less":
-            return abs(margin)
-
-
-def _verify_mean_and_get_diff(
-    mean: float | None,
-    null_mean: float | None,
-    diff: float | None,
-) -> float:
-
-    if diff is None:
-        if mean is None or null_mean is None:
-            raise ValueError("When 'diff' is omitted, both 'mean' and 'null_mean' must be provided.")
-        diff = mean - null_mean
-
-    return diff
 
 
 def solve_power(
@@ -103,7 +103,7 @@ def solve_power(
         float: The statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
+        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -168,7 +168,7 @@ def solve_size(
         int: The required sample size.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
+        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -407,7 +407,7 @@ def solve_margin(
             - If `alternative` is `'less'`, the returned value is in the range $(\\hat{\\mu} - \\hat{\\mu}_0, +\\infty)$
 
     Raises:
-        ValueError: If `diff` is None, and `null_mean` or `mean` is None.
+        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -477,7 +477,7 @@ def solve_std(
         float: The required standard deviation.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `mean` nor `null_mean` is not specified.
+        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
