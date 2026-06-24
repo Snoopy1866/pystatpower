@@ -23,12 +23,12 @@ jobs:
             for v in $(seq 7 15); do echo "{\"python\":\"3.10\",\"scipy\":\"1.$v\"}"; done
             # Py 3.11: 1.10 ~ 1.17
             for v in $(seq 10 17); do echo "{\"python\":\"3.11\",\"scipy\":\"1.$v\"}"; done
-            # Py 3.12: 1.11 ~ 1.17
-            for v in $(seq 11 17); do echo "{\"python\":\"3.12\",\"scipy\":\"1.$v\"}"; done
-            # Py 3.13: 1.15 ~ 1.17
-            for v in $(seq 15 17); do echo "{\"python\":\"3.13\",\"scipy\":\"1.$v\"}"; done
-            # Py 3.14: 1.16 ~ 1.17
-            for v in $(seq 16 17); do echo "{\"python\":\"3.14\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.12: 1.11 ~ 1.18
+            for v in $(seq 11 18); do echo "{\"python\":\"3.12\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.13: 1.15 ~ 1.18
+            for v in $(seq 15 18); do echo "{\"python\":\"3.13\",\"scipy\":\"1.$v\"}"; done
+            # Py 3.14: 1.16 ~ 1.18
+            for v in $(seq 16 18); do echo "{\"python\":\"3.14\",\"scipy\":\"1.$v\"}"; done
           ) | jq -sc '{"include": .}' )
 
           echo "matrix=$JSON_STUFF" >> $GITHUB_OUTPUT
