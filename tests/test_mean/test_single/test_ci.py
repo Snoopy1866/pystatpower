@@ -129,3 +129,23 @@ def test_std(case: TestCase) -> None:
         )
         == case.std
     )
+
+
+def test_interval_type_lower_upper(case: TestCase) -> None:
+    assert (
+        round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist), 9)
+        == round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="lower", dist=case.dist), 9)
+        == round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="upper", dist=case.dist), 9)
+    )
+
+    assert (
+        solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist)
+        == solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="lower", dist=case.dist)
+        == solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="upper", dist=case.dist)
+    )
+
+    assert (
+        round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist), 9)
+        == round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="lower", dist=case.dist), 9)
+        == round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="upper", dist=case.dist), 9)
+    )

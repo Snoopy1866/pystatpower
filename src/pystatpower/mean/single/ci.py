@@ -42,7 +42,7 @@ def _precision_t(
     match interval_type:
         case "two-sided":
             precision = t.ppf(1 - alpha / 2, df) * se
-        case "one-sided":
+        case "one-sided" | "lower" | "upper":
             precision = t.ppf(1 - alpha, df) * se
 
     return float(precision)
@@ -88,10 +88,10 @@ def solve_precision(
         interval_type:
             The type of confidence interval.
 
-            - `'two-sided'`: Two-sided confidence interval $(L, U)$.
-            - `'one-sided'`: One-sided confidence interval $(L, +\infty)$ or $(-\infty, U)$.
-            - `'lower'`: Lower one-sided confidence interval $(L, +\infty)$.
-            - `'upper'`: Upper one-sided confidence interval $(-\infty, U)$.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         dist:
             The distribution used to construct the confidence interval.
 
@@ -132,10 +132,10 @@ def solve_size(
         interval_type:
             The type of confidence interval.
 
-            - `'two-sided'`: Two-sided confidence interval $(L, U)$.
-            - `'one-sided'`: One-sided confidence interval $(L, +\infty)$ or $(-\infty, U)$.
-            - `'lower'`: Lower one-sided confidence interval $(L, +\infty)$.
-            - `'upper'`: Upper one-sided confidence interval $(-\infty, U)$.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         dist:
             The distribution used to construct the confidence interval.
 
@@ -179,10 +179,10 @@ def solve_std(
         interval_type:
             The type of confidence interval.
 
-            - `'two-sided'`: Two-sided confidence interval $(L, U)$.
-            - `'one-sided'`: One-sided confidence interval $(L, +\infty)$ or $(-\infty, U)$.
-            - `'lower'`: Lower one-sided confidence interval $(L, +\infty)$.
-            - `'upper'`: Upper one-sided confidence interval $(-\infty, U)$.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
         dist:
             The distribution used to construct the confidence interval.
 
