@@ -1,151 +1,140 @@
 # 单样本均值置信区间
 
-## 正态分布 {#z-dist}
+样本均值用 $\hat{\mu}$ 表示，总体均值用 $\mu$ 表示，样本方差用 $s^2$ 表示，总体方差用 $\sigma^2$ 表示。
 
-当总体方差 $\sigma^2$ 已知时，可使用正态分布构建置信区间。
+## _z_ 分布 {#z-dist}
+
+当总体方差 $\sigma^2$ 已知时，可使用 _z_ 分布构建置信区间。
 
 $$
-Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)
+z = \frac{\hat{\mu} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)
 $$
 
 === "双侧置信区间"
 
     $$
-    \text{Confidence Interval} = \left(\bar{X}-\frac{z_{1-\alpha/2}\sigma}{\sqrt{n}}, \ \bar{X}+\frac{z_{1-\alpha/2}\sigma}{\sqrt{n}}\right)
+    \begin{align}
+    L & = \hat{\mu} - z_{1-\alpha/2} \frac{\sigma}{\sqrt{n}} \\
+    U & = \hat{\mu} + z_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{z_{1-\alpha/2}\sigma}{\sqrt{n}}
+    d = z_{1-\alpha/2} \frac{\sigma}{\sqrt{n}}
     $$
 
-    === "解出 $n$"
-
-        $$
-        n = \frac{z_{1-\alpha/2}^2\sigma^2}{d^2}
-        $$
-
-    === "解出 $\sigma$"
-
-        $$
-        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha/2}}
-        $$
-
-=== "左侧置信区间"
+=== "单侧置信下限区间"
 
     $$
-    \text{Confidence Interval} = \left(-\infty, \ \bar{X}+\frac{z_{1-\alpha}\sigma}{\sqrt{n}}\right)
+    \begin{align}
+    L & = \hat{\mu} - z_{1-\alpha} \frac{\sigma}{\sqrt{n}} \\
+    U & = +\infty
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{z_{1-\alpha}\sigma}{\sqrt{n}}
+    d = z_{1-\alpha} \frac{\sigma}{\sqrt{n}}
     $$
 
-    === "解出 $n$"
-
-        $$
-        n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
-        $$
-
-    === "解出 $\sigma$"
-
-        $$
-        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha}}
-        $$
-
-=== "右侧置信区间"
+=== "单侧置信上限区间"
 
     $$
-    \text{Confidence Interval} = \left(\bar{X}-\frac{z_{1-\alpha}\sigma}{\sqrt{n}}, \ +\infty\right)
+    \begin{align}
+    L & = -\infty \\
+    U & = \hat{\mu} + z_{1-\alpha} \frac{\sigma}{\sqrt{n}}
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{z_{1-\alpha}\sigma}{\sqrt{n}}
+    d = z_{1-\alpha} \frac{\sigma}{\sqrt{n}}
     $$
 
-    === "解出 $n$"
-
-        $$
-        n = \frac{z_{1-\alpha}^2\sigma^2}{d^2}
-        $$
-
-    === "解出 $\sigma$"
-
-        $$
-        \sigma = \frac{d\sqrt{n}}{z_{1-\alpha}}
-        $$
-
-!!! note ""
-    若已知标准差 $\sigma = 1$ 时，均值到置信限的距离为 $d$，则当均值到置信限的距离为 $d'$ 时，标准差 $\sigma' = d'/d$，
-    利用此关系可以简化 [`solve_std`][pystatpower.mean.single.ci.solve_std] 函数的实现，而不必使用 `brentq` 进行反解。
-
-## *t* 分布 {#t-dist}
+## _t_ 分布 {#t-dist}
 
 当总体方差 $\sigma^2$ 未知时，可使用 $t$ 分布构建置信区间。
 
 $$
-T = \frac{\bar{X} - \mu}{S/\sqrt{n}} \sim t(n - 1)
+t = \frac{\hat{\mu} - \mu}{s/\sqrt{n}} \sim t(n - 1)
 $$
 
 === "双侧置信区间"
 
     $$
-    \text{Confidence Interval} = \left(\bar{X}-\frac{t_{1-\alpha/2,\ n-1}S}{\sqrt{n}}, \ \bar{X}+\frac{t_{1-\alpha/2,\ n-1}S}{\sqrt{n}}\right)
+    \begin{align}
+    L & = \hat{\mu} - t_{1-\alpha/2,\ n-1} \frac{s}{\sqrt{n}} \\
+    U & = \hat{\mu} + t_{1-\alpha/2,\ n-1} \frac{s}{\sqrt{n}}
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{t_{1-\alpha/2, \ n-1}S}{\sqrt{n}}
+    d = t_{1-\alpha/2,\ n-1} \frac{s}{\sqrt{n}}
     $$
 
-    === "解出 $S$"
-
-        $$
-        S = \frac{d\sqrt{n}}{t_{1-\alpha/2, \ n-1}}
-        $$
-
-=== "左侧置信区间"
+=== "单侧置信下限区间"
 
     $$
-    \text{Confidence Interval} = \left(-\infty, \ \bar{X}+\frac{t_{1-\alpha,\ n-1}S}{\sqrt{n}}\right)
+    \begin{align}
+    L & = \hat{\mu} - t_{1-\alpha,\ n-1} \frac{s}{\sqrt{n}} \\
+    U & = +\infty
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{t_{1-\alpha, \ n-1}S}{\sqrt{n}}
+    d = t_{1-\alpha,\ n-1} \frac{s}{\sqrt{n}}
     $$
 
-    === "解出 $S$"
-
-        $$
-        S = \frac{d\sqrt{n}}{t_{1-\alpha, \ n-1}}
-        $$
-
-=== "右侧置信区间"
+=== "单侧置信上限区间"
 
     $$
-    \text{Confidence Interval} = \left(\bar{X}-\frac{t_{1-\alpha,\ n-1}S}{\sqrt{n}}, \ +\infty\right)
+    \begin{align}
+    L & = -\infty \\
+    U & = \hat{\mu} + t_{1-\alpha,\ n-1} \frac{s}{\sqrt{n}}
+    \end{align}
     $$
 
-    设均值到置信限的距离为 $d$，则：
+    定义均值到置信限的距离为 $d$，则：
 
     $$
-    d = \frac{t_{1-\alpha, \ n-1}S}{\sqrt{n}}
+    d = t_{1-\alpha,\ n-1} \frac{s}{\sqrt{n}}
     $$
 
-    === "解出 $S$"
+??? tip "给定参数求解对应标准差的技巧"
 
-        $$
-        S = \frac{d\sqrt{n}}{t_{1-\alpha, \ n-1}}
-        $$
+    以上述 *t* 分布双侧置信区间为例，需求解给定参数 $n$ 和 $d$ 下对应的标准差$s$。
 
-!!! note ""
-    若已知标准差 $S = 1$ 时，均值到置信限的距离为 $d$，则当均值到置信限的距离为 $d'$ 时，标准差 $S' = d'/d$，
-    利用此关系可以简化 [`solve_std`][pystatpower.mean.single.ci.solve_std] 函数的实现，而不必使用 `brentq` 进行反解。
+    标准差为 $s$ 时，样本均值到置信限的距离为 $d$：
+
+    $$
+    d = t_{1-\alpha/2,\ n-1} \frac{s}{\sqrt{n}}
+    $$
+
+    标准差为 $s'$ 时，样本均值到置信限的距离为 $d'$：
+
+    $$
+    d' = t_{1-\alpha/2,\ n-1} \frac{s'}{\sqrt{n}}
+    $$
+
+
+    则有：
+
+    $$
+    \frac{d}{d'} = \frac{s}{s'} \Rightarrow s = s' \cdot \frac{d}{d'}
+    $$
+
+    当 $s' = 1$ 时：
+
+    $$
+    s = \frac{d}{d'}
+    $$
+
+    因此，可以先求解标准差 $s' = 1$ 时的 $d'$，再代入上述公式，即可得到标准差 $s$。
