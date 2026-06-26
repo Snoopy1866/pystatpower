@@ -4,148 +4,199 @@ from typing import Literal
 from scipy.optimize import brentq
 from scipy.stats import norm, t
 
-from ..._constant import SAMPLE_SIZE_SEARCH_MAX
 
-
-def _ci_half_width_z(
-    std: float, size: float, conf_level: float, interval_type: Literal["one-sided", "two-sided"]
-) -> float:
-    """Calculate the half-width of the confidence interval for one mean using z-test."""
-
-    match interval_type:
-        case "one-sided":
-            ci_half_width = norm.ppf(conf_level) * std / sqrt(size)
-        case "two-sided":
-            ci_half_width = norm.ppf((1 + conf_level) / 2) * std / sqrt(size)
-
-    return float(ci_half_width)
-
-
-def _ci_half_width_t(
-    std: float, size: float, conf_level: float, interval_type: Literal["one-sided", "two-sided"]
-) -> float:
-    """Calculate the half-width of the confidence interval for one mean using t-test."""
-
-    match interval_type:
-        case "one-sided":
-            ci_half_width = t.ppf(conf_level, size - 1) * std / sqrt(size)
-        case "two-sided":
-            ci_half_width = t.ppf((1 + conf_level) / 2, size - 1) * std / sqrt(size)
-
-    return float(ci_half_width)
-
-
-def _ci_half_width(
+def _precision_z(
     std: float,
     size: float,
     conf_level: float,
-    interval_type: Literal["one-sided", "two-sided"],
-    method: Literal["z", "t"],
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the half-width of the confidence interval for one mean."""
+    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision) using the z-distribution"""
 
-    match method:
+    alpha = 1 - conf_level
+
+    se = std / sqrt(size)
+
+    match interval_type:
+        case "two-sided":
+            precision = norm.ppf(1 - alpha / 2) * se
+        case "one-sided" | "lower" | "upper":
+            precision = norm.ppf(1 - alpha) * se
+
+    return float(precision)
+
+
+def _precision_t(
+    std: float,
+    size: float,
+    conf_level: float,
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
+) -> float:
+    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision) using the t-distribution."""
+
+    alpha = 1 - conf_level
+
+    se = std / sqrt(size)
+    df = size - 1
+
+    match interval_type:
+        case "two-sided":
+            precision = t.ppf(1 - alpha / 2, df) * se
+        case "one-sided" | "lower" | "upper":
+            precision = t.ppf(1 - alpha, df) * se
+
+    return float(precision)
+
+
+def _precision(
+    std: float,
+    size: float,
+    conf_level: float,
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
+    dist: Literal["z", "t"],
+) -> float:
+    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision)."""
+
+    match dist:
         case "z":
-            ci_half_width = _ci_half_width_z(std, size, conf_level, interval_type)
+            return _precision_z(std, size, conf_level, interval_type)
         case "t":
-            ci_half_width = _ci_half_width_t(std, size, conf_level, interval_type)
-
-    return float(ci_half_width)
+            return _precision_t(std, size, conf_level, interval_type)
 
 
-def solve_half_width(
+def solve_precision(
     *,
     std: float,
     size: int,
     conf_level: float = 0.95,
-    interval_type: Literal["one-sided", "two-sided"] = "two-sided",
-    method: Literal["z", "t"] = "t",
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
+    dist: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Calculate the half-width of the confidence interval for one mean.
+    Calculate the distance from the single-group mean to the confidence limit (commonly known as precision).
 
     Args:
-        std (float):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
-        size (int):
-            Sample size ($n$).
-        conf_level (float, Optional):
+        std:
+            Standard deviation.
+        size:
+            Sample size.
+        conf_level:
             Confidence level.
-        interval_type (Literal["one-sided", "two-sided"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level should be specified
+            - If `interval_type` is `'one-sided'`, `'lower'` or `'upper'`, a one-sided confidence level should be specified
+        interval_type:
             The type of confidence interval.
-        method (Literal["z", "t"], optional):
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        dist:
             The distribution used to construct the confidence interval.
 
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t-distribution.
+
     Returns:
-        (float): The half-width of the confidence interval for one mean.
+        float: The distance from the single-group mean to the confidence limit (commonly known as precision).
+
+    Notes:
+        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
-    half_width = _ci_half_width(std, size, conf_level, interval_type, method)
-    return float(half_width)
+    return _precision(std, size, conf_level, interval_type, dist)
 
 
 def solve_size(
     *,
-    half_width: float,
+    precision: float,
     std: float,
     conf_level: float = 0.95,
-    interval_type: Literal["one-sided", "two-sided"] = "two-sided",
-    method: Literal["z", "t"] = "t",
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
+    dist: Literal["z", "t"] = "t",
 ) -> int:
     """
-    Calculate the required sample size for the half-width of one mean confidence interval.
+    Estimate the required sample size, given the distance from the single-group mean to the confidence limit (commonly known as precision).
 
     Args:
-        half_width (float):
-            Half-width of the confidence interval ($d$).
-        std (float):
-            Standard deviation ($\\sigma$). If `method='t'`, provide the sample standard deviation ($S$).
-        conf_level (float, Optional):
+        precision:
+            Distance from the single-group mean to the confidence limit.
+        std:
+            Standard deviation.
+        conf_level:
             Confidence level.
-        interval_type (Literal["one-sided", "two-sided"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level should be specified
+            - If `interval_type` is `'one-sided'`, `'lower'` or `'upper'`, a one-sided confidence level should be specified
+        interval_type:
             The type of confidence interval.
-        method (Literal["z", "t"], optional):
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        dist:
             The distribution used to construct the confidence interval.
 
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t-distribution.
+
     Returns:
-        (int): The required sample size.
+        int: The required sample size.
+
+    Notes:
+        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
     def func(size: float) -> float:
-        return _ci_half_width(std, size, conf_level, interval_type, method) - half_width
+        return _precision(std, size, conf_level, interval_type, dist) - precision
 
-    size = ceil(brentq(func, 1.1, SAMPLE_SIZE_SEARCH_MAX))
-    return size
+    return ceil(brentq(func, 1 + 1e-12, 1e12))
 
 
 def solve_std(
     *,
-    half_width: float,
+    precision: float,
     size: int,
     conf_level: float = 0.95,
-    interval_type: Literal["one-sided", "two-sided"] = "two-sided",
-    method: Literal["z", "t"] = "t",
+    interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
+    dist: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Calculate the required standard deviation for the half-width of one mean confidence interval.
+    Estimate the required standard deviation, given the distance from the single-group mean to the confidence limit (commonly known as precision).
 
     Args:
-        half_width (float):
-            Half-width of the confidence interval ($d$).
-        size (int):
-            Sample size ($n$).
-        conf_level (float, Optional):
+        precision:
+            Distance from the single-group mean to the confidence limit.
+        size:
+            Sample size.
+        conf_level:
             Confidence level.
-        interval_type (Literal["one-sided", "two-sided"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level should be specified
+            - If `interval_type` is `'one-sided'`, `'lower'` or `'upper'`, a one-sided confidence level should be specified
+        interval_type:
             The type of confidence interval.
-        method (Literal["z", "t"], optional):
+
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'one-sided'`: One-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        dist:
             The distribution used to construct the confidence interval.
 
+            - `'z'`: Normal distribution.
+            - `'t'`: Student's t-distribution.
+
     Returns:
-        (float): The required standard deviation.
+        float: The required standard deviation.
+
+    Notes:
+        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
-    multiplier = _ci_half_width(1, size, conf_level, interval_type, method)
-    std = half_width / multiplier
-
-    return float(std)
+    # First calculate precision d' under standard deviation s' = 1, and then use the conversion formula s = d/d' to
+    # directly obtain the required standard deviation s under given precision d.
+    # This algorithm does not require the use of brentq inverse solution.
+    return precision / _precision(1, size, conf_level, interval_type, dist)
