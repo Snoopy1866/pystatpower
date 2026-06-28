@@ -4,7 +4,7 @@ from typing import Literal
 from scipy.optimize import OptimizeResult, brentq, minimize_scalar
 from scipy.stats import f, norm
 
-from ..._constant import SAMPLE_SIZE_SEARCH_MAX
+from ..._math_utils import _domain_square_root_of_quad
 
 
 def _distance_wald(
@@ -13,19 +13,32 @@ def _distance_wald(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wald method."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
+    using the Wald method.
+    """
+
+    alpha = 1 - conf_level
+
+    se = sqrt(proportion * (1 - proportion) / size)
 
     match interval_type:
         case "two-sided":
-            lower_limit = proportion - norm.ppf((1 + conf_level) / 2) * sqrt(proportion * (1 - proportion) / size)
-            upper_limit = proportion + norm.ppf((1 + conf_level) / 2) * sqrt(proportion * (1 - proportion) / size)
-            distance = min(upper_limit, 1) - max(lower_limit, 0)
+            z = norm.ppf(1 - alpha / 2)
+            L = proportion - z * se
+            U = proportion + z * se
+            distance = min(U, 1) - max(L, 0)
         case "lower":
-            lower_limit = proportion - norm.ppf(conf_level) * sqrt(proportion * (1 - proportion) / size)
-            distance = proportion - max(lower_limit, 0)
+            z = norm.ppf(1 - alpha)
+            L = proportion - z * se
+            # U = 1
+            distance = proportion - max(L, 0)
         case "upper":
-            upper_limit = proportion + norm.ppf(conf_level) * sqrt(proportion * (1 - proportion) / size)
-            distance = min(upper_limit, 1) - proportion
+            z = norm.ppf(1 - alpha)
+            # L = 0
+            U = proportion + z * se
+            distance = min(U, 1) - proportion
 
     return float(distance)
 
@@ -36,31 +49,33 @@ def _distance_wald_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wald method with continuity correction."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
+    using the Wald method with continuity correction.
+    """
+
+    alpha = 1 - conf_level
+
+    se = sqrt(proportion * (1 - proportion) / size)
+    c = 1 / (2 * size)
 
     match interval_type:
         case "two-sided":
-            lower_limit = (
-                proportion
-                - norm.ppf((1 + conf_level) / 2) * sqrt(proportion * (1 - proportion) / size)
-                - 1 / (2 * size)
-            )
-            upper_limit = (
-                proportion
-                + norm.ppf((1 + conf_level) / 2) * sqrt(proportion * (1 - proportion) / size)
-                + 1 / (2 * size)
-            )
-            distance = min(upper_limit, 1) - max(lower_limit, 0)
+            z = norm.ppf(1 - alpha / 2)
+            L = proportion - z * se - c
+            U = proportion + z * se + c
+            distance = min(U, 1) - max(L, 0)
         case "lower":
-            lower_limit = (
-                proportion - norm.ppf(conf_level) * sqrt(proportion * (1 - proportion) / size) - 1 / (2 * size)
-            )
-            distance = proportion - max(lower_limit, 0)
+            z = norm.ppf(1 - alpha)
+            L = proportion - z * se - c
+            # U = 1
+            distance = proportion - max(L, 0)
         case "upper":
-            upper_limit = (
-                proportion + norm.ppf(conf_level) * sqrt(proportion * (1 - proportion) / size) + 1 / (2 * size)
-            )
-            distance = min(upper_limit, 1) - proportion
+            z = norm.ppf(1 - alpha)
+            # L = 0
+            U = proportion + z * se + c
+            distance = min(U, 1) - proportion
 
     return float(distance)
 
@@ -71,33 +86,42 @@ def _distance_wilson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wilson method."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
+    using the Wilson method.
+    """
+
+    alpha = 1 - conf_level
 
     match interval_type:
         case "two-sided":
-            lower_limit = (
-                (2 * size * proportion + norm.ppf((1 + conf_level) / 2) ** 2)
-                - norm.ppf((1 + conf_level) / 2)
-                * sqrt(norm.ppf((1 + conf_level) / 2) ** 2 + 4 * size * proportion * (1 - proportion))
-            ) / (2 * (size + norm.ppf((1 + conf_level) / 2) ** 2))
-            upper_limit = (
-                (2 * size * proportion + norm.ppf((1 + conf_level) / 2) ** 2)
-                + norm.ppf((1 + conf_level) / 2)
-                * sqrt(norm.ppf((1 + conf_level) / 2) ** 2 + 4 * size * proportion * (1 - proportion))
-            ) / (2 * (size + norm.ppf((1 + conf_level) / 2) ** 2))
-            distance = upper_limit - lower_limit
+            z = norm.ppf(1 - alpha / 2)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c = z**2 + 4 * size * proportion * (1 - proportion)
+
+            L = (b - z * sqrt(c)) / a
+            U = (b + z * sqrt(c)) / a
+            distance = U - L
         case "lower":
-            lower_limit = (
-                (2 * size * proportion + norm.ppf(conf_level) ** 2)
-                - norm.ppf(conf_level) * sqrt(norm.ppf(conf_level) ** 2 + 4 * size * proportion * (1 - proportion))
-            ) / (2 * (size + norm.ppf(conf_level) ** 2))
-            distance = proportion - lower_limit
+            z = norm.ppf(1 - alpha)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c = z**2 + 4 * size * proportion * (1 - proportion)
+
+            L = (b - z * sqrt(c)) / a
+            # U = 1
+            distance = proportion - L
         case "upper":
-            upper_limit = (
-                (2 * size * proportion + norm.ppf(conf_level) ** 2)
-                + norm.ppf(conf_level) * sqrt(norm.ppf(conf_level) ** 2 + 4 * size * proportion * (1 - proportion))
-            ) / (2 * (size + norm.ppf(conf_level) ** 2))
-            distance = upper_limit - proportion
+            z = norm.ppf(1 - alpha)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c = z**2 + 4 * size * proportion * (1 - proportion)
+
+            # L = 0
+            U = (b + z * sqrt(c)) / a
+            distance = U - proportion
 
     return float(distance)
 
@@ -108,52 +132,45 @@ def _distance_wilson_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Wilson method, with continuity correction."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
+    using the Wilson method with continuity correction.
+    """
+
+    alpha = 1 - conf_level
 
     match interval_type:
         case "two-sided":
-            lower_limit = (
-                (2 * size * proportion + norm.ppf((1 + conf_level) / 2) ** 2 - 1)
-                - norm.ppf((1 + conf_level) / 2)
-                * sqrt(
-                    norm.ppf((1 + conf_level) / 2) ** 2
-                    - 1 / size
-                    + 4 * size * proportion * (1 - proportion)
-                    + 4 * proportion
-                    - 2
-                )
-            ) / (2 * (size + norm.ppf((1 + conf_level) / 2) ** 2))
+            z = norm.ppf(1 - alpha / 2)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c1 = z**2 - 1 / size + 4 * size * proportion * (1 - proportion)
+            c2 = 4 * proportion - 2
 
-            upper_limit = (
-                (2 * size * proportion + norm.ppf((1 + conf_level) / 2) ** 2 + 1)
-                + norm.ppf((1 + conf_level) / 2)
-                * sqrt(
-                    norm.ppf((1 + conf_level) / 2) ** 2
-                    - 1 / size
-                    + 4 * size * proportion * (1 - proportion)
-                    - 4 * proportion
-                    + 2
-                )
-            ) / (2 * (size + norm.ppf((1 + conf_level) / 2) ** 2))
-            distance = upper_limit - lower_limit
+            L = ((b - 1) - z * sqrt(c1 + c2)) / a
+            U = ((b + 1) + z * sqrt(c1 - c2)) / a
+            distance = U - L
         case "lower":
-            lower_limit = (
-                (2 * size * proportion + norm.ppf(conf_level) ** 2 - 1)
-                - norm.ppf(conf_level)
-                * sqrt(
-                    norm.ppf(conf_level) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) + 4 * proportion - 2
-                )
-            ) / (2 * (size + norm.ppf(conf_level) ** 2))
-            distance = proportion - lower_limit
+            z = norm.ppf(1 - alpha)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c1 = z**2 - 1 / size + 4 * size * proportion * (1 - proportion)
+            c2 = 4 * proportion - 2
+
+            L = ((b - 1) - z * sqrt(c1 + c2)) / a
+            # U = 1
+            distance = proportion - L
         case "upper":
-            upper_limit = (
-                (2 * size * proportion + norm.ppf(conf_level) ** 2 + 1)
-                + norm.ppf(conf_level)
-                * sqrt(
-                    norm.ppf(conf_level) ** 2 - 1 / size + 4 * size * proportion * (1 - proportion) - 4 * proportion + 2
-                )
-            ) / (2 * (size + norm.ppf(conf_level) ** 2))
-            distance = upper_limit - proportion
+            z = norm.ppf(1 - alpha)
+            a = 2 * (size + z**2)
+            b = 2 * size * proportion + z**2
+            c1 = z**2 - 1 / size + 4 * size * proportion * (1 - proportion)
+            c2 = 4 * proportion - 2
+
+            # L = 0
+            U = ((b + 1) + z * sqrt(c1 - c2)) / a
+            distance = U - proportion
 
     return float(distance)
 
@@ -164,47 +181,31 @@ def _distance_clopper_pearson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound using the Clopper-Pearson method."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
+    using the Clopper-Pearson method.
+    """
+
+    alpha = 1 - conf_level
+
+    n = size
+    p = proportion
+    q = 1 - p
 
     match interval_type:
         case "two-sided":
-            lower_limit = 1 / (
-                1
-                + (size * (1 - proportion) + 1)
-                / (
-                    size
-                    * proportion
-                    * f.ppf((1 - conf_level) / 2, 2 * size * proportion, 2 * (size * (1 - proportion) + 1))
-                )
-            )
-            upper_limit = 1 / (
-                1
-                + size
-                * (1 - proportion)
-                / (
-                    (size * proportion + 1)
-                    * f.ppf((1 + conf_level) / 2, 2 * (size * proportion + 1), 2 * size * (1 - proportion))
-                )
-            )
-            distance = upper_limit - lower_limit
+            L = 1 / (1 + (n * q + 1) / (n * p * f.ppf(alpha / 2, 2 * n * p, 2 * (n * q + 1))))
+            U = 1 / (1 + n * q / ((n * p + 1) * f.ppf(1 - alpha / 2, 2 * (n * p + 1), 2 * n * q)))
+            distance = U - L
         case "lower":
-            lower_limit = 1 / (
-                1
-                + (size * (1 - proportion) + 1)
-                / (size * proportion * f.ppf(1 - conf_level, 2 * size * proportion, 2 * (size * (1 - proportion) + 1)))
-            )
-            distance = proportion - lower_limit
+            L = 1 / (1 + (n * q + 1) / (n * p * f.ppf(alpha, 2 * n * p, 2 * (n * q + 1))))
+            # U = 1
+            distance = proportion - L
         case "upper":
-            upper_limit = 1 / (
-                1
-                + size
-                * (1 - proportion)
-                / (
-                    (size * proportion + 1)
-                    * f.ppf(conf_level, 2 * (size * proportion + 1), 2 * size * (1 - proportion))
-                )
-            )
-            distance = upper_limit - proportion
+            # L = 0
+            U = 1 / (1 + n * q / ((n * p + 1) * f.ppf(1 - alpha, 2 * (n * p + 1), 2 * n * q)))
+            distance = U - proportion
 
     return float(distance)
 
@@ -214,13 +215,16 @@ def _distance(
     size: float,
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
-    method: Literal["clopper-pearson", "wald", "wilson"],
+    method: Literal["wald", "wilson", "clopper-pearson", "cp"],
     continuity_correction: bool = False,
 ) -> float:
-    """Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound."""
+    """
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
+    """
 
     match method:
-        case "clopper-pearson":
+        case "clopper-pearson" | "cp":
             return _distance_clopper_pearson(proportion, size, conf_level, interval_type)
         case "wald":
             if continuity_correction:
@@ -240,35 +244,40 @@ def solve_distance(
     size: int,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["wald", "wilson", "clopper-pearson", "cp"] = "cp",
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the confidence interval width for one proportion or the distance from the proportion to the confidence bound.
+    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
+    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
 
     Args:
-        proportion (float):
+        proportion:
             Proportion.
-        size (int):
+        size:
             Sample size.
-        conf_level (float, optional):
+        conf_level:
             Confidence level.
-        interval_type (Literal["two-sided", "lower", "upper"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level is required.
+            - If `interval_type` is `'lower'` or `'upper'`, a one-sided confidence level is required.
+        interval_type:
             Type of the confidence interval.
 
-            - `two-sided`: Two-sided confidence interval $(L, U)$.
-            - `lower`: Lower one-sided confidence interval $(L, +\\infty)$.
-            - `upper`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper-pearson", "wald", "wilson"], optional):
-            Method used in calculation of the confidence interval.
-        continuity_correction (bool, optional):
-            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        method:
+            The method used to construct the confidence interval.
+
+            - `'wald'`: Wald method.
+            - `'wilson'`: Wilson method.
+            - `'clopper-pearson'`, `'cp'`: Clopper-Pearson method.
+        continuity_correction:
+            Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
 
     Returns:
-        (float): The confidence interval width.
-
-    Raises:
-        ValueError: If `method='wald'` or `method='wilson'`, and `continuity_correction=None`.
+        float: The confidence interval width (two-sided confidence interval), or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
     """
 
     return _distance(proportion, size, conf_level, interval_type, method, continuity_correction)
@@ -280,82 +289,93 @@ def solve_size(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["wald", "wilson", "clopper-pearson", "cp"] = "cp",
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size, given either a desired confidence interval width or a desired distance from the proportion to the confidence bound.
+    Estimate the required sample size for a single-group proportion confidence interval.
+
+    For two-sided confidence interval, the confidence interval width needs to be given.
+
+    For one-sided confidence interval, the distance from the proportion to the confidence limit needs to be given.
 
     Args:
-        proportion (float):
+        proportion:
             Proportion.
-        distance (float):
-            - if `interval_type` = `'two-sided'`, provide confidence interval width.
-            - if `interval_type` = `'lower'` or `interval_type` = `'upper'`, provide the distance from the proportion to the confidence bound.
-        conf_level (float, optional):
+        distance:
+            - If `interval_type` is `'two-sided'`, a confidence interval width is required.
+            - If `interval_type` is `'lower'` or `'upper'`, a distance from the proportion to the confidence limit is required.
+        conf_level:
             Confidence level.
-        interval_type (Literal["two-sided", "lower", "upper"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level is required.
+            - If `interval_type` is `'lower'` or `'upper'`, a one-sided confidence level is required.
+        interval_type:
             Type of the confidence interval.
 
-            - `two-sided`: Two-sided confidence interval $(L, U)$.
-            - `lower`: Lower one-sided confidence interval $(L, +\\infty)$.
-            - `upper`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper-pearson", "wald", "wilson"], optional):
-            Method used in calculation of the confidence interval.
-        continuity_correction (bool | None, optional):
-            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        method:
+            The method used to construct the confidence interval.
+
+            - `'wald'`: Wald method.
+            - `'wilson'`: Wilson method.
+            - `'clopper-pearson'`, `'cp'`: Clopper-Pearson method.
+        continuity_correction:
+            Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
 
     Returns:
-        (int): The required sample size.
-
-    Raises:
-        ValueError: If `method='wald'` or `method='wilson'`, and `continuity_correction=None`.
+        int: The required sample size.
     """
 
     def func(size: float) -> float:
         return _distance(proportion, size, conf_level, interval_type, method, continuity_correction) - distance
 
     if method == "wilson" and continuity_correction:
-        # wilson score 连续性校正公式中的分子可能存在对负数开算术平方根的情况，这可能会导致置信区间宽度计算失败，因此需要先求出根号下的定义域，缩小 brentq 搜索范围
-
-        z = norm.ppf((1 + conf_level) / 2) if interval_type == "two-sided" else norm.ppf(conf_level)
-
-        a = 4 * proportion * (1 - proportion)
-        b1 = z**2 + 4 * proportion - 2
-        b2 = z**2 - 4 * proportion + 2
-        c = -1
-
-        # 对 Lower Limit 求根号下的定义域
-        n1 = (-b1 - sqrt(b1**2 - 4 * a * c)) / (2 * a)
-        n2 = (-b1 + sqrt(b1**2 - 4 * a * c)) / (2 * a)
-
-        # 对 Upper Limit 求根号下的定义域
-        n3 = (-b2 - sqrt(b2**2 - 4 * a * c)) / (2 * a)
-        n4 = (-b2 + sqrt(b2**2 - 4 * a * c)) / (2 * a)
-
+        # The numerator in the wilson score continuity correction formula may take the arithmetic square root of a
+        # negative number,which may cause the confidence interval width calculation to fail. Therefore, it is necessary
+        # to first find the domain under the root sign and narrow the brentq search range.
+        alpha = 1 - conf_level
         match interval_type:
             case "two-sided":
-                lower_bound = max(n1, n2, n3, n4)
+                z = norm.ppf(1 - alpha / 2)
+
+                a = 4 * proportion * (1 - proportion)
+                b1 = z**2 + (4 * proportion - 2)
+                b2 = z**2 - (4 * proportion - 2)
+                c = -1
+                lb = max(_domain_square_root_of_quad(a, b1, c)[1][0], _domain_square_root_of_quad(a, b2, c)[1][0])
             case "lower":
-                lower_bound = max(n3, n4)
+                z = norm.ppf(1 - alpha)
+
+                a = 4 * proportion * (1 - proportion)
+                b = z**2 + (4 * proportion - 2)
+                c = -1
+                lb = _domain_square_root_of_quad(a, b, c)[1][0]
             case "upper":
-                lower_bound = max(n1, n2)
+                z = norm.ppf(1 - alpha)
 
-        upper_bound = SAMPLE_SIZE_SEARCH_MAX
+                a = 4 * proportion * (1 - proportion)
+                b = z**2 - (4 * proportion - 2)
+                c = -1
+                lb = _domain_square_root_of_quad(a, b, c)[1][0]
 
-        # wilson score 连续性校正计算出的置信区间宽度并随样本量增大而单调减小，而是在小样本区间内先增大，随着样本量继续增大，置信区间宽度逐渐减小。
-        # 因此，直接使用 brentq 可能无法收敛，必须先找到置信区间的极大值点 $n'$，然后将 brentq 的搜索区间限定为 $[n', [SAMPLE_SIZE_SEARCH_MAX]]$，才能保证收敛。
-        res: OptimizeResult = minimize_scalar(lambda size: -func(size), bounds=(lower_bound, upper_bound))
+        ub = 1e12
+
+        # The width of the confidence interval calculated by wilson score continuity correction does not decreases
+        # monotonically as the sample size increases. Instead, it first increases in the small sample range, and as
+        # the sample size continues to increase, the width of the confidence interval gradually decreases. Therefore,
+        # using brentq directly may not converge. You must first find the maximum value point $n'$ of the confidence
+        # interval, and then limit the search interval of brentq to $(n', 1e12)$ to ensure convergence.
+        res: OptimizeResult = minimize_scalar(lambda size: -func(size), bounds=(lb, ub))
         if -res.fun < 0:
-            raise ValueError("No solution found.")
+            return 2  # Any sample size can meet the requirements, and the minimum allowed sample size 2 is directly returned.
         else:
-            lower_bound = max(lower_bound, res.x)
-
-        size = brentq(func, lower_bound, upper_bound)
+            lb = max(lb, res.x)
+            return ceil(brentq(func, lb, ub))
     else:
-        size = brentq(func, 0.000001, SAMPLE_SIZE_SEARCH_MAX)
-
-    return ceil(size)
+        return ceil(brentq(func, 1e-12, 1e12))
 
 
 def solve_proportion(
@@ -364,47 +384,60 @@ def solve_proportion(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal["clopper-pearson", "wald", "wilson"] = "clopper-pearson",
+    method: Literal["wald", "wilson", "clopper-pearson", "cp"] = "cp",
     continuity_correction: bool = False,
-    search_direction: Literal["below", "above"] = "above",
+    direction: Literal["greater", "less"] = "greater",
 ) -> float:
-    """Estimate the required proportion, given either a desired confidence interval width or a desired distance from the proportion to the confidence bound.
+    """
+    Estimate the required proportion for a single-group proportion confidence interval.
+
+    For two-sided confidence interval, the confidence interval width needs to be given.
+
+    For one-sided confidence interval, the distance from the proportion to the confidence limit needs to be given.
 
     Args:
-        size (int):
+        size:
             Sample size.
-        distance (float):
-            - if `interval_type` = `'two-sided'`, provide confidence interval width.
-            - if `interval_type` = `'lower'` or `interval_type` = `'upper'`, provide the distance from the proportion to the confidence bound.
-        conf_level (float, optional):
+        distance:
+            - If `interval_type` is `'two-sided'`, a confidence interval width is required.
+            - If `interval_type` is `'lower'` or `'upper'`, a distance from the proportion to the confidence limit is required.
+        conf_level:
             Confidence level.
-        interval_type (Literal["two-sided", "lower", "upper"], optional):
+
+            - If `interval_type` is `'two-sided'`, a two-sided confidence level should is required.
+            - If `interval_type` is `'lower'` or `'upper'`, a one-sided confidence level is required.
+        interval_type:
             Type of the confidence interval.
 
-            - `two-sided`: Two-sided confidence interval $(L, U)$.
-            - `lower`: Lower one-sided confidence interval $(L, +\\infty)$.
-            - `upper`: Upper one-sided confidence interval $(-\\infty, U)$.
-        method (Literal["clopper-pearson", "wald", "wilson"], optional):
-            Method used in calculation of the confidence interval.
-        continuity_correction (bool | None, optional):
-            Whether or not to apply Yate's continuity correction, only valid for `method='wald'` or `method='wilson'`.
-        search_direction (Literal["below", "above"], optional):
-            Direction of the search.
+            - `'two-sided'`: Two-sided confidence interval.
+            - `'lower'`: Lower one-sided confidence interval.
+            - `'upper'`: Upper one-sided confidence interval.
+        method:
+            The method used to construct the confidence interval.
 
-            - `'below'`: search for the proportion in range (0, 0.5]
-            - `'above'`: search for the proportion in range [0.5, 1)
+            - `'wald'`: Wald method.
+            - `'wilson'`: Wilson method.
+            - `'clopper-pearson'`, `'cp'`: Clopper-Pearson method.
+        continuity_correction:
+            Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
+        direction:
+            The search direction for the proportion relative to the 0.5.
+
+            - `'greater'`: Search for the proportion greater than 0.5.
+            - `'less'`: Search for the proportion less than 0.5.
 
     Returns:
-        (float): The required proportion.
+        float: The required proportion.
     """
 
     def func(proportion: float) -> float:
         return _distance(proportion, size, conf_level, interval_type, method, continuity_correction) - distance
 
-    match search_direction.lower():
-        case "below":
-            proportion = brentq(func, 0.000001, 0.5 + 0.000001)
-        case "above":
-            proportion = brentq(func, 0.5 - 0.000001, 0.999999)
-
-    return proportion
+    if abs(func(0.5)) < 1e-9:
+        return 0.5
+    else:
+        match direction:
+            case "greater":
+                return float(brentq(func, 0.5, 1 - 1e-12))
+            case "less":
+                return float(brentq(func, 1e-12, 0.5))

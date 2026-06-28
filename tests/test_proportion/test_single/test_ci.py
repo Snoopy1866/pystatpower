@@ -4,76 +4,27 @@
 from dataclasses import dataclass
 from typing import Literal
 
-import pytest
 
 from pystatpower.proportion.single.ci import solve_distance, solve_proportion, solve_size
 
 from tests.models import BaseTestCase
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TestCase(BaseTestCase):
     proportion: float
     size: int
-    distance: float
-    actual_distance: float
     conf_level: float
     interval_type: Literal["two-sided", "lower", "upper"]
-    method: Literal["clopper-pearson", "wald", "wilson"]
+    method: Literal["wald", "wilson", "clopper-pearson", "cp"]
     continuity_correction: bool | None = None
+    distance: float
+    actual_distance: float
 
 
-case_group = (
+case_group_wald = (
     [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "clopper-pearson"
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="clopper-pearson")
-        for size, distance, actual_distance in [
-            (14029, 0.01, 0.0100),
-            (3557, 0.02, 0.0200),
-            (1603, 0.03, 0.0300),
-            (914, 0.04, 0.0400),
-            (593, 0.05, 0.0500),
-            (417, 0.06, 0.0600),
-            (310, 0.07, 0.0700),
-            (241, 0.08, 0.0798),
-            (192, 0.09, 0.0900),
-            (158, 0.10, 0.0997),
-        ]
-    ]
-    + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "clopper-pearson"
-        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="clopper-pearson")
-        for size, distance, actual_distance in [
-            (2704, 0.01, 0.0100),
-            (742, 0.02, 0.0200),
-            (359, 0.03, 0.0300),
-            (218, 0.04, 0.0399),
-            (150, 0.05, 0.0498),
-            (111, 0.06, 0.0598),
-            (86, 0.07, 0.0700),
-            (70, 0.08, 0.0796),
-            (58, 0.09, 0.0898),
-            (50, 0.10, 0.0988),
-        ]
-    ]
-    + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "clopper-pearson"
-        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="clopper-pearson")
-        for size, distance, actual_distance in [
-            (4298, 0.01, 0.0100),
-            (1065, 0.02, 0.0200),
-            (469, 0.03, 0.0300),
-            (261, 0.04, 0.0399),
-            (165, 0.05, 0.0499),
-            (113, 0.06, 0.0598),
-            (81, 0.07, 0.0699),
-            (61, 0.08, 0.0797),
-            (47, 0.09, 0.0897),
-            (37, 0.10, 0.0997),
-        ]
-    ]
-    + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wald", continuity_correction = False
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wald", continuity_correction = False
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="wald", continuity_correction=False)
         for size, distance, actual_distance in [
             (13830, 0.01, 0.0100),
@@ -89,7 +40,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = False
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = False
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wald", continuity_correction=False)
         for size, distance, actual_distance in [
             (2435, 0.01, 0.0100),
@@ -105,7 +56,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = False
+        # proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = False
         TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wald", continuity_correction=False)
         for size, distance, actual_distance in [
             (4329, 0.01, 0.0100),
@@ -120,8 +71,11 @@ case_group = (
             (44, 0.10, 0.0992),
         ]
     ]
-    + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wald", continuity_correction = True
+)
+
+case_group_wald_cc = (
+    [
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wald", continuity_correction = True
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="wald", continuity_correction=True)
         for size, distance, actual_distance in [
             (14029, 0.01, 0.0100),
@@ -137,7 +91,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = True
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wald", continuity_correction = True
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wald", continuity_correction=True)
         for size, distance, actual_distance in [
             (2535, 0.01, 0.0100),
@@ -153,7 +107,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = True
+        # proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wald", continuity_correction = True
         TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wald", continuity_correction=True)
         for size, distance, actual_distance in [
             (4429, 0.01, 0.0100),
@@ -168,8 +122,11 @@ case_group = (
             (53, 0.10, 0.0998),
         ]
     ]
-    + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = False
+)
+
+case_group_wilson = (
+    [
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = False
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="wilson", continuity_correction=False)
         for size, distance, actual_distance in [
             (13833, 0.01, 0.0100),
@@ -185,7 +142,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = False
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = False
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wilson", continuity_correction=False)
         for size, distance, actual_distance in [
             (2649, 0.01, 0.0100),
@@ -201,7 +158,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = False
+        # proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = False
         TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wilson", continuity_correction=False)
         for size, distance, actual_distance in [
             (4164, 0.01, 0.0100),
@@ -216,8 +173,11 @@ case_group = (
             (25, 0.10, 0.0991),
         ]
     ]
-    + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = True
+)
+
+case_group_wilson_cc = (
+    [
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = True
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (14032, 0.01, 0.0100),
@@ -233,7 +193,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = True
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "wilson", continuity_correction = True
         TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (2748, 0.01, 0.0100),
@@ -249,7 +209,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = True
+        # proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "wilson", continuity_correction = True
         TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (4264, 0.01, 0.0100),
@@ -265,7 +225,7 @@ case_group = (
         ]
     ]
     + [
-        # Regular Cases: proportion = 0.10, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = True
+        # proportion = 0.10, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "wilson", continuity_correction = True
         TestCase(proportion=0.10, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="wilson", continuity_correction=True)
         for size, distance, actual_distance in [
             (14032, 0.01, 0.0100),
@@ -282,24 +242,58 @@ case_group = (
     ]
 )
 
+case_group_cp = (
+    [
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "two-sided", method = "clopper-pearson"
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="two-sided", method="clopper-pearson")
+        for size, distance, actual_distance in [
+            (14029, 0.01, 0.0100),
+            (3557, 0.02, 0.0200),
+            (1603, 0.03, 0.0300),
+            (914, 0.04, 0.0400),
+            (593, 0.05, 0.0500),
+            (417, 0.06, 0.0600),
+            (310, 0.07, 0.0700),
+            (241, 0.08, 0.0798),
+            (192, 0.09, 0.0900),
+            (158, 0.10, 0.0997),
+        ]
+    ]
+    + [
+        # proportion = 0.90, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "lower", method = "clopper-pearson"
+        TestCase(proportion=0.90, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="lower", method="clopper-pearson")
+        for size, distance, actual_distance in [
+            (2704, 0.01, 0.0100),
+            (742, 0.02, 0.0200),
+            (359, 0.03, 0.0300),
+            (218, 0.04, 0.0399),
+            (150, 0.05, 0.0498),
+            (111, 0.06, 0.0598),
+            (86, 0.07, 0.0700),
+            (70, 0.08, 0.0796),
+            (58, 0.09, 0.0898),
+            (50, 0.10, 0.0988),
+        ]
+    ]
+    + [
+        # proportion = 0.80, distance = 0.01 to 0.10 by 0.01, conf_level = 0.95, interval_type = "upper", method = "clopper-pearson"
+        TestCase(proportion=0.80, size=size, distance=distance, actual_distance=actual_distance, conf_level=0.95, interval_type="upper", method="clopper-pearson")
+        for size, distance, actual_distance in [
+            (4298, 0.01, 0.0100),
+            (1065, 0.02, 0.0200),
+            (469, 0.03, 0.0300),
+            (261, 0.04, 0.0399),
+            (165, 0.05, 0.0499),
+            (113, 0.06, 0.0598),
+            (81, 0.07, 0.0699),
+            (61, 0.08, 0.0797),
+            (47, 0.09, 0.0897),
+            (37, 0.10, 0.0997),
+        ]
+    ]
+)
 
-def test_solve_size(case: TestCase) -> None:
-    assert (
-        solve_size(
-            proportion=case.proportion,
-            distance=case.distance,
-            conf_level=case.conf_level,
-            interval_type=case.interval_type,
-            method=case.method,
-            continuity_correction=case.continuity_correction,
-        )
-        == case.size
-    )
-
-
-def test_solve_size_no_solution() -> None:
-    with pytest.raises(ValueError):
-        assert solve_size(proportion=0.90, distance=0.99, conf_level=0.95, method="wilson", continuity_correction=True)
+case_group = case_group_wald + case_group_wald_cc + case_group_wilson + case_group_wilson_cc + case_group_cp
 
 
 def test_solve_distance(case: TestCase) -> None:
@@ -319,8 +313,37 @@ def test_solve_distance(case: TestCase) -> None:
     )
 
 
+def test_solve_size(case: TestCase) -> None:
+    assert (
+        solve_size(
+            proportion=case.proportion,
+            distance=case.distance,
+            conf_level=case.conf_level,
+            interval_type=case.interval_type,
+            method=case.method,
+            continuity_correction=case.continuity_correction,
+        )
+        == case.size
+    )
+
+
+def test_solve_size_wilson_score_cc_return_2() -> None:
+    assert solve_size(proportion=0.90, distance=0.90, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.91, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.92, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.93, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.94, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.95, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.96, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.97, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.98, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+    assert solve_size(proportion=0.90, distance=0.99, conf_level=0.95, method="wilson", continuity_correction=True) == 2
+
+
 def test_solve_proportion(case: TestCase) -> None:
-    side = "below" if case.proportion < 0.5 else "above"
+
+    direction = "greater" if case.proportion > 0.5 else "less"
+
     assert (
         round(
             solve_proportion(
@@ -330,9 +353,17 @@ def test_solve_proportion(case: TestCase) -> None:
                 interval_type=case.interval_type,
                 method=case.method,
                 continuity_correction=case.continuity_correction,
-                search_direction=side,
+                direction=direction,
             ),
             2,
         )
         == case.proportion
     )
+
+
+def test_solve_proportion_exact_eq_0_5() -> None:
+    assert solve_proportion(size=385, distance=0.099889014, conf_level=0.95, interval_type="two-sided", method="wald") == 0.5
+    assert solve_proportion(size=404, distance=0.099987100, conf_level=0.95, interval_type="two-sided", method="wald", continuity_correction=True) == 0.5
+    assert solve_proportion(size=381, distance=0.099909587, conf_level=0.95, interval_type="two-sided", method="wilson") == 0.5
+    assert solve_proportion(size=401, distance=0.099880264, conf_level=0.95, interval_type="two-sided", method="wilson", continuity_correction=True) == 0.5
+    assert solve_proportion(size=402, distance=0.099930088, conf_level=0.95, interval_type="two-sided", method="cp") == 0.5
