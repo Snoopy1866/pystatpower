@@ -7,7 +7,7 @@ Domain: TypeAlias = tuple[float, float]
 
 
 def _domain_square_root_of_quad(a: float, b: float, c: float, /) -> Domain | tuple[Domain, Domain] | float | None:
-    r"""Solve the domain of the function f(x) = \sqrt{ax^2+bx+c}"""
+    r"""Solve the domain of the function f(x) = \sqrt{ax^2+bx+c} (a ≠ 0)"""
 
     delta = b**2 - 4 * a * c
     if a > 0:
