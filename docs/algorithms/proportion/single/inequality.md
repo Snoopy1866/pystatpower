@@ -72,7 +72,7 @@ $$
     根据标准正态分布分位数的定义：
 
     $$
-    \frac{z_{1-\alpha} \pm \frac{p-p_0}{\sqrt{p_0(1-p_0)/n}}}{\sqrt{\frac{p(1-p)}{p_0(1-p_0)}}} = \frac{z_{1-\alpha} \sqrt{p_0(1-p_0)} \pm \sqrt{n}(p_1-p_0)}{\sqrt{p(1-p)}} = z_{\beta}
+    \frac{z_{1-\alpha} \pm \frac{p-p_0}{\sqrt{p_0(1-p_0)/n}}}{\sqrt{\frac{p(1-p)}{p_0(1-p_0)}}} = \frac{z_{1-\alpha} \sqrt{p_0(1-p_0)} \pm \sqrt{n}(p-p_0)}{\sqrt{p(1-p)}} = z_{\beta}
     $$
 
     可解出：
@@ -187,7 +187,7 @@ c =
 \begin{cases}
 - \frac{1}{2n} & , \text{if } \hat{p} \gt p_0 \\
   \frac{1}{2n} & , \text{if } \hat{p} \lt p_0 \\
-  0            & , \text{if } \left| \hat{p} - p_0 \right| \le \frac{1}{2n}
+  0            & , \text{if } \left| \hat{p} - p_0 \right| \leqslant \frac{1}{2n}
 \end{cases}
 $$
 
