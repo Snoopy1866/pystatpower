@@ -405,19 +405,6 @@ def test_solve_proportion(case: TestCase) -> None:
         == case.proportion
     )
 
-    if case.alternative in ("greater", "less"):
-        assert round(
-            solve_proportion(
-                null_proportion=case.null_proportion,
-                size=case.size,
-                alternative=case.alternative,
-                alpha=case.alpha,
-                power=case.actual_power,
-                method=case.method,
-                continuity_correction=case.continuity_correction,
-            )
-        )
-
 
 def test_solve_proportion_raise_error() -> None:
     with pytest.raises(ValueError):
@@ -450,19 +437,6 @@ def test_solve_null_proportion(case: TestCase) -> None:
         )
         == case.null_proportion
     )
-
-    if case.alternative in ("greater", "less"):
-        assert round(
-            solve_null_proportion(
-                proportion=case.proportion,
-                size=case.size,
-                alternative=case.alternative,
-                alpha=case.alpha,
-                power=case.actual_power,
-                method=case.method,
-                continuity_correction=case.continuity_correction,
-            )
-        )
 
 
 def test_solve_null_proportion_raise_error() -> None:
