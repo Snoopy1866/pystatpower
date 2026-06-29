@@ -156,7 +156,7 @@ def solve_power(
         size:
             Sample size.
         alternative:
-            Type iof the alternative hypothesis:
+            Type of the alternative hypothesis:
 
             - If `alternative` is `'two-sided'`, the alternative hypothesis is $p ≠ p_0$
             - If `alternative` is `'greater'`, the alternative hypothesis is $p > p_0$
@@ -200,7 +200,7 @@ def solve_size(
         null_proportion:
             Proportion under the null hypothesis.
         alternative:
-            Type iof the alternative hypothesis:
+            Type of the alternative hypothesis:
 
             - If `alternative` is `'two-sided'`, the alternative hypothesis is $p ≠ p_0$
             - If `alternative` is `'greater'`, the alternative hypothesis is $p > p_0$
@@ -252,7 +252,7 @@ def solve_proportion(
         size:
             Sample size.
         alternative:
-            Type iof the alternative hypothesis:
+            Type of the alternative hypothesis:
 
             - If `alternative` is `'two-sided'`, the alternative hypothesis is $p ≠ p_0$
             - If `alternative` is `'greater'`, the alternative hypothesis is $p > p_0$
@@ -329,7 +329,7 @@ def solve_null_proportion(
         size:
             Sample size.
         alternative:
-            Type iof the alternative hypothesis:
+            Type of the alternative hypothesis:
 
             - If `alternative` is `'two-sided'`, the alternative hypothesis is $p ≠ p_0$
             - If `alternative` is `'greater'`, the alternative hypothesis is $p > p_0$
