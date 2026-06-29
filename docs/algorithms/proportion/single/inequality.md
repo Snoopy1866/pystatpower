@@ -103,7 +103,7 @@ $$
 在 $H_1$ 成立时，可构建 $z'$ 统计量：
 
 $$
-z' = \frac{\hat{p}-p_0+c}{\sqrt{p_0(1-p_0)/n}} \sim N\left(\frac{\hat{p}-p_0+c}{\sqrt{p_0(1-p_0)/n}}, \frac{p(1-p)}{p_0(1-p_0)}\right)
+z' = \frac{\hat{p}-p_0+c}{\sqrt{p_0(1-p_0)/n}} \sim N\left(\frac{p-p_0+c}{\sqrt{p_0(1-p_0)/n}}, \frac{p(1-p)}{p_0(1-p_0)}\right)
 $$
 
 === "双侧检验"
@@ -153,15 +153,15 @@ $$
 === "左单侧检验"
 
     $$
-    \text{Power} = P\left(z' < z_{\alpha/2} \right)
-                 = \Phi\left(z_{\alpha/2} - \frac{p-p_0}{\sqrt{p(1-p)/n}}\right)
+    \text{Power} = P\left(z' < z_{\alpha} \right)
+                 = \Phi\left(z_{\alpha} - \frac{p-p_0}{\sqrt{p(1-p)/n}}\right)
     $$
 
 === "右单侧检验"
 
     $$
-    \text{Power} = P\left(z' > z_{1-\alpha/2} \right)
-                 = 1 - \Phi\left(z_{1-\alpha/2} - \frac{p-p_0}{\sqrt{p(1-p)/n}}\right)
+    \text{Power} = P\left(z' > z_{1-\alpha} \right)
+                 = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0}{\sqrt{p(1-p)/n}}\right)
     $$
 
 ??? note "单侧检验样本量公式推导"
@@ -169,13 +169,13 @@ $$
     根据标准正态分布分位数的定义：
 
     $$
-    z_{1-\alpha/2} \pm \frac{p-p_0}{\sqrt{p(1-p)/n}} = z_{\beta}
+    z_{1-\alpha} \pm \frac{p-p_0}{\sqrt{p(1-p)/n}} = z_{\beta}
     $$
 
     可解出：
 
     $$
-    n = \frac{\left(z_{1-\alpha/2}+z_{1-\beta}\right)^2 p(1-p)}{\left(p-p_0\right)^2}
+    n = \frac{\left(z_{1-\alpha}+z_{1-\beta}\right)^2 p(1-p)}{\left(p-p_0\right)^2}
     $$
 
 ## _z-test using s(phat) with continuity correction_ {#z-test-phat-cc}
@@ -214,13 +214,13 @@ $$
 === "左单侧检验"
 
     $$
-    \text{Power} = P\left(z' < z_{\alpha/2} \right)
-                 = \Phi\left(z_{\alpha/2} - \frac{p-p_0+c}{\sqrt{p(1-p)/n}}\right)
+    \text{Power} = P\left(z' < z_{\alpha} \right)
+                 = \Phi\left(z_{\alpha} - \frac{p-p_0+c}{\sqrt{p(1-p)/n}}\right)
     $$
 
 === "右单侧检验"
 
     $$
-    \text{Power} = P\left(z' > z_{1-\alpha/2} \right)
-                 = 1 - \Phi\left(z_{1-\alpha/2} - \frac{p-p_0+c}{\sqrt{p(1-p)/n}}\right)
+    \text{Power} = P\left(z' > z_{1-\alpha} \right)
+                 = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0+c}{\sqrt{p(1-p)/n}}\right)
     $$
