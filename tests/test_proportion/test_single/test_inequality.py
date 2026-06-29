@@ -19,10 +19,10 @@ class TestCase(BaseTestCase):
     alternative: Literal["two-sided", "greater", "less"]
     alpha: float
     power: float
-    method: Literal["z-p0", "z-method"]
+    method: Literal["z-p0", "z-phat"]
     continuity_correction: bool
     actual_power: float
-    direction: Literal["greater", "less"] | None = (None,)
+    direction: Literal["greater", "less"] | None = None
 
 
 case_group_z_p0 = (
@@ -189,7 +189,7 @@ case_group_z_p0_cc = (
 
 case_group_z_method = (
     [
-        # null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = False
+        # null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = False
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 80, 0.8031),
@@ -225,7 +225,7 @@ case_group_z_method = (
         ]
     ]
     + [
-        # null_proportion = 0.80, alternative = "greater", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = False
+        # null_proportion = 0.80, alternative = "greater", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = False
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="greater", alpha=0.05, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.81, 9515, 0.8000),
@@ -246,7 +246,7 @@ case_group_z_method = (
         ]
     ]
     + [
-        # null_proportion = 0.80, alternative = "less", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = False
+        # null_proportion = 0.80, alternative = "less", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = False
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="less", alpha=0.05, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 63, 0.8027),
@@ -270,7 +270,7 @@ case_group_z_method = (
 
 case_group_z_method_cc = (
     [
-        # null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = True
+        # null_proportion = 0.80, alternative = "two-sided", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = True
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="two-sided", alpha=0.05, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 86, 0.8005),
@@ -306,7 +306,7 @@ case_group_z_method_cc = (
         ]
     ]
     + [
-        # null_proportion = 0.80, alternative = "greater", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = True
+        # null_proportion = 0.80, alternative = "greater", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = True
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="greater", alpha=0.05, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.81, 9615, 0.8000),
@@ -327,7 +327,7 @@ case_group_z_method_cc = (
         ]
     ]
     + [
-        # null_proportion = 0.80, alternative = "less", alpha = 0.05, power = 0.80, method = "z-method", continuity_correction = True
+        # null_proportion = 0.80, alternative = "less", alpha = 0.05, power = 0.80, method = "z-phat", continuity_correction = True
         TestCase(null_proportion=0.80, proportion=proportion, size=size, alternative="less", alpha=0.05, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
         for proportion, size, actual_power in [
             (0.65, 70, 0.8054),
