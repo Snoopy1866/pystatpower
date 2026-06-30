@@ -1,114 +1,9 @@
-from math import ceil, sqrt
+from math import ceil
 from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import norm
 
-
-def _power_p0(
-    proportion: float,
-    null_proportion: float,
-    size: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for an equality test of one proportion, using p0 to calculate the variance."""
-
-    h1_z_mean = (proportion - null_proportion) / sqrt(null_proportion * (1 - null_proportion) / size)
-    h1_z_std = sqrt(proportion * (1 - proportion) / (null_proportion * (1 - null_proportion)))
-    match alternative:
-        case "two-sided":
-            power = (
-                1
-                - norm.cdf((norm.ppf(1 - alpha / 2) - h1_z_mean) / h1_z_std)
-                + norm.cdf((norm.ppf(alpha / 2) - h1_z_mean) / h1_z_std)
-            )
-        case "greater":
-            power = 1 - norm.cdf((norm.ppf(1 - alpha) - h1_z_mean) / h1_z_std)
-        case "less":
-            power = norm.cdf((norm.ppf(alpha) - h1_z_mean) / h1_z_std)
-    return float(power)
-
-
-def _power_p0_cc(
-    proportion: float,
-    null_proportion: float,
-    size: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for an equality test of one proportion, using p0 with continuity correction to calculate the variance."""
-
-    if abs(proportion - null_proportion) <= 1 / (2 * size):
-        c = 0
-    elif proportion > null_proportion:
-        c = -1 / (2 * size)
-    else:  # proportion < null_proportion
-        c = 1 / (2 * size)
-
-    h1_z_mean = (proportion - null_proportion + c) / sqrt(null_proportion * (1 - null_proportion) / size)
-    h1_z_std = sqrt(proportion * (1 - proportion) / (null_proportion * (1 - null_proportion)))
-    match alternative:
-        case "two-sided":
-            power = (
-                1
-                - norm.cdf((norm.ppf(1 - alpha / 2) - h1_z_mean) / h1_z_std)
-                + norm.cdf((norm.ppf(alpha / 2) - h1_z_mean) / h1_z_std)
-            )
-        case "greater":
-            power = 1 - norm.cdf((norm.ppf(1 - alpha) - h1_z_mean) / h1_z_std)
-        case "less":
-            power = norm.cdf((norm.ppf(alpha) - h1_z_mean) / h1_z_std)
-    return float(power)
-
-
-def _power_phat(
-    proportion: float,
-    null_proportion: float,
-    size: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for an equality test of one proportion, using phat to calculate the variance."""
-
-    h1_z_mean = (proportion - null_proportion) / sqrt(proportion * (1 - proportion) / size)
-    match alternative:
-        case "two-sided":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha / 2) - h1_z_mean) + norm.cdf(norm.ppf(alpha / 2) - h1_z_mean)
-        case "greater":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - h1_z_mean)
-        case "less":
-            power = norm.cdf(norm.ppf(alpha) - h1_z_mean)
-
-    return float(power)
-
-
-def _power_phat_cc(
-    proportion: float,
-    null_proportion: float,
-    size: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for an equality test of one proportion, using phat with continuity correction to calculate the variance."""
-
-    if abs(proportion - null_proportion) <= 1 / (2 * size):
-        c = 0
-    elif proportion > null_proportion:
-        c = -1 / (2 * size)
-    else:  # proportion < null_proportion
-        c = 1 / (2 * size)
-
-    h1_z_mean = (proportion - null_proportion + c) / sqrt(proportion * (1 - proportion) / size)
-    match alternative:
-        case "two-sided":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha / 2) - h1_z_mean) + norm.cdf(norm.ppf(alpha / 2) - h1_z_mean)
-        case "greater":
-            power = 1 - norm.cdf(norm.ppf(1 - alpha) - h1_z_mean)
-        case "less":
-            power = norm.cdf(norm.ppf(alpha) - h1_z_mean)
-
-    return float(power)
+from ._power import _power as _raw_power
 
 
 def _power(
@@ -120,19 +15,9 @@ def _power(
     method: Literal["z-p0", "z-phat"],
     continuity_correction: bool,
 ) -> float:
-    """Calculate the statistical power for an equality test of one proportion."""
+    """Wrapper that delegates to the shared `_raw_power` implementation."""
 
-    match method:
-        case "z-p0":
-            if continuity_correction:
-                return _power_p0_cc(proportion, null_proportion, size, alternative, alpha)
-            else:
-                return _power_p0(proportion, null_proportion, size, alternative, alpha)
-        case "z-phat":
-            if continuity_correction:
-                return _power_phat_cc(proportion, null_proportion, size, alternative, alpha)
-            else:
-                return _power_phat(proportion, null_proportion, size, alternative, alpha)
+    return _raw_power(proportion, null_proportion, 0, size, alternative, alpha, method, continuity_correction)
 
 
 def solve_power(
@@ -146,10 +31,10 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the statistical power for an equality test of one proportion.
+    Calculate the statistical power for an inequality test of one proportion.
 
     Args:
-        proportion (float):
+        proportion:
             Proportion under the alternative hypothesis.
         null_proportion:
             Proportion under the null hypothesis.
@@ -192,10 +77,10 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size for an equality test of one proportion.
+    Estimate the required sample size for an inequality test of one proportion.
 
     Args:
-        proportion (float):
+        proportion:
             Proportion under the alternative hypothesis.
         null_proportion:
             Proportion under the null hypothesis.
@@ -244,7 +129,7 @@ def solve_proportion(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required proportion under the alternative hypothesis for an equality test of one proportion.
+    Estimate the required proportion under the alternative hypothesis for an inequality test of one proportion.
 
     Args:
         null_proportion:
@@ -321,10 +206,10 @@ def solve_null_proportion(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required proportion under the null hypothesis for an equality test of one proportion.
+    Estimate the required proportion under the null hypothesis for an inequality test of one proportion.
 
     Args:
-        proportion (float):
+        proportion:
             Proportion under the alternative hypothesis.
         size:
             Sample size.
