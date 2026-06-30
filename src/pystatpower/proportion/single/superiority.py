@@ -198,7 +198,7 @@ def solve_proportion(
         \\
         \\Rightarrow p_0 + \\delta < p < 1
         $$
-        
+
         If `alternative` is `'less'`, that is, higher proportions are worse, we have:
 
         $$
@@ -293,7 +293,7 @@ def solve_null_proportion(
         \\
         \\Rightarrow 0 < p_0 < \\operatorname{min}(p - \\delta, 1 - \\delta)
         $$
-        
+
         If `alternative` is `'less'`, that is, higher proportions are worse, we have:
 
         $$
