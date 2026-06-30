@@ -22,6 +22,8 @@ $$
 
 以下推导过程在边界条件 $p - p_0 = \delta$ 下进行。
 
+--8<-- [start:algorithm]
+
 ## _z-test using s(p0)_ {#z-test-p0}
 
 在 $H_0$ 成立时，可构建 $z$ 统计量：
@@ -195,3 +197,5 @@ $$
     $$
     \text{Power} = \operatorname{Pr}(z' < z_{\alpha}) = \Phi\left(z_{\alpha} - \frac{p-p_0-\delta+c}{\sqrt{p(1-p)/n}}\right) = 1 - \Phi\left(z_{1-\alpha} + \frac{p-p_0-\delta+c}{\sqrt{p(1-p)/n}}\right)
     $$
+
+--8<-- [end:algorithm]
