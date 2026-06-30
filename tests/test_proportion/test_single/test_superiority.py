@@ -4,7 +4,9 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.proportion.single.superiority import solve_power, solve_size, solve_null_proportion, solve_proportion, solve_margin
+import pytest
+
+from pystatpower.proportion.single.superiority import _verify_and_get_sup_proportion, solve_power, solve_size, solve_null_proportion, solve_proportion, solve_superiority_proportion, solve_margin
 
 from tests.models import BaseTestCase
 
@@ -14,6 +16,7 @@ class TestCase(BaseTestCase):
     proportion: float
     null_proportion: float
     margin: float
+    superiority_proportion: float | None = None
     size: int
     alternative: Literal["greater", "less"]
     alpha: float
@@ -21,6 +24,10 @@ class TestCase(BaseTestCase):
     method: Literal["z-p0", "z-phat"]
     continuity_correction: bool
     actual_power: float
+
+    def __post_init__(self) -> None:
+        if self.superiority_proportion is None and self.null_proportion is not None and self.margin is not None:
+            self.superiority_proportion = self.null_proportion + self.margin
 
 
 case_group_z_p0 = [
@@ -218,6 +225,21 @@ case_group_z_phat_cc = (
 case_group = case_group_z_p0 + case_group_z_p0_cc + case_group_z_phat + case_group_z_phat_cc
 
 
+def test_verify_and_get_sup_proportion() -> None:
+    with pytest.raises(ValueError):
+        assert _verify_and_get_sup_proportion(null_proportion=None, margin=None, superiority_proportion=None)
+    with pytest.raises(ValueError):
+        assert _verify_and_get_sup_proportion(null_proportion=0.8, margin=None, superiority_proportion=None)
+    with pytest.raises(ValueError):
+        assert _verify_and_get_sup_proportion(null_proportion=None, margin=0.1, superiority_proportion=None)
+
+    assert _verify_and_get_sup_proportion(null_proportion=None, margin=None, superiority_proportion=0.9) == 0.9
+    assert _verify_and_get_sup_proportion(null_proportion=None, margin=0.1, superiority_proportion=0.9) == 0.9
+    assert _verify_and_get_sup_proportion(null_proportion=0.8, margin=None, superiority_proportion=0.9) == 0.9
+    assert _verify_and_get_sup_proportion(null_proportion=0.8, margin=0.1, superiority_proportion=0.9) == 0.9
+    assert _verify_and_get_sup_proportion(null_proportion=0.8, margin=0.1, superiority_proportion=None) == 0.9
+
+
 def test_size_solve_power(case: TestCase) -> None:
     assert round(
         solve_power(
@@ -288,11 +310,25 @@ def test_size_solve_proportion(case: TestCase) -> None:
     )
 
 
-def test_solve_margin(case: TestCase) -> None:
-    if case.margin == 0:
-        import pytest
+def test_size_solve_superiority_proportion(case: TestCase) -> None:
+    assert (
+        round(
+            solve_superiority_proportion(
+                proportion=case.proportion,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                method=case.method,
+                continuity_correction=case.continuity_correction,
+            ),
+            2,
+        )
+        == case.superiority_proportion
+    )
 
-        pytest.skip(reason="Temporarily skip test cases with margin = 0")
+
+def test_solve_margin(case: TestCase) -> None:
     assert (
         round(
             solve_margin(

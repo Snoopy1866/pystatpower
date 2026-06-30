@@ -6,15 +6,13 @@ from scipy.stats import norm
 
 def _power_p0(
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    proportion_threshold: float,
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for one proportion test, using p0 to calculate the variance."""
 
-    proportion_threshold = null_proportion + margin
     h1_z_mean = (proportion - proportion_threshold) / sqrt(proportion_threshold * (1 - proportion_threshold) / size)
     h1_z_std = sqrt(proportion * (1 - proportion) / (proportion_threshold * (1 - proportion_threshold)))
     match alternative:
@@ -33,15 +31,12 @@ def _power_p0(
 
 def _power_p0_cc(
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    proportion_threshold: float,
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for one proportion test, using p0 with continuity correction to calculate the variance."""
-
-    proportion_threshold = null_proportion + margin
 
     if abs(proportion - proportion_threshold) <= 1 / (2 * size):
         c = 0
@@ -68,15 +63,13 @@ def _power_p0_cc(
 
 def _power_phat(
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    proportion_threshold: float,
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for one proportion test, using phat to calculate the variance."""
 
-    proportion_threshold = null_proportion + margin
     h1_z_mean = (proportion - proportion_threshold) / sqrt(proportion * (1 - proportion) / size)
     match alternative:
         case "two-sided":
@@ -91,15 +84,12 @@ def _power_phat(
 
 def _power_phat_cc(
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    proportion_threshold: float,
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
     """Calculate the statistical power for one proportion test, using phat with continuity correction to calculate the variance."""
-
-    proportion_threshold = null_proportion + margin
 
     if abs(proportion - proportion_threshold) <= 1 / (2 * size):
         c = 0
@@ -122,8 +112,7 @@ def _power_phat_cc(
 
 def _power(
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    proportion_threshold: float,
     size: float,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
@@ -135,11 +124,11 @@ def _power(
     match method:
         case "z-p0":
             if continuity_correction:
-                return _power_p0_cc(proportion, null_proportion, margin, size, alternative, alpha)
+                return _power_p0_cc(proportion, proportion_threshold, size, alternative, alpha)
             else:
-                return _power_p0(proportion, null_proportion, margin, size, alternative, alpha)
+                return _power_p0(proportion, proportion_threshold, size, alternative, alpha)
         case "z-phat":
             if continuity_correction:
-                return _power_phat_cc(proportion, null_proportion, margin, size, alternative, alpha)
+                return _power_phat_cc(proportion, proportion_threshold, size, alternative, alpha)
             else:
-                return _power_phat(proportion, null_proportion, margin, size, alternative, alpha)
+                return _power_phat(proportion, proportion_threshold, size, alternative, alpha)

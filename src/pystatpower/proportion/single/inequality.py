@@ -3,21 +3,7 @@ from typing import Literal
 
 from scipy.optimize import brentq
 
-from ._power import _power as _raw_power
-
-
-def _power(
-    proportion: float,
-    null_proportion: float,
-    size: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-    method: Literal["z-p0", "z-phat"],
-    continuity_correction: bool,
-) -> float:
-    """Wrapper that delegates to the shared `_raw_power` implementation."""
-
-    return _raw_power(proportion, null_proportion, 0, size, alternative, alpha, method, continuity_correction)
+from ._power import _power
 
 
 def solve_power(
