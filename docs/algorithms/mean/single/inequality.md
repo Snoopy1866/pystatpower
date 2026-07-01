@@ -108,23 +108,23 @@ $$
 
     $$
         \text{Power}
-    = P\left(t' > t_{1-\alpha/2}\right) + P\left(t' < t_{\alpha/2}\right)
-    = 1 - T\left(t_{1-\alpha/2, n - 1}; n - 1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
-          + T\left(t_{\alpha/2, n - 1}; n - 1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
+    = P\left(t' > t_{1-\alpha/2, n-1}\right) + P\left(t' < t_{\alpha/2, n-1}\right)
+    = 1 - T\left(t_{1-\alpha/2, n-1}; n-1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
+          + T\left(t_{\alpha/2, n-1}; n-1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
     $$
 
 === "左单侧检验"
 
     $$
       \text{Power}
-    = P\left(t' < t_{\alpha}\right)
-    = T\left(t_{\alpha, n - 1}; n - 1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
+    = P\left(t' < t_{\alpha, n-1}\right)
+    = T\left(t_{\alpha, n-1}; n-1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
     $$
 
 === "右单侧检验"
 
     $$
       \text{Power}
-    = P\left(t' > t_{1-\alpha}\right)
-    = 1 - T\left(t_{1-\alpha, n - 1}; n - 1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
+    = P\left(t' > t_{1-\alpha, n-1}\right)
+    = 1 - T\left(t_{1-\alpha, n-1}; n-1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
     $$

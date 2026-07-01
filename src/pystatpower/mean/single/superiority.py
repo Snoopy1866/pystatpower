@@ -92,8 +92,8 @@ def solve_power(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -153,8 +153,8 @@ def solve_size(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -209,8 +209,8 @@ def solve_diff(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -267,8 +267,8 @@ def solve_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -325,8 +325,8 @@ def solve_null_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -392,8 +392,8 @@ def solve_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -454,8 +454,8 @@ def solve_margin(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
