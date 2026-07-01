@@ -337,14 +337,7 @@ def _distance(
     reference_size: float,
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
-    method: Literal[
-        "chisq",
-        "wilson",
-        "farrington_manning",
-        "fm",
-        "miettinen_nurminen",
-        "mn",
-    ],
+    method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit."""
@@ -406,14 +399,7 @@ def solve_distance(
     reference_size: int,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal[
-        "chisq",
-        "wilson",
-        "farrington_manning",
-        "fm",
-        "miettinen_nurminen",
-        "mn",
-    ],
+    method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -478,14 +464,7 @@ def solve_size(
     ratio: float = 1,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal[
-        "chisq",
-        "wilson",
-        "farrington_manning",
-        "fm",
-        "miettinen_nurminen",
-        "mn",
-    ],
+    method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
@@ -579,16 +558,9 @@ def solve_treatment_proportion(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal[
-        "chisq",
-        "wilson",
-        "farrington_manning",
-        "fm",
-        "miettinen_nurminen",
-        "mn",
-    ],
+    method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
-    direction: Literal["greater", "less"] | None = None,
+    direction: Literal["greater", "less"],
 ) -> float:
     """
     Estimate the required proportion in the treatment group.
@@ -688,14 +660,7 @@ def solve_reference_proportion(
     distance: float,
     conf_level: float = 0.95,
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
-    method: Literal[
-        "chisq",
-        "wilson",
-        "farrington_manning",
-        "fm",
-        "miettinen_nurminen",
-        "mn",
-    ],
+    method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
@@ -714,8 +679,6 @@ def solve_reference_proportion(
 
             - If `interval_type` = `'two-sided'`, specify the confidence interval width.
             - If `interval_type` = `'lower'` or `'upper'`, specify the distance from the proportion difference to the confidence limit.
-        ratio:
-            Ratio of sample sizes in the treatment and reference group.
         conf_level:
             Confidence level.
 
@@ -747,6 +710,9 @@ def solve_reference_proportion(
 
     Returns:
         float: The required proportion in the reference group.
+
+    Raises:
+        SolutionNotFoundError: If the solution cannot be found.
     """
 
     def func(reference_proportion: float) -> float:
