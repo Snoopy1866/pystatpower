@@ -11,7 +11,7 @@ def _distance_not_adjusted(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence bound."""
+    """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence limit."""
 
     alpha = 1 - conf_level
     zr = atanh(correlation)
@@ -40,7 +40,7 @@ def _distance_adjusted(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence bound, adjusted for bias."""
+    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit, adjusted for bias."""
 
     alpha = 1 - conf_level
     zr = atanh(correlation)
@@ -71,7 +71,7 @@ def _distance(
     interval_type: Literal["two-sided", "lower", "upper"],
     bias_adj: bool,
 ) -> float:
-    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence bound."""
+    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit."""
 
     if bias_adj:
         return _distance_adjusted(correlation, size, conf_level, interval_type)
@@ -87,7 +87,7 @@ def solve_distance(
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     bias_adj: bool = False,
 ) -> float:
-    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence bound.
+    """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit.
 
     Args:
         correlation:
@@ -96,6 +96,9 @@ def solve_distance(
             Sample size.
         conf_level:
             Confidence level.
+
+            - If `alternative` is `'two-sided'`, a two-sided confidence interval is required.
+            - If `alternative` is `'lower'` or `'upper'`, a one-sided confidence interval is required.
         interval_type:
             Type of the confidence interval.
 
@@ -106,8 +109,10 @@ def solve_distance(
             Whether to adjust for the bias.
 
     Returns:
-        - If `interval_type` is `'two-sided'`, returns the width of correlation coefficient confidence interval
-        - If `interval_type` is `'lower'` or `'upper'`, returns the distance from the correlation coefficient to the confidence bound.
+        The width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit.
+
+            - If `interval_type` is `'two-sided'`, the width of correlation coefficient confidence interval is returned.
+            - If `interval_type` is `'lower'` or `'upper'`, the distance from the correlation coefficient to the confidence limit is returned.
     """
 
     return _distance(correlation, size, conf_level, interval_type, bias_adj)
@@ -127,20 +132,23 @@ def solve_size(
         correlation:
             Correlation coefficient.
         distance:
-            The width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence bound.
+            The width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit.
 
             - If `interval_type` = `'two-sided'`, the width of correlation coefficient two-sided confidence interval id required.
-            - If `interval_type` = `'lower'`, the distance from the correlation coefficient to the lower one-sided confidence bound is required.
-            - If `interval_type` = `'upper'`, the distance from the correlation coefficient to the upper one-sided confidence bound is required.
+            - If `interval_type` = `'lower'`, the distance from the correlation coefficient to the lower one-sided confidence limit is required.
+            - If `interval_type` = `'upper'`, the distance from the correlation coefficient to the upper one-sided confidence limit is required.
         conf_level:
             Confidence level.
+
+            - If `alternative` is `'two-sided'`, a two-sided confidence interval is required.
+            - If `alternative` is `'lower'` or `'upper'`, a one-sided confidence interval is required.
         interval_type:
             Type of the confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
             - `'upper'`: Upper one-sided confidence interval.
-        bias_adj (bool, optional):
+        bias_adj:
             Whether to adjust for bias.
 
     Returns:
