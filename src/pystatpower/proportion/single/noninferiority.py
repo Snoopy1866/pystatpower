@@ -16,11 +16,27 @@ def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
             return abs(margin)
 
 
+def _verify_and_get_noninf_proportion(
+    null_proportion: float | None, margin: float | None, noninferiority_proportion: float | None
+) -> float:
+    """Verify provided proportions and return the non-inferiority proportion"""
+
+    if noninferiority_proportion is None:
+        if null_proportion is None or margin is None:
+            raise ValueError(
+                "When 'noninferiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
+            )
+        noninferiority_proportion = null_proportion + margin
+
+    return noninferiority_proportion
+
+
 def solve_power(
     *,
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    null_proportion: float | None = None,
+    margin: float | None = None,
+    noninferiority_proportion: float | None = None,
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
@@ -35,14 +51,22 @@ def solve_power(
             Proportion under the alternative hypothesis.
         null_proportion:
             Proportion under the null hypothesis.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `margin`.
         margin:
             The non-inferiority margin.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `null_proportion`.
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
             - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        noninferiority_proportion:
+            The non-inferiority proportion.
+
+            Required if either `null_proportion` or `margin` is omitted.
         size:
             Sample size.
         alternative:
@@ -64,18 +88,23 @@ def solve_power(
 
     Returns:
         float: The statistical power of the test.
+
+    Raises:
+        ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
 
     margin = _margin(margin, alternative)
+    noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
-    return _power(proportion, null_proportion, margin, size, alternative, alpha, method, continuity_correction)
+    return _power(proportion, noninferiority_proportion, size, alternative, alpha, method, continuity_correction)
 
 
 def solve_size(
     *,
     proportion: float,
-    null_proportion: float,
-    margin: float,
+    null_proportion: float | None = None,
+    margin: float | None = None,
+    noninferiority_proportion: float | None = None,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
@@ -90,14 +119,22 @@ def solve_size(
             Proportion under the alternative hypothesis.
         null_proportion:
             Proportion under the null hypothesis.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `margin`.
         margin:
             The non-inferiority margin.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `null_proportion`.
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
             - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        noninferiority_proportion:
+            The non-inferiority proportion.
+
+            Required if either `null_proportion` or `margin` is omitted.
         alternative:
             Type of the alternative hypothesis:
 
@@ -121,13 +158,18 @@ def solve_size(
 
     Returns:
         int: The required sample size.
+
+    Raises:
+        ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
 
     margin = _margin(margin, alternative)
+    noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
     def func(size: float) -> float:
         return (
-            _power(proportion, null_proportion, margin, size, alternative, alpha, method, continuity_correction) - power
+            _power(proportion, noninferiority_proportion, size, alternative, alpha, method, continuity_correction)
+            - power
         )
 
     return ceil(brentq(func, 1e-12, 1e12))
@@ -135,8 +177,9 @@ def solve_size(
 
 def solve_proportion(
     *,
-    null_proportion: float,
-    margin: float,
+    null_proportion: float | None = None,
+    margin: float | None = None,
+    noninferiority_proportion: float | None = None,
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
@@ -150,14 +193,22 @@ def solve_proportion(
     Args:
         null_proportion:
             Proportion under the null hypothesis.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `margin`.
         margin:
             The non-inferiority margin.
+
+            Ignored if `noninferiority_proportion` is specified; otherwise, required alongside `margin`.
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
             Internally, the value of `margin` will be converted before actual calculation.
 
             - If `alternative` is `'greater'`, the actual margin used internally is `-abs(margin)`.
             - If `alternative` is `'less'`, the actual margin used internally is `abs(margin)`.
+        noninferiority_proportion:
+            The non-inferiority proportion.
+
+            Required if either `null_proportion` or `margin` is omitted.
         size:
             Sample size.
         alternative:
@@ -184,6 +235,9 @@ def solve_proportion(
     Returns:
         float: The required proportion under the alternative hypothesis.
 
+    Raises:
+        ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
+
     Notes:
         The value range of the alternative hypothesis proportion $p$ is determined by the null hypothesis proportion $p_0$ and the non-inferiority margin $\\delta$.
 
@@ -209,18 +263,20 @@ def solve_proportion(
     """
 
     margin = _margin(margin, alternative)
+    noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
     def func(proportion: float) -> float:
         return (
-            _power(proportion, null_proportion, margin, size, alternative, alpha, method, continuity_correction) - power
+            _power(proportion, noninferiority_proportion, size, alternative, alpha, method, continuity_correction)
+            - power
         )
 
     eps = 1e-12
     match alternative:
         case "greater":
-            return float(brentq(func, max(null_proportion + margin, 0) + eps, 1 - eps))
+            return float(brentq(func, max(noninferiority_proportion, 0) + eps, 1 - eps))
         case "less":
-            return float(brentq(func, eps, min(null_proportion + margin, 1) - eps))
+            return float(brentq(func, eps, min(noninferiority_proportion, 1) - eps))
 
 
 def solve_null_proportion(
@@ -304,7 +360,8 @@ def solve_null_proportion(
 
     def func(null_proportion: float) -> float:
         return (
-            _power(proportion, null_proportion, margin, size, alternative, alpha, method, continuity_correction) - power
+            _power(proportion, null_proportion + margin, size, alternative, alpha, method, continuity_correction)
+            - power
         )
 
     eps = 1e-12
@@ -313,6 +370,88 @@ def solve_null_proportion(
             return float(brentq(func, -margin + eps, min(proportion - margin, 1) - eps))
         case "less":
             return float(brentq(func, max(proportion - margin, 1e-12) + eps, 1 - margin - eps))
+
+
+def solve_noninferiority_proportion(
+    *,
+    proportion: float,
+    size: int,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-p0", "z-phat"],
+    continuity_correction: bool = False,
+) -> float:
+    """
+    Estimate the required non-inferiority proportion for a non-inferiority test of one proportion.
+
+    Args:
+        proportion:
+            Proportion under the alternative hypothesis.
+        size:
+            Sample size.
+        alternative:
+            Type of the alternative hypothesis:
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p - p_0 > \\delta \\ (\\delta < 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p - p_0 < \\delta \\ (\\delta > 0)$
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-p0'`: Standard normal distribution (large sample approximation), using p0 to calculate the variance.
+            - `'z-phat'`: Standard normal distribution (large sample approximation), using phat to calculate the variance.
+        continuity_correction:
+            Whether to apply the continuity correction.
+
+    Returns:
+        float: The required non-inferiority proportion.
+
+    Notes:
+        The value range of the non-inferiority hypothesis proportion $p_{\\text{noninf}}$ is determined by the alternative hypothesis proportion $p$.
+
+        If `alternative` is `'greater'`, that is, higher proportions are better, we have:
+
+        $$
+        \\begin{cases}
+        p_{\\text{noninf}} < p \\\\
+        0 < p_{\\text{noninf}} < 1 \\\\
+        \\end{cases}
+        \\
+        \\Rightarrow 0 < p_{\\text{noninf}} < p
+        $$
+
+        If `alternative` is `'less'`, that is, higher proportions are worse, we have:
+
+        $$
+        \\begin{cases}
+        p_{\\text{noninf}} > p \\\\
+        0 < p_{\\text{noninf}} < 1 \\\\
+        \\end{cases}
+        \\
+        \\Rightarrow p < p_{\\text{noninf}} < 1
+        $$
+    """
+
+    def func(noninferiority_proportion: float) -> float:
+        return (
+            _power(proportion, noninferiority_proportion, size, alternative, alpha, method, continuity_correction)
+            - power
+        )
+
+    eps = 1e-12
+    match alternative:
+        case "greater":
+            return float(brentq(func, eps, proportion - eps))
+        case "less":
+            return float(brentq(func, proportion + eps, 1 - eps))
 
 
 def solve_margin(
@@ -388,7 +527,8 @@ def solve_margin(
 
     def func(margin: float) -> float:
         return (
-            _power(proportion, null_proportion, margin, size, alternative, alpha, method, continuity_correction) - power
+            _power(proportion, null_proportion + margin, size, alternative, alpha, method, continuity_correction)
+            - power
         )
 
     eps = 1e-12
