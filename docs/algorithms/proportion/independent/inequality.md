@@ -128,8 +128,8 @@ $$
 $$
 c =
 \begin{cases}
-- \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 - \hat{p}_2 > 0 \\
-  \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 - \hat{p}_2 < 0 \\
+- \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 > \hat{p}_2 \\
+  \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 < \hat{p}_2 \\
   0 & , \text{if } |\hat{p}_1 - \hat{p}_2| \leqslant \frac{1}{2}\left(\frac{1}{n_1} + \frac{1}{n_2}\right)
 \end{cases}
 $$
@@ -253,8 +253,8 @@ $$
 $$
 c =
 \begin{cases}
-- \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 - \hat{p}_2 > 0 \\
-  \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 - \hat{p}_2 < 0 \\
+- \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 > \hat{p}_2 \\
+  \frac{1}{2}\left(\frac{1}{n_1}+\frac{1}{n_2}\right) & , \text{if } \hat{p}_1 < \hat{p}_2 \\
   0 & , \text{if } |\hat{p}_1 - \hat{p}_2| \leqslant \frac{1}{2}\left(\frac{1}{n_1} + \frac{1}{n_2}\right)
 \end{cases}
 $$
