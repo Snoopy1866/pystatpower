@@ -248,7 +248,7 @@ $$
 
 ## _Z-Test Unpooled with Continuity Correction_ {#z-test-unpooled-cc}
 
-在 [_Z-Test Unpooled_](#z-test-unpooled) 的基础上，添加校正项 $c$，其中：
+在 [_Z-Test Unpooled_](#z-test-unpooled) 的基础上，添加校正项 $c$：
 
 $$
 c =
