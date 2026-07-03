@@ -178,7 +178,7 @@ def solve_size(
 
         treatment_size = ceil(brentq(func, 1e-12, 1e12))
         reference_size = ceil(treatment_size / ratio)
-        return float(treatment_size), float(reference_size)
+        return treatment_size, reference_size
 
 
 def solve_treatment_proportion(
