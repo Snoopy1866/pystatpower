@@ -201,8 +201,6 @@ def solve_treatment_proportion(
     Estimate the required proportion in the treatment group.
 
     Args:
-        treatment_proportion:
-            Proportion in the treatment group.
         reference_proportion:
             Proportion in the reference group.
         margin:
@@ -222,8 +220,6 @@ def solve_treatment_proportion(
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta < 0)$
             - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta > 0)$.
-        ratio:
-            Ratio of sample sizes in the treatment and reference groups.
         alpha:
             Significance level.
 
@@ -239,11 +235,6 @@ def solve_treatment_proportion(
             - `'z-unpooled'`: Z-test using unpooled variance.
         continuity_correction:
             Wether to apply Yates' continuity correction.
-        direction:
-            The direction for the treatment proportion relative to the reference proportion.
-
-            - `'greater'`: Search for the treatment proportion greater than the reference proportion.
-            - `'less'`: Search for the treatment proportion less than the reference proportion.
 
     Returns:
         float: The required proportion in the treatment group.
@@ -437,8 +428,6 @@ def solve_margin(
 
             - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta < 0)$
             - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta > 0)$.
-        ratio:
-            Ratio of sample sizes in the treatment and reference groups.
         alpha:
             Significance level.
 
@@ -504,4 +493,4 @@ def solve_margin(
         case "greater":
             return float(brentq(func, -1, min(treatment_proportion - reference_proportion, 0)))
         case "less":
-            return float(brentq(func, min(treatment_proportion - reference_proportion, 0), 1))
+            return float(brentq(func, max(treatment_proportion - reference_proportion, 0), 1))
