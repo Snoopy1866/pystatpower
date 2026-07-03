@@ -221,13 +221,13 @@ $$
 在 $H_0$ 成立时，可构建 $z$ 统计量：
 
 $$
-z = \frac{\hat{p}_1 - \hat{p}_2 - \delta + c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}} \sim N(0,1)
+z = \frac{\hat{p}_1 - \hat{p}_2 - \delta \pm c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}} \sim N(0,1)
 $$
 
 在 $H_1$ 成立时，可构建 $z'$ 统计量：
 
 $$
-z' = \frac{\hat{p}_1 - \hat{p}_2 - \delta + c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}} \sim N\left(\frac{p_1 - p_2 - \delta + c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}}, \ 1\right)
+z' = \frac{\hat{p}_1 - \hat{p}_2 - \delta \pm c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}} \sim N\left(\frac{p_1 - p_2 - \delta + c}{\sqrt{\frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}}}, \ 1\right)
 $$
 
 === "高优指标"
