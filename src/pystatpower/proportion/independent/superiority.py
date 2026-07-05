@@ -1,248 +1,175 @@
-from math import ceil, sqrt
+from math import ceil
+from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import norm
 
-from ..._constant import SAMPLE_SIZE_SEARCH_MAX
-
-
-def _power_pooled(
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    treatment_size: float,
-    reference_size: float,
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a superiority test of two independent proportions using pooled variance."""
-
-    pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
-        treatment_size + reference_size
-    )
-    power = 1 - norm.cdf(
-        (
-            norm.ppf(1 - alpha)
-            * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
-            - abs(treatment_proportion - reference_proportion - margin)
-        )
-        / sqrt(
-            treatment_proportion * (1 - treatment_proportion) / treatment_size
-            + reference_proportion * (1 - reference_proportion) / reference_size
-        )
-    )
-    return float(power)
+from ._power import _power
 
 
-def _power_pooled_cc(
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    treatment_size: float,
-    reference_size: float,
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a superiority test of two independent proportions using pooled variance and continuity correction."""
+def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
+    """Convert margin to regular form based on alternative hypothesis"""
 
-    pooled_proportion = (treatment_size * treatment_proportion + reference_size * reference_proportion) / (
-        treatment_size + reference_size
-    )
-    power = 1 - norm.cdf(
-        (
-            norm.ppf(1 - alpha)
-            * sqrt(pooled_proportion * (1 - pooled_proportion) * (1 / treatment_size + 1 / reference_size))
-            - abs(treatment_proportion - reference_proportion - margin)
-            + 1 / 2 * (1 / treatment_size + 1 / reference_size)
-        )
-        / sqrt(
-            treatment_proportion * (1 - treatment_proportion) / treatment_size
-            + reference_proportion * (1 - reference_proportion) / reference_size
-        )
-    )
-    return float(power)
-
-
-def _power_unpooled(
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    treatment_size: float,
-    reference_size: float,
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a superiority test of two independent proportions using unpooled variance."""
-
-    power = 1 - norm.cdf(
-        norm.ppf(1 - alpha)
-        - abs(treatment_proportion - reference_proportion - margin)
-        / sqrt(
-            treatment_proportion * (1 - treatment_proportion) / treatment_size
-            + reference_proportion * (1 - reference_proportion) / reference_size
-        )
-    )
-    return float(power)
-
-
-def _power_unpooled_cc(
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    treatment_size: float,
-    reference_size: float,
-    alpha: float,
-) -> float:
-    """Calculate the statistical power for a superiority test of two independent proportions using unpooled variance and continuity correction."""
-
-    power = 1 - norm.cdf(
-        norm.ppf(1 - alpha)
-        - (
-            abs(treatment_proportion - reference_proportion - margin)
-            - 1 / 2 * (1 / treatment_size + 1 / reference_size)
-        )
-        / sqrt(
-            treatment_proportion * (1 - treatment_proportion) / treatment_size
-            + reference_proportion * (1 - reference_proportion) / reference_size
-        )
-    )
-    return float(power)
-
-
-def _power(
-    treatment_proportion: float,
-    reference_proportion: float,
-    margin: float,
-    treatment_size: float,
-    reference_size: float,
-    alpha: float,
-    pooled: bool,
-    continuity_correction: bool,
-) -> float:
-    """Calculate the statistical power for a superiority test of two independent proportions."""
-
-    if pooled:
-        if continuity_correction:
-            return _power_pooled_cc(
-                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
-            )
-        else:
-            return _power_pooled(
-                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
-            )
-    else:
-        if continuity_correction:
-            return _power_unpooled_cc(
-                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
-            )
-        else:
-            return _power_unpooled(
-                treatment_proportion, reference_proportion, margin, treatment_size, reference_size, alpha
-            )
+    match alternative:
+        case "greater":
+            return abs(margin)
+        case "less":
+            return -abs(margin)
 
 
 def solve_power(
     *,
     treatment_proportion: float,
     reference_proportion: float,
-    margin: float,
+    margin: float | None = None,
+    superiority_proportion: float | None = None,
     treatment_size: int,
     reference_size: int,
-    alpha: float = 0.05,
-    pooled: bool = False,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the statistical power for a superiority test of two independent proportions.
+    Calculate the statistical power.
 
     Args:
-        treatment_proportion (float):
-            Actual proportion in the treatment group ($p_1$). Must be between 0 and 1.
-        reference_proportion (float):
-            Actual proportion in the reference group ($p_2$). Must be between 0 and 1.
-        margin (float):
-            The superiority margin ($\\delta$)
+        treatment_proportion:
+            Proportion in the treatment group.
+        reference_proportion:
+            Proportion in the reference group.
+        margin:
+            The superiority margin.
 
-            - provide a positive value if a higher proportion is better
-              (e.g., 0.10 for a 10% superiority margin in cure rates)
-            - provide a negative value if a higher proportion is worse
-              (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alpha (float, optional):
-            One-sided significance level.
-        pooled (bool, optional):
-            If True, use the pooled variance estimator.
-        continuity_correction (bool, optional):
-            If True, applied continuity correction.
+            Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+        superiority_proportion:
+            The superiority proportion.
+
+            Required if `margin` is omitted.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
 
     Returns:
-        (float): Power of the test.
+        The statistical power of the test.
+
+    Raises:
+        ValueError: If `margin` and `superiority_proportion` are both omitted.
     """
 
-    power = _power(
+    if superiority_proportion is None:
+        if margin is None:
+            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
+
+        margin = _margin(margin, alternative)
+        superiority_proportion = reference_proportion + margin
+
+    return _power(
         treatment_proportion,
         reference_proportion,
-        margin,
+        superiority_proportion,
         treatment_size,
         reference_size,
+        alternative,
         alpha,
-        pooled,
+        method,
         continuity_correction,
     )
-    return power
 
 
 def solve_size(
     *,
     treatment_proportion: float,
     reference_proportion: float,
-    margin: float,
+    margin: float | None = None,
+    superiority_proportion: float | None = None,
+    alternative: Literal["greater", "less"],
     ratio: float = 1,
-    alpha: float = 0.05,
-    power: float = 0.80,
-    pooled: bool = False,
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
-    Estimate the required sample size for a superiority test of two independent proportions.
+    Estimate the required sample size.
 
     Args:
-        treatment_proportion (float):
-            Expected proportion in the treatment group ($p_1$). Must be between 0 and 1.
-        reference_proportion (float):
-            Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
-        margin (float):
-            The superiority margin ($\\delta$)
+        treatment_proportion:
+            Proportion in the treatment group.
+        reference_proportion:
+            Proportion in the reference group.
+        margin:
+            The superiority margin.
 
-            - provide a positive value if a higher proportion is better
-              (e.g., 0.10 for a 10% superiority margin in cure rates)
-            - provide a negative value if a higher proportion is worse
-              (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        ratio (float, optional):
-            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        pooled (bool, optional):
-            If True, use the pooled variance estimator.
-        continuity_correction (bool, optional):
-            If True, applied continuity correction.
+            Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+        superiority_proportion:
+            The superiority proportion.
+
+            Required if `margin` is omitted.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        ratio:
+            Ratio of sample sizes in the treatment and reference groups.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
 
     Returns:
-        (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
 
-    Notes:
-        If `continuity_correction` is enabled, the power function may not be monotonic at very small sample sizes.
-        The function identifies a safe lower bound to ensure convergence of the root-finding algorithm (Brent's method).
+    Raises:
+        ValueError: If `margin` and `superiority_proportion` are both omitted.
     """
 
-    if continuity_correction:
-        lower_bound = 1 / 2 * (1 / ratio + 1) / abs(treatment_proportion - reference_proportion - margin)
-    else:
-        lower_bound = 0.000001
+    if superiority_proportion is None:
+        if margin is None:
+            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
 
-    upper_bound = SAMPLE_SIZE_SEARCH_MAX
+        margin = _margin(margin, alternative)
+        superiority_proportion = reference_proportion + margin
 
     if ratio >= 1:
 
@@ -251,18 +178,19 @@ def solve_size(
                 _power(
                     treatment_proportion,
                     reference_proportion,
-                    margin,
+                    superiority_proportion,
                     reference_size * ratio,
                     reference_size,
+                    alternative,
                     alpha,
-                    pooled,
+                    method,
                     continuity_correction,
                 )
                 - power
             )
 
-        reference_size = int(ceil(brentq(func, lower_bound, upper_bound)))
-        treatment_size = int(ceil(reference_size * ratio))
+        reference_size = ceil(brentq(func, 1e-12, 1e12))
+        treatment_size = ceil(reference_size * ratio)
         return treatment_size, reference_size
     else:
 
@@ -271,99 +199,142 @@ def solve_size(
                 _power(
                     treatment_proportion,
                     reference_proportion,
-                    margin,
+                    superiority_proportion,
                     treatment_size,
-                    treatment_size / ratio,
+                    treatment_size * (1 / ratio),
+                    alternative,
                     alpha,
-                    pooled,
+                    method,
                     continuity_correction,
                 )
                 - power
             )
 
-        treatment_size = ceil(brentq(func, lower_bound, upper_bound))
-        reference_size = ceil(treatment_size / ratio)
-        return float(treatment_size), float(reference_size)
+        treatment_size = ceil(brentq(func, 1e-12, 1e12))
+        reference_size = ceil(treatment_size * (1 / ratio))
+        return treatment_size, reference_size
 
 
 def solve_treatment_proportion(
     *,
     reference_proportion: float,
-    margin: float,
+    margin: float | None = None,
+    superiority_proportion: float | None = None,
     treatment_size: int,
     reference_size: int,
-    alpha: float = 0.05,
-    power: float = 0.80,
-    pooled: bool = False,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
-    Estimate the required proportion in the treatment group for a superiority test of two independent proportions.
+    Estimate the required proportion in the treatment group.
 
     Args:
-        reference_proportion (float):
-            Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
-        margin (float):
-            The superiority margin ($\\delta$)
+        reference_proportion:
+            Proportion in the reference group.
+        margin:
+            The superiority margin.
 
-            - provide a positive value if a higher proportion is better
-              (e.g., 0.10 for a 10% superiority margin in cure rates)
-            - provide a negative value if a higher proportion is worse
-              (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        pooled (bool, optional):
-            If True, use the pooled variance estimator.
-        continuity_correction (bool, optional):
-            If True, applied continuity correction.
+            Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
+
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+        superiority_proportion:
+            The superiority proportion.
+
+            Required if `margin` is omitted.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
 
     Returns:
-        (float): The required proportion in the treatment group.
+        The required proportion in the treatment group.
+
+    Raises:
+        ValueError: If `margin` and `superiority_proportion` are both omitted.
 
     Notes:
-        The search interval for treatment proportion ($p_1$) is constrained by the reference proportion ($p_2$) and the
-        margin ($\\delta$) to ensure the alternative hypothesis remains plausible:
+        The value range of the treatment proportion $p_1$ is determined by the reference proportion $p_2$ and the superiority margin $\\delta$.
+
+        If `alternative` is `'greater'`, that is, higher proportions are better, we have:
 
         $$
-        \\text{Search Interval} =
         \\begin{cases}
-        \\left(0, \\ p_2+\\delta\\right), & \\text{if } \\delta < 0 \\\\
-        \\left(p_2, \\ 1\\right),         & \\text{if } \\delta = 0 \\\\
-        \\left(p_2+\\delta, \\ 1\\right), & \\text{if } \\delta > 0
+        p_1 > p_2 + \\delta \\\\
+        0 < p_1 < 1 \\\\
+        \\delta > 0
         \\end{cases}
+        \\
+        \\Rightarrow p_2 + \\delta < p_1 < 1
+        $$
+
+        If `alternative` is `'less'`, that is, higher proportions are worse, we have:
+
+        $$
+        \\begin{cases}
+        p_1 < p_2 + \\delta \\\\
+        0 < p_1 < 1 \\\\
+        \\delta < 0
+        \\end{cases}
+        \\
+        \\Rightarrow 0 < p_1 < p_2 + \\delta
         $$
     """
+
+    if superiority_proportion is None:
+        if margin is None:
+            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
+
+        margin = _margin(margin, alternative)
+        superiority_proportion = reference_proportion + margin
 
     def func(treatment_proportion: float) -> float:
         return (
             _power(
                 treatment_proportion,
                 reference_proportion,
-                margin,
+                superiority_proportion,
                 treatment_size,
                 reference_size,
+                alternative,
                 alpha,
-                pooled,
+                method,
                 continuity_correction,
             )
             - power
         )
 
-    if margin < 0:
-        lower_bound, upper_bound = 0, reference_proportion + margin
-        return float(brentq(func, lower_bound, upper_bound))
-    elif margin > 0:
-        lower_bound, upper_bound = reference_proportion + margin, 1
-        return float(brentq(func, lower_bound, upper_bound))
-    else:  # margin == 0
-        lower_bound, upper_bound = reference_proportion, 1
-        return float(brentq(func, lower_bound, upper_bound))
+    match alternative:
+        case "greater":
+            return float(brentq(func, reference_proportion + margin, 1))
+        case "less":
+            return float(brentq(func, 0, reference_proportion + margin))
 
 
 def solve_reference_proportion(
@@ -372,78 +343,204 @@ def solve_reference_proportion(
     margin: float,
     treatment_size: int,
     reference_size: int,
-    alpha: float = 0.05,
-    power: float = 0.80,
-    pooled: bool = False,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
-    Estimate the required proportion in the reference group for a superiority test of two independent proportions.
+    Estimate the required proportion in the reference group.
 
     Args:
-        treatment_proportion (float):
-            Expected proportion in the treatment group ($p_1$). Must be between 0 and 1.
-        margin (float):
-            The superiority margin ($\\delta$)
+        treatment_proportion:
+            Proportion in the treatment group.
+        margin:
+            The superiority margin.
 
-            - provide a positive value if a higher proportion is better
-              (e.g., 0.10 for a 10% superiority margin in cure rates)
-            - provide a negative value if a higher proportion is worse
-              (e.g., -0.05 for a -5% superiority margin in mortality rates)
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        pooled (bool, optional):
-            If True, use the pooled variance estimator.
-        continuity_correction (bool, optional):
-            If True, applied continuity correction.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
+            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
 
     Returns:
-        (float): The required proportion in the reference group.
+        The required proportion in the reference group.
 
     Notes:
-        The search interval for reference proportion ($p_2$) is constrained by the treatment proportion ($p_1$) and the
-        margin ($\\delta$) to ensure the alternative hypothesis remains plausible:
+        The value range of the reference proportion $p_2$ is determined by the treatment proportion $p_1$ and the superiority margin $\\delta$.
+
+        If `alternative` is `'greater'`, that is, higher proportions are better, we have:
 
         $$
-        \\text{Search Interval} =
         \\begin{cases}
-        \\left(p_1-\\delta, \\ 1\\right), & \\text{if } \\delta < 0 \\\\
-        \\left(0, \\ p_1\\right),         & \\text{if } \\delta = 0 \\\\
-        \\left(0, \\ p_1-\\delta\\right), & \\text{if } \\delta > 0
+        p_2 < p_1 - \\delta \\\\
+        0 < p_2 < 1 \\\\
+        \\delta > 0
         \\end{cases}
+        \\
+        \\Rightarrow 0 < p_2 < p_1 - \\delta
+        $$
+
+        If `alternative` is `'less'`, that is, higher proportions are worse, we have:
+
+        $$
+        \\begin{cases}
+        p_2 > p_1 - \\delta \\\\
+        0 < p_2 < 1 \\\\
+        \\delta < 0
+        \\end{cases}
+        \\
+        \\Rightarrow p_1 - \\delta < p_2 < 1
         $$
     """
+
+    margin = _margin(margin, alternative)
 
     def func(reference_proportion: float) -> float:
         return (
             _power(
                 treatment_proportion,
                 reference_proportion,
-                margin,
+                reference_proportion + margin,
                 treatment_size,
                 reference_size,
+                alternative,
                 alpha,
-                pooled,
+                method,
                 continuity_correction,
             )
             - power
         )
 
-    if margin < 0:
-        lower_bound, upper_bound = treatment_proportion - margin, 1
-        return float(brentq(func, lower_bound, upper_bound))
-    elif margin > 0:
-        lower_bound, upper_bound = 0, treatment_proportion - margin
-        return float(brentq(func, lower_bound, upper_bound))
-    else:  # margin == 0
-        lower_bound, upper_bound = 0, treatment_proportion
-        return float(brentq(func, lower_bound, upper_bound))
+    match alternative:
+        case "greater":
+            return brentq(func, 0, treatment_proportion - margin)
+        case "less":
+            return brentq(func, treatment_proportion - margin, 1)
+
+
+def solve_superiority_proportion(
+    *,
+    treatment_proportion: float,
+    reference_proportion: float,
+    treatment_size: int,
+    reference_size: int,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
+    continuity_correction: bool = False,
+) -> float:
+    """
+    Estimate the required superiority proportion.
+
+    Args:
+        treatment_proportion:
+            Proportion in the treatment group.
+        reference_proportion:
+            Proportion in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
+
+    Returns:
+        The required superiority proportion.
+
+    Notes:
+        The value range of the superiority proportion $p_{\\text{sup}}$ is determined by the treatment proportion $p_1$.
+
+        If `alternative` is `'greater'`, that is, higher proportions are better, we have:
+
+        $$
+        \\begin{cases}
+        p_{\\text{sup}} < p_1 \\\\
+        0 < p_{\\text{sup}} < 1 \\\\
+        \\delta > 0
+        \\end{cases}
+        \\
+        \\Rightarrow 0 < p_{\\text{sup}} < p_1
+        $$
+
+        If `alternative` is `'less'`, that is, higher proportions are worse, we have:
+
+        $$
+        \\begin{cases}
+        p_{\\text{sup}} > p_1 \\\\
+        0 < p_{\\text{sup}} < 1 \\\\
+        \\delta < 0
+        \\end{cases}
+        \\
+        \\Rightarrow p_1 < p_{\\text{sup}} < 1
+        $$
+    """
+
+    def func(superiority_proportion: float) -> float:
+        return (
+            _power(
+                treatment_proportion,
+                reference_proportion,
+                superiority_proportion,
+                treatment_size,
+                reference_size,
+                alternative,
+                alpha,
+                method,
+                continuity_correction,
+            )
+            - power
+        )
+
+    match alternative:
+        case "greater":
+            return brentq(func, 0, treatment_proportion)
+        case "less":
+            return brentq(func, treatment_proportion, 1)
 
 
 def solve_margin(
@@ -452,69 +549,93 @@ def solve_margin(
     reference_proportion: float,
     treatment_size: int,
     reference_size: int,
-    alpha: float = 0.05,
-    power: float = 0.80,
-    pooled: bool = False,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
-    Estimate the required margin for a superiority test of two independent proportions.
+    Estimate the required superiority margin.
 
     Args:
-        treatment_proportion (float):
-            Expected proportion in the treatment group ($p_1$). Must be between 0 and 1.
-        reference_proportion (float):
-            Expected proportion in the reference group ($p_2$). Must be between 0 and 1.
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alpha (float, optional):
-            One-sided significance level.
-        power (float, optional):
-            Desired statistical power.
-        pooled (bool, optional):
-            If True, use the pooled variance estimator.
-        continuity_correction (bool, optional):
-            If True, applied continuity correction.
+        treatment_proportion:
+            Proportion in the treatment group.
+        reference_proportion:
+            Proportion in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p_1 - p_2 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p_1 - p_2 < \\delta \\ (\\delta < 0)$.
+        alpha:
+            Significance level.
+
+            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        method:
+            The method used to construct the test statistic.
+
+            - `'z-pooled'`: Z-test using pooled variance.
+            - `'z-unpooled'`: Z-test using unpooled variance.
+        continuity_correction:
+            Wether to apply Yates' continuity correction.
 
     Returns:
-        (float): The required superiority margin.
+        The required superiority margin.
 
     Notes:
-        The search interval for superiority margin ($\\delta$) is constrained by the treatment proportion ($p_1$) and the
-        reference proportion ($p_2$) to ensure the alternative hypothesis remains plausible:
+        The value range of the superiority margin $\\delta$ is determined by the treatment proportion $p_1$ and the reference proportion $p_2$.
+
+        If `alternative` is `'greater'`, that is, higher proportions are better, we have:
 
         $$
-        \\text{Search Interval} =
         \\begin{cases}
-        \\left(p_1-p_2, \\ 0\\right), & \\text{if } p_1 < p_2 \\\\
-        \\left[0, \\ p_1-p_2\\right), & \\text{if } p_1 > p_2 \\\\
+        \\delta < p_1 - p_2 \\\\
+        \\delta > 0
         \\end{cases}
+        \\
+        \\Rightarrow 0 < \\delta < p_1 - p_2
+        $$
+
+        If `alternative` is `'less'`, that is, higher proportions are worse, we have:
+
+        $$
+        \\begin{cases}
+        \\delta > p_1 - p_2 \\\\
+        \\delta < 0
+        \\end{cases}
+        \\
+        \\Rightarrow p_1 - p_2 < \\delta < 0
+        $$
+
+        To handle cases where the superiority margin is zero, the program computes the margin indirectly.
+        It first calls [solve_superiority_proportion][pystatpower.proportion.independent.superiority.solve_superiority_proportion]
+        to determine the superiority proportion $p_{\\text{sup}}$, and then calculates the margin $\\delta$ using the following formula:
+
+        $$
+        \\delta = p_{\\text{sup}} - p_2
         $$
     """
 
-    def func(margin: float) -> float:
-        return (
-            _power(
-                treatment_proportion,
-                reference_proportion,
-                margin,
-                treatment_size,
-                reference_size,
-                alpha,
-                pooled,
-                continuity_correction,
-            )
-            - power
+    return (
+        solve_superiority_proportion(
+            treatment_proportion=treatment_proportion,
+            reference_proportion=reference_proportion,
+            treatment_size=treatment_size,
+            reference_size=reference_size,
+            alternative=alternative,
+            alpha=alpha,
+            power=power,
+            method=method,
+            continuity_correction=continuity_correction,
         )
-
-    if treatment_proportion < reference_proportion:
-        lower_bound, upper_bound = treatment_proportion - reference_proportion, 0
-        return brentq(func, lower_bound, upper_bound)
-    else:
-        if round(func(0), 4) == 0:
-            return 0
-        else:
-            lower_bound, upper_bound = 0, treatment_proportion - reference_proportion
-            return brentq(func, lower_bound, upper_bound)
+        - reference_proportion
+    )

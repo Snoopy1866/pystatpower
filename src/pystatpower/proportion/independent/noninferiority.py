@@ -74,7 +74,7 @@ def solve_power(
     return _power(
         treatment_proportion,
         reference_proportion,
-        margin,
+        reference_proportion + margin,
         treatment_size,
         reference_size,
         alternative,
@@ -148,7 +148,7 @@ def solve_size(
                 _power(
                     treatment_proportion,
                     reference_proportion,
-                    margin,
+                    reference_proportion + margin,
                     reference_size * ratio,
                     reference_size,
                     alternative,
@@ -169,7 +169,7 @@ def solve_size(
                 _power(
                     treatment_proportion,
                     reference_proportion,
-                    margin,
+                    reference_proportion + margin,
                     treatment_size,
                     treatment_size * (1 / ratio),
                     alternative,
@@ -274,7 +274,7 @@ def solve_treatment_proportion(
             _power(
                 treatment_proportion,
                 reference_proportion,
-                margin,
+                reference_proportion + margin,
                 treatment_size,
                 reference_size,
                 alternative,
@@ -381,7 +381,7 @@ def solve_reference_proportion(
             _power(
                 treatment_proportion,
                 reference_proportion,
-                margin,
+                reference_proportion + margin,
                 treatment_size,
                 reference_size,
                 alternative,
@@ -478,7 +478,7 @@ def solve_margin(
             _power(
                 treatment_proportion,
                 reference_proportion,
-                margin,
+                reference_proportion + margin,
                 treatment_size,
                 reference_size,
                 alternative,

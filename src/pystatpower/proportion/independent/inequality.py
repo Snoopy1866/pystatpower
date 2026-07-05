@@ -18,14 +18,13 @@ def _power(
 ) -> float:
     """Calculate the statistical power."""
 
-    margin = 0
     if alternative == "one-sided":
         alternative = "greater" if treatment_proportion > reference_proportion else "less"
 
     return _raw_power(
         treatment_proportion,
         reference_proportion,
-        margin,
+        reference_proportion,
         treatment_size,
         reference_size,
         alternative,
