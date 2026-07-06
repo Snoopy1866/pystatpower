@@ -84,8 +84,6 @@ def solve_size(
             Correlation coefficient under the null hypothesis.
         correlation:
             Correlation coefficient under the alternative hypothesis.
-        size:
-            Sample size.
         alternative:
             Type of the alternative hypothesis.
 
@@ -190,7 +188,7 @@ def solve_null_correlation(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimete the required correlation coefficient under the alternative hypothesis.
+    Estimete the required correlation coefficient under the null hypothesis.
 
     Args:
         correlation:
