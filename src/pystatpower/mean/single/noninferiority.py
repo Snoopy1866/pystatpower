@@ -37,7 +37,7 @@ def _power(
     alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a non-inferiority test of one sample mean."""
+    """Calculate the statistical power."""
 
     df = size - 1
     nc = (diff - margin) * sqrt(size) / std
@@ -62,7 +62,7 @@ def solve_power(
     alpha: float = 0.025,
 ) -> float:
     """
-    Calculate the statistical power for a non-inferiority test of one sample mean.
+    Calculate the statistical power.
 
     Args:
         mean:
@@ -125,7 +125,7 @@ def solve_size(
     power: float = 0.8,
 ) -> int:
     """
-    Estimate the required sample size for a non-inferiority test of one sample mean.
+    Estimate the required sample size.
 
     Args:
         mean:
@@ -191,7 +191,7 @@ def solve_diff(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required mean difference between the alternative hypothesis and the null hypothesis for a non-inferiority test of one sample mean.
+    Estimate the required mean difference.
 
     Args:
         margin:
@@ -247,7 +247,7 @@ def solve_mean(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required mean under the alternative hypothesis for a non-inferiority test of one sample mean.
+    Estimate the required mean under the alternative hypothesis.
 
     Args:
         null_mean:
@@ -307,7 +307,7 @@ def solve_null_mean(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required mean under the null hypothesis for a non-inferiority test of one sample mean.
+    Estimate the required mean under the null hypothesis.
 
     Args:
         mean:
@@ -366,7 +366,7 @@ def solve_std(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required standard deviation for a non-inferiority test of one sample mean.
+    Estimate the required standard deviation.
 
     Args:
         mean:
@@ -434,7 +434,7 @@ def solve_margin(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required margin for a non-inferiority test of one sample mean.
+    Estimate the required non-inferiority margin.
 
     Args:
         mean:

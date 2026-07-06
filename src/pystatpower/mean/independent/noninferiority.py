@@ -35,7 +35,7 @@ def solve_power(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Calculate the statistical power for a non-inferiority test of two independent means.
+    Calculate the statistical power.
 
     Args:
         treatment_mean:
@@ -148,7 +148,7 @@ def solve_size(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
     """
-    Estimate the required sample size for a non-inferiority test of two independent means.
+    Estimate the required sample size.
 
     Args:
         treatment_mean:
@@ -298,7 +298,7 @@ def solve_treatment_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required mean in the treatment group for a non-inferiority test of two independent means.
+    Estimate the required mean in the treatment group.
 
     Args:
         reference_mean:
@@ -411,7 +411,7 @@ def solve_reference_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required mean in the reference group for a non-inferiority test of two independent means.
+    Estimate the required mean in the reference group.
 
     Args:
         treatment_mean:
@@ -523,7 +523,7 @@ def solve_diff(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required difference between the mean in treatment and reference groups for a non-inferiority test of two independent means.
+    Estimate the required mean difference.
 
     Args:
         margin:
@@ -635,7 +635,7 @@ def solve_margin(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required margin for a non-inferiority test of two independent means.
+    Estimate the required non-inferiority margin.
 
     Args:
         treatment_mean:
@@ -754,7 +754,7 @@ def solve_treatment_std(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required standard deviation in the treatment group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the treatment group.
 
     Args:
         treatment_mean:
@@ -932,7 +932,7 @@ def solve_reference_std(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required standard deviation in the reference group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the reference group.
 
     Args:
         treatment_mean:

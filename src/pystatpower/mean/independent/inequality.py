@@ -260,7 +260,7 @@ def solve_power(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
         df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 
@@ -272,7 +272,7 @@ def solve_power(
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     power = _power(
@@ -357,7 +357,7 @@ def solve_size(
             - If False: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
         df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 
@@ -369,7 +369,7 @@ def solve_size(
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if ratio >= 1:
@@ -441,7 +441,7 @@ def solve_diff(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required difference for an inequality test of two independent means.
+    Estimate the required mean difference.
 
     Args:
         treatment_std:
@@ -485,7 +485,7 @@ def solve_diff(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
         df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
@@ -497,7 +497,7 @@ def solve_diff(
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(diff: float) -> float:
@@ -543,7 +543,7 @@ def solve_treatment_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required mean in the treatment group for an inequality test of two independent means.
+    Estimate the required mean in the treatment group.
 
     Args:
         reference_mean:
@@ -589,7 +589,7 @@ def solve_treatment_mean(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
         df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
@@ -600,7 +600,7 @@ def solve_treatment_mean(
         The required mean in the treatment group.
 
     Raises:
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(treatment_mean: float) -> float:
@@ -647,7 +647,7 @@ def solve_reference_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required mean in the reference group for an inequality test of two independent means.
+    Estimate the required mean in the reference group.
 
     Args:
         treatment_mean:
@@ -693,7 +693,7 @@ def solve_reference_mean(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
         df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
@@ -704,7 +704,7 @@ def solve_reference_mean(
         (float): The required mean in the treatment group.
 
     Raises:
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(reference_mean: float) -> float:
@@ -751,7 +751,7 @@ def solve_treatment_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required standard deviation in the treatment group for an inequality test of two independent means.
+    Estimate the required standard deviation in the treatment group.
 
     Args:
         treatment_mean:
@@ -802,7 +802,7 @@ def solve_treatment_std(
         reference_std:
             Standard deviation in the reference group.
 
-            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
+            If `equal_var`=`True`, this parameter is ignored, otherwise, you must specify this parameter.
         df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
@@ -881,7 +881,7 @@ def solve_reference_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required standard deviation in the reference group for an inequality test of two independent means.
+    Estimate the required standard deviation in the reference group.
 
     Args:
         treatment_mean:
@@ -932,7 +932,7 @@ def solve_reference_std(
         treatment_std:
             Standard deviation in the treatment group.
 
-            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
+            If `equal_var`=`True`, this parameter is ignored, otherwise, you must specify this parameter.
         df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 

@@ -28,7 +28,7 @@ def _power_p0(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test, using $p_0$ to calculate variance."""
+    """Calculate the statistical power, using $p_0$ to calculate variance."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -62,7 +62,7 @@ def _power_p0_cc(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test with continuity correction, using $p_0$ to calculate variance."""
+    """Calculate the statistical power, using p0 to calculate variance with continuity correction."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -99,7 +99,7 @@ def _power_phat(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test, using $\\hat{p}$ to calculate variance."""
+    """Calculate the statistical power, using phat to calculate variance."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -125,7 +125,7 @@ def _power_phat_cc(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test with continuity correction, using $\\hat{p}$ to calculate variance."""
+    """Calculate the statistical power, using phat to calculate variance with continuity correction."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -158,7 +158,7 @@ def _power(
     phat: bool,
     continuity_correction: bool,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test."""
+    """Calculate the statistical power."""
 
     match (phat, continuity_correction):
         case (True, True):
@@ -185,7 +185,7 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the statistical power for a one-sample proportion equivalence test.
+    Calculate the statistical power.
 
     Args:
         null_proportion:
@@ -224,7 +224,7 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size for a one-sample proportion equivalence test.
+    Estimate the required sample size.
 
     Args:
         null_proportion:
@@ -270,11 +270,11 @@ def solve_null_proportion(
     search_direction: Literal["lower", "upper"] = "upper",
 ) -> float:
     """
-    Estimate the required proportion under the null hypothesis ($p_0$) for a one-sample proportion equivalence test.
+    Estimate the required proportion under the null hypothesis.
 
     Args:
         proportion:
-            Proportion under the alternative hypothesis ($p$).
+            Proportion under the alternative hypothesis.
         margin_lower:
             Lower equivalence margin ($\\delta_1$), a negative value must be specified.
         margin_upper:
@@ -357,7 +357,7 @@ def solve_proportion(
     search_direction: Literal["lower", "upper"] = "upper",
 ) -> float:
     """
-    Estimate the required proportion under the alternative hypothesis ($p$) for a one-sample proportion equivalence test.
+    Estimate the required proportion under the alternative hypothesis.
 
     Args:
         null_proportion:

@@ -17,7 +17,7 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the statistical power for an inequality test of one proportion.
+    Calculate the statistical power.
 
     Args:
         proportion:
@@ -63,7 +63,7 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size for an inequality test of one proportion.
+    Estimate the required sample size.
 
     Args:
         proportion:
@@ -115,7 +115,7 @@ def solve_proportion(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required proportion under the alternative hypothesis for an inequality test of one proportion.
+    Estimate the required proportion under the alternative hypothesis.
 
     Args:
         null_proportion:
@@ -192,7 +192,7 @@ def solve_null_proportion(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required proportion under the null hypothesis for an inequality test of one proportion.
+    Estimate the required proportion under the null hypothesis.
 
     Args:
         proportion:

@@ -26,7 +26,7 @@ def _power_z(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of one mean, using z-test."""
+    """Calculate the statistical power, using z-test."""
 
     se = std / sqrt(size)
 
@@ -48,7 +48,7 @@ def _power_t(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of one mean, using t-test."""
+    """Calculate the statistical power, using t-test."""
 
     df = size - 1
     se = std / sqrt(size)
@@ -73,7 +73,7 @@ def _power(
     alpha: float,
     dist: Literal["z", "t"],
 ) -> float:
-    """Calculate the statistical power for an inequality test of one mean."""
+    """Calculate the statistical power."""
 
     match dist:
         case "z":
@@ -96,7 +96,7 @@ def solve_power(
     dist: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Calculate the statistical power for an inequality test of one mean.
+    Calculate the statistical power.
 
     Args:
         mean:
@@ -156,7 +156,7 @@ def solve_size(
     dist: Literal["z", "t"] = "t",
 ) -> int:
     """
-    Estimate the required sample size for an inequality test of one mean.
+    Estimate the required sample size.
 
     Args:
         mean:
@@ -220,7 +220,7 @@ def solve_diff(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required mean difference between the alternative hypothesis and the null hypothesis for an inequality test of one mean.
+    Estimate the required mean difference.
 
     Args:
         std:
@@ -295,7 +295,7 @@ def solve_mean(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required mean under the alternative hypothesis for an inequality test of one mean.
+    Estimate the required mean under the alternative hypothesis.
 
     Args:
         null_mean:
@@ -372,7 +372,7 @@ def solve_null_mean(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimate the required mean under the null hypothesis for an inequality test of one mean.
+    Estimate the required mean under the null hypothesis.
 
     Args:
         mean:
@@ -449,7 +449,7 @@ def solve_std(
     dist: Literal["z", "t"],
 ) -> float:
     """
-    Estimate the required standard deviation for an inequality test of one mean.
+    Estimate the required standard deviation.
 
     Args:
         mean:
