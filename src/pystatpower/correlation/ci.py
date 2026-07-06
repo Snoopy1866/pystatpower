@@ -107,7 +107,7 @@ def solve_distance(
 
     Returns:
         - If `interval_type` is `'two-sided'`, returns the width of correlation coefficient confidence interval
-        - If `interval_type` is `'greater'` or `'less'`, returns the distance from the correlation coefficient to the confidence bound.
+        - If `interval_type` is `'lower'` or `'upper'`, returns the distance from the correlation coefficient to the confidence bound.
     """
 
     return _distance(correlation, size, conf_level, interval_type, bias_adj)
