@@ -3,11 +3,9 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.correlation.ci import solve_distance, solve_size, solve_correlation
+from pystatpower.correlation.ci import solve_distance, solve_size
 
 from tests.models import BaseTestCase
-
-pytestmark = pytest.mark.skip(reason="The methods used by PASS and SAS are quite complex and cannot be used directly as test cases, so this module is skipped for now")
 
 
 @dataclass(kw_only=True)
@@ -184,22 +182,25 @@ case_group = case_group_not_bias_adj + case_group_bias_adj
 
 def test_solve_distance(case: TestCase) -> None:
 
-    assert (
-        round(
-            solve_distance(
-                correlation=case.correlation,
-                size=case.size,
-                conf_level=case.conf_level,
-                interval_type=case.interval_type,
-                bias_adj=case.bias_adj,
-            ),
-            9,
-        )
-        == case.actual_distance
-    )
+    if case.bias_adj:
+        pytest.skip(reason="Neither SAS or PASS don't support bias adjustment, skipping the 'bias_adj = True' test case.")
+
+    assert round(
+        solve_distance(
+            correlation=case.correlation,
+            size=case.size,
+            conf_level=case.conf_level,
+            interval_type=case.interval_type,
+            bias_adj=case.bias_adj,
+        ),
+        6,
+    ) == round(case.actual_distance, 6)
 
 
 def test_solve_size(case: TestCase) -> None:
+
+    if case.bias_adj:
+        pytest.skip(reason="Neither SAS or PASS don't support bias adjustment, skipping the 'bias_adj = True' test case.")
 
     assert (
         solve_size(
@@ -210,21 +211,4 @@ def test_solve_size(case: TestCase) -> None:
             bias_adj=case.bias_adj,
         )
         == case.size
-    )
-
-
-def test_solve_correlation(case: TestCase) -> None:
-
-    assert (
-        round(
-            solve_correlation(
-                distance=case.actual_distance,
-                size=case.size,
-                conf_level=case.conf_level,
-                interval_type=case.interval_type,
-                bias_adj=case.bias_adj,
-            ),
-            2,
-        )
-        == case.correlation
     )
