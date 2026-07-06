@@ -188,7 +188,7 @@ def solve_null_correlation(
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
-    Estimete the required correlation coefficient under the null hypothesis.
+    Estimate the required correlation coefficient under the null hypothesis.
 
     Args:
         correlation:
