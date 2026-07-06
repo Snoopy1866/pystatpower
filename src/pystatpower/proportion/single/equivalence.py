@@ -206,7 +206,7 @@ def solve_power(
             Whether to apply Yate's continuity correction.
 
     Returns:
-        (float): The statistical power of the test.
+        The statistical power of the test.
     """
 
     return _power(null_proportion, proportion, margin_lower, margin_upper, size, alpha, phat, continuity_correction)
@@ -245,7 +245,7 @@ def solve_size(
             Whether to apply Yate's continuity correction.
 
     Returns:
-        (int): The required sample size.
+        The required sample size.
     """
 
     def func(size: float) -> float:
@@ -298,7 +298,7 @@ def solve_null_proportion(
             If $p$ itself satisfies the target power, this parameter is ignored and $p$ is returned directly.
 
     Returns:
-        (float): The required proportion under the null hypothesis ($p_0$).
+        The required proportion under the null hypothesis ($p_0$).
 
     Notes:
         The search interval for the null proportion ($p_0$) is constrained by the alternative proportion ($p$) and
@@ -385,7 +385,7 @@ def solve_proportion(
             If $p_0$ itself satisfies the target power, this parameter is ignored and $p_0$ is returned directly.
 
     Returns:
-        (float): The required proportion under the alternative hypothesis ($p$).
+        The required proportion under the alternative hypothesis ($p$).
 
     Notes:
         The search interval for the alternative proportion ($p$) is constrained by the null proportion ($p$) and

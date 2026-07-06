@@ -437,7 +437,7 @@ def solve_distance(
 
 
     Returns:
-        float: The confidence interval width or the distance from the proportion difference to the confidence limit.
+        The confidence interval width or the distance from the proportion difference to the confidence limit.
 
             - If `interval_type` is `'two-sided'`, the confidence interval width is returned.
             - If `interval_type` is `'lower'` or `'upper'`, the distance from the proportion difference to the confidence limit is returned.
@@ -505,7 +505,7 @@ def solve_size(
 
 
     Returns:
-        tuple[int, int]: The required sample size.
+        The required sample sizes in treatment and reference groups, respectively.
     """
 
     if ratio >= 1:
@@ -607,8 +607,7 @@ def solve_treatment_proportion(
             - `'less'`: Returns the smaller (lower) of the two treatment proportion solutions.
 
     Returns:
-        float:
-            The required proportion in the treatment group.
+        The required proportion in the treatment group.
 
     Raises:
         SolutionNotFoundError: If the solution cannot be found.
@@ -709,7 +708,7 @@ def solve_reference_proportion(
             - `'less'`: Returns the smaller (lower) of the two reference proportion solutions.
 
     Returns:
-        float: The required proportion in the reference group.
+        The required proportion in the reference group.
 
     Raises:
         SolutionNotFoundError: If the solution cannot be found.

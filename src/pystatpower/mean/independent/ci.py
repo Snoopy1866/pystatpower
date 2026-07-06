@@ -125,7 +125,7 @@ def solve_size(
             - `False`: The variances are not assumed to be equal. In this case, Welch-Satterthwaite's approximate t-test is used.
 
     Returns:
-        The required sample size in the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
     """
 
     if ratio >= 1:

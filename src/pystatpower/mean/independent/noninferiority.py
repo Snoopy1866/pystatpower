@@ -100,7 +100,7 @@ def solve_power(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -214,7 +214,7 @@ def solve_size(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        tuple[int, int]: The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -357,7 +357,7 @@ def solve_treatment_mean(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required mean in the treatment group.
+        The required mean in the treatment group.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -470,7 +470,7 @@ def solve_reference_mean(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required mean in the reference group.
+        The required mean in the reference group.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -580,7 +580,7 @@ def solve_diff(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required difference between the mean in treatment and reference groups.
+        The required difference between the mean in treatment and reference groups.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -696,8 +696,7 @@ def solve_margin(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float:
-            The required non-inferiority margin for the test.
+        The required non-inferiority margin for the test.
 
             - If `alternative` is `greater`, the returned value is in the range $(-\\infty, \\hat{\\mu}_1 - \\hat{\\mu}_2)$
             - If `alternative` is `less`, the returned value is in the range $(\\hat{\\mu}_1 - \\hat{\\mu}_2, +\\infty)$
@@ -819,7 +818,7 @@ def solve_treatment_std(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required standard deviation in the treatment group.
+        The required standard deviation in the treatment group.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -993,7 +992,7 @@ def solve_reference_std(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required standard deviation in the reference group.
+        The required standard deviation in the reference group.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.

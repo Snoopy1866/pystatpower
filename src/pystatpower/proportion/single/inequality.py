@@ -46,7 +46,7 @@ def solve_power(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
     """
 
     return _power(proportion, null_proportion, size, alternative, alpha, method, continuity_correction)
@@ -94,7 +94,7 @@ def solve_size(
             Whether to apply the continuity correction.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
     """
 
     def func(size: float) -> float:
@@ -156,7 +156,7 @@ def solve_proportion(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and this parameter is ignored.
 
     Returns:
-        float: The required proportion under the alternative hypothesis.
+        The required proportion under the alternative hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
@@ -233,7 +233,7 @@ def solve_null_proportion(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'greater'`, and this parameter is ignored.
 
     Returns:
-        float: The required proportion under the null hypothesis.
+        The required proportion under the null hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.

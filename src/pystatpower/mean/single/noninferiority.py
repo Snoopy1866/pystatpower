@@ -100,7 +100,7 @@ def solve_power(
             The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -165,7 +165,7 @@ def solve_size(
             0.8 is a commonly used statistical power.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -221,7 +221,7 @@ def solve_diff(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean difference between the alternative hypothesis and the null hypothesis.
+        The required mean difference between the alternative hypothesis and the null hypothesis.
     """
 
     margin = _margin(margin, alternative)
@@ -281,7 +281,7 @@ def solve_mean(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean under the alternative hypothesis.
+        The required mean under the alternative hypothesis.
     """
 
     margin = _margin(margin, alternative)
@@ -341,7 +341,7 @@ def solve_null_mean(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean under the null hypothesis.
+        The required mean under the null hypothesis.
     """
 
     def func(null_mean: float) -> float:
@@ -406,7 +406,7 @@ def solve_std(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required standard deviation.
+        The required standard deviation.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -468,8 +468,7 @@ def solve_margin(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float:
-            The required non-inferiority margin.
+        The required non-inferiority margin.
 
             - If `alternative` is `'greater'`, the returned value is in the range $(-\\infty, \\hat{\\mu} - \\hat{\\mu}_0)$
             - If `alternative` is `'less'`, the returned value is in the range $(\\hat{\\mu} - \\hat{\\mu}_0, +\\infty)$

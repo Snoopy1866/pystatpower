@@ -154,7 +154,7 @@ def solve_correlation(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and this parameter is ignored.
 
     Returns:
-        required correlation coefficient under the alternative hypothesis.
+        The required correlation coefficient under the alternative hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.

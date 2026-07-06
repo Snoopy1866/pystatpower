@@ -305,7 +305,7 @@ def solve_size(
             Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
 
     Returns:
-        int: The required sample size.
+        The required sample size.
     """
 
     def func(size: float) -> float:
@@ -406,7 +406,7 @@ def solve_proportion(
             - `'less'`: Search for the proportion less than 0.5.
 
     Returns:
-        float: The required proportion.
+        The required proportion.
     """
 
     def func(proportion: float) -> float:

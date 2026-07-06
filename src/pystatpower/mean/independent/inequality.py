@@ -365,7 +365,7 @@ def solve_size(
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-       The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
@@ -701,7 +701,7 @@ def solve_reference_mean(
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required mean in the treatment group.
+        The required mean in the treatment group.
 
     Raises:
         ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
@@ -810,7 +810,7 @@ def solve_treatment_std(
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required standard deviation in the treatment group.
+        The required standard deviation in the treatment group.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
@@ -940,7 +940,7 @@ def solve_reference_std(
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required standard deviation in the reference group.
+        The required standard deviation in the reference group.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.

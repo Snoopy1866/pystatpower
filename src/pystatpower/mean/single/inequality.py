@@ -133,7 +133,7 @@ def solve_power(
             - `'t'`: Student's t distribution.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -195,7 +195,7 @@ def solve_size(
             - `'t'`: Student's t distribution.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -259,7 +259,7 @@ def solve_diff(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
 
     Returns:
-        float: The required mean difference between the alternative hypothesis and the null hypothesis.
+        The required mean difference between the alternative hypothesis and the null hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
@@ -336,7 +336,7 @@ def solve_mean(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'less'`, and the parameter `direction` is ignored.
 
     Returns:
-        float: The required mean under the alternative hypothesis.
+        The required mean under the alternative hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
@@ -413,7 +413,7 @@ def solve_null_mean(
                 - If `alternative` is `'less'`, the search direction is automatically inferred to be `'greater'`, and the parameter `direction` is ignored.
 
     Returns:
-        float: The required mean under the null hypothesis.
+        The required mean under the null hypothesis.
 
     Raises:
         ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
@@ -488,7 +488,7 @@ def solve_std(
             - `'t'`: Student's t distribution.
 
     Returns:
-        float: The required standard deviation.
+        The required standard deviation.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.

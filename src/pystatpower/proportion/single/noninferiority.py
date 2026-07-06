@@ -87,7 +87,7 @@ def solve_power(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
@@ -157,7 +157,7 @@ def solve_size(
             Whether to apply the continuity correction.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
 
     Raises:
         ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
@@ -233,7 +233,7 @@ def solve_proportion(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The required proportion under the alternative hypothesis.
+        The required proportion under the alternative hypothesis.
 
     Raises:
         ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
@@ -328,7 +328,7 @@ def solve_null_proportion(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The required proportion under the null hypothesis.
+        The required proportion under the null hypothesis.
 
     Notes:
         The value range of the null hypothesis proportion $p_0$ is determined by the alternative hypothesis proportion $p$ and the non-inferiority margin $\\delta$.
@@ -412,7 +412,7 @@ def solve_noninferiority_proportion(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The required non-inferiority proportion.
+        The required non-inferiority proportion.
 
     Notes:
         The value range of the non-inferiority hypothesis proportion $p_{\\text{noninf}}$ is determined by the alternative hypothesis proportion $p$.
@@ -497,7 +497,7 @@ def solve_margin(
             Whether to apply the continuity correction.
 
     Returns:
-        float: The required non-inferiority margin.
+        The required non-inferiority margin.
 
     Notes:
         The value range of the non-inferiority margin $\\delta$ is determined by the alternative hypothesis proportion $p$ and the null hypothesis proportion $p_0$.

@@ -76,7 +76,7 @@ def solve_power(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
     """
 
     return _power(
@@ -135,7 +135,7 @@ def solve_size(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        tuple[int, int]: The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
     """
 
     if ratio >= 1:
@@ -230,7 +230,7 @@ def solve_treatment_proportion(
             - `'less'`: Search for the treatment proportion less than the reference proportion.
 
     Returns:
-        float: The required proportion in the treatment group.
+        The required proportion in the treatment group.
     """
 
     def func(treatment_proportion: float) -> float:
@@ -305,7 +305,7 @@ def solve_reference_proportion(
             - `'less'`: Search for the treatment proportion less than the reference proportion.
 
     Returns:
-        float: The required proportion in the reference group.
+        The required proportion in the reference group.
     """
 
     def func(reference_proportion: float) -> float:
