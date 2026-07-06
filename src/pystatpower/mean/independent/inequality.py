@@ -449,9 +449,9 @@ def solve_diff(
         reference_std:
             Standard deviation in the reference group.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -553,9 +553,9 @@ def solve_treatment_mean(
         reference_std:
             Standard deviation in the reference group.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -657,9 +657,9 @@ def solve_reference_mean(
         reference_std:
             Standard deviation in the reference group.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -767,9 +767,9 @@ def solve_treatment_std(
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -897,9 +897,9 @@ def solve_reference_std(
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 

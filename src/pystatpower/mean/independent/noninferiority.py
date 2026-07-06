@@ -70,9 +70,9 @@ def solve_power(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -323,9 +323,9 @@ def solve_treatment_mean(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -436,9 +436,9 @@ def solve_reference_mean(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -546,9 +546,9 @@ def solve_diff(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -662,9 +662,9 @@ def solve_margin(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -784,9 +784,9 @@ def solve_treatment_std(
             - If `dist` is `t` and `equal_var` is `True`, this parameter is optional. If specified, this value is used to calculate the standard error of mean difference.
             - If `dist` is `t` and `equal_var` is `False`, this parameter is required.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
