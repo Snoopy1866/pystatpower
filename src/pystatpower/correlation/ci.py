@@ -95,7 +95,7 @@ def solve_distance(
         size:
             Sample size.
         conf_level:
-            Condidence level.
+            Confidence level.
         interval_type:
             Type of the confidence interval.
 
@@ -133,7 +133,7 @@ def solve_size(
             - If `interval_type` = `'lower'`, the distance from the correlation coefficient to the lower one-sided confidence bound is required.
             - If `interval_type` = `'upper'`, the distance from the correlation coefficient to the upper one-sided confidence bound is required.
         conf_level:
-            Condidence level.
+            Confidence level.
         interval_type:
             Type of the confidence interval.
 
