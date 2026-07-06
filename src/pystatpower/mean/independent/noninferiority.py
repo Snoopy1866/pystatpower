@@ -35,7 +35,7 @@ def solve_power(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Calculate the statistical power for a non-inferiority test of two independent means.
+    Calculate the statistical power.
 
     Args:
         treatment_mean:
@@ -70,9 +70,9 @@ def solve_power(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -100,7 +100,7 @@ def solve_power(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -148,7 +148,7 @@ def solve_size(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
     """
-    Estimate the required sample size for a non-inferiority test of two independent means.
+    Estimate the required sample size.
 
     Args:
         treatment_mean:
@@ -214,7 +214,7 @@ def solve_size(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        tuple[int, int]: The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -298,7 +298,7 @@ def solve_treatment_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required mean in the treatment group for a non-inferiority test of two independent means.
+    Estimate the required mean in the treatment group.
 
     Args:
         reference_mean:
@@ -323,9 +323,9 @@ def solve_treatment_mean(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -357,7 +357,7 @@ def solve_treatment_mean(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required mean in the treatment group.
+        The required mean in the treatment group.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -411,7 +411,7 @@ def solve_reference_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required mean in the reference group for a non-inferiority test of two independent means.
+    Estimate the required mean in the reference group.
 
     Args:
         treatment_mean:
@@ -436,9 +436,9 @@ def solve_reference_mean(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -470,7 +470,7 @@ def solve_reference_mean(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required mean in the reference group.
+        The required mean in the reference group.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -523,7 +523,7 @@ def solve_diff(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required difference between the mean in treatment and reference groups for a non-inferiority test of two independent means.
+    Estimate the required mean difference.
 
     Args:
         margin:
@@ -546,9 +546,9 @@ def solve_diff(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -580,7 +580,7 @@ def solve_diff(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required difference between the mean in treatment and reference groups.
+        The required difference between the mean in treatment and reference groups.
 
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
@@ -635,7 +635,7 @@ def solve_margin(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required margin for a non-inferiority test of two independent means.
+    Estimate the required non-inferiority margin.
 
     Args:
         treatment_mean:
@@ -662,9 +662,9 @@ def solve_margin(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -696,8 +696,7 @@ def solve_margin(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float:
-            The required non-inferiority margin for the test.
+        The required non-inferiority margin for the test.
 
             - If `alternative` is `greater`, the returned value is in the range $(-\\infty, \\hat{\\mu}_1 - \\hat{\\mu}_2)$
             - If `alternative` is `less`, the returned value is in the range $(\\hat{\\mu}_1 - \\hat{\\mu}_2, +\\infty)$
@@ -754,7 +753,7 @@ def solve_treatment_std(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required standard deviation in the treatment group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the treatment group.
 
     Args:
         treatment_mean:
@@ -785,9 +784,9 @@ def solve_treatment_std(
             - If `dist` is `t` and `equal_var` is `True`, this parameter is optional. If specified, this value is used to calculate the standard error of mean difference.
             - If `dist` is `t` and `equal_var` is `False`, this parameter is required.
         treatment_size:
-            Sample size for the treatment group.
+            Sample size in the treatment group.
         reference_size:
-            Sample size for the reference group.
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -819,7 +818,7 @@ def solve_treatment_std(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required standard deviation in the treatment group.
+        The required standard deviation in the treatment group.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
@@ -932,7 +931,7 @@ def solve_reference_std(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
     """
-    Estimate the required standard deviation in the reference group for a non-inferiority test of two independent means.
+    Estimate the required standard deviation in the reference group.
 
     Args:
         treatment_mean:
@@ -993,7 +992,7 @@ def solve_reference_std(
             - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
 
     Returns:
-        float: The required standard deviation in the reference group.
+        The required standard deviation in the reference group.
 
     Raises:
         ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.

@@ -28,7 +28,7 @@ def _power_p0(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test, using $p_0$ to calculate variance."""
+    """Calculate the statistical power, using $p_0$ to calculate variance."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -62,7 +62,7 @@ def _power_p0_cc(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test with continuity correction, using $p_0$ to calculate variance."""
+    """Calculate the statistical power, using p0 to calculate variance with continuity correction."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -99,7 +99,7 @@ def _power_phat(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test, using $\\hat{p}$ to calculate variance."""
+    """Calculate the statistical power, using phat to calculate variance."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -125,7 +125,7 @@ def _power_phat_cc(
     size: float,
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test with continuity correction, using $\\hat{p}$ to calculate variance."""
+    """Calculate the statistical power, using phat to calculate variance with continuity correction."""
 
     proportion_lower = null_proportion + margin_lower
     proportion_upper = null_proportion + margin_upper
@@ -158,7 +158,7 @@ def _power(
     phat: bool,
     continuity_correction: bool,
 ) -> float:
-    """Calculate the statistical power for a one-sample proportion equivalence test."""
+    """Calculate the statistical power."""
 
     match (phat, continuity_correction):
         case (True, True):
@@ -185,28 +185,28 @@ def solve_power(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the statistical power for a one-sample proportion equivalence test.
+    Calculate the statistical power.
 
     Args:
-        null_proportion (float):
+        null_proportion:
             Proportion under the null hypothesis ($p_0$).
-        proportion (float):
+        proportion:
             Proportion under the alternative hypothesis ($p$).
-        margin_lower (float):
+        margin_lower:
             Lower equivalence margin ($\\delta_1$), a negative value must be specified.
-        margin_upper (float):
+        margin_upper:
             Upper equivalence margin ($\\delta_2$), a positive value must be specified.
-        size (int):
+        size:
             Sample size.
-        alpha (float, optional):
+        alpha:
             One-sided significance level.
-        phat (bool, optional):
+        phat:
             Whether to use the alternative proportion $p$ to calculate the standard deviation.
-        continuity_correction (bool, optional):
+        continuity_correction:
             Whether to apply Yate's continuity correction.
 
     Returns:
-        (float): The statistical power of the test.
+        The statistical power of the test.
     """
 
     return _power(null_proportion, proportion, margin_lower, margin_upper, size, alpha, phat, continuity_correction)
@@ -224,28 +224,28 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size for a one-sample proportion equivalence test.
+    Estimate the required sample size.
 
     Args:
-        null_proportion (float):
+        null_proportion:
             Proportion under the null hypothesis ($p_0$).
-        proportion (float):
+        proportion:
             Proportion under the alternative hypothesis ($p$).
-        margin_lower (float):
+        margin_lower:
             Lower equivalence margin ($\\delta_1$), a negative value must be specified.
-        margin_upper (float):
+        margin_upper:
             Upper equivalence margin ($\\delta_2$), a positive value must be specified.
-        alpha (float, optional):
+        alpha:
             One-sided significance level.
-        power (float, optional):
+        power:
             Power of the test.
-        phat (bool, optional):
+        phat:
             Whether to use the alternative proportion $p$ to calculate the standard deviation.
-        continuity_correction (bool, optional):
+        continuity_correction:
             Whether to apply Yate's continuity correction.
 
     Returns:
-        (int): The required sample size.
+        The required sample size.
     """
 
     def func(size: float) -> float:
@@ -270,26 +270,26 @@ def solve_null_proportion(
     search_direction: Literal["lower", "upper"] = "upper",
 ) -> float:
     """
-    Estimate the required proportion under the null hypothesis ($p_0$) for a one-sample proportion equivalence test.
+    Estimate the required proportion under the null hypothesis.
 
     Args:
-        proportion (float):
-            Proportion under the alternative hypothesis ($p$).
-        margin_lower (float):
+        proportion:
+            Proportion under the alternative hypothesis.
+        margin_lower:
             Lower equivalence margin ($\\delta_1$), a negative value must be specified.
-        margin_upper (float):
+        margin_upper:
             Upper equivalence margin ($\\delta_2$), a positive value must be specified.
-        size (int):
+        size:
             Sample size.
-        alpha (float, optional):
+        alpha:
             One-sided significance level.
-        power (float, optional):
+        power:
             Power of the test.
-        phat (bool, optional):
+        phat:
             Whether to use the alternative proportion $p$ to calculate the standard deviation.
-        continuity_correction (bool, optional):
+        continuity_correction:
             Whether to apply Yate's continuity correction.
-        search_direction (Literal["lower", "upper"], optional):
+        search_direction:
             The direction to search for the null proportion relative to the maximum power point ($p_{\\text{argmax}}$), if two valid solutions exist.
 
             - `'lower'`: Search for $p_0$ in the interval below $p_{\\text{argmax}}$.
@@ -298,7 +298,7 @@ def solve_null_proportion(
             If $p$ itself satisfies the target power, this parameter is ignored and $p$ is returned directly.
 
     Returns:
-        (float): The required proportion under the null hypothesis ($p_0$).
+        The required proportion under the null hypothesis ($p_0$).
 
     Notes:
         The search interval for the null proportion ($p_0$) is constrained by the alternative proportion ($p$) and
@@ -357,26 +357,26 @@ def solve_proportion(
     search_direction: Literal["lower", "upper"] = "upper",
 ) -> float:
     """
-    Estimate the required proportion under the alternative hypothesis ($p$) for a one-sample proportion equivalence test.
+    Estimate the required proportion under the alternative hypothesis.
 
     Args:
-        null_proportion (float):
+        null_proportion:
             Proportion under the null hypothesis ($p_0$).
-        margin_lower (float):
+        margin_lower:
             Lower equivalence margin ($\\delta_1$), a negative value must be specified.
-        margin_upper (float):
+        margin_upper:
             Upper equivalence margin ($\\delta_2$), a positive value must be specified.
-        size (int):
+        size:
             Sample size.
-        alpha (float, optional):
+        alpha:
             One-sided significance level.
-        power (float, optional):
+        power:
             Power of the test.
-        phat (bool, optional):
+        phat:
             Whether to use the alternative proportion $p$ to calculate the standard deviation.
-        continuity_correction (bool, optional):
+        continuity_correction:
             Whether to apply Yate's continuity correction.
-        search_direction (Literal["lower", "upper"], optional):
+        search_direction:
             The direction to search for the proportion relative to the maximum power point ($p_{\\text{argmax}}$), if two valid solutions exist.
 
             - `lower`: Search for $p$ in the interval below $p_{\\text{argmax}}$.
@@ -385,7 +385,7 @@ def solve_proportion(
             If $p_0$ itself satisfies the target power, this parameter is ignored and $p_0$ is returned directly.
 
     Returns:
-        (float): The required proportion under the alternative hypothesis ($p$).
+        The required proportion under the alternative hypothesis ($p$).
 
     Notes:
         The search interval for the alternative proportion ($p$) is constrained by the null proportion ($p$) and

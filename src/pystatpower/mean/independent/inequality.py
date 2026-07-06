@@ -15,7 +15,7 @@ def _power_z_equal_var(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of two independent means using z-test with equal variance."""
+    """Calculate the statistical power, using z-test with equal variance."""
 
     se = std * sqrt(1 / treatment_size + 1 / reference_size)
     match alternative:
@@ -38,7 +38,7 @@ def _power_z_unequal_var(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of two independent means using z-test with unequal variance."""
+    """Calculate the statistical power, using z-test with unequal variance."""
 
     se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
     match alternative:
@@ -61,7 +61,7 @@ def _power_t_equal_var(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for an inequality test of two independent means using t-test with equal variance."""
+    """Calculate the statistical power, using t-test with equal variance."""
 
     df = treatment_size + reference_size - 2
     var_c = ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2) / df
@@ -88,7 +88,7 @@ def _power_unequal_var_satterthwaite(
     alpha: float,
 ) -> float:
     """
-    Calculate the statistical power for an inequality test of two independent means using t-test with unequal variance,
+    Calculate the statistical power, using t-test with unequal variance,
     degree of freedom adjustment is based on Satterthwaite method.
     """
 
@@ -119,7 +119,7 @@ def _power_unequal_var_welch(
     alpha: float,
 ) -> float:
     """
-    Calculate the statistical power for an inequality test of two independent means using t-test with unequal variance,
+    Calculate the statistical power, using t-test with unequal variance,
     degree of freedom adjustment is based on Welch method.
     """
 
@@ -155,7 +155,7 @@ def _power(
     equal_var: bool,
     df_adjust: Literal["satterthwaite", "welch"],
 ) -> float:
-    """Calculate the statistical power for an inequality test of two independent means."""
+    """Calculate the statistical power."""
 
     if diff is None:
         if treatment_mean is None or reference_mean is None:
@@ -210,48 +210,48 @@ def solve_power(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Calculate the statistical power for an inequality test of two independent means.
+    Calculate the statistical power.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
+        treatment_mean:
+            Mean in the treatment group.
 
             If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
+        reference_mean:
+            Mean in the reference group.
 
             If provided together with `treatment_mean`, `diff` is ignored.
-        diff (float, optional):
-            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        diff:
+            Mean difference between treatment and reference group.
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
-        treatment_std (float):
-            Standard deviation in the treatment group ($\\sigma_1$).
-        reference_std (float):
-            Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (int):
-            Sample size in the treatment group ($n_1$).
-        reference_size (int):
-            Sample size in the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
 
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central *t* distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -260,19 +260,19 @@ def solve_power(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
+        df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The calculated statistical power of the test.
+        The calculated statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     power = _power(
@@ -308,47 +308,47 @@ def solve_size(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> tuple[int, int]:
     """
-    Estimate the required sample size for an inequality test of two independent means.
+    Estimate the required sample size.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
+        treatment_mean:
+            Mean in the treatment group.
 
             If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
+        reference_mean:
+            Mean in the reference group.
 
             If provided together with `treatment_mean`, `diff` is ignored.
-        diff (float, optional):
-            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        diff:
+            Mean difference between treatment and reference group.
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
-        treatment_std (float):
-            Standard deviation in the treatment group ($\\sigma_1$).
-        reference_std (float):
-            Standard deviation in the reference group ($\\sigma_2$).
-        ratio (float, optional):
-            Ratio of treatment sample size to reference sample size ($k = n_1 / n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        ratio:
+            Ratio of treatment sample size to reference sample size.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central *t* distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If True: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -357,19 +357,19 @@ def solve_size(
             - If False: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method="t"`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
+        df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (tuple[int, int]): The required sample sizes for the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     if ratio >= 1:
@@ -441,42 +441,42 @@ def solve_diff(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required difference for an inequality test of two independent means.
+    Estimate the required mean difference.
 
     Args:
-        treatment_std (float):
-            Standard deviation in the treatment group ($\\sigma_1$).
-        reference_std (float):
-            Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-        search_direction (Literal["above", "below"], optional):
+        search_direction:
             Specify whether to search for the mean difference above or below 0.
 
             - `'above'`: Search the difference above 0.
             - `'below'`: Search the difference below 0.
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central *t* distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -485,19 +485,19 @@ def solve_diff(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
+        df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required difference between the treatment and reference means.
+        The required difference between the treatment and reference means.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(diff: float) -> float:
@@ -543,44 +543,44 @@ def solve_treatment_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required mean in the treatment group for an inequality test of two independent means.
+    Estimate the required mean in the treatment group.
 
     Args:
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
-        treatment_std (float):
-            Standard deviation in the treatment group ($\\sigma_1$).
-        reference_std (float):
-            Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        reference_mean:
+            Mean in the reference group.
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-        search_direction (Literal["above", "below"], optional):
+        search_direction:
             Specify whether to search for the treatment mean above or below the reference mean.
 
             - `'above'`: Search the treatment mean above the reference mean.
             - `'below'`: Search the treatment mean below the reference mean.
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central *t* distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -589,18 +589,18 @@ def solve_treatment_mean(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
+        df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required mean in the treatment group.
+        The required mean in the treatment group.
 
     Raises:
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(treatment_mean: float) -> float:
@@ -647,44 +647,44 @@ def solve_reference_mean(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required mean in the reference group for an inequality test of two independent means.
+    Estimate the required mean in the reference group.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_2$).
-        treatment_std (float):
-            Standard deviation in the treatment group ($\\sigma_1$).
-        reference_std (float):
-            Standard deviation in the reference group ($\\sigma_2$).
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_mean:
+            Mean in the treatment group.
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
-        search_direction (Literal["above", "below"], optional):
+        search_direction:
             Specify whether to search for the reference mean above or below the treatment mean.
 
             - `'above'`: Search the reference mean above the treatment mean.
             - `'below'`: Search the reference mean below the treatment mean.
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central *t* distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -693,18 +693,18 @@ def solve_reference_mean(
             - If `False`: Assume $\\sigma_1^2 \\neq \\sigma_2^2$. Use *Unpooled Variance* to calculate SE.
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
-            If `method='z'` and `equal_var=True`, the standard deviation of the two groups must be equal.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `method='z'` and `equal_var`=`True`, the standard deviation of the two groups must be equal.
+        df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required mean in the treatment group.
+        The required mean in the treatment group.
 
     Raises:
-        ValueError: If `method='z'` and `equal_var=True` but `treatment_std` does not equal to `reference_std`.
+        ValueError: If `method='z'` and `equal_var`=`True` but `treatment_std` does not equal to `reference_std`.
     """
 
     def func(reference_mean: float) -> float:
@@ -751,45 +751,45 @@ def solve_treatment_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required standard deviation in the treatment group for an inequality test of two independent means.
+    Estimate the required standard deviation in the treatment group.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
+        treatment_mean:
+            Mean in the treatment group.
 
             If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
+        reference_mean:
+            Mean in the reference group.
 
             If provided together with `treatment_mean`, `diff` is ignored.
-        diff (float, optional):
-            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        diff:
+            Mean difference between treatment and reference group.
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central t distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If `True`: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -799,18 +799,18 @@ def solve_treatment_std(
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
-        reference_std (float | None, optional):
-            Standard deviation in the reference group ($\\sigma_2$).
+        reference_std:
+            Standard deviation in the reference group.
 
-            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `equal_var`=`True`, this parameter is ignored, otherwise, you must specify this parameter.
+        df_adjust:
             Degree of freedom adjustment method when `method='t'` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required standard deviation in the treatment group.
+        The required standard deviation in the treatment group.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.
@@ -881,45 +881,45 @@ def solve_reference_std(
     df_adjust: Literal["satterthwaite", "welch"] = "satterthwaite",
 ) -> float:
     """
-    Estimate the required standard deviation in the reference group for an inequality test of two independent means.
+    Estimate the required standard deviation in the reference group.
 
     Args:
-        treatment_mean (float, optional):
-            Mean in the treatment group ($\\mu_1$).
+        treatment_mean:
+            Mean in the treatment group.
 
             If provided together with `reference_mean`, `diff` is ignored.
-        reference_mean (float, optional):
-            Mean in the reference group ($\\mu_2$).
+        reference_mean:
+            Mean in the reference group.
 
             If provided together with `treatment_mean`, `diff` is ignored.
-        diff (float, optional):
-            Mean difference between treatment and reference group ($\\mu_1 - \\mu_2$).
+        diff:
+            Mean difference between treatment and reference group.
 
             If provided, `treatment_mean` and `reference_mean` will be ignored.
-        treatment_size (int):
-            Sample size for the treatment group ($n_1$).
-        reference_size (int):
-            Sample size for the reference group ($n_2$).
-        alternative (Literal["two-sided", "greater", "less"], optional):
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
             Type of the alternative hypothesis.
 
             - `'two-sided'`: Two-sided alternative hypothesis: $\\mu_1 \\neq \\mu_2$
             - `'less'`: Lower one-sided alternative hypothesis: $\\mu_1 < \\mu_2$
             - `'greater'`: Upper one-sided alternative hypothesis: $\\mu_1 > \\mu_2$
-        alpha (float, optional):
+        alpha:
             Significance level.
 
             - If `alternative` is `'two-sided'`, provide the two-sided significance level.
             - If `alternative` is `'greater'` or `'less'`, provide the one-sided significance level.
-        power (float, optional):
+        power:
             Desired statistical power.
-        method (Literal["z", "t"], optional):
+        method:
             The distribution used for the test.
 
             - `'z'`: Standard normal distribution (large sample approximation).
             - `'t'`: Student's or non-central t distribution.
 
-        equal_var (bool, optional):
+        equal_var:
             Whether to assume equal variances between groups.
 
             - If True: Assume $\\sigma_1^2 = \\sigma_2^2$. Use *Pooled Variance* to calculate SE.
@@ -929,18 +929,18 @@ def solve_reference_std(
               If `method='t'`, the degree of freedom is adjusted based on the `df_adjust` parameter.
 
             If Z test is used and `equal_var` is True, the standard deviation of the two groups must be equal.
-        treatment_std (float | None, optional):
-            Standard deviation in the treatment group ($\\sigma_1$).
+        treatment_std:
+            Standard deviation in the treatment group.
 
-            If `equal_var=True`, this parameter is ignored, otherwise, you must specify this parameter.
-        df_adjust (Literal["satterthwaite", "welch"], optional):
+            If `equal_var`=`True`, this parameter is ignored, otherwise, you must specify this parameter.
+        df_adjust:
             Degree of freedom adjustment method when `method="t"` and `equal_var=False`.
 
             - `'satterthwaite'`: Adjustment based on Satterthwaite (1946).
             - `'welch'`: Adjustment based on Welch (1947).
 
     Returns:
-        (float): The required standard deviation in the reference group.
+        The required standard deviation in the reference group.
 
     Raises:
         ValueError: If `diff` is not provided, and both `treatment_mean` and `reference_mean` are not provided.

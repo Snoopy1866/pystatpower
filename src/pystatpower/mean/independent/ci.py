@@ -57,30 +57,30 @@ def solve_precision(
     Calculate the distance from the mean difference to the confidence limit.
 
     Args:
-        treatment_std (float):
+        treatment_std:
             Standard deviation in the treatment group.
-        reference_std (float):
+        reference_std:
             Standard deviation in the reference group.
-        treatment_size (int):
+        treatment_size:
             Sample size in the treatment group.
-        reference_size (int):
+        reference_size:
             Sample size in the reference group.
-        conf_level (float):
+        conf_level:
             Confidence level.
-        interval_type (Literal["two-sided", "lower", "upper"], optional):
+        interval_type:
             The type of confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
             - `'upper'`: Upper one-sided confidence interval.
-        equal_var (bool):
+        equal_var:
             Specify whether the variances are assumed to be equal.
 
             - `True`: The variances are assumed to be equal. In this case, the standard t-test is used.
             - `False`: The variances are not assumed to be equal. In this case, Welch-Satterthwaite's approximate t-test is used.
 
     Returns:
-        float: The distance from the mean difference to the confidence limit.
+        The distance from the mean difference to the confidence limit.
     """
 
     return _precision(
@@ -99,33 +99,33 @@ def solve_size(
     equal_var: bool = False,
 ) -> tuple[int, int]:
     """
-    Estimate the required sample size, given the distance from the mean difference to the confidence limit.
+    Estimate the required sample size.
 
     Args:
-        treatment_std (float):
+        treatment_std:
             Standard deviation in the treatment group.
-        reference_std (float):
+        reference_std:
             Standard deviation in the reference group.
-        precision (float):
+        precision:
             The distance from the mean difference to the confidence limit.
-        ratio (float):
+        ratio:
             The ratio of the sample size in the treatment group to the sample size in the reference group.
-        conf_level (float):
+        conf_level:
             Confidence level.
-        interval_type (Literal["two-sided", "lower", "upper"], optional):
+        interval_type:
             The type of confidence interval.
 
             - `'two-sided'`: Two-sided confidence interval.
             - `'lower'`: Lower one-sided confidence interval.
             - `'upper'`: Upper one-sided confidence interval.
-        equal_var (bool):
+        equal_var:
             Specify whether the variances are assumed to be equal.
 
             - `True`: The variances are assumed to be equal. In this case, the standard t-test is used.
             - `False`: The variances are not assumed to be equal. In this case, Welch-Satterthwaite's approximate t-test is used.
 
     Returns:
-        tuple[int, int]: The required sample size in the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
     """
 
     if ratio >= 1:

@@ -37,7 +37,7 @@ def _power(
     alternative: Literal["greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for a superiority test of one sample mean."""
+    """Calculate the statistical power."""
 
     df = size - 1
     nc = (diff - margin) * sqrt(size) / std
@@ -62,7 +62,7 @@ def solve_power(
     alpha: float = 0.025,
 ) -> float:
     """
-    Calculate the statistical power for a superiority test of one sample mean.
+    Calculate the statistical power.
 
     Args:
         mean:
@@ -92,15 +92,15 @@ def solve_power(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
             The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -125,7 +125,7 @@ def solve_size(
     power: float = 0.8,
 ) -> int:
     """
-    Estimate the required sample size for a superiority test of one sample mean.
+    Estimate the required sample size.
 
     Args:
         mean:
@@ -153,8 +153,8 @@ def solve_size(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -165,7 +165,7 @@ def solve_size(
             0.8 is a commonly used statistical power.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -191,7 +191,7 @@ def solve_diff(
     power: float = 0.8,
 ) -> float:
     """
-    Estimete the required mean difference between the alternative hypothesis and the null hypothesis for a superiority test of one sample mean.
+    Estimate the required mean difference.
 
     Args:
         margin:
@@ -209,8 +209,8 @@ def solve_diff(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -221,7 +221,7 @@ def solve_diff(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean difference between the alternative hypothesis and the null hypothesis.
+        The required mean difference between the alternative hypothesis and the null hypothesis.
     """
 
     margin = _margin(margin, alternative)
@@ -247,7 +247,7 @@ def solve_mean(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required mean under the alternative hypothesis for a superiority test of one sample mean.
+    Estimate the required mean under the alternative hypothesis.
 
     Args:
         null_mean:
@@ -267,8 +267,8 @@ def solve_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -279,7 +279,7 @@ def solve_mean(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean under the alternative hypothesis.
+        The required mean under the alternative hypothesis.
     """
 
     margin = _margin(margin, alternative)
@@ -305,7 +305,7 @@ def solve_null_mean(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required mean under the null hypothesis for a superiority test of one sample mean.
+    Estimate the required mean under the null hypothesis.
 
     Args:
         mean:
@@ -325,8 +325,8 @@ def solve_null_mean(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -337,7 +337,7 @@ def solve_null_mean(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required mean under the null hypothesis.
+        The required mean under the null hypothesis.
     """
 
     margin = _margin(margin, alternative)
@@ -364,7 +364,7 @@ def solve_std(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required standard deviation for a superiority test of one sample mean.
+    Estimate the required standard deviation.
 
     Args:
         mean:
@@ -392,8 +392,8 @@ def solve_std(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -404,7 +404,7 @@ def solve_std(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float: The required standard deviation.
+        The required standard deviation.
 
     Raises:
         ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
@@ -432,7 +432,7 @@ def solve_margin(
     power: float = 0.8,
 ) -> float:
     """
-    Estimate the required margin for a superiority test of one sample mean.
+    Estimate the required superiority margin.
 
     Args:
         mean:
@@ -454,8 +454,8 @@ def solve_margin(
         alternative:
             Type of the alternative hypothesis.
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta$
-            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $\\mu - \\mu_0 > \\delta \\ (\\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $\\mu - \\mu_0 < \\delta \\ (\\delta < 0)$
         alpha:
             Significance level.
 
@@ -466,8 +466,7 @@ def solve_margin(
             0.8 is a commonly used statistical power.
 
     Returns:
-        float:
-            The required superiority margin.
+        The required superiority margin.
 
             - If `alternative` is `'greater'`, the returned value is in the range $(0, \\hat{\\mu} - \\hat{\\mu}_0)$
             - If `alternative` is `'less'`, the returned value is in the range $(\\hat{\\mu} - \\hat{\\mu}_0, 0)$

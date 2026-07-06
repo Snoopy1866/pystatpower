@@ -13,11 +13,7 @@ def _distance_wald(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
-    using the Wald method.
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wald method."""
 
     alpha = 1 - conf_level
 
@@ -49,11 +45,7 @@ def _distance_wald_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
-    using the Wald method with continuity correction.
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wald method with continuity correction."""
 
     alpha = 1 - conf_level
 
@@ -86,11 +78,7 @@ def _distance_wilson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
-    using the Wilson method.
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wilson method."""
 
     alpha = 1 - conf_level
 
@@ -132,11 +120,7 @@ def _distance_wilson_cc(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
-    using the Wilson method with continuity correction.
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wilson method with continuity correction."""
 
     alpha = 1 - conf_level
 
@@ -181,11 +165,7 @@ def _distance_clopper_pearson(
     conf_level: float,
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval),
-    using the Clopper-Pearson method.
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Clopper-Pearson method."""
 
     alpha = 1 - conf_level
 
@@ -218,10 +198,7 @@ def _distance(
     method: Literal["wald", "wilson", "clopper-pearson", "cp"],
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
-    """
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit"""
 
     match method:
         case "clopper-pearson" | "cp":
@@ -248,8 +225,7 @@ def solve_distance(
     continuity_correction: bool = False,
 ) -> float:
     """
-    Calculate the width of the confidence interval for a single-group proportion (two-sided confidence interval),
-    or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
+    Calculate the confidence interval width or the distance from the proportion to the confidence limit.
 
     Args:
         proportion:
@@ -277,7 +253,10 @@ def solve_distance(
             Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
 
     Returns:
-        float: The confidence interval width (two-sided confidence interval), or the distance from the proportion to the confidence limit (lower or upper one-sided confidence interval).
+        The confidence interval width or the distance from the proportion to the confidence limit.
+
+            - If `alternative` is `'two-sided'`, the confidence interval width is returned.
+            - If `alternative` is `'less'`, the distance from the proportion to the confidence limit is returned.
     """
 
     return _distance(proportion, size, conf_level, interval_type, method, continuity_correction)
@@ -293,11 +272,11 @@ def solve_size(
     continuity_correction: bool = False,
 ) -> int:
     """
-    Estimate the required sample size for a single-group proportion confidence interval.
+    Estimate the required sample size.
 
-    For two-sided confidence interval, the confidence interval width needs to be given.
+    For two-sided confidence interval, the confidence interval width is required.
 
-    For one-sided confidence interval, the distance from the proportion to the confidence limit needs to be given.
+    For one-sided confidence interval, the distance from the proportion to the confidence limit is required.
 
     Args:
         proportion:
@@ -326,7 +305,7 @@ def solve_size(
             Whether to apply the continuity correction, only takes effect when `method` is specified as `'wald'` or `'wilson'`
 
     Returns:
-        int: The required sample size.
+        The required sample size.
     """
 
     def func(size: float) -> float:
@@ -389,11 +368,11 @@ def solve_proportion(
     direction: Literal["greater", "less"] = "greater",
 ) -> float:
     """
-    Estimate the required proportion for a single-group proportion confidence interval.
+    Estimate the required proportion.
 
-    For two-sided confidence interval, the confidence interval width needs to be given.
+    For two-sided confidence interval, the confidence interval width is required.
 
-    For one-sided confidence interval, the distance from the proportion to the confidence limit needs to be given.
+    For one-sided confidence interval, the distance from the proportion to the confidence limit is required.
 
     Args:
         size:
@@ -427,7 +406,7 @@ def solve_proportion(
             - `'less'`: Search for the proportion less than 0.5.
 
     Returns:
-        float: The required proportion.
+        The required proportion.
     """
 
     def func(proportion: float) -> float:

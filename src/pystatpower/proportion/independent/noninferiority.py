@@ -66,7 +66,7 @@ def solve_power(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        float: The statistical power of the test.
+        The statistical power of the test.
     """
 
     margin = _margin(margin, alternative)
@@ -136,7 +136,7 @@ def solve_size(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        tuple[int, int]: The required sample sizes in the treatment and reference groups, respectively.
+        The required sample sizes in the treatment and reference groups, respectively.
     """
 
     margin = _margin(margin, alternative)
@@ -237,7 +237,7 @@ def solve_treatment_proportion(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        float: The required proportion in the treatment group.
+        The required proportion in the treatment group.
 
     Notes:
         The value range of the treatment proportion $p_1$ is determined by the reference proportion $p_2$ and the non-inferiority margin $\\delta$.
@@ -344,7 +344,7 @@ def solve_reference_proportion(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        float: The required proportion in the reference group.
+        The required proportion in the reference group.
 
     Notes:
         The value range of the reference proportion $p_2$ is determined by the treatment proportion $p_1$ and the non-inferiority margin $\\delta$.
@@ -445,7 +445,7 @@ def solve_margin(
             Wether to apply Yates' continuity correction.
 
     Returns:
-        float: The required non-inferiority margin.
+        The required non-inferiority margin.
 
     Notes:
         The value range of the non-inferiority margin $\\delta$ is determined by the treatment proportion $p_1$ and the reference proportion $p_2$.

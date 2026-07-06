@@ -31,7 +31,7 @@ $$
 
 以下推导过程在边界条件 $p = p_0$ 下进行。
 
-## _z-test using s(p0)_ {#z-test-p0}
+## _Z-Test Using S(P0)_ {#z-test-p0}
 
 在 $H_0$ 成立时，可构建 $z$ 统计量：
 
@@ -81,9 +81,9 @@ $$
     n = \frac{\left(z_{1-\alpha}\sqrt{p_0(1-p_0)} + z_{1-\beta}\sqrt{p(1-p)}\right)^2}{\left(p-p_0\right)^2}
     $$
 
-## _z-test using s(p0) with continuity correction_ {#z-test-p0-cc}
+## _Z-Test Using S(P0) with Continuity Correction_ {#z-test-p0-cc}
 
-在 [_z-test using s(p0)_](#z-test-p0) 的基础上加入校正项 $c$：
+在 [_Z-Test Using S(P0)_](#z-test-p0) 的基础上加入校正项 $c$：
 
 $$
 c =
@@ -128,7 +128,7 @@ $$
                  = 1 - \Phi\left(\frac{z_{1-\alpha} - \frac{p-p_0+c}{\sqrt{p_0(1-p_0)/n}}}{\sqrt{\frac{p(1-p)}{p_0(1-p_0)}}}\right)
     $$
 
-## _z-test using s(phat)_ {#z-test-phat}
+## _Z-Test Using S(Phat)_ {#z-test-phat}
 
 在 $H_0$ 成立时，可构建 $z$ 统计量：
 
@@ -178,9 +178,9 @@ $$
     n = \frac{\left(z_{1-\alpha}+z_{1-\beta}\right)^2 p(1-p)}{\left(p-p_0\right)^2}
     $$
 
-## _z-test using s(phat) with continuity correction_ {#z-test-phat-cc}
+## _Z-Test Using S(Phat) with Continuity Correction_ {#z-test-phat-cc}
 
-在 [_z-test using s(phat)_](#z-test-phat) 的基础上加入校正项 $c$：
+在 [_Z-Test Using S(Phat)_](#z-test-phat) 的基础上加入校正项 $c$：
 
 $$
 c =

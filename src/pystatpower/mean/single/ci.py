@@ -11,7 +11,7 @@ def _precision_z(
     conf_level: float,
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision) using the z-distribution"""
+    """Calculate the distance from the mean to the confidence limit (commonly known as precision), using the z-distribution"""
 
     alpha = 1 - conf_level
 
@@ -32,7 +32,7 @@ def _precision_t(
     conf_level: float,
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision) using the t-distribution."""
+    """Calculate the distance from the mean to the confidence limit (commonly known as precision), using the t-distribution."""
 
     alpha = 1 - conf_level
 
@@ -55,7 +55,7 @@ def _precision(
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
     dist: Literal["z", "t"],
 ) -> float:
-    """Calculate the distance from the single-group mean to the confidence limit (commonly known as precision)."""
+    """Calculate the distance from the mean to the confidence limit (commonly known as precision)."""
 
     match dist:
         case "z":
@@ -73,7 +73,7 @@ def solve_precision(
     dist: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Calculate the distance from the single-group mean to the confidence limit (commonly known as precision).
+    Calculate the distance from the mean to the confidence limit (commonly known as precision).
 
     Args:
         std:
@@ -99,10 +99,10 @@ def solve_precision(
             - `'t'`: Student's t-distribution.
 
     Returns:
-        float: The distance from the single-group mean to the confidence limit (commonly known as precision).
+        The distance from the mean to the confidence limit (commonly known as precision).
 
     Notes:
-        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
+        Since the confidence interval for the mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
     return _precision(std, size, conf_level, interval_type, dist)
@@ -117,11 +117,11 @@ def solve_size(
     dist: Literal["z", "t"] = "t",
 ) -> int:
     """
-    Estimate the required sample size, given the distance from the single-group mean to the confidence limit (commonly known as precision).
+    Estimate the required sample size.
 
     Args:
         precision:
-            Distance from the single-group mean to the confidence limit.
+            Distance from the mean to the confidence limit.
         std:
             Standard deviation.
         conf_level:
@@ -143,10 +143,10 @@ def solve_size(
             - `'t'`: Student's t-distribution.
 
     Returns:
-        int: The required sample size.
+        The required sample size.
 
     Notes:
-        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
+        Since the confidence interval for the mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
     def func(size: float) -> float:
@@ -164,11 +164,11 @@ def solve_std(
     dist: Literal["z", "t"] = "t",
 ) -> float:
     """
-    Estimate the required standard deviation, given the distance from the single-group mean to the confidence limit (commonly known as precision).
+    Estimate the required standard deviation.
 
     Args:
         precision:
-            Distance from the single-group mean to the confidence limit.
+            Distance from the mean to the confidence limit.
         size:
             Sample size.
         conf_level:
@@ -190,10 +190,10 @@ def solve_std(
             - `'t'`: Student's t-distribution.
 
     Returns:
-        float: The required standard deviation.
+        The required standard deviation.
 
     Notes:
-        Since the confidence interval for the single-group mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
+        Since the confidence interval for the mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
 
     # First calculate precision d' under standard deviation s' = 1, and then use the conversion formula s = d/d' to

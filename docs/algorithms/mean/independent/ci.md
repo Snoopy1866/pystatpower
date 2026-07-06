@@ -51,9 +51,9 @@
 
 ## 假设两组方差不等 {#unequal_var}
 
-两组方差不等时，不能使用一般的 $t$ 检验构建置信区间，应当使用近似 $t$ 检验，如 Welch-Satterthwaite $t$ 检验。
+两组方差不等时，不能使用一般的 $t$ 检验构建置信区间，应当使用近似 $t$ 检验，如 _Welch-Satterthwaite_ $t$ 检验。
 
-Welch-Satterthwaite $t$ 检验对自由度进行了校正：
+_Welch-Satterthwaite_ $t$ 检验对自由度进行了校正：
 
 $$
 v = \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{s_1^4}{n_1^2(n_1-1)} + \frac{s_2^4}{n_2^2(n_2-1)}}

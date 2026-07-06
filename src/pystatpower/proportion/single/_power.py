@@ -11,7 +11,7 @@ def _power_p0(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for one proportion test, using p0 to calculate the variance."""
+    """Calculate the statistical power, using p0 to calculate the variance."""
 
     h1_z_mean = (proportion - proportion_threshold) / sqrt(proportion_threshold * (1 - proportion_threshold) / size)
     h1_z_std = sqrt(proportion * (1 - proportion) / (proportion_threshold * (1 - proportion_threshold)))
@@ -36,7 +36,7 @@ def _power_p0_cc(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for one proportion test, using p0 with continuity correction to calculate the variance."""
+    """Calculate the statistical power, using p0 with continuity correction to calculate the variance."""
 
     if abs(proportion - proportion_threshold) <= 1 / (2 * size):
         c = 0
@@ -68,7 +68,7 @@ def _power_phat(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for one proportion test, using phat to calculate the variance."""
+    """Calculate the statistical power, using phat to calculate the variance."""
 
     h1_z_mean = (proportion - proportion_threshold) / sqrt(proportion * (1 - proportion) / size)
     match alternative:
@@ -89,7 +89,7 @@ def _power_phat_cc(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for one proportion test, using phat with continuity correction to calculate the variance."""
+    """Calculate the statistical power, using phat with continuity correction to calculate the variance."""
 
     if abs(proportion - proportion_threshold) <= 1 / (2 * size):
         c = 0
@@ -119,7 +119,7 @@ def _power(
     method: Literal["z-p0", "z-phat"],
     continuity_correction: bool,
 ) -> float:
-    """Calculate the statistical power for one proportion test."""
+    """Calculate the statistical power."""
 
     match method:
         case "z-p0":

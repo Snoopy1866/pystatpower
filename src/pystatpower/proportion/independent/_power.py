@@ -13,7 +13,7 @@ def _power_pooled(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for two independent proportions using z-test with pooled variance."""
+    """Calculate the statistical power, using z-test with pooled variance."""
 
     effect = treatment_proportion - proportion_threshold
 
@@ -50,7 +50,7 @@ def _power_pooled_cc(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for two independent proportions using z-test with pooled variance and continuity correction."""
+    """Calculate the statistical power, using z-test with pooled variance and continuity correction."""
 
     effect = treatment_proportion - proportion_threshold
 
@@ -89,7 +89,7 @@ def _power_unpooled(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for two independent proportions using z-tes with unpooled variance."""
+    """Calculate the statistical power, using z-tes with unpooled variance."""
 
     effect = treatment_proportion - proportion_threshold
 
@@ -117,7 +117,7 @@ def _power_unpooled_cc(
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
-    """Calculate the statistical power for two independent proportions using unpooled variance and continuity correction."""
+    """Calculate the statistical power, using unpooled variance and continuity correction."""
 
     effect = treatment_proportion - proportion_threshold
 
@@ -153,7 +153,7 @@ def _power(
     method: Literal["z-pooled", "z-unpooled"],
     continuity_correction: bool,
 ) -> float:
-    """Calculate the statistical power for two independent proportions."""
+    """Calculate the statistical power."""
 
     match method:
         case "z-pooled":
