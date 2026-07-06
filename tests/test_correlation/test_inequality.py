@@ -3,15 +3,12 @@ from typing import Literal
 
 import pytest
 
-
 from pystatpower.correlation.inequality import solve_correlation, solve_null_correlation, solve_power, solve_size
 
 from tests.models import BaseTestCase
 
-pytestmark = pytest.mark.skip(reason="The methods used by PASS and SAS are quite complex and cannot be used directly as test cases, so this module is skipped for now")
 
-
-@dataclass(kw_only=True)
+@dataclass
 class TestCase(BaseTestCase):
     null_correlation: float
     correlation: float
@@ -19,46 +16,81 @@ class TestCase(BaseTestCase):
     size: int
     alpha: float
     power: float
+    bias_adj: bool
     actual_power: float
-
-    direction: Literal["greater", "less"] | None = None
 
 
 case_group = (
     [
-        # null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="two-sided"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="two-sided", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
-        for null_correlation, correlation, size, actual_power in [
-            (0.70, 0.80, 149, 0.800033602915902),
-            (0.70, 0.81, 119, 0.801172107171729),
-            (0.70, 0.82, 96, 0.800214888681120),
-            (0.70, 0.83, 79, 0.802216867132290),
-            (0.70, 0.84, 66, 0.806165364615654),
-            (0.70, 0.85, 55, 0.805663960470385),
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="two-sided", alpha = 0.05, power = 0.80, bias_adj = False
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="two-sided", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.80, 150, 0.8008),
+            (0.81, 120, 0.8022),
+            (0.82, 97, 0.8015),
+            (0.83, 80, 0.8038),
+            (0.84, 66, 0.8020),
+            (0.85, 55, 0.8007),
         ]
     ]
     + [
-        # null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
-        for null_correlation, correlation, size, actual_power in [
-            (0.70, 0.80, 118, 0.800918493524417),
-            (0.70, 0.81, 94, 0.800758189202634),
-            (0.70, 0.82, 76, 0.800386731516288),
-            (0.70, 0.83, 63, 0.804433060505794),
-            (0.70, 0.84, 52, 0.803190833888237),
-            (0.70, 0.85, 44, 0.807790593965972),
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater", alpha = 0.05, power = 0.80, bias_adj = False
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.80, 119, 0.8013),
+            (0.81, 95, 0.8013),
+            (0.82, 77, 0.8011),
+            (0.83, 64, 0.8054),
+            (0.84, 53, 0.8044),
+            (0.85, 44, 0.8009),
         ]
     ]
     + [
-        # null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
-        for null_correlation, correlation, size, actual_power in [
-            (0.70, 0.50, 64, 0.804873804392821),
-            (0.70, 0.51, 69, 0.801841619643146),
-            (0.70, 0.52, 76, 0.804569720197291),
-            (0.70, 0.53, 83, 0.802188625071084),
-            (0.70, 0.54, 92, 0.802734426274549),
-            (0.70, 0.55, 102, 0.800714288976865),
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less", alpha = 0.05, power = 0.80, bias_adj = False
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, bias_adj=False, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.50, 65, 0.8048),
+            (0.51, 70, 0.8018),
+            (0.52, 77, 0.8046),
+            (0.53, 84, 0.8022),
+            (0.54, 93, 0.8028),
+            (0.55, 103, 0.8008),
+        ]
+    ]
+    + [
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="two-sided", alpha = 0.05, power = 0.80, bias_adj = True
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="two-sided", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.80, 150, 0.8020),
+            (0.81, 119, 0.8002),
+            (0.82, 97, 0.8032),
+            (0.83, 79, 0.8007),
+            (0.84, 66, 0.8044),
+            (0.85, 55, 0.8035),
+        ]
+    ]
+    + [
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater", alpha = 0.05, power = 0.80, bias_adj = True
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.80, 119, 0.8026),
+            (0.81, 95, 0.8029),
+            (0.82, 77, 0.8030),
+            (0.83, 63, 0.8019),
+            (0.84, 52, 0.8001),
+            (0.85, 44, 0.8041),
+        ]
+    ]
+    + [
+        # Regular Test Cases: null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less", alpha = 0.05, power = 0.80, bias_adj = True
+        TestCase(null_correlation=0.70, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, bias_adj=True, actual_power=actual_power)
+        for correlation, size, actual_power in [
+            (0.50, 64, 0.8027),
+            (0.51, 70, 0.8049),
+            (0.52, 76, 0.8027),
+            (0.53, 83, 0.8005),
+            (0.54, 92, 0.8012),
+            (0.55, 103, 0.8028),
         ]
     ]
 )
@@ -73,6 +105,7 @@ def test_solve_power(case: TestCase) -> None:
                 size=case.size,
                 alternative=case.alternative,
                 alpha=case.alpha,
+                bias_adj=case.bias_adj,
             ),
             4,
         )
@@ -88,31 +121,14 @@ def test_solve_size(case: TestCase) -> None:
             alternative=case.alternative,
             alpha=case.alpha,
             power=case.power,
+            bias_adj=case.bias_adj,
         )
         == case.size
     )
 
 
-def test_solve_correlation(case: TestCase) -> None:
-    case.direction = "greater" if case.correlation > case.null_correlation else "less"
-    assert (
-        round(
-            solve_correlation(
-                null_correlation=case.null_correlation,
-                size=case.size,
-                alternative=case.alternative,
-                alpha=case.alpha,
-                power=case.actual_power,
-                direction=case.direction,
-            ),
-            2,
-        )
-        == case.correlation
-    )
-
-
 def test_solve_null_correlation(case: TestCase) -> None:
-    case.direction = "greater" if case.null_correlation > case.correlation else "less"
+    search_direction = "above" if case.null_correlation > case.correlation else "below"
     assert (
         round(
             solve_null_correlation(
@@ -121,9 +137,35 @@ def test_solve_null_correlation(case: TestCase) -> None:
                 alternative=case.alternative,
                 alpha=case.alpha,
                 power=case.actual_power,
-                direction=case.direction,
+                bias_adj=case.bias_adj,
+                search_direction=search_direction,
             ),
             2,
         )
         == case.null_correlation
     )
+
+    with pytest.raises(ValueError):
+        solve_null_correlation(correlation=0.80, size=100, alpha=0.05, power=0.80, bias_adj=True, search_direction="equal")
+
+
+def test_solve_correlation(case: TestCase) -> None:
+    search_direction = "above" if case.correlation > case.null_correlation else "below"
+    assert (
+        round(
+            solve_correlation(
+                null_correlation=case.null_correlation,
+                size=case.size,
+                alternative=case.alternative,
+                alpha=case.alpha,
+                power=case.actual_power,
+                bias_adj=case.bias_adj,
+                search_direction=search_direction,
+            ),
+            2,
+        )
+        == case.correlation
+    )
+
+    with pytest.raises(ValueError):
+        solve_correlation(null_correlation=0.80, size=100, alpha=0.05, power=0.80, bias_adj=True, search_direction="equal")
