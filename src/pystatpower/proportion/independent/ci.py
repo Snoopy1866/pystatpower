@@ -481,7 +481,7 @@ def solve_size(
             - If `interval_type` = `'two-sided'`, specify the confidence interval width.
             - If `interval_type` = `'lower'` or `'upper'`, specify the distance from the proportion difference to the confidence limit.
         ratio:
-            Ratio of sample sizes in the treatment and reference group.
+            Ratio of sample sizes in the treatment and reference groups.
         conf_level:
             Confidence level.
 

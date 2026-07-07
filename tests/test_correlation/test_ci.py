@@ -183,7 +183,7 @@ case_group = case_group_not_bias_adj + case_group_bias_adj
 def test_solve_distance(case: TestCase) -> None:
 
     if case.bias_adj:
-        pytest.skip(reason="Neither SAS or PASS don't support bias adjustment, skipping the 'bias_adj = True' test case.")
+        pytest.skip(reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases.")
 
     assert round(
         solve_distance(
@@ -200,7 +200,7 @@ def test_solve_distance(case: TestCase) -> None:
 def test_solve_size(case: TestCase) -> None:
 
     if case.bias_adj:
-        pytest.skip(reason="Neither SAS or PASS don't support bias adjustment, skipping the 'bias_adj = True' test case.")
+        pytest.skip(reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases.")
 
     assert (
         solve_size(

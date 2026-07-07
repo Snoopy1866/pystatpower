@@ -159,7 +159,7 @@ def solve_proportion(
         The required proportion under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -236,7 +236,7 @@ def solve_null_proportion(
         The required proportion under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":

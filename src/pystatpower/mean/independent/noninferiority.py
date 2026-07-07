@@ -41,15 +41,15 @@ def solve_power(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is not specified, this parameter must be specified along with `reference_mean`.
+            If `diff` is omitted, this parameter is required alongside `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is not specified, this parameter must be specified along with `treatment_mean`.
+            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
-            If both `treatment_mean` and `reference_mean` are not specified, this parameter must be specified.
+            If both `treatment_mean` and `reference_mean` are not specified, this parameter is required.
         margin:
             The non-inferiority margin.
 
@@ -92,7 +92,6 @@ def solve_power(
 
             - `True`: Variances are assumed equal.
             - `False`: Variances are assumed unequal.
-
         approx_t_method:
             Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
 
@@ -103,9 +102,9 @@ def solve_power(
         The statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -142,7 +141,7 @@ def solve_size(
     ratio: float = 1,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -154,15 +153,15 @@ def solve_size(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is not specified, this parameter must be specified along with `reference_mean`.
+            If `diff` is omitted, this parameter is required alongside `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is not specified, this parameter must be specified along with `treatment_mean`.
+            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
-            If both `treatment_mean` and `reference_mean` are not specified, this parameter must be specified.
+            If both `treatment_mean` and `reference_mean` are not specified, this parameter is required.
         margin:
             The non-inferiority margin.
 
@@ -183,7 +182,7 @@ def solve_size(
             If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
             Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
         ratio:
-            Ratio of sample size in the treatment and reference group.
+            Ratio of sample sizes in the treatment and reference groups.
         alternative:
             Type of the alternative hypothesis.
 
@@ -217,9 +216,9 @@ def solve_size(
         The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -281,6 +280,116 @@ def solve_size(
         return treatment_size, reference_size
 
 
+def solve_diff(
+    *,
+    margin: float,
+    treatment_std: float | None = None,
+    reference_std: float | None = None,
+    std: float | None = None,
+    treatment_size: int,
+    reference_size: int,
+    alternative: Literal["greater", "less"],
+    alpha: float = 0.025,
+    power: float = 0.8,
+    dist: Literal["z", "t"] = "t",
+    equal_var: bool = False,
+    approx_t_method: Literal["welch", "satterthwaite"] = "welch",
+) -> float:
+    """
+    Estimate the required mean difference.
+
+    Args:
+        margin:
+            The non-inferiority margin.
+
+            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
+            Internally, the value of `margin` will be converted before actual calculation.
+
+            - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
+        treatment_std:
+            Standard deviation in the treatment group.
+        reference_std:
+            Standard deviation in the reference group.
+        std:
+            Standard deviation in both groups.
+
+            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
+
+            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
+            Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
+        treatment_size:
+            Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
+        alternative:
+            Type of the alternative hypothesis.
+
+            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta < 0$)
+            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta > 0$)
+        alpha:
+            Significance level.
+
+            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
+        power:
+            Expected statistical power.
+
+            0.8 is a commonly used statistical power.
+        dist:
+            The distribution used for the test.
+
+            - `'z'`: Standard normal distribution.
+            - `'t'`: Student's or non-central t distribution.
+        equal_var:
+            Whether to assume equal variances between treatment and reference groups.
+
+            - `True`: Variances are assumed equal.
+            - `False`: Variances are assumed unequal.
+
+        approx_t_method:
+            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
+
+            - `'welch'`: Welch's approximate t-test (1947).
+            - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
+
+    Returns:
+        The required difference between the mean in treatment and reference groups.
+
+    Raises:
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
+    """
+
+    std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
+
+    margin = _margin(margin, alternative)
+
+    def func(diff: float) -> float:
+        return (
+            _power(
+                diff=diff,
+                margin=margin,
+                treatment_std=treatment_std,
+                reference_std=reference_std,
+                std=std,
+                treatment_size=treatment_size,
+                reference_size=reference_size,
+                alternative=alternative,
+                alpha=alpha,
+                dist=dist,
+                equal_var=equal_var,
+                approx_t_method=approx_t_method,
+            )
+            - power
+        )
+
+    match alternative:
+        case "greater":
+            return float(brentq(func, margin, 1e9))
+        case "less":
+            return float(brentq(func, -1e9, margin))
+
+
 def solve_treatment_mean(
     *,
     reference_mean: float,
@@ -292,7 +401,7 @@ def solve_treatment_mean(
     reference_size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -360,8 +469,8 @@ def solve_treatment_mean(
         The required mean in the treatment group.
 
     Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
@@ -405,7 +514,7 @@ def solve_reference_mean(
     reference_size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -473,8 +582,8 @@ def solve_reference_mean(
         The required mean in the reference group.
 
     Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
@@ -507,116 +616,6 @@ def solve_reference_mean(
             return float(brentq(func, treatment_mean - margin, 1e9))
 
 
-def solve_diff(
-    *,
-    margin: float,
-    treatment_std: float | None = None,
-    reference_std: float | None = None,
-    std: float | None = None,
-    treatment_size: int,
-    reference_size: int,
-    alternative: Literal["greater", "less"],
-    alpha: float = 0.025,
-    power: float = 0.80,
-    dist: Literal["z", "t"] = "t",
-    equal_var: bool = False,
-    approx_t_method: Literal["welch", "satterthwaite"] = "welch",
-) -> float:
-    """
-    Estimate the required mean difference.
-
-    Args:
-        margin:
-            The non-inferiority margin.
-
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
-
-            - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
-        treatment_std:
-            Standard deviation in the treatment group.
-        reference_std:
-            Standard deviation in the reference group.
-        std:
-            Standard deviation in both groups.
-
-            This is a convenience parameter that will override `treatment_std` and `reference_std` when `dist` is `z` and `equal_var` is `True`.
-
-            If you specify `dist` as `z` and `equal_var` as `True`, you can just specify `std` instead of `treatment_std` and `reference_std`.
-            Internally, the value of `std` will be treated as the standard deviation of both the treatment and reference groups.
-        treatment_size:
-            Sample size in the treatment group.
-        reference_size:
-            Sample size in the reference group.
-        alternative:
-            Type of the alternative hypothesis.
-
-            - If `alternative` is `greater`, the alternative hypothesis is $\\mu_1 - \\mu_2 > \\delta$ ($\\delta < 0$)
-            - If `alternative` is `less`, the alternative hypothesis is $\\mu_1 - \\mu_2 < \\delta$ ($\\delta > 0$)
-        alpha:
-            Significance level.
-
-            The non-inferiority test is a one-sided test, and 0.025 is a commonly used significance level.
-        power:
-            Expected statistical power.
-
-            0.8 is a commonly used statistical power.
-        dist:
-            The distribution used for the test.
-
-            - `'z'`: Standard normal distribution.
-            - `'t'`: Student's or non-central t distribution.
-        equal_var:
-            Whether to assume equal variances between treatment and reference groups.
-
-            - `True`: Variances are assumed equal.
-            - `False`: Variances are assumed unequal.
-
-        approx_t_method:
-            Approximate t-test method. It is used when `dist` is `'t'` and `equal_var` = `False`.
-
-            - `'welch'`: Welch's approximate t-test (1947).
-            - `'satterthwaite'`: Satterthwaite's approximate t-test (1946).
-
-    Returns:
-        The required difference between the mean in treatment and reference groups.
-
-    Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
-    """
-
-    std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
-
-    margin = _margin(margin, alternative)
-
-    def func(diff: float) -> float:
-        return (
-            _power(
-                diff=diff,
-                margin=margin,
-                treatment_std=treatment_std,
-                reference_std=reference_std,
-                std=std,
-                treatment_size=treatment_size,
-                reference_size=reference_size,
-                alternative=alternative,
-                alpha=alpha,
-                dist=dist,
-                equal_var=equal_var,
-                approx_t_method=approx_t_method,
-            )
-            - power
-        )
-
-    match alternative:
-        case "greater":
-            return float(brentq(func, margin, 1e9))
-        case "less":
-            return float(brentq(func, -1e9, margin))
-
-
 def solve_margin(
     *,
     treatment_mean: float | None = None,
@@ -629,7 +628,7 @@ def solve_margin(
     reference_size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -641,15 +640,15 @@ def solve_margin(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is not specified, this parameter must be specified along with `reference_mean`.
+            If `diff` is omitted, this parameter is required alongside `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is not specified, this parameter must be specified along with `treatment_mean`.
+            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
-            If both `treatment_mean` and `reference_mean` are not specified, this parameter must be specified.
+            If both `treatment_mean` and `reference_mean` are not specified, this parameter is required.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -702,9 +701,9 @@ def solve_margin(
             - If `alternative` is `less`, the returned value is in the range $(\\hat{\\mu}_1 - \\hat{\\mu}_2, +\\infty)$
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and any of `treatment_std`, `reference_std` or `std` is not specified.
-        ValueError: If `dist` is `z` and `equal_var` is `True` without specifying `std`: `treatment_std` and `reference_std` are not equal if both are provided.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
@@ -747,7 +746,7 @@ def solve_treatment_std(
     reference_size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -759,15 +758,15 @@ def solve_treatment_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is not specified, this parameter must be specified along with `reference_mean`.
+            If `diff` is omitted, this parameter is required alongside `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is not specified, this parameter must be specified along with `treatment_mean`.
+            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
-            If both `treatment_mean` and `reference_mean` are not specified, this parameter must be specified.
+            If both `treatment_mean` and `reference_mean` are not specified, this parameter is required.
         margin:
             The non-inferiority margin.
 
@@ -821,14 +820,14 @@ def solve_treatment_std(
         The required standard deviation in the treatment group.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `equal_var` is `False`, and `reference_std` is not specified.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and reference_std is None:
-        raise ValueError("'reference_std' must be specified when 'equal_var' = False.")
+        raise ValueError("'reference_std' is required when 'equal_var' = False.")
 
     margin = _margin(margin, alternative)
 
@@ -925,7 +924,7 @@ def solve_reference_std(
     reference_size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    power: float = 0.80,
+    power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
@@ -937,15 +936,15 @@ def solve_reference_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is not specified, this parameter must be specified along with `reference_mean`.
+            If `diff` is omitted, this parameter is required alongside `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is not specified, this parameter must be specified along with `treatment_mean`.
+            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
-            If both `treatment_mean` and `reference_mean` are not specified, this parameter must be specified.
+            If both `treatment_mean` and `reference_mean` are not specified, this parameter is required.
         margin:
             The non-inferiority margin.
 
@@ -995,14 +994,14 @@ def solve_reference_std(
         The required standard deviation in the reference group.
 
     Raises:
-        ValueError: If `diff` is not specified, and neither `treatment_mean` nor `reference_mean` is not specified.
-        ValueError: If `equal_var` is `False`, and `treatment_std` is not specified.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
 
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and treatment_std is None:
-        raise ValueError("'treatment_std' must be specified when 'equal_var' = False.")
+        raise ValueError("'treatment_std' is required when 'equal_var' = False.")
 
     margin = _margin(margin, alternative)
 
