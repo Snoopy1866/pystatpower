@@ -632,16 +632,9 @@ def test_solve_power(case: TestCase) -> None:
 
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case in [
-        TestCase(treatment_mean=42, reference_mean=30, diff=17, treatment_std=40, reference_std=40, treatment_size=103, reference_size=52, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8002, dist="t", equal_var=True),
-        TestCase(treatment_mean=47, reference_mean=30, diff=17, treatment_std=40, reference_std=40, treatment_size=103, reference_size=52, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8002, dist="t", equal_var=True),
-        TestCase(treatment_mean=54, reference_mean=30, diff=17, treatment_std=40, reference_std=40, treatment_size=103, reference_size=52, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8002, dist="t", equal_var=True),
-        TestCase(treatment_mean=41, reference_mean=30, diff=22, treatment_std=40, reference_std=30, treatment_size=28, reference_size=56, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8120, dist="t", equal_var=False, approx_t_method="satterthwaite"),
-        TestCase(treatment_mean=46, reference_mean=30, diff=22, treatment_std=40, reference_std=30, treatment_size=28, reference_size=56, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8120, dist="t", equal_var=False, approx_t_method="satterthwaite"),
-        TestCase(treatment_mean=52, reference_mean=30, diff=22, treatment_std=40, reference_std=30, treatment_size=28, reference_size=56, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8120, dist="t", equal_var=False, approx_t_method="satterthwaite"),
-        TestCase(treatment_mean=53, reference_mean=30, diff=22, treatment_std=40, reference_std=30, treatment_size=28, reference_size=56, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8120, dist="t", equal_var=False, approx_t_method="satterthwaite"),
-        TestCase(treatment_mean=41, reference_mean=30, diff=11, treatment_std=40, reference_std=30, treatment_size=106, reference_size=212, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8013, dist="t", equal_var=False, approx_t_method="welch"),
-    ]:
+    if (case.treatment_mean in [42, 47, 54, 55] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (
+        case.treatment_mean in [41, 46, 52, 53] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"
+    ):
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if case.treatment_mean in range(40, 61) and (
@@ -671,9 +664,7 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case in [
-        TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, dist="t", equal_var=True),
-    ]:
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if case.treatment_mean in range(40, 61) and (
@@ -712,9 +703,7 @@ def test_solve_diff_raise_error() -> None:
 
 def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case in [
-        TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, dist="t", equal_var=True),
-    ]:
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if case.treatment_mean in range(40, 61) and (
@@ -755,9 +744,7 @@ def test_solve_treatment_mean_raise_error() -> None:
 
 def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case in [
-        TestCase(treatment_mean=56, reference_mean=30, diff=26, treatment_std=40, reference_std=40, treatment_size=45, reference_size=23, alternative="greater", alpha=0.05, power=0.8, actual_power=0.8065, dist="t", equal_var=True),
-    ]:
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     if case.treatment_mean in range(40, 61) and (
