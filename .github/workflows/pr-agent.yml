@@ -38,6 +38,7 @@ jobs:
           # /describe configuration
           pr_description.publish_labels: "false"
           pr_description.generate_ai_title: "false"
+          pr_description.enable_pr_diagram: "false"
 
           # /review configuration
           pr_reviewer.extra_instructions: "Focus on Python best practices, type hints, and docstrings."
