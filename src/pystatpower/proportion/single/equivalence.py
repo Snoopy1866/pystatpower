@@ -193,9 +193,9 @@ def solve_power(
         proportion:
             Proportion under the alternative hypothesis ($p$).
         margin_lower:
-            Lower equivalence margin ($\\delta_1$), a negative value must be specified.
+            Lower equivalence margin ($\\delta_1$), a negative value is required.
         margin_upper:
-            Upper equivalence margin ($\\delta_2$), a positive value must be specified.
+            Upper equivalence margin ($\\delta_2$), a positive value is required.
         size:
             Sample size.
         alpha:
@@ -232,9 +232,9 @@ def solve_size(
         proportion:
             Proportion under the alternative hypothesis ($p$).
         margin_lower:
-            Lower equivalence margin ($\\delta_1$), a negative value must be specified.
+            Lower equivalence margin ($\\delta_1$), a negative value is required.
         margin_upper:
-            Upper equivalence margin ($\\delta_2$), a positive value must be specified.
+            Upper equivalence margin ($\\delta_2$), a positive value is required.
         alpha:
             One-sided significance level.
         power:
@@ -276,9 +276,9 @@ def solve_null_proportion(
         proportion:
             Proportion under the alternative hypothesis.
         margin_lower:
-            Lower equivalence margin ($\\delta_1$), a negative value must be specified.
+            Lower equivalence margin ($\\delta_1$), a negative value is required.
         margin_upper:
-            Upper equivalence margin ($\\delta_2$), a positive value must be specified.
+            Upper equivalence margin ($\\delta_2$), a positive value is required.
         size:
             Sample size.
         alpha:
@@ -363,9 +363,9 @@ def solve_proportion(
         null_proportion:
             Proportion under the null hypothesis ($p_0$).
         margin_lower:
-            Lower equivalence margin ($\\delta_1$), a negative value must be specified.
+            Lower equivalence margin ($\\delta_1$), a negative value is required
         margin_upper:
-            Upper equivalence margin ($\\delta_2$), a positive value must be specified.
+            Upper equivalence margin ($\\delta_2$), a positive value is required.
         size:
             Sample size.
         alpha:

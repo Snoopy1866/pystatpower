@@ -68,11 +68,11 @@ def solve_power(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter and `null_mean` are required.
+            If `diff` is omitted, this parameter and `null_mean` are required.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is not specified, this parameter and `mean` are required.
+            If `diff` is omitted, this parameter and `mean` are required.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
@@ -103,7 +103,7 @@ def solve_power(
         The statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
+        ValueError: If all `diff`, `mean` and `null_mean` are omitted.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -131,11 +131,11 @@ def solve_size(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter and `null_mean` are required.
+            If `diff` is omitted, this parameter and `null_mean` are required.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is not specified, this parameter and `mean` are required.
+            If `diff` is omitted, this parameter and `mean` are required.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
@@ -168,7 +168,7 @@ def solve_size(
         The required sample size.
 
     Raises:
-        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
+        ValueError: If all `diff`, `mean` and `null_mean` are omitted.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -253,7 +253,7 @@ def solve_mean(
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is not specified, this parameter and `mean` are required.
+            If `diff` is omitted, this parameter and `mean` are required.
         margin:
             The non-inferiority margin.
 
@@ -313,7 +313,7 @@ def solve_null_mean(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter and `null_mean` are required.
+            If `diff` is omitted, this parameter and `null_mean` are required.
         margin:
             The non-inferiority margin.
 
@@ -372,11 +372,11 @@ def solve_std(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter and `null_mean` are required.
+            If `diff` is omitted, this parameter and `null_mean` are required.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is not specified, this parameter and `mean` are required.
+            If `diff` is omitted, this parameter and `mean` are required.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
@@ -409,7 +409,7 @@ def solve_std(
         The required standard deviation.
 
     Raises:
-        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
+        ValueError: If all `diff`, `mean` and `null_mean` are omitted.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)
@@ -440,11 +440,11 @@ def solve_margin(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is not specified, this parameter and `null_mean` are required.
+            If `diff` is omitted, this parameter and `null_mean` are required.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is not specified, this parameter and `mean` are required.
+            If `diff` is omitted, this parameter and `mean` are required.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
@@ -474,7 +474,7 @@ def solve_margin(
             - If `alternative` is `'less'`, the returned value is in the range $(\\hat{\\mu} - \\hat{\\mu}_0, +\\infty)$
 
     Raises:
-        ValueError: If `diff` is not specified, and either `mean` or `null_mean` is not specified.
+        ValueError: If all `diff`, `mean` and `null_mean` are omitted.
     """
 
     diff = _verify_mean_and_get_diff(mean, null_mean, diff)

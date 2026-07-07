@@ -4,6 +4,8 @@
 
 | Submodule                                                                               | Description                                                                |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [**correlation.ci**](./correlation/ci.md)                                               | Confidence Interval for Correlation                                        |
+| [**correlation.inequality**](./correlation/inequality.md)                               | Inequality Test for Correlation                                            |
 | [**mean.single.ci**](./mean/single/ci.md)                                               | Confidence Interval for One Mean                                           |
 | [**mean.single.inequality**](./mean/single/inequality.md)                               | Inequality Test for One Mean                                               |
 | [**mean.single.noninferiority**](./mean/single/noninferiority.md)                       | Non-Inferiority Test for One Mean                                          |
@@ -21,8 +23,6 @@
 | [**proportion.independent.inequality**](./proportion/independent/inequality.md)         | Inequality Test for Two Independent Proportions                            |
 | [**proportion.independent.noninferiority**](./proportion/independent/noninferiority.md) | Non-Inferiority Test for Two Independent Proportions                       |
 | [**proportion.independent.superiority**](./proportion/independent/superiority.md)       | Superiority Test for Two Independent Proportions                           |
-| [**correlation.ci**](./correlation/ci.md)                                               | Confidence Interval for Correlation                                        |
-| [**correlation.inequality**](./correlation/inequality.md)                               | Inequality Test for Correlation                                            |
 
 ## Exceptions
 

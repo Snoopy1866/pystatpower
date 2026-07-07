@@ -157,7 +157,7 @@ def solve_correlation(
         The required correlation coefficient under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -225,7 +225,7 @@ def solve_null_correlation(
         The required correlation coefficient under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is not specified.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
