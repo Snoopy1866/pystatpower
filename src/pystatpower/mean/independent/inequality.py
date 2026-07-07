@@ -116,8 +116,8 @@ def solve_power(
         The calculated statistical power of the test.
 
     Raises:
-        ValueError: If `diff` is omitted, and neither `treatment_mean` nor `reference_mean` is omitted.
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
@@ -217,8 +217,8 @@ def solve_size(
         The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If `diff` is omitted, and neither `treatment_mean` nor `reference_mean` is omitted.
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
 
@@ -357,9 +357,9 @@ def solve_diff(
         The required difference between the treatment and reference means.
 
     Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omiited.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -479,9 +479,9 @@ def solve_treatment_mean(
         The required mean in the treatment group.
 
     Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omiited.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -601,9 +601,9 @@ def solve_reference_mean(
         The required mean in the treatment group.
 
     Raises:
-        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
+        ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omiited.
+        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -718,7 +718,7 @@ def solve_treatment_std(
         The required standard deviation in the treatment group.
 
     Raises:
-        ValueError: If `diff` is omitted, and neither `treatment_mean` nor `reference_mean` is omitted.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
 
@@ -882,7 +882,7 @@ def solve_reference_std(
         The required standard deviation in the reference group.
 
     Raises:
-        ValueError: If `diff` is omitted, and neither `treatment_mean` nor `reference_mean` is omitted.
+        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
 
