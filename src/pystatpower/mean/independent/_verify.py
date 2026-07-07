@@ -28,12 +28,12 @@ def _verify_std_and_get_std(
             if std is None:
                 if treatment_std is None and reference_std is None:
                     raise ValueError(
-                        "For 'z' test with equal variance, at least one of 'std', 'treatment_std', or 'reference_std' must be specified."
+                        "For z-test with equal variance, at least one of 'std', 'treatment_std', or 'reference_std' is required."
                     )
                 elif treatment_std is not None and reference_std is not None:
                     if treatment_std != reference_std:
                         raise ValueError(
-                            "For 'z' test with equal variance, when 'std' is omitted and both 'treatment_std' and 'reference_std' are supplied, they must be equal."
+                            "For z-test with equal variance, if 'std' is omitted and you provide both 'treatment_std' and 'reference_std', they must be equal."
                         )
                     else:  # treatment_std == reference_std
                         std = treatment_std
@@ -44,10 +44,10 @@ def _verify_std_and_get_std(
         else:  # equal_var == False
             if treatment_std is None or reference_std is None:
                 raise ValueError(
-                    "For z-test with unequal variance, both 'treatment_std' and 'reference_std' must be specified."
+                    "For z-test with unequal variance, both 'treatment_std' and 'reference_std' is required."
                 )
     else:  # dist == "t"
         if treatment_std is None or reference_std is None:
-            raise ValueError("For t-test, both 'treatment_std' and 'reference_std' must be specified.")
+            raise ValueError("For t-test, both 'treatment_std' and 'reference_std' is required.")
 
     return std
