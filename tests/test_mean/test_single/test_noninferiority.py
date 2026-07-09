@@ -7,7 +7,7 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.noninferiority import _margin, _ParamsValidator
+from pystatpower.mean.single.noninferiority import _ParamsValidator
 from pystatpower.mean.single.noninferiority import solve_power, solve_size, solve_mean, solve_null_mean, solve_margin, solve_diff, solve_noninferiority_mean, solve_offset, solve_std
 
 from tests.models import BaseTestCase
@@ -98,11 +98,13 @@ class TestCase(BaseTestCase):
     actual_power: float
 
     def __post_init__(self) -> None:
-        self.margin = _margin(self.margin, self.alternative)
-        pv = _ParamsValidator(mean=self.mean, null_mean=self.null_mean, margin=self.margin, diff=self.diff, noninferiority_mean=self.noninferiority_mean, offset=self.offset)
+        self.margin = _ParamsValidator._margin(self.margin, self.alternative)
+
+        pv = _ParamsValidator(mean=self.mean, null_mean=self.null_mean, margin=self.margin, diff=self.diff, noninferiority_mean=self.noninferiority_mean, offset=self.offset, alternative=self.alternative)
         pv.validate("diff", warning=False)
         pv.validate("noninferiority_mean", warning=False)
         pv.validate("offset", warning=False)
+
         self.diff = pv.diff
         self.noninferiority_mean = pv.noninferiority_mean
         self.offset = pv.offset
@@ -280,7 +282,10 @@ def test_solve_power(case: TestCase) -> None:
     ) == round(case.actual_power, 6)
 
 
-def test_solve_size(case: TestCase) -> None:
+def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-18.0, -12.0, -8.0, -5.0, -3.0] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert (
         solve_size(
@@ -300,7 +305,10 @@ def test_solve_size(case: TestCase) -> None:
     )
 
 
-def test_solve_mean(case: TestCase) -> None:
+def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
         solve_mean(
@@ -318,7 +326,10 @@ def test_solve_mean(case: TestCase) -> None:
     ) == round(case.mean, 2)
 
 
-def test_solve_null_mean(case: TestCase) -> None:
+def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
         solve_null_mean(
@@ -335,7 +346,10 @@ def test_solve_null_mean(case: TestCase) -> None:
     ) == round(case.null_mean, 2)
 
 
-def test_solve_margin(case: TestCase) -> None:
+def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert (
         round(
@@ -356,7 +370,10 @@ def test_solve_margin(case: TestCase) -> None:
     )
 
 
-def test_solve_diff(case: TestCase) -> None:
+def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-9.5, -9.0, -3.5] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert (
         round(
@@ -375,7 +392,10 @@ def test_solve_diff(case: TestCase) -> None:
     )
 
 
-def test_solve_noninferiority_mean(case: TestCase) -> None:
+def test_solve_noninferiority_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
+
+    if case.margin in [-11.5] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
         solve_noninferiority_mean(
@@ -393,7 +413,10 @@ def test_solve_noninferiority_mean(case: TestCase) -> None:
 
 def test_solve_offset(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case.margin in [4.0, 6.5, 8.5, 9.5, 10.5, 11.5, 13.0, 14.0, 14.5, 16.0] and case.alternative == "less" and case.dist == "t":
+    if case.margin in [-15.5] and case.alternative == "greater" and case.dist == "t":
+        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+
+    if case.margin in [3.0, 3.5, 4.0, 6.5, 8.5, 9.5, 10.5, 11.5, 13.0, 14.0, 14.5, 15.0, 16.0, 18.0] and case.alternative == "less" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(

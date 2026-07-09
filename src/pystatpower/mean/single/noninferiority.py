@@ -8,16 +8,6 @@ from scipy.optimize import brentq
 from ._power import _power
 
 
-def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert the margin to its standard form according to the alternative hypothesis"""
-
-    match alternative:
-        case "greater":
-            return -abs(margin)
-        case "less":
-            return abs(margin)
-
-
 class _ParamsValidator:
     def __init__(
         self,
@@ -28,6 +18,7 @@ class _ParamsValidator:
         diff: float | None = None,
         noninferiority_mean: float | None = None,
         offset: float | None = None,
+        alternative: Literal["greater", "less"] | None = None,
     ) -> None:
         self.mean = mean
         self.null_mean = null_mean
@@ -35,8 +26,22 @@ class _ParamsValidator:
         self.diff = diff
         self.noninferiority_mean = noninferiority_mean
         self.offset = offset
+        self.alternative = alternative
 
-        self.params_provided = {k for k, v in self.__dict__.items() if v is not None}
+        self.params_provided = {k for k, v in self.__dict__.items() if v is not None and k != "alternative"}
+
+        if self.margin is not None and self.alternative is not None:
+            self.margin = _ParamsValidator._margin(self.margin, self.alternative)
+
+    @classmethod
+    def _margin(cls, margin: float, alternative: Literal["greater", "less"]) -> float:
+        """Convert the margin to its standard form according to the alternative hypothesis"""
+
+        match alternative:
+            case "greater":
+                return -abs(margin)
+            case "less":
+                return abs(margin)
 
     def validate(self, target: Literal["diff", "noninferiority_mean", "offset"], *, warning: bool = True) -> None:
         match target:
@@ -212,10 +217,14 @@ def solve_power(
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
 
-    margin = _margin(margin, alternative)
-
     pv = _ParamsValidator(
-        mean=mean, null_mean=null_mean, margin=margin, diff=diff, noninferiority_mean=noninferiority_mean, offset=offset
+        mean=mean,
+        null_mean=null_mean,
+        margin=margin,
+        diff=diff,
+        noninferiority_mean=noninferiority_mean,
+        offset=offset,
+        alternative=alternative,
     )
     pv.validate(target="offset")
     offset = pv.offset
@@ -319,10 +328,14 @@ def solve_size(
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
 
-    margin = _margin(margin, alternative)
-
     pv = _ParamsValidator(
-        mean=mean, null_mean=null_mean, margin=margin, diff=diff, noninferiority_mean=noninferiority_mean, offset=offset
+        mean=mean,
+        null_mean=null_mean,
+        margin=margin,
+        diff=diff,
+        noninferiority_mean=noninferiority_mean,
+        offset=offset,
+        alternative=alternative,
     )
     pv.validate(target="offset")
     offset = pv.offset
@@ -409,8 +422,6 @@ def solve_mean(
         ValueError: The given set of parameters is insufficient to determine the noninferiority mean.
     """
 
-    margin = _margin(margin, alternative)
-
     pv = _ParamsValidator(null_mean=null_mean, margin=margin, noninferiority_mean=noninferiority_mean)
     pv.validate(target="noninferiority_mean")
     noninferiority_mean = pv.noninferiority_mean
@@ -480,7 +491,7 @@ def solve_null_mean(
         The required mean under the null hypothesis.
     """
 
-    margin = _margin(margin, alternative)
+    margin = _ParamsValidator._margin(margin, alternative)
 
     def func(null_mean: float) -> float:
         return _power(mean - null_mean - margin, std, size, alternative, alpha, dist) - power
@@ -566,9 +577,9 @@ def solve_margin(
 
     match alternative:
         case "greater":
-            return float(brentq(func, -1e6, diff))
+            return float(brentq(func, -1e6, min(diff, 0)))
         case "less":
-            return float(brentq(func, diff, 1e6))
+            return float(brentq(func, max(diff, 0), 1e6))
 
 
 def solve_diff(
@@ -623,7 +634,7 @@ def solve_diff(
         The required mean difference between the alternative hypothesis and the null hypothesis.
     """
 
-    margin = _margin(margin, alternative)
+    margin = _ParamsValidator._margin(margin, alternative)
 
     def func(diff: float) -> float:
         return _power(diff - margin, std, size, alternative, alpha, dist) - power
@@ -837,10 +848,14 @@ def solve_std(
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
 
-    margin = _margin(margin, alternative)
-
     pv = _ParamsValidator(
-        mean=mean, null_mean=null_mean, margin=margin, diff=diff, noninferiority_mean=noninferiority_mean, offset=offset
+        mean=mean,
+        null_mean=null_mean,
+        margin=margin,
+        diff=diff,
+        noninferiority_mean=noninferiority_mean,
+        offset=offset,
+        alternative=alternative,
     )
     pv.validate(target="offset")
     offset = pv.offset
