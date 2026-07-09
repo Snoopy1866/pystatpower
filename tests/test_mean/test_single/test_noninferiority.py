@@ -416,7 +416,7 @@ def test_solve_offset(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case.margin in [-15.5, -7.5] and case.alternative == "greater" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
-    if case.margin in [3.0, 3.5, 4.0, 4.5, 6.5, 8.5, 9.5, 10.5, 11.0, 11.5, 13.0, 14.0, 14.5, 15.0, 16.0, 18.0] and case.alternative == "less" and case.dist == "t":
+    if case.margin in [3.0, 3.5, 4.0, 4.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.0, 11.5, 13.0, 14.0, 14.5, 15.0, 16.0, 18.0] and case.alternative == "less" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     assert round(
