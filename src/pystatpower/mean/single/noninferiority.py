@@ -422,7 +422,9 @@ def solve_mean(
         ValueError: The given set of parameters is insufficient to determine the noninferiority mean.
     """
 
-    pv = _ParamsValidator(null_mean=null_mean, margin=margin, noninferiority_mean=noninferiority_mean)
+    pv = _ParamsValidator(
+        null_mean=null_mean, margin=margin, noninferiority_mean=noninferiority_mean, alternative=alternative
+    )
     pv.validate(target="noninferiority_mean")
     noninferiority_mean = pv.noninferiority_mean
 
