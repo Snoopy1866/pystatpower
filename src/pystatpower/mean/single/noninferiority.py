@@ -8,6 +8,16 @@ from scipy.optimize import brentq
 from ._power import _power
 
 
+def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
+    """Convert the margin to its standard form according to the alternative hypothesis"""
+
+    match alternative:
+        case "greater":
+            return -abs(margin)
+        case "less":
+            return abs(margin)
+
+
 class _ParamsValidator:
     def __init__(
         self,
@@ -31,17 +41,7 @@ class _ParamsValidator:
         self.params_provided = {k for k, v in self.__dict__.items() if v is not None and k != "alternative"}
 
         if self.margin is not None and self.alternative is not None:
-            self.margin = _ParamsValidator._margin(self.margin, self.alternative)
-
-    @classmethod
-    def _margin(cls, margin: float, alternative: Literal["greater", "less"]) -> float:
-        """Convert the margin to its standard form according to the alternative hypothesis"""
-
-        match alternative:
-            case "greater":
-                return -abs(margin)
-            case "less":
-                return abs(margin)
+            self.margin = _margin(self.margin, self.alternative)
 
     def validate(self, target: Literal["diff", "noninferiority_mean", "offset"], *, warning: bool = True) -> None:
         match target:
@@ -118,7 +118,6 @@ class _ParamsValidator:
         params_str = ", ".join(params)
         warnings.warn(
             f"Redundant parameters detected: {params_str}.",
-            UserWarning,
             stacklevel=2,
         )
 
@@ -493,7 +492,7 @@ def solve_null_mean(
         The required mean under the null hypothesis.
     """
 
-    margin = _ParamsValidator._margin(margin, alternative)
+    margin = _margin(margin, alternative)
 
     def func(null_mean: float) -> float:
         return _power(mean - null_mean - margin, std, size, alternative, alpha, dist) - power
@@ -636,7 +635,7 @@ def solve_diff(
         The required mean difference between the alternative hypothesis and the null hypothesis.
     """
 
-    margin = _ParamsValidator._margin(margin, alternative)
+    margin = _margin(margin, alternative)
 
     def func(diff: float) -> float:
         return _power(diff - margin, std, size, alternative, alpha, dist) - power

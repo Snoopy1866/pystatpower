@@ -7,13 +7,20 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.noninferiority import _ParamsValidator
+from pystatpower.mean.single.noninferiority import _margin, _ParamsValidator
 from pystatpower.mean.single.noninferiority import solve_power, solve_size, solve_mean, solve_null_mean, solve_margin, solve_diff, solve_noninferiority_mean, solve_offset, solve_std
 
 from tests.models import BaseTestCase
 
 
 pytestmark = pytest.mark.filterwarnings("ignore")
+
+
+def test_margin() -> None:
+    assert _margin(5, alternative="greater") == -5
+    assert _margin(-5, alternative="greater") == -5
+    assert _margin(5, alternative="less") == 5
+    assert _margin(-5, alternative="less") == 5
 
 
 def test_validate() -> None:
@@ -98,7 +105,7 @@ class TestCase(BaseTestCase):
     actual_power: float
 
     def __post_init__(self) -> None:
-        self.margin = _ParamsValidator._margin(self.margin, self.alternative)
+        self.margin = _margin(self.margin, self.alternative)
 
         pv = _ParamsValidator(mean=self.mean, null_mean=self.null_mean, margin=self.margin, diff=self.diff, noninferiority_mean=self.noninferiority_mean, offset=self.offset, alternative=self.alternative)
         pv.validate("diff", warning=False)
