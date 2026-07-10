@@ -208,7 +208,7 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
-    if case.mean in (30,) and case.alternative == "greater" and case.dist == "t":
+    if case.mean in (30, 33) and case.alternative == "greater" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     case.direction = "greater" if case.mean > case.null_mean else "less"
@@ -272,7 +272,7 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
-    if case.mean in (30,) and case.alternative == "greater" and case.dist == "t":
+    if case.mean in (30, 33) and case.alternative == "greater" and case.dist == "t":
         request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
 
     direction = "greater" if case.mean > case.null_mean else "less"

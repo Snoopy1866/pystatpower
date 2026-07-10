@@ -85,15 +85,15 @@ def solve_power(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `null_mean`.
+            This parameter must be used in conjuction with `null_mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `mean`.
+            This parameter must be used in conjuction with `mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
-            If neither `mean` nor `null_mean` is specified, this parameter is required.
+            If this parameter is specified, both `mean` and `null_mean` are ignored.
         std:
             Standard deviation.
         size:
@@ -119,7 +119,7 @@ def solve_power(
         The statistical power of the test.
 
     Raises:
-        ValueError: If all of `diff`, `mean` and `null_mean` are omitted.
+        ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
 
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
@@ -147,15 +147,15 @@ def solve_size(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `null_mean`.
+            This parameter must be used in conjuction with `null_mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `mean`.
+            This parameter must be used in conjuction with `mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
-            If neither `mean` nor `null_mean` is specified, this parameter is required.
+            If this parameter is specified, both `mean` and `null_mean` are ignored.
         std:
             Standard deviation.
         alternative:
@@ -183,7 +183,7 @@ def solve_size(
         The required sample size.
 
     Raises:
-        ValueError: If all of `diff`, `mean` and `null_mean` are omitted.
+        ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
 
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
@@ -252,7 +252,7 @@ def solve_mean(
         The required mean under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -329,7 +329,7 @@ def solve_null_mean(
         The required mean under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -403,7 +403,7 @@ def solve_diff(
         The required mean difference between the alternative hypothesis and the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -442,15 +442,15 @@ def solve_std(
         mean:
             Mean under the alternative hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `null_mean`.
+            This parameter must be used in conjuction with `null_mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         null_mean:
             Mean under the null hypothesis.
 
-            If `diff` is omitted, this parameter is required along with `mean`.
+            This parameter must be used in conjuction with `mean` to compute the `diff`, where `diff` = `mean` - `null_mean`.
         diff:
             Mean difference between the alternative hypothesis and the null hypothesis.
 
-            If neither `mean` nor `null_mean` is specified, this parameter is required.
+            If this parameter is specified, both `mean` and `null_mean` are ignored.
         size:
             Sample size.
         alternative:
@@ -478,7 +478,7 @@ def solve_std(
         The required standard deviation.
 
     Raises:
-        ValueError: If all of `diff`, `mean` and `null_mean` are omitted.
+        ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
 
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
