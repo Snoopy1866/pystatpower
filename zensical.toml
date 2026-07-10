@@ -25,7 +25,8 @@ nav = [
         ] },
         { "其他" = [
             { "相关系数置信区间" = "algorithms/correlation/ci.md" },
-            { "相关系数差异性检验" = "algorithms/correlation/inequality.md" }
+            { "相关系数差异性检验" = "algorithms/correlation/inequality.md" },
+            { "至少观察到一例事件的检出能力" = "algorithms/misc/observe_at_least_one_event.md" }
         ] }
     ] },
     { "API Reference" = [
@@ -49,6 +50,7 @@ nav = [
         { "proportion.independent.inequality" = "api/proportion/independent/inequality.md" },
         { "proportion.independent.noninferiority" = "api/proportion/independent/noninferiority.md" },
         { "proportion.independent.superiority" = "api/proportion/independent/superiority.md" },
+        { "misc.observe_at_least_one_event" = "api/misc/observe_at_least_one_event.md" },
         { "exceptions" = "api/exceptions.md" }
     ] }
 ]
