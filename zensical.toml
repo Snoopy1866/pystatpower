@@ -146,27 +146,40 @@ inventories = [
 paths = ["src"]
 
 [project.plugins.mkdocstrings.handlers.python.options]
+# General
 backlinks = "tree"
-docstring_options.ignore_init_summary = true
-docstring_style = "google"
-docstring_section_style = "table"
-filters = ["!^_"]
-inherited_members = true
-heading_level = 1
-merge_init_into_class = true
-parameter_headings = false
-separate_signature = true
 show_source = false
-relative_crossrefs = true
-scoped_crossrefs = true
+
+# Headings
+heading_level = 1
+parameter_headings = false
 show_root_heading = true
 show_root_toc_entry = false
 show_root_full_path = true
-show_signature_annotations = true
+show_root_members_full_path = false
 show_symbol_type_heading = true
 show_symbol_type_toc = true
-signature_crossrefs = true
+
+# Members
+inherited_members = true
 members_order = "source"
+filters = ["!^_"]
+group_by_category = true
+
+# Docstrings
+docstring_style = "google"
+docstring_options.ignore_init_summary = true
+docstring_section_style = "spacy"
+merge_init_into_class = true
+relative_crossrefs = true
+scoped_crossrefs = true
+
+# Signatures
+line_length = 120
+show_signature = true
+show_signature_annotations = true
+separate_signature = true
+signature_crossrefs = true
 
 [project.plugins.mkdocstrings.handlers.python.options.summary]
 attributes = false
