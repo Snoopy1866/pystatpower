@@ -84,14 +84,35 @@ case_group = case_group_bin + case_group_poisson
 
 def test_solve_power(case: TestCase) -> None:
 
-    assert round(solve_power(proportion=case.proportion, size=case.size, dist=case.dist), 6) == round(case.actual_power, 6)
+    assert round(
+        solve_power(
+            proportion=case.proportion,
+            size=case.size,
+            dist=case.dist,
+        ),
+        6,
+    ) == round(case.actual_power, 6)
 
 
 def test_solve_size(case: TestCase) -> None:
 
-    assert solve_size(proportion=case.proportion, power=case.power, dist=case.dist) == case.size
+    assert (
+        solve_size(
+            proportion=case.proportion,
+            power=case.power,
+            dist=case.dist,
+        )
+        == case.size
+    )
 
 
 def test_solve_proportion(case: TestCase) -> None:
 
-    assert solve_proportion(size=case.size, power=case.actual_power, dist=case.dist)
+    assert round(
+        solve_proportion(
+            size=case.size,
+            power=case.actual_power,
+            dist=case.dist,
+        ),
+        3,
+    ) == round(case.proportion, 3)
