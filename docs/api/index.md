@@ -23,6 +23,7 @@
 | [**proportion.independent.inequality**](./proportion/independent/inequality.md)         | Inequality Test for Two Independent Proportions                            |
 | [**proportion.independent.noninferiority**](./proportion/independent/noninferiority.md) | Non-Inferiority Test for Two Independent Proportions                       |
 | [**proportion.independent.superiority**](./proportion/independent/superiority.md)       | Superiority Test for Two Independent Proportions                           |
+| [**misc.observe_at_least_one_event**](./misc/observe_at_least_one_event.md)             | Proportion of observing at least one event                                 |
 
 ## Exceptions
 
