@@ -267,3 +267,8 @@ $$
     $$
     d = U - \hat{p}
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.
+    2. Ryan, Thomas. (2013). Sample Size Determination and Power. Sample Size Determination and Power. 10.1002/9781118439241.

@@ -472,3 +472,8 @@ $\hat{p}_1 - \hat{p}_2$ 的置信区间端点可通过解方程得到。
     $$
     d = U - (\hat{p}_1-\hat{p}_2)
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.
+    2. Fleiss J L, Levin B, Paik M C. Statistical methods for rates and proportions[M]. john wiley & sons, 2013.

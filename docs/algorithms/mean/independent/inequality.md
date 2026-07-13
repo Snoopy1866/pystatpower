@@ -322,3 +322,8 @@ $$
     = P\left(t' > t_{1-\alpha}\right)
     = 1 - T\left(t_{1-\alpha, v'}; v', \frac{\mu_1 - \mu_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.
+    2. Chow S C, Shao J, Wang H, et al. Sample size calculations in clinical research[M]. chapman and hall/CRC, 2017.
