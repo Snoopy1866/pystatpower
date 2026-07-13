@@ -138,3 +138,7 @@ $$
     $$
 
     因此，可以先求解标准差 $s' = 1$ 时的 $d'$，再代入上述公式，即可得到标准差 $s$。
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.

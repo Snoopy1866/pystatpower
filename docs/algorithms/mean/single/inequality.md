@@ -128,3 +128,7 @@ $$
     = P\left(t' > t_{1-\alpha, n-1}\right)
     = 1 - T\left(t_{1-\alpha, n-1}; n-1, \frac{\mu - \mu_0}{\sigma/\sqrt{n}}\right)
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.

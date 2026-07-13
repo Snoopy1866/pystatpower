@@ -103,3 +103,7 @@ $$
     $$
     d = t_{1-\alpha, v} \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.

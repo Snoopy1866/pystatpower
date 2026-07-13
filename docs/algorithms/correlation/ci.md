@@ -67,7 +67,6 @@ $$
     d = \operatorname{tanh}U - r
     $$
 
-
 ## 校正偏倚 {#bias-adj}
 
 在 [未校正偏倚][bias-not-adj] 的基础上加入校正项 $\frac{r}{2(n-1)}$，即：
@@ -120,3 +119,7 @@ $$
     $$
     d = \operatorname{tanh}U - r
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.

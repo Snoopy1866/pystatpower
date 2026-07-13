@@ -97,3 +97,7 @@ $$
                      {\ln^2\frac{(1+r)(1-r_0)}{(1-r)(1+r_0)}}
           + 3
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.

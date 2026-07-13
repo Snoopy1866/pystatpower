@@ -91,3 +91,7 @@ $$
     $$
 
 --8<-- [end:algorithm]
+
+!!! quote "参考文献"
+
+    1. Chow S C, Shao J, Wang H, et al. Sample size calculations in clinical research[M]. chapman and hall/CRC, 2017.

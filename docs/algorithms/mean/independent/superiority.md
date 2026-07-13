@@ -23,3 +23,8 @@ $\delta$ 为优效界值，两样本均值分别用 $\hat{\mu}_1$ 和 $\hat{\mu}
 以下推导过程在边界条件 $\mu_1 - \mu_2 = \delta$ 下进行。
 
 --8<-- "docs/algorithms/mean/independent/noninferiority.md:algorithm"
+
+!!! quote "参考文献"
+
+    1. Chow S C, Shao J, Wang H, et al. Sample size calculations in clinical research[M]. chapman and hall/CRC, 2017.
+    2. Julious, Steven. (2009). Sample Sizes for Clinical Trials. 10.1201/9780429503658.

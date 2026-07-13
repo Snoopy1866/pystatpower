@@ -224,3 +224,9 @@ $$
     \text{Power} = P\left(z' > z_{1-\alpha} \right)
                  = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0+c}{\sqrt{p(1-p)/n}}\right)
     $$
+
+!!! quote "参考文献"
+
+    1. JH Z. Zar JH. Dichotomous variables[J]. Biostatistical Analysis 5th ed. Upper Saddle River, NJ: Prentice-Hall, 2010: 557-558.
+    2. Chow S C, Shao J, Wang H, et al. Sample size calculations in clinical research[M]. chapman and hall/CRC, 2017.
+    3. Ryan, Thomas. (2013). Sample Size Determination and Power. Sample Size Determination and Power. 10.1002/9781118439241.
