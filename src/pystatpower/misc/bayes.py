@@ -1,7 +1,7 @@
 import numpy as np
-from scipy.stats import gamma, expon, uniform
+
 from scipy.optimize import brentq
-import warnings
+from scipy.stats import gamma
 
 
 # ============================================================
