@@ -39,7 +39,7 @@ def _min_nonneg(f: Callable[[int], float], *, bounds: tuple[int, int], strict: b
 def _power_exact(
     proportion: float,
     proportion_threshold: float,
-    size: float,
+    size: int,
     alternative: Literal["two-sided", "greater", "less"],
     alpha: float,
 ) -> float:
