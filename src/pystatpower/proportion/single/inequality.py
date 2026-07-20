@@ -3,7 +3,7 @@ from typing import Literal
 
 from scipy.optimize import brentq
 
-from ._power import _power
+from ._power import _min_nonneg, _power
 
 
 def solve_power(
@@ -13,7 +13,7 @@ def solve_power(
     size: int,
     alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
-    method: Literal["z-p0", "z-phat"] = "z-phat",
+    method: Literal["exact", "z-p0", "z-phat"] = "exact",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -40,6 +40,7 @@ def solve_power(
         method:
             The method used to construct the test statistic.
 
+            - `'exact'`: Binomial distribution.
             - `'z-p0'`: Standard normal distribution (large sample approximation), using p0 to calculate the variance.
             - `'z-phat'`: Standard normal distribution (large sample approximation), using phat to calculate the variance.
         continuity_correction:
@@ -59,7 +60,7 @@ def solve_size(
     alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"] = "z-phat",
+    method: Literal["exact", "z-p0", "z-phat"] = "exact",
     continuity_correction: bool = False,
 ) -> int:
     """
@@ -84,10 +85,11 @@ def solve_size(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
+            - `'exact'`: Binomial distribution.
             - `'z-p0'`: Standard normal distribution (large sample approximation), using p0 to calculate the variance.
             - `'z-phat'`: Standard normal distribution (large sample approximation), using phat to calculate the variance.
         continuity_correction:
@@ -100,7 +102,10 @@ def solve_size(
     def func(size: float) -> float:
         return _power(proportion, null_proportion, size, alternative, alpha, method, continuity_correction) - power
 
-    return ceil(brentq(func, 1e-12, 1e12))
+    if method == "exact":
+        return _min_nonneg(func, bounds=(1, 1e12))
+    else:
+        return ceil(brentq(func, 1e-12, 1e12))
 
 
 def solve_proportion(
@@ -110,7 +115,7 @@ def solve_proportion(
     alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"] = "z-phat",
+    method: Literal["exact", "z-p0", "z-phat"] = "exact",
     continuity_correction: bool = False,
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
@@ -136,10 +141,11 @@ def solve_proportion(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
+            - `'exact'`: Binomial distribution.
             - `'z-p0'`: Standard normal distribution (large sample approximation), using p0 to calculate the variance.
             - `'z-phat'`: Standard normal distribution (large sample approximation), using phat to calculate the variance.
         continuity_correction:
@@ -159,7 +165,7 @@ def solve_proportion(
         The required proportion under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -213,7 +219,7 @@ def solve_null_proportion(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -236,7 +242,12 @@ def solve_null_proportion(
         The required proportion under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
+
+    Info:
+        This solver does not support the exact test method, as minor fluctuations in `null_proportion` can cause
+        oscillations in power, making it impossible to obtain an accurate `null_proportion` value under the given
+        parameters.
     """
 
     if alternative == "two-sided":
