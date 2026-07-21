@@ -52,17 +52,18 @@ def solve_power(
         null_proportion:
             Proportion under the null hypothesis.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `margin`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `margin`.
         margin:
             The superiority margin.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `null_proportion`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `null_proportion`.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -77,7 +78,7 @@ def solve_power(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         method:
             The method used to construct the test statistic.
 
@@ -120,17 +121,18 @@ def solve_size(
         null_proportion:
             Proportion under the null hypothesis.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `margin`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `margin`.
         margin:
             The superiority margin.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `null_proportion`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `null_proportion`.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -143,11 +145,11 @@ def solve_size(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -193,17 +195,18 @@ def solve_proportion(
         null_proportion:
             Proportion under the null hypothesis.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `margin`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `margin`.
         margin:
             The superiority margin.
 
-            Ignored if `superiority_proportion` is specified; otherwise, required alongside `null_proportion`.
+            Ignored if `superiority_proportion` is specified; otherwise, required along with `null_proportion`.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -218,11 +221,11 @@ def solve_proportion(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -301,11 +304,12 @@ def solve_null_proportion(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `'less'`, the actual margin used internally is `-abs(margin)`.
+            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         size:
             Sample size.
         alternative:
@@ -316,11 +320,11 @@ def solve_null_proportion(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -404,11 +408,11 @@ def solve_superiority_proportion(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -488,11 +492,11 @@ def solve_margin(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
