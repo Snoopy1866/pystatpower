@@ -1,57 +1,38 @@
 # 单样本率等效性检验
 
+样本率用 $\hat{p}$ 表示，总体率用 $p$ 表示，下等效界值用 $\delta_1$ 表示，上等效界值用 $\delta_2$ 表示，$\delta_1 < 0$，$\delta_2 > 0$。
+
 $$
 \begin{align}
-H_{01} &: p - p_0 \leqslant \delta_1 \text{ 或 } H_{02}: p - p_0 \geqslant \delta_2 \\
+H_{01} &: p - p_0 \leqslant \delta_1 \;\text{或}\; H_{02}: p - p_0 \geqslant \delta_2 \\
 H_1 \  &: \delta_1 < p - p_0 < \delta_2
 \end{align}
 $$
 
-$\delta_1$ 和 $\delta_2$ 为等效性界值，$\delta_1 < 0$，$\delta_2 > 0$，样本比例用 $\hat{p}$ 表示。
-
-$$
-\operatorname{E}(\hat{p}) = p
-$$
-
 以下推导过程在边界条件 $p - p_0 = \delta_1$ 和 $p - p_0 = \delta_2$ 下进行。
 
+## _Z-Test Using S(P0)_ {#z-test-p0}
 
-## Z-test using S(P0) {#z-test-p0}
-
-在 $H_{01}$ 成立时，使用 $p_0$ 计算样本比例 $\hat{p}$ 的方差：
-
-$$
-\operatorname{Var}(\hat{p}) = \frac{(p_0+\delta_1)(1-p_0-\delta_1)}{n}
-$$
-
-构建 $z_1$ 统计量：
+在 $H_{01}$ 成立时，可构建 $z_1$ 统计量：
 
 $$
 z_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_1$ 统计量：
-
-$$
-z'_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N\left(\frac{p-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}, \frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}\right)
-$$
-
-在 $H_{02}$ 成立时，使用 $p_0$ 计算样本比例 $\hat{p}$ 的方差：
-
-$$
-\operatorname{Var}(\hat{p}) = \frac{(p_0+\delta_2)(1-p_0-\delta_2)}{n}
-$$
-
-构建 $z_2$ 统计量：
+在 $H_{02}$ 成立时，可构建 $z_2$ 统计量：
 
 $$
 z_2 = \frac{\hat{p}-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_2$ 统计量：
+在 $H_1$ 成立时，可构建 $z'_1$ 和 $z'_2$ 统计量：
 
 $$
-z'_2 = \frac{\hat{p}-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N\left(\frac{p-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}, \frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}\right)
+z'_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N\left(\frac{p-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}, \frac{p(1-p)}{(p_0+\delta_1)(1-p_0-\delta_1)}\right)
+$$
+
+$$
+z'_2 = \frac{\hat{p}-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N\left(\frac{p-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}, \frac{p(1-p)}{(p_0+\delta_2)(1-p_0-\delta_2)}\right)
 $$
 
 计算检验效能：
@@ -59,30 +40,21 @@ $$
 $$
 \begin{align}
     \text{Power}
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - 1 \\
-& = 1 - \Phi\left(\frac{z_{1-\alpha} - \frac{p-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}{\frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}\right)
-      + \Phi\left(\frac{-z_{1-\alpha} - \frac{p-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}{\frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}\right)
-      - 1 \\
+& = P(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < z_{\alpha}) \\
+& = P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - P(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < z_{\alpha}) \\
+& \approx P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - 1 \\
+& = 1 - \Phi\left(\frac{z_{1-\alpha} - \frac{p-p_0-\delta_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}{\sqrt{\frac{p(1-p)}{(p_0+\delta_1)(1-p_0-\delta_1)}}}\right)
+      + \Phi\left(\frac{z_{\alpha} - \frac{p-p_0-\delta_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}{\sqrt{\frac{p(1-p)}{(p_0+\delta_2)(1-p_0-\delta_2)}}}\right) - 1 \\
 & = \begin{aligned}[t]
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n} - (p-p_0-\delta_1)}{\sqrt{p(1-p)/n}}\right) + \\
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n} + (p-p_0-\delta_2)}{\sqrt{p(1-p)/n}}\right) - 1
-    \end{aligned} \\
-& = \begin{aligned}[t]
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)} - (p-p_0-\delta_1)\sqrt{n}}{\sqrt{p(1-p)}}\right) \\
-      & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)} + (p-p_0-\delta_2)\sqrt{n}}{\sqrt{p(1-p)}}\right)
+    & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n} - (p-p_0-\delta_1)}{\sqrt{p(1-p)/n}}\right) \\
+    & + \Phi\left(\frac{z_{\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n} - (p-p_0-\delta_2)}{\sqrt{p(1-p)/n}}\right)
     \end{aligned}
 \end{align}
 $$
 
-??? note "$\operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < -z_{1-\alpha}) = 1$ 的证明"
-    略。
+## _Z-Test Using S(P0) with Continuity Correction_ {#z-test-p0-cc}
 
-
-## Z-test using S(P0) 连续性校正 {#z-test-p0-cc}
-
-在 [Z-test using S(P0)](#z-test-p0) 的基础上加入校正项 $c_1$ 和 $c_2$：
+在 [_Z-Test Using S(P0)_](#z-test-p0) 的基础上加入校正项 $c_1$ 和 $c_2$：
 
 $$
 c_1 =
@@ -102,28 +74,26 @@ c_2 =
 \end{cases}
 $$
 
-在 $H_{01}$ 成立时，构建 $z_1$ 统计量：
+在 $H_{01}$ 成立时，可构建 $z_1$ 统计量：
 
 $$
 z_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_1$ 统计量：
-
-$$
-z'_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N\left(\frac{p-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}, \frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}\right)
-$$
-
-在 $H_{02}$ 成立时，构建 $z_2$ 统计量：
+在 $H_{02}$ 成立时，可构建 $z_2$ 统计量：
 
 $$
 z_2 = \frac{\hat{p}-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_2$ 统计量：
+在 $H_1$ 成立时，可构建 $z'_1$ 和 $z'_2$ 统计量：
 
 $$
-z'_2 = \frac{\hat{p}-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N\left(\frac{p-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}, \frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}\right)
+z'_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}} \sim N\left(\frac{p-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}, \frac{p(1-p)}{(p_0+\delta_1)(1-p_0-\delta_1)}\right)
+$$
+
+$$
+z'_2 = \frac{\hat{p}-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}} \sim N\left(\frac{p-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}, \frac{p(1-p)}{(p_0+\delta_2)(1-p_0-\delta_2)}\right)
 $$
 
 计算检验效能：
@@ -131,58 +101,37 @@ $$
 $$
 \begin{align}
     \text{Power}
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - 1 \\
-& = 1 - \Phi\left(\frac{z_{1-\alpha} - \frac{p-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}{\frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}\right)
-      + \Phi\left(\frac{-z_{1-\alpha} - \frac{p-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}{\frac{\sqrt{p(1-p)/n}}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}\right)
-      - 1 \\
+& = P(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < z_{\alpha}) \\
+& = P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - P(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < z_{\alpha}) \\
+& \approx P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - 1 \\
+& = 1 - \Phi\left(\frac{z_{1-\alpha} - \frac{p-p_0-\delta_1+c_1}{\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n}}}{\sqrt{\frac{p(1-p)}{(p_0+\delta_1)(1-p_0-\delta_1)}}}\right)
+      + \Phi\left(\frac{z_{\alpha} - \frac{p-p_0-\delta_2+c_2}{\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n}}}{\sqrt{\frac{p(1-p)}{(p_0+\delta_2)(1-p_0-\delta_2)}}}\right) - 1 \\
 & = \begin{aligned}[t]
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n} - (p-p_0-\delta_1+c_1)}{\sqrt{p(1-p)/n}}\right) + \\
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n} + (p-p_0-\delta_2+c_2)}{\sqrt{p(1-p)/n}}\right) - 1
-    \end{aligned} \\
-& = \begin{aligned}[t]
-    1 & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)} - (p-p_0-\delta_1+c_1)\sqrt{n}}{\sqrt{p(1-p)}}\right) \\
-      & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)} + (p-p_0-\delta_2+c_2)\sqrt{n}}{\sqrt{p(1-p)}}\right)
+    & - \Phi\left(\frac{z_{1-\alpha}\sqrt{(p_0+\delta_1)(1-p_0-\delta_1)/n} - (p-p_0-\delta_1+c_1)}{\sqrt{p(1-p)/n}}\right) \\
+    & + \Phi\left(\frac{z_{\alpha}\sqrt{(p_0+\delta_2)(1-p_0-\delta_2)/n} - (p-p_0-\delta_2+c_2)}{\sqrt{p(1-p)/n}}\right)
     \end{aligned}
 \end{align}
 $$
 
+## _Z-Test Using S(Phat)_ {#z-test-phat}
 
-## Z-test using S(Phat) {#z-test-phat}
-
-
-在 $H_{01}$ 成立时，使用 $p$ 计算样本比例 $\hat{p}$ 的方差：
-
-$$
-\operatorname{Var}(\hat{p}) = \frac{p(1-p)}{n}
-$$
-
-构建 $z_1$ 统计量：
+在 $H_{01}$ 成立时，可构建 $z_1$ 统计量：
 
 $$
 z_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{p(1-p)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_1$ 统计量：
-
-$$
-z'_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_1}{\sqrt{p(1-p)/n}}, 1\right)
-$$
-
-在 $H_{01}$ 成立时，使用 $p$ 计算样本比例 $\hat{p}$ 的方差：
-
-$$
-\operatorname{Var}(\hat{p}) = \frac{p(1-p)}{n}
-$$
-
-构建 $z_2$ 统计量：
+在 $H_{02}$ 成立时，可构建 $z_2$ 统计量：
 
 $$
 z_2 = \frac{\hat{p}-p_0-\delta_2}{\sqrt{p(1-p)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_2$ 统计量：
+在 $H_1$ 成立时，可构建 $z'_1$ 和 $z'_2$ 统计量：
+
+$$
+z'_1 = \frac{\hat{p}-p_0-\delta_1}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_1}{\sqrt{p(1-p)/n}}, 1\right)
+$$
 
 $$
 z'_2 = \frac{\hat{p}-p_0-\delta_2}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_2}{\sqrt{p(1-p)/n}}, 1\right)
@@ -193,22 +142,18 @@ $$
 $$
 \begin{align}
     \text{Power}
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - 1 \\
+& = P(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < z_{\alpha}) \\
+& = P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - P(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < z_{\alpha}) \\
+& \approx P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - 1 \\
 & = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1}{\sqrt{p(1-p)/n}}\right)
-      + \Phi\left(-z_{1-\alpha} - \frac{p-p_0-\delta_2}{\sqrt{p(1-p)/n}}\right)
-      - 1 \\
-& = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1}{\sqrt{p(1-p)/n}}\right) +
-    1 - \Phi\left(z_{1-\alpha} + \frac{p-p_0-\delta_2}{\sqrt{p(1-p)/n}}\right) - 1 \\
-& = 1 - \Phi\left(z_{1-\alpha} - \frac{(p-p_0-\delta_1)\sqrt{n}}{\sqrt{p(1-p)}}\right) - \Phi\left(z_{1-\alpha} + \frac{(p-p_0-\delta_2)\sqrt{n}}{\sqrt{p(1-p)}}\right)
+      + \Phi\left(z_{\alpha} - \frac{p-p_0-\delta_2}{\sqrt{p(1-p)/n}}\right) - 1 \\
+& = - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1}{\sqrt{p(1-p)/n}}\right) + \Phi\left(z_{\alpha} - \frac{p-p_0-\delta_2}{\sqrt{p(1-p)/n}}\right)
 \end{align}
 $$
 
+## _Z-Test Using S(Phat) with Continuity Correction_ {#z-test-phat-cc}
 
-## Z-test using S(Phat) 连续性校正 {#z-test-phat-cc}
-
-在 [Z-test using S(Phat)](#z-test-phat) 的基础上加入校正项 $c$：
+在 [_Z-Test Using S(Phat)_](#z-test-phat) 的基础上加入校正项 $c$：
 
 $$
 c_1 =
@@ -228,25 +173,23 @@ c_2 =
 \end{cases}
 $$
 
-在 $H_{01}$ 成立时，构建 $z_1$ 统计量：
+在 $H_{01}$ 成立时，可构建 $z_1$ 统计量：
 
 $$
 z_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_1$ 统计量：
-
-$$
-z'_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}}, 1\right)
-$$
-
-在 $H_{01}$ 成立时，构建 $z_2$ 统计量：
+在 $H_{02}$ 成立时，可构建 $z_2$ 统计量：
 
 $$
 z_2 = \frac{\hat{p}-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}} \sim N(0, 1)
 $$
 
-在 $H_1$ 成立时，构建 $z'_2$ 统计量：
+在 $H_1$ 成立时，可构建 $z'_1$ 和 $z'_2$ 统计量：
+
+$$
+z'_1 = \frac{\hat{p}-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}}, 1\right)
+$$
 
 $$
 z'_2 = \frac{\hat{p}-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}} \sim N\left(\frac{p-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}}, 1\right)
@@ -257,14 +200,15 @@ $$
 $$
 \begin{align}
     \text{Power}
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - \operatorname{Pr}(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < -z_{1-\alpha}) \\
-& = \operatorname{Pr}(z'_1 > z_{1-\alpha}) + \operatorname{Pr}(z'_2 < -z_{1-\alpha}) - 1 \\
+& = P(z'_1 > z_{1-\alpha} \ \cap \ z'_2 < z_{\alpha}) \\
+& = P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - P(z'_1 > z_{1-\alpha} \ \cup \ z'_2 < z_{\alpha}) \\
+& \approx P(z'_1 > z_{1-\alpha}) + P(z'_2 < z_{\alpha}) - 1 \\
 & = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}}\right)
-      + \Phi\left(-z_{1-\alpha} - \frac{p-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}}\right)
-      - 1 \\
-& = 1 - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}}\right) +
-    1 - \Phi\left(z_{1-\alpha} + \frac{p-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}}\right) - 1 \\
-& = 1 - \Phi\left(z_{1-\alpha} - \frac{(p-p_0-\delta_1+c_1)\sqrt{n}}{\sqrt{p(1-p)}}\right) - \Phi\left(z_{1-\alpha} + \frac{(p-p_0-\delta_2+c_2)\sqrt{n}}{\sqrt{p(1-p)}}\right)
+      + \Phi\left(z_{\alpha} - \frac{p-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}}\right) - 1 \\
+& = - \Phi\left(z_{1-\alpha} - \frac{p-p_0-\delta_1+c_1}{\sqrt{p(1-p)/n}}\right) + \Phi\left(z_{\alpha} - \frac{p-p_0-\delta_2+c_2}{\sqrt{p(1-p)/n}}\right)
 \end{align}
 $$
+
+!!! quote "参考文献"
+
+    1. Chow S C, Shao J, Wang H, et al. Sample size calculations in clinical research[M]. chapman and hall/CRC, 2017.
