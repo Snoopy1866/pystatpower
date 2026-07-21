@@ -92,8 +92,6 @@ def solve_size(
             The lower equivalence margin, must be a negative value.
         margin_upper:
             The upper equivalence margin, must be a positive value.
-        size:
-            Sample size.
         alpha:
             Significance level.
 
