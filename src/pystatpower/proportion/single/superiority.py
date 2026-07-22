@@ -40,7 +40,7 @@ def solve_power(
     size: int,
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -111,7 +111,7 @@ def solve_size(
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> int:
     """
@@ -189,7 +189,7 @@ def solve_proportion(
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -298,7 +298,7 @@ def solve_null_proportion(
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -397,7 +397,7 @@ def solve_superiority_proportion(
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -479,7 +479,7 @@ def solve_margin(
     alternative: Literal["greater", "less"],
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """

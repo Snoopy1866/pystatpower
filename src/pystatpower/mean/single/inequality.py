@@ -74,8 +74,8 @@ def solve_power(
     diff: float | None = None,
     std: float,
     size: int,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
     dist: Literal["z", "t"] = "t",
 ) -> float:
     """
@@ -135,8 +135,8 @@ def solve_size(
     null_mean: float | None = None,
     diff: float | None = None,
     std: float,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> int:
@@ -201,10 +201,10 @@ def solve_mean(
     null_mean: float,
     std: float,
     size: int,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-    power: float,
-    dist: Literal["z", "t"],
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
+    power: float = 0.8,
+    dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
@@ -278,8 +278,8 @@ def solve_null_mean(
     mean: float,
     std: float,
     size: int,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
@@ -354,10 +354,10 @@ def solve_diff(
     *,
     std: float,
     size: int,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-    power: float,
-    dist: Literal["z", "t"],
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
+    power: float = 0.8,
+    dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
     """
@@ -430,10 +430,10 @@ def solve_std(
     null_mean: float | None = None,
     diff: float | None = None,
     size: int,
-    alternative: Literal["two-sided", "greater", "less"],
-    alpha: float,
-    power: float,
-    dist: Literal["z", "t"],
+    alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    alpha: float = 0.05,
+    power: float = 0.8,
+    dist: Literal["z", "t"] = "t",
 ) -> float:
     """
     Estimate the required standard deviation.

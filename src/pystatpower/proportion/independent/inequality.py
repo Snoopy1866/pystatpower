@@ -42,7 +42,7 @@ def solve_power(
     reference_size: int,
     alternative: Literal["two-sided", "one-sided"],
     alpha: float = 0.05,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -99,7 +99,7 @@ def solve_size(
     ratio: float = 1,
     alpha: float = 0.05,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
@@ -188,7 +188,7 @@ def solve_treatment_proportion(
     alternative: Literal["two-sided", "one-sided"],
     alpha: float = 0.05,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
@@ -263,7 +263,7 @@ def solve_reference_proportion(
     alternative: Literal["two-sided", "one-sided"],
     alpha: float = 0.05,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:

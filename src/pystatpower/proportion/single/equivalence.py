@@ -33,7 +33,7 @@ def solve_power(
     margin_upper: float,
     size: int,
     alpha: float = 0.025,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -77,7 +77,7 @@ def solve_size(
     margin_upper: float,
     alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-p0", "z-phat"],
+    method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> int:
     """
