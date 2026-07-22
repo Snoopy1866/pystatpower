@@ -55,7 +55,7 @@ def solve_power(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -169,7 +169,7 @@ def solve_size(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -307,7 +307,7 @@ def solve_diff(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -421,7 +421,7 @@ def solve_treatment_mean(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -535,7 +535,7 @@ def solve_reference_mean(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -778,7 +778,7 @@ def solve_treatment_std(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
@@ -957,7 +957,7 @@ def solve_reference_std(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
             - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.

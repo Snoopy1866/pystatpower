@@ -304,7 +304,7 @@ def solve_null_proportion(
 
             Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
-                before actual calculation takes place..
+                before actual calculation takes place.
 
             - If `alternative` is `'greater'`, the internally used margin is `-abs(margin)`.
             - If `alternative` is `'less'`, the internally used margin is `abs(margin)`.
