@@ -164,6 +164,10 @@ print(treatment_proportion)
 >
 > `-` : This combination of Python and SciPy does not exist.
 
+## ✨ Contributing
+
+Contributions are welcome and highly appreciated. To get started, check out the [contributing guidelines](CONTRIBUTING.md).
+
 ## 🤝 Acknowledgments
 
 - [scipy](https://github.com/scipy/scipy)
