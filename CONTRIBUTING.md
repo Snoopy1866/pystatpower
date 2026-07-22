@@ -137,18 +137,22 @@ When using `feat` or `fix` related to a statistical model, to avoid overly long 
 | `ci`               | `correlation.inequality`                |
 | `msc`              | `mean.single.ci`                        |
 | `msi`              | `mean.single.inequality`                |
+| `mse`              | `mean.single.equivalence`               |
 | `msn`              | `mean.single.noninferiority`            |
 | `mss`              | `mean.single.superiority`               |
 | `mic`              | `mean.independent.ci`                   |
 | `mii`              | `mean.independent.inequality`           |
+| `mie`              | `mean.independent.equivalence`          |
 | `min`              | `mean.independent.noninferiority`       |
 | `mis`              | `mean.independent.superiority`          |
 | `psc`              | `proportion.single.ci`                  |
 | `psi`              | `proportion.single.inequality`          |
+| `pse`              | `proportion.single.equivalence`         |
 | `psn`              | `proportion.single.noninferiority`      |
 | `pss`              | `proportion.single.superiority`         |
 | `pic`              | `proportion.independent.ci`             |
 | `pii`              | `proportion.independent.inequality`     |
+| `pie`              | `proportion.independent.equivalence`    |
 | `pin`              | `proportion.independent.noninferiority` |
 | `pis`              | `proportion.independent.superiority`    |
 
@@ -156,15 +160,33 @@ For model names not covered in the table above, you may use the acronym of the n
 
 ## 🚀 Submitting a Pull Request (PR)
 
-1. Create a topic branch:
+1. Create and switch to a topic branch:
 
    ```bash
-   git checkout -b feature/your-feature-name
+   git switch -c feature/your-feature-name
    ```
 
-2. Commit your changes: Write clear and concise commit messages following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-3. Write tests: Add test cases for any new functionality or bug fixes.
-4. Run local checks: Ensure `uv run ruff format --check`, `uv run ruff check` and `uv run pytest` pass cleanly.
-5. Push and submit: Push your branch to GitHub and open a PR targeting the `main` branch.
+2. Implement your changes and write unit tests for new functionality or bug fixes.
+
+3. Run local code quality and test checks to ensure everything passes cleanly:
+
+   ```bash
+   uv run ruff format
+   uv run ruff check
+   uv run pytest
+   ```
+
+4. Stage and commit your changes following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification:
+
+   ```bash
+   git add .
+   git commit -m "feat(scope): short description of your changes"
+   ```
+
+5. Push your branch to GitHub and open a PR targeting the `main` branch.
+
+   ```bash
+   git push -u origin feature/your-feature-name
+   ```
 
 Thank you for contributing to PyStatPower! 🚀
