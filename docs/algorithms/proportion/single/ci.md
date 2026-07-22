@@ -2,7 +2,7 @@
 
 样本率用 $\hat{p}$ 表示，总体率用 $p$ 表示。
 
-## _Simple Asymptotic_ {#normal-approx}
+## _Simple Asymptotic_ {#simple-asymptotic}
 
 样本率 $\hat{p}$ 在大样本时，其分布近似服从正态分布：
 
@@ -61,9 +61,9 @@ $$
     d = \min(U, 1) - \hat{p}
     $$
 
-## _Simple Asymptotic with Continuity Correction_ {#normal-approx-cc}
+## _Simple Asymptotic with Continuity Correction_ {#simple-asymptotic-cc}
 
-在 [渐进正态法](#normal-approx) 的基础上添加校正项 $1/2n$：
+在 [_Simple Asymptotic_](#simple-asymptotic) 的基础上添加校正项 $1/2n$：
 
 $$
 z = \frac{\hat{p} - p \pm \frac{1}{2n}}{\sqrt{\hat{p}(1-\hat{p})/n}} \sim N(0, 1)
