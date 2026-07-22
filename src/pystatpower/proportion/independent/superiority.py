@@ -42,12 +42,14 @@ def solve_power(
 
             Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
-            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
+                - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+                - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -126,12 +128,14 @@ def solve_size(
 
             Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
-            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
+                - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+                - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -241,12 +245,14 @@ def solve_treatment_proportion(
 
             Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+            
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
-            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
+                - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+                - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         superiority_proportion:
             The superiority proportion.
 
@@ -361,12 +367,14 @@ def solve_reference_proportion(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+            
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
-            - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
+                - If `alternative` is `'greater'`, the internally used margin is `abs(margin)`.
+                - If `alternative` is `'less'`, the internally used margin is `-abs(margin)`.
         treatment_size:
             Sample size in the treatment group.
         reference_size:

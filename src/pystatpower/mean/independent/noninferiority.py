@@ -540,12 +540,14 @@ def solve_reference_mean(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -783,12 +785,14 @@ def solve_treatment_std(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
         reference_std:
             Standard deviation in the reference group.
 
@@ -962,12 +966,14 @@ def solve_reference_std(
         margin:
             The non-inferiority margin.
 
-            Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+            !!! tip
+
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
 
-            - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `greater`, the actual margin used internally is `-abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
 
