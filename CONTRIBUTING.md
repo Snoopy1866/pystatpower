@@ -2,8 +2,6 @@
 
 Thank you for your interest in contributing to **PyStatPower**! We welcome contributions of all kinds, including bug fixes, new statistical models, feature enhancements, documentation updates, and issue reports.
 
----
-
 ## 📜 Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
@@ -19,13 +17,9 @@ Thank you for your interest in contributing to **PyStatPower**! We welcome contr
     - [Scope Naming Rules for Statistical Models](#scope-naming-rules-for-statistical-models)
 - [Submitting a Pull Request (PR)](#submitting-a-pull-request-pr)
 
----
-
 ## 📜 Code of Conduct
 
 By participating in this project, you agree to maintain a respectful, inclusive, and collaborative environment for everyone. Please treat fellow contributors with empathy and respect.
-
----
 
 ## 💡 How Can I Contribute?
 
@@ -47,8 +41,6 @@ Check our roadmap in the README table for models marked as `⏳ WIP`. If you wan
 
 - Ensure mathematical formulations and algorithms are reference-backed (e.g., PASS, SAS, or standard statistical literature). Please include references in code docstrings or PR descriptions.
 - Implement methods for solving sample size (`solve_size`), power (`solve_power`), and, where applicable and feasible, effect size along with other relevant parameters.
-
----
 
 ## 🛠️ Development Setup
 
