@@ -17,25 +17,25 @@
 [![pytest](https://img.shields.io/badge/logo-pytest-blue?logo=pytest&labelColor=5c5c5c&label=%20)](https://github.com/pytest-dev/pytest)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/37b044b24840497c9153ac4be7b841d9)](https://app.codacy.com/gh/Snoopy1866/pystatpower/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-PyStatPower is a Python package for statistical power analysis that allows users to estimate sample size, test power, and effect size.
+PyStatPower 是一个统计学功效分析的 Python 软件包，可用于样本量、检验效能和效应量大小的估计。
 
-[简体中文](README-zh.md) | English
+简体中文 | [English](README.md)
 
-> 🗺️ **Feature List & Roadmap**: To see currently supported statistical models and planned features, check out [roadmap](docs/roadmap.md).
+> 🗺️ **功能列表 & 路线图**：如需查看当前支持的统计模型及计划中的功能，请参阅[路线图](docs/roadmap.md)。
 
-## 📦 Installation
+## 📦 安装
 
-**Prerequisites**: Python 3.10+
+前置需求：Python 3.10+
 
 ```bash
 pip install pystatpower
 ```
 
-## 🚀 Usage Examples
+## 🚀 使用示例
 
-### Sample Size Estimation
+### 估算样本量
 
-- Single Proportion Confidence Interval
+- 单样本率置信区间
 
   ```python
   from pystatpower import proportion
@@ -51,7 +51,7 @@ pip install pystatpower
   # output: 158
   ```
 
-- Single Proportion Inequality Test
+- 单样本率差异性检验（单组目标值法）
 
   ```python
   from pystatpower import proportion
@@ -68,7 +68,7 @@ pip install pystatpower
   # output: 42
   ```
 
-- Two Independent Proportions Non-Inferiority Test
+- 两独立样本率非劣效检验
 
   ```python
   from pystatpower import proportion
@@ -86,7 +86,7 @@ pip install pystatpower
   # output: (48, 48)
   ```
 
-- Two Independent Means Superiority Test
+- 两独立样本均值优效性检验
 
   ```python
   from pystatpower import mean
@@ -105,7 +105,7 @@ pip install pystatpower
   # output: (214, 107)
   ```
 
-### Statistical Power Calculation
+### 计算检验效能
 
 ```python
 from pystatpower import proportion
@@ -123,7 +123,7 @@ print(power)
 # output: 0.800282915718918
 ```
 
-### Effect Size Solving
+### 求解效应量
 
 ```python
 from pystatpower import proportion
@@ -141,30 +141,30 @@ print(treatment_proportion)
 # output: 0.9499637015276098
 ```
 
-## 🧪 Compatibility Matrix
+## 🧪 兼容性测试结果
 
 [![Test Status](https://img.shields.io/github/actions/workflow/status/Snoopy1866/pystatpower/pytest_full.yml?branch=main&label=test)](https://github.com/Snoopy1866/pystatpower/actions/workflows/pytest_full.yml?query=branch:main)
 
-|            | 🐍 3.10 | 🐍 3.11 | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
-| ---------- | ------- | ------- | ------- | ------- | ------- |
-| SciPy 1.7  | ✅      | -       | -       | -       | -       |
-| SciPy 1.8  | ✅      | -       | -       | -       | -       |
-| SciPy 1.9  | ✅      | -       | -       | -       | -       |
-| SciPy 1.10 | ✅      | ✅      | -       | -       | -       |
-| SciPy 1.11 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.12 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.13 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.14 | ✅      | ✅      | ✅      | -       | -       |
-| SciPy 1.15 | ✅      | ✅      | ✅      | ✅      | -       |
-| SciPy 1.16 | -       | ✅      | ✅      | ✅      | ✅      |
-| SciPy 1.17 | -       | ✅      | ✅      | ✅      | ✅      |
-| SciPy 1.18 | -       | -       | ✅      | ✅      | ✅      |
+|            | 🐍 3.10<sup>*</sup> | 🐍 3.11<sup>*</sup> | 🐍 3.12 | 🐍 3.13 | 🐍 3.14 |
+| ---------- | ------------------- | ------------------- | ------- | ------- | ------- |
+| SciPy 1.7  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.8  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.9  | ✅                  | -                   | -       | -       | -       |
+| SciPy 1.10 | ✅                  | ✅                  | -       | -       | -       |
+| SciPy 1.11 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.12 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.13 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.14 | ✅                  | ✅                  | ✅      | -       | -       |
+| SciPy 1.15 | ✅                  | ✅                  | ✅      | ✅      | -       |
+| SciPy 1.16 | -                   | ✅                  | ✅      | ✅      | ✅      |
+| SciPy 1.17 | -                   | ✅                  | ✅      | ✅      | ✅      |
+| SciPy 1.18 | -                   | -                   | ✅      | ✅      | ✅      |
 
 > [!NOTE]
 >
-> `-` : This combination of Python and SciPy does not exist.
+> `-` : Python 与 SciPy 版本组合不存在。
 
-## 🤝 Acknowledgments
+## 🤝 致谢
 
 - [scipy](https://github.com/scipy/scipy)
 - [pingouin](https://github.com/raphaelvallat/pingouin)

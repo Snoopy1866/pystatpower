@@ -1,7 +1,7 @@
 [project]
 nav = [
-    { "首页" = "index.md" },
-    { "算法" = [
+    { "Homepage" = "index.md" },
+    { "Algorithm" = [
         { "均值模型" = [
             { "单样本均值置信区间" = "algorithms/mean/single/ci.md" },
             { "单样本均值差异性检验" = "algorithms/mean/single/inequality.md" },
@@ -29,6 +29,7 @@ nav = [
             { "至少观察到一例事件的检出能力" = "algorithms/misc/observe_at_least_one_event.md" }
         ] }
     ] },
+    { "Roadmap" = "roadmap.md" },
     { "API Reference" = [
         { "overview" = "api/index.md" },
         { "correlation.ci" = "api/correlation/ci.md" },
@@ -46,7 +47,7 @@ nav = [
         { "proportion.single.noninferiority" = "api/proportion/single/noninferiority.md" },
         { "proportion.single.superiority" = "api/proportion/single/superiority.md" },
         { "proportion.single.equivalence" = "api/proportion/single/equivalence.md" },
-        { "proportion.independent.ci" = "api/proportion/single/ci.md" },
+        { "proportion.independent.ci" = "api/proportion/independent/ci.md" },
         { "proportion.independent.inequality" = "api/proportion/independent/inequality.md" },
         { "proportion.independent.noninferiority" = "api/proportion/independent/noninferiority.md" },
         { "proportion.independent.superiority" = "api/proportion/independent/superiority.md" },
