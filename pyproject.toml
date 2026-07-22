@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pystatpower"
-version = "0.0.6"
+version = "0.0.7"
 description = "A Power Analysis Toolkit for Python"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
