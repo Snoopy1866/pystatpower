@@ -2,7 +2,9 @@
 
 Welcome to the **PyStatPower** project roadmap! This document outlines the project's core vision, currently supported functionality, and planned future features.
 
-> 💡 **Note**: This roadmap is a living document and will evolve as new features are implemented and community feedback is integrated.
+!!! info
+
+    This roadmap is a living document and will evolve as new features are implemented and community feedback is integrated.
 
 ## 🎯 Project Vision
 
