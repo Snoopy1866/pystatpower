@@ -67,12 +67,6 @@ We use [`uv`](https://github.com/astral-sh/uv) for fast Python package managemen
    uv sync --all-groups
    ```
 
-3. **Install pre-commit hooks (Optional but recommended):**
-
-   ```bash
-   uv run pre-commit install
-   ```
-
 ## 🔄 Development Workflow
 
 ### Code Style & Formatting
