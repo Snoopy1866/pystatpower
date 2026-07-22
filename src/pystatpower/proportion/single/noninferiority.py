@@ -207,7 +207,7 @@ def solve_proportion(
             Ignored if `noninferiority_proportion` is specified; otherwise, required along with `margin`.
 
             !!! tip
-            
+
                 Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
@@ -309,7 +309,7 @@ def solve_null_proportion(
             The non-inferiority margin.
 
             !!! tip
-            
+
                 Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.

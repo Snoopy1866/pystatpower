@@ -246,7 +246,7 @@ def solve_treatment_proportion(
             Required if `superiority_proportion` is omitted. If `superiority_proportion` is specified, this parameter is ignored.
 
             !!! tip
-            
+
                 Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
@@ -368,7 +368,7 @@ def solve_reference_proportion(
             The superiority margin.
 
             !!! tip
-            
+
                 Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
                 parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
                 before actual calculation takes place.
