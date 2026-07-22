@@ -8,7 +8,7 @@ Welcome to the **PyStatPower** project roadmap! This document outlines the proje
 
 ## 🎯 Project Vision
 
-`PyStatPower` aims to provide a lightweight, accurate, and easy-to-use Python toolkit for statistical power analysis, sample size estimation, power calculation, and effect size solving.
+`PyStatPower` aims to provide a streamlined, accurate, and easy-to-use Python toolkit for statistical power analysis, sample size estimation, power calculation, and effect size solving.
 
 ## 📚 Current Feature Status
 
