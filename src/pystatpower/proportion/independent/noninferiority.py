@@ -24,8 +24,8 @@ def solve_power(
     treatment_size: int,
     reference_size: int,
     alternative: Literal["greater", "less"],
-    alpha: float = 0.05,
-    method: Literal["z-pooled", "z-unpooled"],
+    alpha: float = 0.025,
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -94,9 +94,9 @@ def solve_size(
     margin: float,
     alternative: Literal["greater", "less"],
     ratio: float = 1,
-    alpha: float = 0.05,
+    alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
     """
@@ -198,9 +198,9 @@ def solve_treatment_proportion(
     treatment_size: int,
     reference_size: int,
     alternative: Literal["greater", "less"],
-    alpha: float = 0.05,
+    alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -308,9 +308,9 @@ def solve_reference_proportion(
     treatment_size: int,
     reference_size: int,
     alternative: Literal["greater", "less"],
-    alpha: float = 0.05,
+    alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
@@ -418,9 +418,9 @@ def solve_margin(
     treatment_size: int,
     reference_size: int,
     alternative: Literal["greater", "less"],
-    alpha: float = 0.05,
+    alpha: float = 0.025,
     power: float = 0.8,
-    method: Literal["z-pooled", "z-unpooled"],
+    method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
     """
