@@ -98,7 +98,7 @@ def solve_size(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
 
     Returns:
         The required sample size.
@@ -141,7 +141,7 @@ def solve_correlation(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         direction:
             The direction for the correlation coefficient under the alternative hypothesis relative to the correlation coefficient under the null hypothesis.
 
@@ -157,7 +157,7 @@ def solve_correlation(
         The required correlation coefficient under the alternative hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -209,7 +209,7 @@ def solve_null_correlation(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         direction:
             The direction for the correlation coefficient under the null hypothesis relative to the correlation coefficient under the alternative hypothesis.
 
@@ -225,7 +225,7 @@ def solve_null_correlation(
         The required correlation coefficient under the null hypothesis.
 
     Raises:
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":

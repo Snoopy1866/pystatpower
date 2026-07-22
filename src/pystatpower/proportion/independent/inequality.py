@@ -125,7 +125,7 @@ def solve_size(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -215,7 +215,7 @@ def solve_treatment_proportion(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 
@@ -290,7 +290,7 @@ def solve_reference_proportion(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         method:
             The method used to construct the test statistic.
 

@@ -41,11 +41,11 @@ def solve_power(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -53,11 +53,14 @@ def solve_power(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -81,7 +84,7 @@ def solve_power(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         dist:
             The distribution used for the test.
 
@@ -103,7 +106,7 @@ def solve_power(
         The statistical power of the test.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
@@ -154,11 +157,11 @@ def solve_size(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -166,11 +169,14 @@ def solve_size(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -192,11 +198,11 @@ def solve_size(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -217,7 +223,7 @@ def solve_size(
         The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
@@ -303,11 +309,14 @@ def solve_diff(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -331,11 +340,11 @@ def solve_diff(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -416,11 +425,14 @@ def solve_treatment_mean(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -444,11 +456,11 @@ def solve_treatment_mean(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -529,11 +541,14 @@ def solve_reference_mean(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
         reference_std:
@@ -557,11 +572,11 @@ def solve_reference_mean(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -641,7 +656,7 @@ def solve_margin(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
@@ -673,11 +688,11 @@ def solve_margin(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -702,7 +717,7 @@ def solve_margin(
             - If `alternative` is `less`, the returned value is in the range $(\\hat{\\mu}_1 - \\hat{\\mu}_2, 0]$
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
@@ -759,11 +774,11 @@ def solve_treatment_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -771,11 +786,14 @@ def solve_treatment_std(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         reference_std:
             Standard deviation in the reference group.
 
@@ -795,11 +813,11 @@ def solve_treatment_std(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -821,7 +839,7 @@ def solve_treatment_std(
         The required standard deviation in the treatment group.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
 
@@ -937,11 +955,11 @@ def solve_reference_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -949,11 +967,14 @@ def solve_reference_std(
         margin:
             The superiority margin.
 
-            Regardless of whether `alternative` is specified as `greater` or `less`, you can alwanys specify this parameter to be positive or negative as you prefer.
-            Internally, the value of `margin` will be converted before actual calculation.
+            !!! tip
 
-            - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
-            - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
+                Regardless of whether `alternative` is specified as `'greater'` or `'less'`, you can always specify this
+                parameter as either positive or negative, as you prefer. Internally, the value of `margin` is converted
+                before actual calculation takes place.
+
+                - If `alternative` is `greater`, the actual margin used internally is `abs(margin)`.
+                - If `alternative` is `less`, the actual margin used internally is `-abs(margin)`.
         treatment_std:
             Standard deviation in the treatment group.
 
@@ -969,11 +990,11 @@ def solve_reference_std(
         alpha:
             Significance level.
 
-            The superiority test is a one-sided test, and 0.025 is a commonly used significance level.
+            The superiority test is a one-sided test, with a significance level of 0.025 being commonly used.
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -995,7 +1016,7 @@ def solve_reference_std(
         The required standard deviation in the reference group.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
 

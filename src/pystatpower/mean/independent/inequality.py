@@ -61,11 +61,11 @@ def solve_power(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -116,7 +116,7 @@ def solve_power(
         The calculated statistical power of the test.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
@@ -162,11 +162,11 @@ def solve_size(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -217,7 +217,7 @@ def solve_size(
         The required sample sizes in the treatment and reference groups, respectively.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
@@ -326,7 +326,7 @@ def solve_diff(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -359,7 +359,7 @@ def solve_diff(
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -448,7 +448,7 @@ def solve_treatment_mean(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -481,7 +481,7 @@ def solve_treatment_mean(
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -570,7 +570,7 @@ def solve_reference_mean(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -603,7 +603,7 @@ def solve_reference_mean(
     Raises:
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
-        ValueError: If `alternative` is `'two-sided'` but `direction` is omitted.
+        ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
 
     if alternative == "two-sided":
@@ -663,11 +663,11 @@ def solve_treatment_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -697,7 +697,7 @@ def solve_treatment_std(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -718,7 +718,7 @@ def solve_treatment_std(
         The required standard deviation in the treatment group.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
 
@@ -827,11 +827,11 @@ def solve_reference_std(
         treatment_mean:
             Mean in the treatment group.
 
-            If `diff` is omitted, this parameter is required alongside `reference_mean`.
+            If `diff` is omitted, this parameter is required along with `reference_mean`.
         reference_mean:
             Mean in the reference group.
 
-            If `diff` is omitted, this parameter is required alongside `treatment_mean`.
+            If `diff` is omitted, this parameter is required along with `treatment_mean`.
         diff:
             Mean difference between treatment and reference group.
 
@@ -861,7 +861,7 @@ def solve_reference_std(
         power:
             Expected statistical power.
 
-            0.8 is a commonly used statistical power.
+            0.8 is a commonly used value for statistical power.
         dist:
             The distribution used for the test.
 
@@ -882,7 +882,7 @@ def solve_reference_std(
         The required standard deviation in the reference group.
 
     Raises:
-        ValueError: If all `diff`, `treatment_mean` and `reference_mean` are omitted.
+        ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
 
