@@ -166,7 +166,7 @@ print(treatment_proportion)
 
 ## ✨ Contributing
 
-Contributions are welcome and highly appreciated. To get started, check out the [contributing guidelines](CONTRIBUTING.md).
+Issues and pull requests are welcome and highly appreciated. To get started, check out the [contributing guidelines](CONTRIBUTING.md).
 
 ## 🤝 Acknowledgments
 
