@@ -26,7 +26,7 @@ jobs:
           config.model: "deepseek/deepseek-v4-flash"
           # config.fallback_models: '["deepseek/deepseek-v4-flash"]'
           deepseek.key: ${{ secrets.DEEPSEEK_KEY }}
-          config.custom_model_max_tokens: 6400
+          config.custom_model_max_tokens: 64000
           config.language: "zh-CN"
 
           # Github Action configuration
