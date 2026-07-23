@@ -43,6 +43,7 @@ jobs:
           # /review configuration
           pr_reviewer.extra_instructions: "Focus on Python best practices, type hints, and docstrings."
           pr_reviewer.enable_review_labels_effort: "false"
+          pr_reviewer.enable_review_labels_security: "false"
 
           # /improve configuration
           pr_code_suggestions.commitable_code_suggestions: "true"
