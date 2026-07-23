@@ -5,4 +5,3 @@ from dataclasses import dataclass
 class BaseTestCase:
     __test__ = False
 
-    ...

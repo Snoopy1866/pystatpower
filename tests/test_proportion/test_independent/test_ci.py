@@ -4,9 +4,11 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.proportion.independent.ci import solve_distance, solve_size, solve_treatment_proportion, solve_reference_proportion
 from pystatpower.exceptions import SolutionNotFoundError
-
+from pystatpower.proportion.independent.ci import solve_distance
+from pystatpower.proportion.independent.ci import solve_reference_proportion
+from pystatpower.proportion.independent.ci import solve_size
+from pystatpower.proportion.independent.ci import solve_treatment_proportion
 from tests.models import BaseTestCase
 
 
@@ -797,7 +799,14 @@ case_group_miettinen_nurminen = (
 )
 
 
-case_group = case_group_chisq + case_group_chisq_cc + case_group_wilson + case_group_wilson_cc + case_group_farrington_manning + case_group_miettinen_nurminen
+case_group = (
+    case_group_chisq
+    + case_group_chisq_cc
+    + case_group_wilson
+    + case_group_wilson_cc
+    + case_group_farrington_manning
+    + case_group_miettinen_nurminen
+)
 
 
 def test_size_solve_distance(case: TestCase) -> None:

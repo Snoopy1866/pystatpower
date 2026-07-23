@@ -4,8 +4,8 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.proportion.single.equivalence import solve_power, solve_size
-
+from pystatpower.proportion.single.equivalence import solve_power
+from pystatpower.proportion.single.equivalence import solve_size
 from tests.models import BaseTestCase
 
 
@@ -25,7 +25,18 @@ class TestCase(BaseTestCase):
 
 case_group_z_p0 = [
     # proportion = 0.71 to 0.89 by 0.01, null_proportion = 0.80, margin_lower = -0.10, margin_upper = 0.10, alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = False
-    TestCase(proportion=proportion, null_proportion=0.80, margin_lower=-0.10, margin_upper=0.10, size=size, alpha=0.025, power=0.80, method="z-p0", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        proportion=proportion,
+        null_proportion=0.80,
+        margin_lower=-0.10,
+        margin_upper=0.10,
+        size=size,
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.71, 16386, 0.800008645395320),
         (0.72, 4071, 0.800020228237472),
@@ -51,7 +62,18 @@ case_group_z_p0 = [
 
 case_group_z_p0_cc = [
     # proportion = 0.71 to 0.89 by 0.01, null_proportion = 0.80, margin_lower = -0.10, margin_upper = 0.10, alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = True
-    TestCase(proportion=proportion, null_proportion=0.80, margin_lower=-0.10, margin_upper=0.10, size=size, alpha=0.025, power=0.80, method="z-p0", continuity_correction=True, actual_power=actual_power)
+    TestCase(
+        proportion=proportion,
+        null_proportion=0.80,
+        margin_lower=-0.10,
+        margin_upper=0.10,
+        size=size,
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=True,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.71, 16486, 0.800012299780784),
         (0.72, 4121, 0.800035047971845),
@@ -77,7 +99,18 @@ case_group_z_p0_cc = [
 
 case_group_z_phat = [
     # proportion = 0.71 to 0.89 by 0.01, null_proportion = 0.80, margin_lower = -0.10, margin_upper = 0.10, alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = False
-    TestCase(proportion=proportion, null_proportion=0.80, margin_lower=-0.10, margin_upper=0.10, size=size, alpha=0.025, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        proportion=proportion,
+        null_proportion=0.80,
+        margin_lower=-0.10,
+        margin_upper=0.10,
+        size=size,
+        alpha=0.025,
+        power=0.80,
+        method="z-phat",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.71, 16161, 0.800003800757050),
         (0.72, 3956, 0.800016318697791),
@@ -103,7 +136,18 @@ case_group_z_phat = [
 
 case_group_z_phat_cc = [
     # proportion = 0.71 to 0.89 by 0.01, null_proportion = 0.80, margin_lower = -0.10, margin_upper = 0.10, alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = True
-    TestCase(proportion=proportion, null_proportion=0.80, margin_lower=-0.10, margin_upper=0.10, size=size, alpha=0.025, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
+    TestCase(
+        proportion=proportion,
+        null_proportion=0.80,
+        margin_lower=-0.10,
+        margin_upper=0.10,
+        size=size,
+        alpha=0.025,
+        power=0.80,
+        method="z-phat",
+        continuity_correction=True,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.71, 16261, 0.800007531462899),
         (0.72, 4006, 0.800031784019027),

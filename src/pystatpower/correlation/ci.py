@@ -1,4 +1,7 @@
-from math import atanh, ceil, sqrt, tanh
+from math import atanh
+from math import ceil
+from math import sqrt
+from math import tanh
 from typing import Literal
 
 from scipy.optimize import brentq
@@ -24,10 +27,8 @@ def _distance_not_adjusted(
             distance = tanh(U) - tanh(L)
         case "lower":
             L = zr - norm.ppf(1 - alpha) / se_recip
-            # U = 1
             distance = correlation - tanh(L)
         case "upper":
-            # L = -1
             U = zr + norm.ppf(1 - alpha) / se_recip
             distance = tanh(U) - correlation
 
@@ -54,10 +55,8 @@ def _distance_adjusted(
             distance = tanh(U) - tanh(L)
         case "lower":
             L = zr - bias - norm.ppf(1 - alpha) / se_recip
-            # U = 1
             distance = correlation - tanh(L)
         case "upper":
-            # L = -1
             U = zr - bias + norm.ppf(1 - alpha) / se_recip
             distance = tanh(U) - correlation
 

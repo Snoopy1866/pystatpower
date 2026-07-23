@@ -6,9 +6,16 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.independent._verify import _verify_mean_and_get_diff, _verify_std_and_get_std
-from pystatpower.mean.independent.noninferiority import solve_power, solve_size, solve_treatment_mean, solve_reference_mean, solve_diff, solve_margin, solve_treatment_std, solve_reference_std
-
+from pystatpower.mean.independent._verify import _verify_mean_and_get_diff
+from pystatpower.mean.independent._verify import _verify_std_and_get_std
+from pystatpower.mean.independent.noninferiority import solve_diff
+from pystatpower.mean.independent.noninferiority import solve_margin
+from pystatpower.mean.independent.noninferiority import solve_power
+from pystatpower.mean.independent.noninferiority import solve_reference_mean
+from pystatpower.mean.independent.noninferiority import solve_reference_std
+from pystatpower.mean.independent.noninferiority import solve_size
+from pystatpower.mean.independent.noninferiority import solve_treatment_mean
+from pystatpower.mean.independent.noninferiority import solve_treatment_std
 from tests.models import BaseTestCase
 
 
@@ -354,7 +361,13 @@ case_group_t_unequal_var_satterthwaite = [
 ]
 
 
-case_group = case_group_z_equal_var + case_group_z_unequal_var + case_group_t_equal_var + case_group_t_unequal_var_welch + case_group_t_unequal_var_satterthwaite
+case_group = (
+    case_group_z_equal_var
+    + case_group_z_unequal_var
+    + case_group_t_equal_var
+    + case_group_t_unequal_var_welch
+    + case_group_t_unequal_var_satterthwaite
+)
 
 
 def test_verify_mean_and_get_diff() -> None:
@@ -459,32 +472,108 @@ def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) ->
     if request.config.is_macos and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py310:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     assert (
         round(
@@ -514,32 +603,108 @@ def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) ->
     if request.config.is_macos and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py310:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     assert (
         round(
@@ -569,32 +734,108 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
     if request.config.is_macos and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py310:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     assert (
         round(
@@ -623,32 +864,108 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
     if request.config.is_macos and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py310:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     if request.config.is_windows and request.config.is_py311:
         if case in [
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007, dist="t", equal_var=False, approx_t_method="satterthwaite"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007,
+                dist="t",
+                equal_var=False,
+                approx_t_method="satterthwaite",
             ),
             TestCase(
-                treatment_mean=10, reference_mean=10, diff=0, margin=-15, treatment_std=40, reference_std=40, treatment_size=169, reference_size=85, alternative="greater", alpha=0.025, power=0.8, actual_power=0.8007237508501055, dist="t", equal_var=False, approx_t_method="welch"
+                treatment_mean=10,
+                reference_mean=10,
+                diff=0,
+                margin=-15,
+                treatment_std=40,
+                reference_std=40,
+                treatment_size=169,
+                reference_size=85,
+                alternative="greater",
+                alpha=0.025,
+                power=0.8,
+                actual_power=0.8007237508501055,
+                dist="t",
+                equal_var=False,
+                approx_t_method="welch",
             ),
         ]:
-            request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+            request.node.add_marker(
+                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+            )
 
     assert (
         round(
@@ -721,7 +1038,9 @@ def test_solve_treatment_std(case: TestCase) -> None:
 
 def test_solve_treatment_std_error() -> None:
     with pytest.raises(ValueError):
-        solve_treatment_std(diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False)
+        solve_treatment_std(
+            diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False
+        )
 
 
 def test_solve_reference_std(case: TestCase) -> None:
@@ -771,4 +1090,6 @@ def test_solve_reference_std(case: TestCase) -> None:
 
 def test_solve_reference_std_error() -> None:
     with pytest.raises(ValueError):
-        solve_reference_std(diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False)
+        solve_reference_std(
+            diff=0, margin=10, treatment_size=20, reference_size=20, alternative="greater", equal_var=False
+        )

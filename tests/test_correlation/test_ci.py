@@ -3,8 +3,8 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.correlation.ci import solve_distance, solve_size
-
+from pystatpower.correlation.ci import solve_distance
+from pystatpower.correlation.ci import solve_size
 from tests.models import BaseTestCase
 
 
@@ -22,7 +22,15 @@ class TestCase(BaseTestCase):
 case_group_not_bias_adj = (
     [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "two-sided", distance = 0.10, bias_adj = False
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="two-sided", bias_adj=False, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="two-sided",
+            bias_adj=False,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 1530, 0.099979331717472),
             (0.10, 1507, 0.099984091436488),
@@ -47,7 +55,15 @@ case_group_not_bias_adj = (
     ]
     + [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "upper", distance = 0.10, bias_adj = False
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="upper", bias_adj=False, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="upper",
+            bias_adj=False,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 268, 0.099945111385950),
             (0.10, 262, 0.099816657006419),
@@ -72,7 +88,15 @@ case_group_not_bias_adj = (
     ]
     + [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "lower", distance = 0.10, bias_adj = False
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="lower", bias_adj=False, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="lower",
+            bias_adj=False,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 274, 0.099834696441772),
             (0.10, 272, 0.099953147908188),
@@ -101,7 +125,15 @@ case_group_not_bias_adj = (
 case_group_bias_adj = (
     [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "two-sided", distance = 0.10, bias_adj = True
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="two-sided", bias_adj=True, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="two-sided",
+            bias_adj=True,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 1530, 0.099979332),
             (0.10, 1507, 0.099984091),
@@ -126,7 +158,15 @@ case_group_bias_adj = (
     ]
     + [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "upper", distance = 0.10, bias_adj = True
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="upper", bias_adj=True, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="upper",
+            bias_adj=True,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 268, 0.099945111),
             (0.10, 262, 0.099816657),
@@ -151,7 +191,15 @@ case_group_bias_adj = (
     ]
     + [
         # correlation = 0.05 to 0.95 by 0.05, conf_level = 0.95, alternative = "lower", distance = 0.10, bias_adj = True
-        TestCase(correlation=correlation, size=size, conf_level=0.95, interval_type="lower", bias_adj=True, distance=0.10, actual_distance=actual_distance)
+        TestCase(
+            correlation=correlation,
+            size=size,
+            conf_level=0.95,
+            interval_type="lower",
+            bias_adj=True,
+            distance=0.10,
+            actual_distance=actual_distance,
+        )
         for correlation, size, actual_distance in [
             (0.05, 274, 0.099834696),
             (0.10, 272, 0.099953148),
@@ -183,7 +231,9 @@ case_group = case_group_not_bias_adj + case_group_bias_adj
 def test_solve_distance(case: TestCase) -> None:
 
     if case.bias_adj:
-        pytest.skip(reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases.")
+        pytest.skip(
+            reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases."
+        )
 
     assert round(
         solve_distance(
@@ -200,7 +250,9 @@ def test_solve_distance(case: TestCase) -> None:
 def test_solve_size(case: TestCase) -> None:
 
     if case.bias_adj:
-        pytest.skip(reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases.")
+        pytest.skip(
+            reason="Both SAS and PASS do not support the bias adjustment, skipping the 'bias_adj = True' test cases."
+        )
 
     assert (
         solve_size(

@@ -1,3 +1,5 @@
+# Copyright 2024-2026 <wtwang>
+#
 # Validation Software: PASS 15
 # Module: Confidence Intervals for the Difference Between Two Means
 
@@ -6,6 +8,8 @@ from typing import Literal
 
 import pytest
 
+from pystatpower.mean.independent.ci import solve_precision
+from pystatpower.mean.independent.ci import solve_size
 from tests.models import BaseTestCase
 
 
@@ -100,33 +104,33 @@ case_group = case_group_equal_var + case_group_unequal_var
 def test_solve_distance(case: TestCase) -> None:
     pytest.skip(reason="There may be issues with the PASS calculation results, so the test is temporarily skipped")
 
-    # assert (
-    #     round(
-    #         solve_precision(
-    #             treatment_std=case.treatment_std,
-    #             reference_std=case.reference_std,
-    #             treatment_size=case.treatment_size,
-    #             reference_size=case.reference_size,
-    #             conf_level=case.conf_level,
-    #             interval_type=case.interval_type,
-    #             equal_var=case.equal_var,
-    #         ),
-    #         9,
-    #     )
-    #     == case.actual_precision
-    # )
+    assert (
+        round(
+            solve_precision(
+                treatment_std=case.treatment_std,
+                reference_std=case.reference_std,
+                treatment_size=case.treatment_size,
+                reference_size=case.reference_size,
+                conf_level=case.conf_level,
+                interval_type=case.interval_type,
+                equal_var=case.equal_var,
+            ),
+            9,
+        )
+        == case.actual_precision
+    )
 
 
 def test_solve_size(case: TestCase) -> None:
     pytest.skip(reason="There may be issues with the PASS calculation results, so the test is temporarily skipped")
 
-    # ratio = case.treatment_size / case.reference_size
-    # assert solve_size(
-    #     treatment_std=case.treatment_std,
-    #     reference_std=case.reference_std,
-    #     precision=case.precision,
-    #     ratio=ratio,
-    #     conf_level=case.conf_level,
-    #     interval_type=case.interval_type,
-    #     equal_var=case.equal_var,
-    # ) == (case.treatment_size, case.reference_size)
+    ratio = case.treatment_size / case.reference_size
+    assert solve_size(
+        treatment_std=case.treatment_std,
+        reference_std=case.reference_std,
+        precision=case.precision,
+        ratio=ratio,
+        conf_level=case.conf_level,
+        interval_type=case.interval_type,
+        equal_var=case.equal_var,
+    ) == (case.treatment_size, case.reference_size)

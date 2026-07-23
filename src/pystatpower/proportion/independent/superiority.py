@@ -84,7 +84,8 @@ def solve_power(
 
     if superiority_proportion is None:
         if margin is None:
-            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
+            msg = "at least one of 'margin' or 'superiority_proportion' is required."
+            raise ValueError(msg)
 
         margin = _margin(margin, alternative)
         superiority_proportion = reference_proportion + margin
@@ -172,7 +173,8 @@ def solve_size(
 
     if superiority_proportion is None:
         if margin is None:
-            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
+            msg = "at least one of 'margin' or 'superiority_proportion' is required."
+            raise ValueError(msg)
 
         margin = _margin(margin, alternative)
         superiority_proportion = reference_proportion + margin
@@ -318,7 +320,8 @@ def solve_treatment_proportion(
 
     if superiority_proportion is None:
         if margin is None:
-            raise ValueError("at least one of 'margin' or 'superiority_proportion' is required.")
+            msg = "at least one of 'margin' or 'superiority_proportion' is required."
+            raise ValueError(msg)
 
         margin = _margin(margin, alternative)
         superiority_proportion = reference_proportion + margin

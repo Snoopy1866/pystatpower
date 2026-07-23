@@ -1,4 +1,6 @@
-from ..proportion import independent, paried, single
+from ..proportion import independent
+from ..proportion import paried
+from ..proportion import single
 
 __all__ = [
     "independent",

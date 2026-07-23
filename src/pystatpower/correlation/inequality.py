@@ -1,4 +1,6 @@
-from math import atanh, ceil, sqrt
+from math import atanh
+from math import ceil
+from math import sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
@@ -162,7 +164,8 @@ def solve_correlation(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -230,7 +233,8 @@ def solve_null_correlation(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"

@@ -7,11 +7,18 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.single.noninferiority import _margin, _ParamsValidator
-from pystatpower.mean.single.noninferiority import solve_power, solve_size, solve_mean, solve_null_mean, solve_margin, solve_diff, solve_noninferiority_mean, solve_offset, solve_std
-
+from pystatpower.mean.single.noninferiority import _margin
+from pystatpower.mean.single.noninferiority import _ParamsValidator
+from pystatpower.mean.single.noninferiority import solve_diff
+from pystatpower.mean.single.noninferiority import solve_margin
+from pystatpower.mean.single.noninferiority import solve_mean
+from pystatpower.mean.single.noninferiority import solve_noninferiority_mean
+from pystatpower.mean.single.noninferiority import solve_null_mean
+from pystatpower.mean.single.noninferiority import solve_offset
+from pystatpower.mean.single.noninferiority import solve_power
+from pystatpower.mean.single.noninferiority import solve_size
+from pystatpower.mean.single.noninferiority import solve_std
 from tests.models import BaseTestCase
-
 
 pytestmark = pytest.mark.filterwarnings("ignore")
 
@@ -56,36 +63,66 @@ def test_validate() -> None:
 
     # validate parameter combinations against offset
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=None, margin=None, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=None, null_mean=None, margin=None, diff=None, noninferiority_mean=None, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=12, null_mean=None, margin=None, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=12, null_mean=None, margin=None, diff=None, noninferiority_mean=None, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=10, margin=None, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=None, null_mean=10, margin=None, diff=None, noninferiority_mean=None, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=None, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=None, null_mean=None, margin=-5, diff=None, noninferiority_mean=None, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=None, margin=None, diff=2, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=None, null_mean=None, margin=None, diff=2, noninferiority_mean=None, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=None, margin=None, diff=None, noninferiority_mean=5, offset=None).validate(target="offset")
+        _ParamsValidator(
+            mean=None, null_mean=None, margin=None, diff=None, noninferiority_mean=5, offset=None
+        ).validate(target="offset")
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=12, null_mean=10, margin=None, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(mean=12, null_mean=10, margin=None, diff=None, noninferiority_mean=None, offset=None).validate(
+            target="offset"
+        )
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=None, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(mean=None, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(
+            target="offset"
+        )
     with pytest.raises(ValueError):
-        _ParamsValidator(mean=12, null_mean=None, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+        _ParamsValidator(mean=12, null_mean=None, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(
+            target="offset"
+        )
 
     with pytest.warns(UserWarning):
-        _ParamsValidator(mean=None, null_mean=None, margin=-5, diff=2, noninferiority_mean=None, offset=7).validate(target="offset")
+        _ParamsValidator(mean=None, null_mean=None, margin=-5, diff=2, noninferiority_mean=None, offset=7).validate(
+            target="offset"
+        )
     with pytest.warns(UserWarning):
-        _ParamsValidator(mean=12, null_mean=None, margin=None, diff=None, noninferiority_mean=5, offset=7).validate(target="offset")
+        _ParamsValidator(mean=12, null_mean=None, margin=None, diff=None, noninferiority_mean=5, offset=7).validate(
+            target="offset"
+        )
     with pytest.warns(UserWarning):
-        _ParamsValidator(mean=12, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=7).validate(target="offset")
+        _ParamsValidator(mean=12, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=7).validate(
+            target="offset"
+        )
     with pytest.warns(UserWarning):
-        _ParamsValidator(mean=None, null_mean=None, margin=-5, diff=2, noninferiority_mean=5, offset=None).validate(target="offset")
+        _ParamsValidator(mean=None, null_mean=None, margin=-5, diff=2, noninferiority_mean=5, offset=None).validate(
+            target="offset"
+        )
     with pytest.warns(UserWarning):
-        _ParamsValidator(mean=12, null_mean=10, margin=None, diff=None, noninferiority_mean=5, offset=None).validate(target="offset")
+        _ParamsValidator(mean=12, null_mean=10, margin=None, diff=None, noninferiority_mean=5, offset=None).validate(
+            target="offset"
+        )
 
-    _ParamsValidator(mean=12, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(target="offset")
+    _ParamsValidator(mean=12, null_mean=10, margin=-5, diff=None, noninferiority_mean=None, offset=None).validate(
+        target="offset"
+    )
 
 
 @dataclass(kw_only=True)
@@ -107,7 +144,15 @@ class TestCase(BaseTestCase):
     def __post_init__(self) -> None:
         self.margin = _margin(self.margin, self.alternative)
 
-        pv = _ParamsValidator(mean=self.mean, null_mean=self.null_mean, margin=self.margin, diff=self.diff, noninferiority_mean=self.noninferiority_mean, offset=self.offset, alternative=self.alternative)
+        pv = _ParamsValidator(
+            mean=self.mean,
+            null_mean=self.null_mean,
+            margin=self.margin,
+            diff=self.diff,
+            noninferiority_mean=self.noninferiority_mean,
+            offset=self.offset,
+            alternative=self.alternative,
+        )
         pv.validate("diff", warning=False)
         pv.validate("noninferiority_mean", warning=False)
         pv.validate("offset", warning=False)
@@ -119,7 +164,18 @@ class TestCase(BaseTestCase):
 
 case_group_z = [
     # mean = 20,  null_mean = 18, margin = -18 to -3 by 0.5, std = 40, alpha = 0.025, power = 0.80, alternative = "greater", dist = "z"
-    TestCase(mean=20, null_mean=18, margin=margin, std=40, size=size, alternative="greater", alpha=0.025, dist="z", power=0.80, actual_power=actual_power)
+    TestCase(
+        mean=20,
+        null_mean=18,
+        margin=margin,
+        std=40,
+        size=size,
+        alternative="greater",
+        alpha=0.025,
+        dist="z",
+        power=0.80,
+        actual_power=actual_power,
+    )
     for margin, size, actual_power in [
         (-18.0, 32, 0.807429578798747),
         (-17.5, 34, 0.811280559074981),
@@ -155,7 +211,18 @@ case_group_z = [
     ]
 ] + [
     # mean = 20,  null_mean = 22, margin = 3 to 18 by 0.5, std = 40, alpha = 0.025, power = 0.80, alternative = "less", dist = "z"
-    TestCase(mean=20, null_mean=22, margin=margin, std=40, size=size, alternative="less", alpha=0.025, dist="z", power=0.80, actual_power=actual_power)
+    TestCase(
+        mean=20,
+        null_mean=22,
+        margin=margin,
+        std=40,
+        size=size,
+        alternative="less",
+        alpha=0.025,
+        dist="z",
+        power=0.80,
+        actual_power=actual_power,
+    )
     for margin, size, actual_power in [
         (3.0, 503, 0.800523806680340),
         (3.5, 416, 0.800804060056704),
@@ -194,7 +261,18 @@ case_group_z = [
 
 case_group_t = [
     # mean = 20,  null_mean = 18, margin = -18 to -3 by 0.5, std = 40, alpha = 0.025, power = 0.80, alternative = "greater", dist = "t"
-    TestCase(mean=20, null_mean=18, margin=margin, std=40, size=size, alternative="greater", alpha=0.025, dist="t", power=0.80, actual_power=actual_power)
+    TestCase(
+        mean=20,
+        null_mean=18,
+        margin=margin,
+        std=40,
+        size=size,
+        alternative="greater",
+        alpha=0.025,
+        dist="t",
+        power=0.80,
+        actual_power=actual_power,
+    )
     for margin, size, actual_power in [
         (-18.0, 34, 0.807776685543458),
         (-17.5, 35, 0.800053415357762),
@@ -230,7 +308,18 @@ case_group_t = [
     ]
 ] + [
     # mean = 20,  null_mean = 22, margin = 3 to 18 by 0.5, std = 40, alpha = 0.025, power = 0.80, alternative = "less", dist = "t"
-    TestCase(mean=20, null_mean=22, margin=margin, std=40, size=size, alternative="less", alpha=0.025, dist="t", power=0.80, actual_power=actual_power)
+    TestCase(
+        mean=20,
+        null_mean=22,
+        margin=margin,
+        std=40,
+        size=size,
+        alternative="less",
+        alpha=0.025,
+        dist="t",
+        power=0.80,
+        actual_power=actual_power,
+    )
     for margin, size, actual_power in [
         (3.0, 505, 0.800582923601105),
         (3.5, 418, 0.800874842237122),
@@ -292,7 +381,9 @@ def test_solve_power(case: TestCase) -> None:
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-18.0, -12.0, -8.0, -5.0, -3.0] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         solve_size(
@@ -315,7 +406,9 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert round(
         solve_mean(
@@ -336,7 +429,9 @@ def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert round(
         solve_null_mean(
@@ -356,7 +451,9 @@ def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None
 def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-12.5, -5.0] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(
@@ -380,7 +477,9 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-9.5, -9.0, -3.5] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(
@@ -402,7 +501,9 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 def test_solve_noninferiority_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-12.0, -11.5] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert round(
         solve_noninferiority_mean(
@@ -421,10 +522,18 @@ def test_solve_noninferiority_mean(case: TestCase, request: pytest.FixtureReques
 def test_solve_offset(case: TestCase, request: pytest.FixtureRequest) -> None:
 
     if case.margin in [-15.5, -7.5] and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if case.margin in [3.0, 3.5, 4.0, 4.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.0, 11.5, 13.0, 14.0, 14.5, 15.0, 16.0, 18.0] and case.alternative == "less" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (
+        case.margin in [3.0, 3.5, 4.0, 4.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.0, 11.5, 13.0, 14.0, 14.5, 15.0, 16.0, 18.0]
+        and case.alternative == "less"
+        and case.dist == "t"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert round(
         solve_offset(

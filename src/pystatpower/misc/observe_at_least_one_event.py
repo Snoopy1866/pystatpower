@@ -1,4 +1,5 @@
-from math import ceil, exp
+from math import ceil
+from math import exp
 from typing import Literal
 
 from scipy.optimize import brentq

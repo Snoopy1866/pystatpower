@@ -62,11 +62,45 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]
-extend-select = ["I"]
+extend-select = [
+    "ERA",    # eradicate
+    "YTT",    # flake8-2020
+    "B",      # flake8-bugbear
+    "S",      # flake8-bandit
+    "A",      # flake8-builtins
+    "BLE",    # flake8-blind-except
+    "COM818", # flake8-commas - Trailing comma on bare tuple prohibited
+    "C4",     # flake8-comprehensions
+    "EM",     # flake8-errmsg
+    "T10",    # flake8-debugger
+    "ISC",    # flake8-implicit-str-concat
+    "ICN",    # flake8-import-conventions
+    "INP",    # flake8-no-pep420
+    "PIE",    # flake8-pie
+    # "SIM"     # flake8-simplify
+    "TC",   # flake8-type-checking
+    "PTH",  # flake8-use-pathlib
+    "I",    # isort
+    "N",    # pep8-naming
+    "PERF", # Perflint
+    # "D"     # pydocstyle
+    "UP" # pyupgrade
+]
+ignore = ["N806"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "D"]
 
 [tool.ruff.lint.isort]
-known-local-folder = ["src"]
+force-single-line = true
+known-first-party = ["src"]
 lines-between-types = 1
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [dependency-groups]
 dev = [

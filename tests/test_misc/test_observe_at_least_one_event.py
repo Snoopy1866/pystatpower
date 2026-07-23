@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.misc.observe_at_least_one_event import solve_power, solve_size, solve_proportion
-
+from pystatpower.misc.observe_at_least_one_event import solve_power
+from pystatpower.misc.observe_at_least_one_event import solve_proportion
+from pystatpower.misc.observe_at_least_one_event import solve_size
 from tests.models import BaseTestCase
 
 

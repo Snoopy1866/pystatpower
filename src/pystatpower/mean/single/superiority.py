@@ -60,9 +60,8 @@ class _ParamsValidator:
             params_used = {"mean", "null_mean"}
 
         if self.diff is None:
-            raise ValueError(
-                "The mean difference cannot be calculated using the specified combination of parameters. Please provide the 'diff' parameter directly, or use both 'mean' and 'null_mean'."
-            )
+            msg = "The mean difference cannot be calculated using the specified combination of parameters. Please provide the 'diff' parameter directly, or use both 'mean' and 'null_mean'."
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used
@@ -77,9 +76,8 @@ class _ParamsValidator:
             params_used = {"null_mean", "margin"}
 
         if self.superiority_mean is None:
-            raise ValueError(
-                "The superiority mean cannot be calculated using the specified combination of parameters. Please provide the 'superiority_mean' parameter directly, or use both 'null_mean' and 'margin'."
-            )
+            msg = "The superiority mean cannot be calculated using the specified combination of parameters. Please provide the 'superiority_mean' parameter directly, or use both 'null_mean' and 'margin'."
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used
@@ -100,12 +98,13 @@ class _ParamsValidator:
             params_used = {"mean", "null_mean", "margin"}
 
         if self.offset is None:
-            raise ValueError(
+            msg = (
                 "The offset cannot be calculated using the specified combination of parameters. Please provide the 'offset' parameter directly, or use one of the following parameter combinations:\n"
                 "1. 'mean' and 'superiority_mean'\n"
                 "2. 'diff' and 'margin'\n"
                 "3. 'mean', 'null_mean' and 'margin'"
             )
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used

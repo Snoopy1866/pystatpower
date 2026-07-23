@@ -1,7 +1,9 @@
 from math import sqrt
 from typing import Literal
 
-from scipy.stats import nct, norm, t
+from scipy.stats import nct
+from scipy.stats import norm
+from scipy.stats import t
 
 
 def _power_z_equal_var(

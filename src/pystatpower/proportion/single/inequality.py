@@ -3,7 +3,8 @@ from typing import Literal
 
 from scipy.optimize import brentq
 
-from ._power import _min_nonneg, _power
+from ._power import _min_nonneg
+from ._power import _power
 
 
 def solve_power(
@@ -170,7 +171,8 @@ def solve_proportion(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -252,7 +254,8 @@ def solve_null_proportion(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"

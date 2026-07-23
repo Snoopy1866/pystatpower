@@ -7,7 +7,7 @@ Verifies that the package can be imported and basic functionality works.
 import sys
 
 
-def main():
+def main() -> None:
     # 1. 尝试导入包的主模块
     try:
         import pystatpower
@@ -32,7 +32,7 @@ def main():
             power=0.8,
         )
         assert result is not None
-    except Exception as e:
+    except AssertionError as e:
         print(f"Basic functionality test failed: {e}", file=sys.stderr)
         sys.exit(1)
 

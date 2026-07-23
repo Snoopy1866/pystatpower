@@ -1,4 +1,5 @@
-from math import ceil, sqrt
+from math import ceil
+from math import sqrt
 from typing import Literal
 
 from scipy.optimize import brentq

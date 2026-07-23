@@ -1,8 +1,10 @@
-from math import ceil, sqrt
+from math import ceil
+from math import sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
-from scipy.stats import norm, t
+from scipy.stats import norm
+from scipy.stats import t
 
 
 def _precision_z(

@@ -3,12 +3,15 @@ from typing import Literal
 
 import pytest
 
-
-from pystatpower.correlation.inequality import solve_correlation, solve_null_correlation, solve_power, solve_size
-
+from pystatpower.correlation.inequality import solve_correlation
+from pystatpower.correlation.inequality import solve_null_correlation
+from pystatpower.correlation.inequality import solve_power
+from pystatpower.correlation.inequality import solve_size
 from tests.models import BaseTestCase
 
-pytestmark = pytest.mark.skip(reason="The methods used by PASS and SAS are quite complex and cannot be used directly as test cases, so this module is skipped for now")
+pytestmark = pytest.mark.skip(
+    reason="The methods used by PASS and SAS are quite complex and cannot be used directly as test cases, so this module is skipped for now"
+)
 
 
 @dataclass(kw_only=True)
@@ -27,7 +30,15 @@ class TestCase(BaseTestCase):
 case_group = (
     [
         # null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="two-sided"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="two-sided", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
+        TestCase(
+            null_correlation=null_correlation,
+            correlation=correlation,
+            alternative="two-sided",
+            size=size,
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+        )
         for null_correlation, correlation, size, actual_power in [
             (0.70, 0.80, 149, 0.800033602915902),
             (0.70, 0.81, 119, 0.801172107171729),
@@ -39,7 +50,15 @@ case_group = (
     ]
     + [
         # null_correlation = 0.70, correlation = 0.80 to 0.85 by 0.01, alternative="greater"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="greater", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
+        TestCase(
+            null_correlation=null_correlation,
+            correlation=correlation,
+            alternative="greater",
+            size=size,
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+        )
         for null_correlation, correlation, size, actual_power in [
             (0.70, 0.80, 118, 0.800918493524417),
             (0.70, 0.81, 94, 0.800758189202634),
@@ -51,7 +70,15 @@ case_group = (
     ]
     + [
         # null_correlation = 0.70, correlation = 0.50 to 0.55 by 0.01, alternative="less"
-        TestCase(null_correlation=null_correlation, correlation=correlation, alternative="less", size=size, alpha=0.05, power=0.80, actual_power=actual_power)
+        TestCase(
+            null_correlation=null_correlation,
+            correlation=correlation,
+            alternative="less",
+            size=size,
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+        )
         for null_correlation, correlation, size, actual_power in [
             (0.70, 0.50, 64, 0.804873804392821),
             (0.70, 0.51, 69, 0.801841619643146),

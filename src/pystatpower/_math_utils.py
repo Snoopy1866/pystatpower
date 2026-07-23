@@ -1,6 +1,7 @@
 """A module containing mathematical tool functions"""
 
-from math import inf, sqrt
+from math import inf
+from math import sqrt
 from typing import TypeAlias
 
 Domain: TypeAlias = tuple[float, float]

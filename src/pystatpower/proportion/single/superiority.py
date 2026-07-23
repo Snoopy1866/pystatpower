@@ -23,9 +23,8 @@ def _verify_and_get_sup_proportion(
 
     if superiority_proportion is None:
         if null_proportion is None or margin is None:
-            raise ValueError(
-                "When 'superiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
-            )
+            msg = "When 'superiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
+            raise ValueError(msg)
         superiority_proportion = null_proportion + margin
 
     return superiority_proportion

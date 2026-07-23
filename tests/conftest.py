@@ -1,9 +1,8 @@
 import sys
 
-import pytest
-
 from dataclasses import asdict
 
+import pytest
 
 from .models import BaseTestCase
 
@@ -26,7 +25,7 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
             metafunc.parametrize("case", case_group, ids=generate_id)
 
 
-def pytest_configure(config: pytest.Config):
+def pytest_configure(config: pytest.Config) -> None:
     """Mount the current OS information and Python version information to config"""
 
     config.is_linux = sys.platform == "linux"

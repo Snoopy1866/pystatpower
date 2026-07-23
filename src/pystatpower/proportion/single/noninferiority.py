@@ -23,9 +23,8 @@ def _verify_and_get_noninf_proportion(
 
     if noninferiority_proportion is None:
         if null_proportion is None or margin is None:
-            raise ValueError(
-                "When 'noninferiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
-            )
+            msg = "When 'noninferiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
+            raise ValueError(msg)
         noninferiority_proportion = null_proportion + margin
 
     return noninferiority_proportion

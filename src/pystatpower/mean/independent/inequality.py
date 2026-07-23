@@ -4,7 +4,8 @@ from typing import Literal
 from scipy.optimize import brentq
 
 from ._power import _power as _raw_power
-from ._verify import _verify_mean_and_get_diff, _verify_std_and_get_std
+from ._verify import _verify_mean_and_get_diff
+from ._verify import _verify_std_and_get_std
 
 
 def _power(
@@ -364,7 +365,8 @@ def solve_diff(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -486,7 +488,8 @@ def solve_treatment_mean(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -608,7 +611,8 @@ def solve_reference_mean(
 
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"
@@ -725,7 +729,8 @@ def solve_treatment_std(
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and reference_std is None:
-        raise ValueError("'reference_std' is required when 'equal_var' = False.")
+        msg = "'reference_std' is required when 'equal_var' = False."
+        raise ValueError(msg)
 
     if equal_var:
         match dist:
@@ -889,7 +894,8 @@ def solve_reference_std(
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and treatment_std is None:
-        raise ValueError("'treatment_std' is required when 'equal_var' = False.")
+        msg = "'treatment_std' is required when 'equal_var' = False."
+        raise ValueError(msg)
 
     if equal_var:
         match dist:

@@ -2,7 +2,8 @@ from collections.abc import Callable
 from math import sqrt
 from typing import Literal
 
-from scipy.stats import binom, norm
+from scipy.stats import binom
+from scipy.stats import norm
 
 
 def _min_nonneg(f: Callable[[int], float], *, bounds: tuple[int, int], strict: bool = False) -> int:

@@ -1,8 +1,12 @@
-from math import ceil, sqrt
+from math import ceil
+from math import sqrt
 from typing import Literal
 
-from scipy.optimize import OptimizeResult, brentq, minimize_scalar
-from scipy.stats import f, norm
+from scipy.optimize import OptimizeResult
+from scipy.optimize import brentq
+from scipy.optimize import minimize_scalar
+from scipy.stats import f
+from scipy.stats import norm
 
 from ..._math_utils import _domain_square_root_of_quad
 
@@ -28,11 +32,9 @@ def _distance_wald(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = proportion - z * se
-            # U = 1
             distance = proportion - max(L, 0)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = 0
             U = proportion + z * se
             distance = min(U, 1) - proportion
 
@@ -61,11 +63,9 @@ def _distance_wald_cc(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = proportion - z * se - c
-            # U = 1
             distance = proportion - max(L, 0)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = 0
             U = proportion + z * se + c
             distance = min(U, 1) - proportion
 
@@ -99,7 +99,6 @@ def _distance_wilson(
             c = z**2 + 4 * size * proportion * (1 - proportion)
 
             L = (b - z * sqrt(c)) / a
-            # U = 1
             distance = proportion - L
         case "upper":
             z = norm.ppf(1 - alpha)
@@ -107,7 +106,6 @@ def _distance_wilson(
             b = 2 * size * proportion + z**2
             c = z**2 + 4 * size * proportion * (1 - proportion)
 
-            # L = 0
             U = (b + z * sqrt(c)) / a
             distance = U - proportion
 
@@ -143,7 +141,6 @@ def _distance_wilson_cc(
             c2 = 4 * proportion - 2
 
             L = ((b - 1) - z * sqrt(c1 + c2)) / a
-            # U = 1
             distance = proportion - L
         case "upper":
             z = norm.ppf(1 - alpha)
@@ -152,7 +149,6 @@ def _distance_wilson_cc(
             c1 = z**2 - 1 / size + 4 * size * proportion * (1 - proportion)
             c2 = 4 * proportion - 2
 
-            # L = 0
             U = ((b + 1) + z * sqrt(c1 - c2)) / a
             distance = U - proportion
 
@@ -180,10 +176,8 @@ def _distance_clopper_pearson(
             distance = U - L
         case "lower":
             L = 1 / (1 + (n * q + 1) / (n * p * f.ppf(alpha, 2 * n * p, 2 * (n * q + 1))))
-            # U = 1
             distance = proportion - L
         case "upper":
-            # L = 0
             U = 1 / (1 + n * q / ((n * p + 1) * f.ppf(1 - alpha, 2 * (n * p + 1), 2 * n * q)))
             distance = U - proportion
 
