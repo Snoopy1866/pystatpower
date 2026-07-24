@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 2025
 # Module: Superiority by a Margin for the Difference Between Two Proportions
 
@@ -6,8 +9,12 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.proportion.independent.superiority import solve_power, solve_size, solve_treatment_proportion, solve_reference_proportion, solve_superiority_proportion, solve_margin
-
+from pystatpower.proportion.independent.superiority import solve_margin
+from pystatpower.proportion.independent.superiority import solve_power
+from pystatpower.proportion.independent.superiority import solve_reference_proportion
+from pystatpower.proportion.independent.superiority import solve_size
+from pystatpower.proportion.independent.superiority import solve_superiority_proportion
+from pystatpower.proportion.independent.superiority import solve_treatment_proportion
 from tests.models import BaseTestCase
 
 

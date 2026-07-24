@@ -1,15 +1,32 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the superiority test of two independent means.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- mean difference
+- mean for the treatment group
+- mean for the reference group
+- superiority margin
+- standard deviation for the treatment group
+- standard deviation for the reference group
+"""
+
 from math import ceil
 from typing import Literal
 
 from scipy.optimize import brentq
 
 from ._power import _power
-from ._verify import _verify_mean_and_get_diff, _verify_std_and_get_std
+from ._verify import _verify_mean_and_get_diff
+from ._verify import _verify_std_and_get_std
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to standard form based on alternative hypothesis"""
-
+    """Convert margin to standard form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return abs(margin)
@@ -34,8 +51,7 @@ def solve_power(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         treatment_mean:
@@ -110,7 +126,6 @@ def solve_power(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
@@ -150,8 +165,7 @@ def solve_size(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         treatment_mean:
@@ -227,7 +241,6 @@ def solve_size(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
@@ -302,8 +315,7 @@ def solve_diff(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required mean difference.
+    r"""Estimate the required mean difference.
 
     Args:
         margin:
@@ -369,7 +381,6 @@ def solve_diff(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
     margin = _margin(margin, alternative)
@@ -416,8 +427,7 @@ def solve_treatment_mean(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required mean in the treatment group.
+    r"""Estimate the required mean in the treatment group.
 
     Args:
         reference_mean:
@@ -485,7 +495,6 @@ def solve_treatment_mean(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
     margin = _margin(margin, alternative)
@@ -532,8 +541,7 @@ def solve_reference_mean(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required mean in the reference group.
+    r"""Estimate the required mean in the reference group.
 
     Args:
         treatment_mean:
@@ -601,7 +609,6 @@ def solve_reference_mean(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
     margin = _margin(margin, alternative)
@@ -649,8 +656,7 @@ def solve_margin(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required superiority margin.
+    r"""Estimate the required superiority margin.
 
     Args:
         treatment_mean:
@@ -721,7 +727,6 @@ def solve_margin(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` is omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
@@ -767,8 +772,7 @@ def solve_treatment_std(
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required standard deviation in the treatment group.
+    r"""Estimate the required standard deviation in the treatment group.
 
     Args:
         treatment_mean:
@@ -842,11 +846,11 @@ def solve_treatment_std(
         ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and reference_std is None:
-        raise ValueError("'reference_std' is required when 'equal_var' = False.")
+        msg = "'reference_std' is required when 'equal_var' = False."
+        raise ValueError(msg)
 
     margin = _margin(margin, alternative)
 
@@ -948,8 +952,7 @@ def solve_reference_std(
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required standard deviation in the reference group.
+    r"""Estimate the required standard deviation in the reference group.
 
     Args:
         treatment_mean:
@@ -982,6 +985,10 @@ def solve_reference_std(
             - If `dist` is `z` and `equal_var` is `False`, this parameter is required.
             - If `dist` is `t` and `equal_var` is `True`, this parameter is optional. If specified, this value is used to calculate the standard error of mean difference.
             - If `dist` is `t` and `equal_var` is `False`, this parameter is required.
+        treatment_size:
+                    Sample size in the treatment group.
+        reference_size:
+            Sample size in the reference group.
         alternative:
             Type of the alternative hypothesis.
 
@@ -1019,11 +1026,11 @@ def solve_reference_std(
         ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and treatment_std is None:
-        raise ValueError("'treatment_std' is required when 'equal_var' = False.")
+        msg = "'treatment_std' is required when 'equal_var' = False."
+        raise ValueError(msg)
 
     margin = _margin(margin, alternative)
 

@@ -1,3 +1,16 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the inequality test of two independent proportions.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion for the treatment group
+- proportion for the reference group
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -17,7 +30,6 @@ def _power(
     continuity_correction: bool,
 ) -> float:
     """Calculate the statistical power."""
-
     if alternative == "one-sided":
         alternative = "greater" if treatment_proportion > reference_proportion else "less"
 
@@ -45,8 +57,7 @@ def solve_power(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    """Calculate the statistical power.
 
     Args:
         treatment_proportion:
@@ -78,7 +89,6 @@ def solve_power(
     Returns:
         The statistical power of the test.
     """
-
     return _power(
         treatment_proportion,
         reference_proportion,
@@ -102,8 +112,7 @@ def solve_size(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         treatment_proportion:
@@ -137,7 +146,6 @@ def solve_size(
     Returns:
         The required sample sizes in the treatment and reference groups, respectively.
     """
-
     if ratio >= 1:
 
         def func(reference_size: float) -> float:
@@ -192,8 +200,7 @@ def solve_treatment_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the treatment group.
+    """Estimate the required proportion in the treatment group.
 
     Args:
         reference_proportion:
@@ -267,8 +274,7 @@ def solve_reference_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the reference group.
+    """Estimate the required proportion in the reference group.
 
     Args:
         treatment_proportion:

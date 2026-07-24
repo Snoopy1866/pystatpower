@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from math import sqrt
 from typing import Literal
 
@@ -14,7 +17,6 @@ def _power_pooled(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using z-test with pooled variance."""
-
     effect = treatment_proportion - proportion_threshold
 
     treatment_var = treatment_proportion * (1 - treatment_proportion) / treatment_size
@@ -51,7 +53,6 @@ def _power_pooled_cc(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using z-test with pooled variance and continuity correction."""
-
     effect = treatment_proportion - proportion_threshold
 
     c = 1 / 2 * (1 / treatment_size + 1 / reference_size)
@@ -90,7 +91,6 @@ def _power_unpooled(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using z-tes with unpooled variance."""
-
     effect = treatment_proportion - proportion_threshold
 
     treatment_var = treatment_proportion * (1 - treatment_proportion) / treatment_size
@@ -118,7 +118,6 @@ def _power_unpooled_cc(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using unpooled variance and continuity correction."""
-
     effect = treatment_proportion - proportion_threshold
 
     c = 1 / 2 * (1 / treatment_size + 1 / reference_size)
@@ -154,7 +153,6 @@ def _power(
     continuity_correction: bool,
 ) -> float:
     """Calculate the statistical power."""
-
     match method:
         case "z-pooled":
             if continuity_correction:

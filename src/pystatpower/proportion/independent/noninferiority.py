@@ -1,3 +1,17 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the non-inferiority test of two independent proportions.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion for the treatment group
+- proportion for the reference group
+- non-inferiority margin
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -7,8 +21,7 @@ from ._power import _power
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to regular form based on alternative hypothesis"""
-
+    """Convert margin to regular form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return -abs(margin)
@@ -28,8 +41,7 @@ def solve_power(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         treatment_proportion:
@@ -71,7 +83,6 @@ def solve_power(
     Returns:
         The statistical power of the test.
     """
-
     margin = _margin(margin, alternative)
 
     return _power(
@@ -99,8 +110,7 @@ def solve_size(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         treatment_proportion:
@@ -144,7 +154,6 @@ def solve_size(
     Returns:
         The required sample sizes in the treatment and reference groups, respectively.
     """
-
     margin = _margin(margin, alternative)
 
     if ratio >= 1:
@@ -203,8 +212,7 @@ def solve_treatment_proportion(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion in the treatment group.
+    r"""Estimate the required proportion in the treatment group.
 
     Args:
         reference_proportion:
@@ -275,7 +283,6 @@ def solve_treatment_proportion(
         \\Rightarrow 0 < p_1 < \\operatorname{min}(p_2 + \\delta, 1)
         $$
     """
-
     margin = _margin(margin, alternative)
 
     def func(treatment_proportion: float) -> float:
@@ -313,8 +320,7 @@ def solve_reference_proportion(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion in the reference group.
+    r"""Estimate the required proportion in the reference group.
 
     Args:
         treatment_proportion:
@@ -385,7 +391,6 @@ def solve_reference_proportion(
         \\Rightarrow \\operatorname{max}(p_1 - \\delta, 0) < p_2 < 1
         $$
     """
-
     margin = _margin(margin, alternative)
 
     def func(reference_proportion: float) -> float:
@@ -423,8 +428,7 @@ def solve_margin(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required non-inferiority margin.
+    r"""Estimate the required non-inferiority margin.
 
     Args:
         treatment_proportion:

@@ -1,11 +1,15 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 15
 # Module: Confidence Intervals for One Mean
 
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.mean.single.ci import solve_precision, solve_size, solve_std
-
+from pystatpower.mean.single.ci import solve_precision
+from pystatpower.mean.single.ci import solve_size
+from pystatpower.mean.single.ci import solve_std
 from tests.models import BaseTestCase
 
 
@@ -22,7 +26,15 @@ class TestCase(BaseTestCase):
 
 case_group_z = [
     # precision = 1 to 10 by 1, std = 10, conf_level = 0.95, interval_type = "one-sided", dist = "z"
-    TestCase(precision=precision, actual_precision=actual_precision, std=10, size=size, conf_level=0.95, interval_type="one-sided", dist="z")
+    TestCase(
+        precision=precision,
+        actual_precision=actual_precision,
+        std=10,
+        size=size,
+        conf_level=0.95,
+        interval_type="one-sided",
+        dist="z",
+    )
     for precision, actual_precision, size in [
         (1, 0.9992, 271),
         (2, 1.9947, 68),
@@ -37,7 +49,15 @@ case_group_z = [
     ]
 ] + [
     # precision = 1 to 10 by 1, std = 10, conf_level = 0.95, interval_type = "two-sided", dist = "z"
-    TestCase(precision=precision, actual_precision=actual_precision, std=10, size=size, conf_level=0.95, interval_type="two-sided", dist="z")
+    TestCase(
+        precision=precision,
+        actual_precision=actual_precision,
+        std=10,
+        size=size,
+        conf_level=0.95,
+        interval_type="two-sided",
+        dist="z",
+    )
     for precision, actual_precision, size in [
         (1, 0.9989, 385),
         (2, 1.99, 97),
@@ -53,7 +73,15 @@ case_group_z = [
 ]
 case_group_t = [
     # precision = 1 to 10 by 1, std = 10, conf_level = 0.95, interval_type = "one-sided", dist = "t"
-    TestCase(precision=precision, actual_precision=actual_precision, std=10, size=size, conf_level=0.95, interval_type="one-sided", dist="t")
+    TestCase(
+        precision=precision,
+        actual_precision=actual_precision,
+        std=10,
+        size=size,
+        conf_level=0.95,
+        interval_type="one-sided",
+        dist="t",
+    )
     for precision, actual_precision, size in [
         (1, 0.9989, 273),
         (2, 1.9927, 70),
@@ -68,7 +96,15 @@ case_group_t = [
     ]
 ] + [
     # precision = 1 to 10 by 1, std = 10, conf_level = 0.95, interval_type = "two-sided", dist = "t"
-    TestCase(precision=precision, actual_precision=actual_precision, std=10, size=size, conf_level=0.95, interval_type="two-sided", dist="t")
+    TestCase(
+        precision=precision,
+        actual_precision=actual_precision,
+        std=10,
+        size=size,
+        conf_level=0.95,
+        interval_type="two-sided",
+        dist="t",
+    )
     for precision, actual_precision, size in [
         (1, 0.9994, 387),
         (2, 1.9945, 99),
@@ -133,19 +169,79 @@ def test_std(case: TestCase) -> None:
 
 def test_interval_type_lower_upper(case: TestCase) -> None:
     assert (
-        round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist), 9)
-        == round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="lower", dist=case.dist), 9)
-        == round(solve_precision(std=case.std, size=case.size, conf_level=case.conf_level, interval_type="upper", dist=case.dist), 9)
+        round(
+            solve_precision(
+                std=case.std, size=case.size, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist
+            ),
+            9,
+        )
+        == round(
+            solve_precision(
+                std=case.std, size=case.size, conf_level=case.conf_level, interval_type="lower", dist=case.dist
+            ),
+            9,
+        )
+        == round(
+            solve_precision(
+                std=case.std, size=case.size, conf_level=case.conf_level, interval_type="upper", dist=case.dist
+            ),
+            9,
+        )
     )
 
     assert (
-        solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist)
-        == solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="lower", dist=case.dist)
-        == solve_size(precision=case.actual_precision, std=case.std, conf_level=case.conf_level, interval_type="upper", dist=case.dist)
+        solve_size(
+            precision=case.actual_precision,
+            std=case.std,
+            conf_level=case.conf_level,
+            interval_type="one-sided",
+            dist=case.dist,
+        )
+        == solve_size(
+            precision=case.actual_precision,
+            std=case.std,
+            conf_level=case.conf_level,
+            interval_type="lower",
+            dist=case.dist,
+        )
+        == solve_size(
+            precision=case.actual_precision,
+            std=case.std,
+            conf_level=case.conf_level,
+            interval_type="upper",
+            dist=case.dist,
+        )
     )
 
     assert (
-        round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="one-sided", dist=case.dist), 9)
-        == round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="lower", dist=case.dist), 9)
-        == round(solve_std(precision=case.actual_precision, size=case.size, conf_level=case.conf_level, interval_type="upper", dist=case.dist), 9)
+        round(
+            solve_std(
+                precision=case.actual_precision,
+                size=case.size,
+                conf_level=case.conf_level,
+                interval_type="one-sided",
+                dist=case.dist,
+            ),
+            9,
+        )
+        == round(
+            solve_std(
+                precision=case.actual_precision,
+                size=case.size,
+                conf_level=case.conf_level,
+                interval_type="lower",
+                dist=case.dist,
+            ),
+            9,
+        )
+        == round(
+            solve_std(
+                precision=case.actual_precision,
+                size=case.size,
+                conf_level=case.conf_level,
+                interval_type="upper",
+                dist=case.dist,
+            ),
+            9,
+        )
     )

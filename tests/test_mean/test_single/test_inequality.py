@@ -1,3 +1,5 @@
+# Copyright 2024-2026 <wtwang>
+#
 # Validation Software: PASS 2025
 # Module: One-Sample Z-Tests
 #         One-Sample T-Tests
@@ -8,8 +10,12 @@ from typing import Literal
 import pytest
 
 from pystatpower.mean.single.inequality import _ParamsValidator
-from pystatpower.mean.single.inequality import solve_power, solve_size, solve_mean, solve_null_mean, solve_diff, solve_std
-
+from pystatpower.mean.single.inequality import solve_diff
+from pystatpower.mean.single.inequality import solve_mean
+from pystatpower.mean.single.inequality import solve_null_mean
+from pystatpower.mean.single.inequality import solve_power
+from pystatpower.mean.single.inequality import solve_size
+from pystatpower.mean.single.inequality import solve_std
 from tests.models import BaseTestCase
 
 pytestmark = pytest.mark.filterwarnings("ignore")
@@ -56,7 +62,17 @@ class TestCase(BaseTestCase):
 case_group_z = (
     [
         # mean = 30 to 40 by 1, null_mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "two-sided", dist = "z"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="two-sided", alpha=0.05, power=0.80, actual_power=actual_power, dist="z")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="two-sided",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="z",
+        )
         for mean, null_mean, size, actual_power in [
             (30, 20, 32, 0.807430419417483),
             (31, 20, 26, 0.800805007022753),
@@ -73,7 +89,17 @@ case_group_z = (
     ]
     + [
         # mean = 30 to 40 by 1, null_mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "greater", dist = "z"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="greater", alpha=0.05, power=0.80, actual_power=actual_power, dist="z")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="greater",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="z",
+        )
         for mean, null_mean, size, actual_power in [
             (30, 20, 25, 0.803764940006850),
             (31, 20, 21, 0.809366177809150),
@@ -90,7 +116,17 @@ case_group_z = (
     ]
     + [
         # mean = 20, null_mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "less", dist = "z"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="less", alpha=0.05, power=0.80, actual_power=actual_power, dist="z")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="less",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="z",
+        )
         for mean, null_mean, size, actual_power in [
             (20, 30, 25, 0.803764940006850),
             (20, 31, 21, 0.809366177809151),
@@ -111,7 +147,17 @@ case_group_z = (
 case_group_t = (
     [
         # mean = 30 to 40 by 1, null_mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "two-sided", dist = "t"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="two-sided", alpha=0.05, power=0.80, actual_power=actual_power, dist="t")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="two-sided",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="t",
+        )
         for mean, null_mean, size, actual_power in [
             (30, 20, 34, 0.807777501325314),
             (31, 20, 28, 0.801083123950921),
@@ -128,7 +174,17 @@ case_group_t = (
     ]
     + [
         # mean = 30 to 40 by 1, null_mean = 20, std = 20, alpha = 0.05, power = 0.80, alternative = "greater", dist = "t"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="greater", alpha=0.05, power=0.80, actual_power=actual_power, dist="t")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="greater",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="t",
+        )
         for mean, null_mean, size, actual_power in [
             (30, 20, 27, 0.811831551748864),
             (31, 20, 22, 0.802436511114216),
@@ -145,7 +201,17 @@ case_group_t = (
     ]
     + [
         # mean = 20, null_mean = 30 to 40 by 1, std = 20, alpha = 0.05, power = 0.80, alternative = "less", dist = "t"
-        TestCase(mean=mean, null_mean=null_mean, std=20, size=size, alternative="less", alpha=0.05, power=0.80, actual_power=actual_power, dist="t")
+        TestCase(
+            mean=mean,
+            null_mean=null_mean,
+            std=20,
+            size=size,
+            alternative="less",
+            alpha=0.05,
+            power=0.80,
+            actual_power=actual_power,
+            dist="t",
+        )
         for mean, null_mean, size, actual_power in [
             (20, 30, 27, 0.811831551748864),
             (20, 31, 22, 0.802436511114216),
@@ -183,11 +249,19 @@ def test_solve_power(case: TestCase) -> None:
 
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (
+        case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40)
+        and case.alternative == "two-sided"
+        and case.dist == "t"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.mean in (30, 34, 40) and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         solve_size(
@@ -205,11 +279,19 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
 def test_solve_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (
+        case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40)
+        and case.alternative == "two-sided"
+        and case.dist == "t"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.mean in (30, 33) and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     case.direction = "greater" if case.mean > case.null_mean else "less"
     assert (
@@ -237,11 +319,19 @@ def test_solve_mean_raise_error() -> None:
 
 def test_solve_null_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (
+        case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40)
+        and case.alternative == "two-sided"
+        and case.dist == "t"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.mean in (33,) and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     case.direction = "greater" if case.null_mean > case.mean else "less"
     assert (
@@ -269,11 +359,19 @@ def test_solve_null_mean_raise_error() -> None:
 
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40) and case.alternative == "two-sided" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (
+        case.mean in (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40)
+        and case.alternative == "two-sided"
+        and case.dist == "t"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.mean in (30, 33) and case.alternative == "greater" and case.dist == "t":
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     direction = "greater" if case.mean > case.null_mean else "less"
     assert (

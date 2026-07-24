@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from math import inf
 
 from pystatpower._math_utils import _domain_square_root_of_quad

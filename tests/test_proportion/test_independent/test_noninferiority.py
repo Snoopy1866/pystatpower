@@ -1,11 +1,17 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 15
 # Module: Non-Inferiority Tests for the Difference Between Two Proportions
 
 from dataclasses import dataclass
 from typing import Literal
 
-from pystatpower.proportion.independent.noninferiority import solve_margin, solve_power, solve_reference_proportion, solve_size, solve_treatment_proportion
-
+from pystatpower.proportion.independent.noninferiority import solve_margin
+from pystatpower.proportion.independent.noninferiority import solve_power
+from pystatpower.proportion.independent.noninferiority import solve_reference_proportion
+from pystatpower.proportion.independent.noninferiority import solve_size
+from pystatpower.proportion.independent.noninferiority import solve_treatment_proportion
 from tests.models import BaseTestCase
 
 

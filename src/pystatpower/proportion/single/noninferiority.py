@@ -1,3 +1,18 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the non-inferiority test of a single proportion.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion under the alternative hypothesis
+- proportion under the null hypothesis
+- non-inferiority proportion threshold
+- non-inferiority margin
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -7,8 +22,7 @@ from ._power import _power
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to standard form based on alternative hypothesis"""
-
+    """Convert margin to standard form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return -abs(margin)
@@ -19,13 +33,11 @@ def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
 def _verify_and_get_noninf_proportion(
     null_proportion: float | None, margin: float | None, noninferiority_proportion: float | None
 ) -> float:
-    """Verify provided proportions and return the non-inferiority proportion"""
-
+    """Verify provided proportions and return the non-inferiority proportion."""
     if noninferiority_proportion is None:
         if null_proportion is None or margin is None:
-            raise ValueError(
-                "When 'noninferiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
-            )
+            msg = "When 'noninferiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
+            raise ValueError(msg)
         noninferiority_proportion = null_proportion + margin
 
     return noninferiority_proportion
@@ -43,8 +55,7 @@ def solve_power(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool,
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         proportion:
@@ -95,7 +106,6 @@ def solve_power(
     Raises:
         ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
-
     margin = _margin(margin, alternative)
     noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
@@ -114,8 +124,7 @@ def solve_size(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> int:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         proportion:
@@ -168,7 +177,6 @@ def solve_size(
     Raises:
         ValueError: If `noninferiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
-
     margin = _margin(margin, alternative)
     noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
@@ -193,8 +201,7 @@ def solve_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion under the alternative hypothesis.
+    r"""Estimate the required proportion under the alternative hypothesis.
 
     Args:
         null_proportion:
@@ -270,7 +277,6 @@ def solve_proportion(
         \\Rightarrow 0 < p_0 < \\operatorname{min}(p_0 + \\delta, 1)
         $$
     """
-
     margin = _margin(margin, alternative)
     noninferiority_proportion = _verify_and_get_noninf_proportion(null_proportion, margin, noninferiority_proportion)
 
@@ -299,8 +305,7 @@ def solve_null_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion under the null hypothesis.
+    r"""Estimate the required proportion under the null hypothesis.
 
     Args:
         proportion:
@@ -367,7 +372,6 @@ def solve_null_proportion(
         \\Rightarrow \\operatorname{max}(p - \\delta, 0) < p_0 < 1 - \\delta
         $$
     """
-
     margin = _margin(margin, alternative)
 
     def func(null_proportion: float) -> float:
@@ -394,8 +398,7 @@ def solve_noninferiority_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required non-inferiority proportion.
+    r"""Estimate the required non-inferiority proportion.
 
     Args:
         proportion:
@@ -477,8 +480,7 @@ def solve_margin(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required non-inferiority margin.
+    r"""Estimate the required non-inferiority margin.
 
     Args:
         proportion:

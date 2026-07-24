@@ -1,9 +1,23 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the inequality test of a single proportion.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion under the alternative hypothesis
+- proportion under the null hypothesis
+"""
+
 from math import ceil
 from typing import Literal
 
 from scipy.optimize import brentq
 
-from ._power import _min_nonneg, _power
+from ._power import _min_nonneg
+from ._power import _power
 
 
 def solve_power(
@@ -16,8 +30,7 @@ def solve_power(
     method: Literal["exact", "z-p0", "z-phat"] = "exact",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    """Calculate the statistical power.
 
     Args:
         proportion:
@@ -49,7 +62,6 @@ def solve_power(
     Returns:
         The statistical power of the test.
     """
-
     return _power(proportion, null_proportion, size, alternative, alpha, method, continuity_correction)
 
 
@@ -63,8 +75,7 @@ def solve_size(
     method: Literal["exact", "z-p0", "z-phat"] = "exact",
     continuity_correction: bool = False,
 ) -> int:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         proportion:
@@ -119,8 +130,7 @@ def solve_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required proportion under the alternative hypothesis.
+    """Estimate the required proportion under the alternative hypothesis.
 
     Args:
         null_proportion:
@@ -167,10 +177,10 @@ def solve_proportion(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -197,8 +207,7 @@ def solve_null_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required proportion under the null hypothesis.
+    """Estimate the required proportion under the null hypothesis.
 
     Args:
         proportion:
@@ -249,10 +258,10 @@ def solve_null_proportion(
         oscillations in power, making it impossible to obtain an accurate `null_proportion` value under the given
         parameters.
     """
-
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"

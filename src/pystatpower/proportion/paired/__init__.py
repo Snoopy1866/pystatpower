@@ -1,9 +1,4 @@
 # Copyright (C) 2024-present The Package Authors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from dataclasses import dataclass
-
-
-@dataclass
-class BaseTestCase:
-    __test__ = False
+"""Power analysis for paired proportion models."""

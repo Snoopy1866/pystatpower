@@ -1,4 +1,18 @@
-from math import atanh, ceil, sqrt, tanh
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of a correlation coefficient.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- width/distance
+- sample size
+"""
+
+from math import atanh
+from math import ceil
+from math import sqrt
+from math import tanh
 from typing import Literal
 
 from scipy.optimize import brentq
@@ -12,7 +26,6 @@ def _distance_not_adjusted(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the correlation coefficient confidence interval width or the distance from the correlation coefficient to the confidence limit."""
-
     alpha = 1 - conf_level
     zr = atanh(correlation)
     se_recip = sqrt(size - 3)
@@ -24,10 +37,8 @@ def _distance_not_adjusted(
             distance = tanh(U) - tanh(L)
         case "lower":
             L = zr - norm.ppf(1 - alpha) / se_recip
-            # U = 1
             distance = correlation - tanh(L)
         case "upper":
-            # L = -1
             U = zr + norm.ppf(1 - alpha) / se_recip
             distance = tanh(U) - correlation
 
@@ -41,7 +52,6 @@ def _distance_adjusted(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit, adjusted for bias."""
-
     alpha = 1 - conf_level
     zr = atanh(correlation)
     bias = 0.5 * correlation / (size - 1)
@@ -54,10 +64,8 @@ def _distance_adjusted(
             distance = tanh(U) - tanh(L)
         case "lower":
             L = zr - bias - norm.ppf(1 - alpha) / se_recip
-            # U = 1
             distance = correlation - tanh(L)
         case "upper":
-            # L = -1
             U = zr - bias + norm.ppf(1 - alpha) / se_recip
             distance = tanh(U) - correlation
 
@@ -72,7 +80,6 @@ def _distance(
     bias_adj: bool,
 ) -> float:
     """Calculate the width of correlation coefficient confidence interval or the distance from the correlation coefficient to the confidence limit."""
-
     if bias_adj:
         return _distance_adjusted(correlation, size, conf_level, interval_type)
     else:  # bias_adj == False
@@ -114,7 +121,6 @@ def solve_distance(
             - If `interval_type` is `'two-sided'`, the width of correlation coefficient confidence interval is returned.
             - If `interval_type` is `'lower'` or `'upper'`, the distance from the correlation coefficient to the confidence limit is returned.
     """
-
     return _distance(correlation, size, conf_level, interval_type, bias_adj)
 
 

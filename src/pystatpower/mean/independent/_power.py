@@ -1,7 +1,12 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from math import sqrt
 from typing import Literal
 
-from scipy.stats import nct, norm, t
+from scipy.stats import nct
+from scipy.stats import norm
+from scipy.stats import t
 
 
 def _power_z_equal_var(
@@ -14,7 +19,6 @@ def _power_z_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the power of two independent mean difference test, using z test, assuming equal variances."""
-
     se = std * sqrt(1 / treatment_size + 1 / reference_size)
 
     match alternative:
@@ -43,7 +47,6 @@ def _power_z_unequal_var(
     alpha: float,
 ) -> float:
     """Calculate the power of two independent mean difference test, using z test, assuming unequal variances."""
-
     se = sqrt(treatment_std**2 / treatment_size + reference_std**2 / reference_size)
 
     match alternative:
@@ -72,7 +75,6 @@ def _power_t_equal_var(
     alpha: float,
 ) -> float:
     """Calculate the power of two independent mean difference test, using t test, assuming equal variances."""
-
     df = treatment_size + reference_size - 2
     se = sqrt(
         ((treatment_size - 1) * treatment_std**2 + (reference_size - 1) * reference_std**2)
@@ -103,7 +105,6 @@ def _power_t_unequal_var_welch(
     alpha: float,
 ) -> float:
     """Calculate the power of two independent mean difference test, using Welch's approximate t test."""
-
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size + 1))
         + reference_std**4 / (reference_size**2 * (reference_size + 1))
@@ -133,7 +134,6 @@ def _power_t_unequal_var_satterthwaite(
     alpha: float,
 ) -> float:
     """Calculate the power of two independent mean difference test, using Satterthwaite's approximate t test."""
-
     df = (treatment_std**2 / treatment_size + reference_std**2 / reference_size) ** 2 / (
         treatment_std**4 / (treatment_size**2 * (treatment_size - 1))
         + reference_std**4 / (reference_size**2 * (reference_size - 1))
@@ -168,7 +168,6 @@ def _power(
     approx_t_method: Literal["welch", "satterthwaite"],
 ) -> float:
     """Calculate the power of two independent mean difference test."""
-
     match dist:
         case "z":
             if equal_var:

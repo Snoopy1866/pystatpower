@@ -1,4 +1,19 @@
-from math import atanh, ceil, sqrt
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the inequality test of a correlation coefficient.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- correlation under the alternative hypothesis
+- correlation under the null hypothesis
+"""
+
+from math import atanh
+from math import ceil
+from math import sqrt
 from typing import Literal
 
 from scipy.optimize import brentq
@@ -13,7 +28,6 @@ def _power(
     alpha: float,
 ) -> float:
     """Calculate the statistical power."""
-
     null_zeta = atanh(null_correlation)
     zeta = atanh(correlation)
     se_recip = sqrt(size - 3)
@@ -41,7 +55,7 @@ def solve_power(
     alternative: Literal["two-sided", "greater", "less"] = "two-sided",
     alpha: float = 0.05,
 ) -> float:
-    """Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         null_correlation:
@@ -65,7 +79,6 @@ def solve_power(
     Returns:
         The statistical power of the test.
     """
-
     return _power(null_correlation, correlation, alternative, size, alpha)
 
 
@@ -77,7 +90,7 @@ def solve_size(
     alpha: float = 0.05,
     power: float = 0.8,
 ) -> int:
-    """Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         null_correlation:
@@ -119,8 +132,7 @@ def solve_correlation(
     power: float = 0.8,
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required correlation coefficient under the alternative hypothesis.
+    r"""Estimate the required correlation coefficient under the alternative hypothesis.
 
     Args:
         null_correlation:
@@ -159,10 +171,10 @@ def solve_correlation(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "greater"
     else:  # alternative == "less"
@@ -187,8 +199,7 @@ def solve_null_correlation(
     power: float = 0.8,
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required correlation coefficient under the null hypothesis.
+    r"""Estimate the required correlation coefficient under the null hypothesis.
 
     Args:
         correlation:
@@ -227,10 +238,10 @@ def solve_null_correlation(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
-            raise ValueError("'direction' is required when 'alternative' is 'two-sided'.")
+            msg = "'direction' is required when 'alternative' is 'two-sided'."
+            raise ValueError(msg)
     elif alternative == "greater":
         direction = "less"
     else:  # alternative == "less"

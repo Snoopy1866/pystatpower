@@ -1,8 +1,24 @@
-from math import ceil, sqrt
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of a single proportion.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- width/distance
+- sample size
+- proportion
+"""
+
+from math import ceil
+from math import sqrt
 from typing import Literal
 
-from scipy.optimize import OptimizeResult, brentq, minimize_scalar
-from scipy.stats import f, norm
+from scipy.optimize import OptimizeResult
+from scipy.optimize import brentq
+from scipy.optimize import minimize_scalar
+from scipy.stats import f
+from scipy.stats import norm
 
 from ..._math_utils import _domain_square_root_of_quad
 
@@ -14,7 +30,6 @@ def _distance_wald(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wald method."""
-
     alpha = 1 - conf_level
 
     se = sqrt(proportion * (1 - proportion) / size)
@@ -28,11 +43,9 @@ def _distance_wald(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = proportion - z * se
-            # U = 1
             distance = proportion - max(L, 0)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = 0
             U = proportion + z * se
             distance = min(U, 1) - proportion
 
@@ -46,7 +59,6 @@ def _distance_wald_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wald method with continuity correction."""
-
     alpha = 1 - conf_level
 
     se = sqrt(proportion * (1 - proportion) / size)
@@ -61,11 +73,9 @@ def _distance_wald_cc(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = proportion - z * se - c
-            # U = 1
             distance = proportion - max(L, 0)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = 0
             U = proportion + z * se + c
             distance = min(U, 1) - proportion
 
@@ -79,7 +89,6 @@ def _distance_wilson(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wilson method."""
-
     alpha = 1 - conf_level
 
     match interval_type:
@@ -99,7 +108,6 @@ def _distance_wilson(
             c = z**2 + 4 * size * proportion * (1 - proportion)
 
             L = (b - z * sqrt(c)) / a
-            # U = 1
             distance = proportion - L
         case "upper":
             z = norm.ppf(1 - alpha)
@@ -107,7 +115,6 @@ def _distance_wilson(
             b = 2 * size * proportion + z**2
             c = z**2 + 4 * size * proportion * (1 - proportion)
 
-            # L = 0
             U = (b + z * sqrt(c)) / a
             distance = U - proportion
 
@@ -121,7 +128,6 @@ def _distance_wilson_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Wilson method with continuity correction."""
-
     alpha = 1 - conf_level
 
     match interval_type:
@@ -143,7 +149,6 @@ def _distance_wilson_cc(
             c2 = 4 * proportion - 2
 
             L = ((b - 1) - z * sqrt(c1 + c2)) / a
-            # U = 1
             distance = proportion - L
         case "upper":
             z = norm.ppf(1 - alpha)
@@ -152,7 +157,6 @@ def _distance_wilson_cc(
             c1 = z**2 - 1 / size + 4 * size * proportion * (1 - proportion)
             c2 = 4 * proportion - 2
 
-            # L = 0
             U = ((b + 1) + z * sqrt(c1 - c2)) / a
             distance = U - proportion
 
@@ -166,7 +170,6 @@ def _distance_clopper_pearson(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit, using the Clopper-Pearson method."""
-
     alpha = 1 - conf_level
 
     n = size
@@ -180,10 +183,8 @@ def _distance_clopper_pearson(
             distance = U - L
         case "lower":
             L = 1 / (1 + (n * q + 1) / (n * p * f.ppf(alpha, 2 * n * p, 2 * (n * q + 1))))
-            # U = 1
             distance = proportion - L
         case "upper":
-            # L = 0
             U = 1 / (1 + n * q / ((n * p + 1) * f.ppf(1 - alpha, 2 * (n * p + 1), 2 * n * q)))
             distance = U - proportion
 
@@ -198,8 +199,7 @@ def _distance(
     method: Literal["wald", "wilson", "clopper-pearson", "cp"],
     continuity_correction: bool = False,
 ) -> float:
-    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit"""
-
+    """Calculate the width of the confidence interval or the distance from the proportion to the confidence limit."""
     match method:
         case "clopper-pearson" | "cp":
             return _distance_clopper_pearson(proportion, size, conf_level, interval_type)
@@ -224,8 +224,7 @@ def solve_distance(
     method: Literal["wald", "wilson", "clopper-pearson", "cp"] = "cp",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the confidence interval width or the distance from the proportion to the confidence limit.
+    """Calculate the confidence interval width or the distance from the proportion to the confidence limit.
 
     Args:
         proportion:
@@ -258,7 +257,6 @@ def solve_distance(
             - If `alternative` is `'two-sided'`, the confidence interval width is returned.
             - If `alternative` is `'less'`, the distance from the proportion to the confidence limit is returned.
     """
-
     return _distance(proportion, size, conf_level, interval_type, method, continuity_correction)
 
 
@@ -271,8 +269,7 @@ def solve_size(
     method: Literal["wald", "wilson", "clopper-pearson", "cp"] = "cp",
     continuity_correction: bool = False,
 ) -> int:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     For two-sided confidence interval, the confidence interval width is required.
 
@@ -367,8 +364,7 @@ def solve_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"] = "greater",
 ) -> float:
-    """
-    Estimate the required proportion.
+    """Estimate the required proportion.
 
     For two-sided confidence interval, the confidence interval width is required.
 

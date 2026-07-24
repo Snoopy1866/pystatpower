@@ -1,7 +1,28 @@
-from math import acos, ceil, copysign, cos, isclose, pi, sqrt
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of two independent proportion difference.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- width/distance
+- sample size
+- proportion for the treatment group
+- proportion for the reference group
+"""
+
+from math import acos
+from math import ceil
+from math import copysign
+from math import cos
+from math import isclose
+from math import pi
+from math import sqrt
 from typing import Literal
 
-from scipy.optimize import OptimizeResult, brentq, minimize_scalar
+from scipy.optimize import OptimizeResult
+from scipy.optimize import brentq
+from scipy.optimize import minimize_scalar
 from scipy.stats import norm
 
 from ...exceptions import SolutionNotFoundError
@@ -16,7 +37,6 @@ def _distance_chisq(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Pearson's chi-square method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
     sd = sqrt(
@@ -33,11 +53,9 @@ def _distance_chisq(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = diff - z * sd
-            # U = 1
             distance = diff - max(L, -1)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = -1
             U = diff + z * sd
             distance = min(U, 1) - diff
 
@@ -53,7 +71,6 @@ def _distance_chisq_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Yate's chi-square with continuity correction method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
     sd = sqrt(
@@ -71,11 +88,9 @@ def _distance_chisq_cc(
         case "lower":
             z = norm.ppf(1 - alpha)
             L = diff - z * sd - c
-            # U = 1
             distance = diff - max(L, -1)
         case "upper":
             z = norm.ppf(1 - alpha)
-            # L = -1
             U = diff + z * sd + c
             distance = min(U, 1) - diff
 
@@ -91,13 +106,11 @@ def _distance_wilson(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Newcombe-Wilson method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
     def _wilson_ci(proportion: float, size: float, alpha: float) -> tuple[float, float]:
-        """Internal function to calculate Wilson confidence interval"""
-
+        """Internal function to calculate Wilson confidence interval."""
         z = norm.ppf(1 - alpha)
 
         a = 2 * size * proportion + z**2
@@ -133,13 +146,11 @@ def _distance_wilson(
                 - reference_proportion
                 - sqrt((treatment_proportion - L1) ** 2 + (U2 - reference_proportion) ** 2)
             )
-            # U = 1
             distance = diff - L
         case "upper":
             _, U1 = _wilson_ci(treatment_proportion, treatment_size, alpha)
             L2, _ = _wilson_ci(reference_proportion, reference_size, alpha)
 
-            # L = -1
             U = (
                 treatment_proportion
                 - reference_proportion
@@ -159,13 +170,11 @@ def _distance_wilson_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Newcombe-Wilson with continuity correction method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
     def _wilson_cc_ci(proportion: float, size: float, alpha: float) -> tuple[float, float]:
-        """Internal function to calculate Wilson confidence interval with continuity correction"""
-
+        """Internal function to calculate Wilson confidence interval with continuity correction."""
         z = norm.ppf(1 - alpha)
 
         a = 2 * size * proportion + z**2
@@ -201,13 +210,11 @@ def _distance_wilson_cc(
                 - reference_proportion
                 - sqrt((treatment_proportion - L1) ** 2 + (U2 - reference_proportion) ** 2)
             )
-            # U = 1
             distance = diff - L
         case "upper":
             _, U1 = _wilson_cc_ci(treatment_proportion, treatment_size, alpha)
             L2, _ = _wilson_cc_ci(reference_proportion, reference_size, alpha)
 
-            # L = -1
             U = (
                 treatment_proportion
                 - reference_proportion
@@ -227,7 +234,6 @@ def _distance_farrington_manning(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Farrington and Manning's score method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
@@ -264,10 +270,8 @@ def _distance_farrington_manning(
             distance = U - L
         case "lower":
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha), -1 + eps, diff)
-            # U = 1
             distance = diff - L
         case "upper":
-            # L = -1
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
 
@@ -283,7 +287,6 @@ def _distance_miettinen_nurminen(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Miettinen and Nurminen's score method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
@@ -320,10 +323,8 @@ def _distance_miettinen_nurminen(
             distance = U - L
         case "lower":
             L = brentq(lambda delta: func(delta) - norm.ppf(1 - alpha), -1 + eps, diff)
-            # U = 1
             distance = diff - L
         case "upper":
-            # L = -1
             U = brentq(lambda delta: func(delta) - norm.ppf(alpha), diff, 1 - eps)
             distance = U - diff
 
@@ -341,7 +342,6 @@ def _distance(
     continuity_correction: bool = False,
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit."""
-
     match method:
         case "chisq":
             if continuity_correction:
@@ -402,8 +402,7 @@ def solve_distance(
     method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the confidence interval width or the distance from the proportion difference to the confidence limit.
+    """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit.
 
     Args:
         treatment_proportion:
@@ -443,7 +442,6 @@ def solve_distance(
             - If `interval_type` is `'lower'` or `'upper'`, the distance from the proportion difference to the confidence limit is returned.
 
     """
-
     return _distance(
         treatment_proportion,
         reference_proportion,
@@ -467,8 +465,7 @@ def solve_size(
     method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         treatment_proportion:
@@ -507,7 +504,6 @@ def solve_size(
     Returns:
         The required sample sizes in treatment and reference groups, respectively.
     """
-
     if ratio >= 1:
 
         def func(reference_size: float) -> float:
@@ -562,8 +558,7 @@ def solve_treatment_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the treatment group.
+    """Estimate the required proportion in the treatment group.
 
     Args:
         reference_proportion:
@@ -633,7 +628,8 @@ def solve_treatment_proportion(
     ub = 1 - eps
     res: OptimizeResult = minimize_scalar(lambda treatment_proportion: -func(treatment_proportion), bounds=(lb, ub))
     if not res.success:
-        raise SolutionNotFoundError("Solution not found.")
+        msg = "Solution not found."
+        raise SolutionNotFoundError(msg)
 
     if abs(func(res.x)) < 1e-9:
         return float(res.x)
@@ -641,12 +637,14 @@ def solve_treatment_proportion(
     match direction:
         case "greater":
             if func(res.x) * func(ub) > 0:
-                raise SolutionNotFoundError("Solution not found.")
+                msg = "Solution not found."
+                raise SolutionNotFoundError(msg)
             else:
                 return float(brentq(func, res.x, ub))
         case "less":
             if func(res.x) * func(lb) > 0:
-                raise SolutionNotFoundError("Solution not found.")
+                msg = "Solution not found."
+                raise SolutionNotFoundError(msg)
             else:
                 return float(brentq(func, lb, res.x))
 
@@ -663,8 +661,7 @@ def solve_reference_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the reference group.
+    """Estimate the required proportion in the reference group.
 
     Args:
         treatment_proportion:
@@ -734,7 +731,8 @@ def solve_reference_proportion(
     ub = 1 - eps
     res: OptimizeResult = minimize_scalar(lambda reference_proportion: -func(reference_proportion), bounds=(lb, ub))
     if not res.success:
-        raise SolutionNotFoundError("Solution not found.")
+        msg = "Solution not found."
+        raise SolutionNotFoundError(msg)
 
     if abs(func(res.x)) < 1e-9:
         return float(res.x)
@@ -742,11 +740,13 @@ def solve_reference_proportion(
     match direction:
         case "greater":
             if func(res.x) * func(ub) > 0:
-                raise SolutionNotFoundError("Solution not found.")
+                msg = "Solution not found."
+                raise SolutionNotFoundError(msg)
             else:
                 return float(brentq(func, res.x, ub))
         case "less":
             if func(res.x) * func(lb) > 0:
-                raise SolutionNotFoundError("Solution not found.")
+                msg = "Solution not found."
+                raise SolutionNotFoundError(msg)
             else:
                 return float(brentq(func, lb, res.x))

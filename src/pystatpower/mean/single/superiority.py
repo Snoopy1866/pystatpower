@@ -1,3 +1,21 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the superiority test of a single mean.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- mean under the alternative hypothesis
+- mean under the null hypothesis
+- superiority margin
+- mean difference
+- superiority mean threshold
+- offset
+- standard deviation
+"""
+
 import warnings
 
 from math import ceil
@@ -9,8 +27,7 @@ from ._power import _power
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to standard form based on alternative hypothesis"""
-
+    """Convert margin to standard form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return abs(margin)
@@ -60,9 +77,8 @@ class _ParamsValidator:
             params_used = {"mean", "null_mean"}
 
         if self.diff is None:
-            raise ValueError(
-                "The mean difference cannot be calculated using the specified combination of parameters. Please provide the 'diff' parameter directly, or use both 'mean' and 'null_mean'."
-            )
+            msg = "The mean difference cannot be calculated using the specified combination of parameters. Please provide the 'diff' parameter directly, or use both 'mean' and 'null_mean'."
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used
@@ -77,9 +93,8 @@ class _ParamsValidator:
             params_used = {"null_mean", "margin"}
 
         if self.superiority_mean is None:
-            raise ValueError(
-                "The superiority mean cannot be calculated using the specified combination of parameters. Please provide the 'superiority_mean' parameter directly, or use both 'null_mean' and 'margin'."
-            )
+            msg = "The superiority mean cannot be calculated using the specified combination of parameters. Please provide the 'superiority_mean' parameter directly, or use both 'null_mean' and 'margin'."
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used
@@ -100,12 +115,13 @@ class _ParamsValidator:
             params_used = {"mean", "null_mean", "margin"}
 
         if self.offset is None:
-            raise ValueError(
+            msg = (
                 "The offset cannot be calculated using the specified combination of parameters. Please provide the 'offset' parameter directly, or use one of the following parameter combinations:\n"
                 "1. 'mean' and 'superiority_mean'\n"
                 "2. 'diff' and 'margin'\n"
                 "3. 'mean', 'null_mean' and 'margin'"
             )
+            raise ValueError(msg)
 
         if warning:
             params_redundant = self.params_provided - params_used
@@ -114,7 +130,6 @@ class _ParamsValidator:
 
     def _warn_params_redundant(self, params: set[str], /) -> None:
         """Warn if parameters are redundant."""
-
         params_str = ", ".join(params)
         warnings.warn(
             f"Redundant parameters detected: {params_str}.",
@@ -136,8 +151,7 @@ def solve_power(
     alpha: float = 0.025,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         mean:
@@ -215,7 +229,6 @@ def solve_power(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
-
     pv = _ParamsValidator(
         mean=mean,
         null_mean=null_mean,
@@ -245,8 +258,7 @@ def solve_size(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> int:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         mean:
@@ -326,7 +338,6 @@ def solve_size(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
-
     pv = _ParamsValidator(
         mean=mean,
         null_mean=null_mean,
@@ -357,8 +368,7 @@ def solve_mean(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required mean under the alternative hypothesis.
+    r"""Estimate the required mean under the alternative hypothesis.
 
     Args:
         null_mean:
@@ -420,7 +430,6 @@ def solve_mean(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the superiority mean.
     """
-
     pv = _ParamsValidator(
         null_mean=null_mean, margin=margin, superiority_mean=superiority_mean, alternative=alternative
     )
@@ -448,8 +457,7 @@ def solve_null_mean(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required mean under the null hypothesis.
+    r"""Estimate the required mean under the null hypothesis.
 
     Args:
         mean:
@@ -491,7 +499,6 @@ def solve_null_mean(
     Returns:
         The required mean under the null hypothesis.
     """
-
     margin = _margin(margin, alternative)
 
     def func(null_mean: float) -> float:
@@ -516,8 +523,7 @@ def solve_margin(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required superiority margin.
+    r"""Estimate the required superiority margin.
 
     Args:
         mean:
@@ -568,7 +574,6 @@ def solve_margin(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
-
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
     pv.validate(target="diff")
     diff = pv.diff
@@ -593,8 +598,7 @@ def solve_diff(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required mean difference.
+    r"""Estimate the required mean difference.
 
     Args:
         margin:
@@ -634,7 +638,6 @@ def solve_diff(
     Returns:
         The required mean difference between the alternative hypothesis and the null hypothesis.
     """
-
     margin = _margin(margin, alternative)
 
     def func(diff: float) -> float:
@@ -657,8 +660,7 @@ def solve_superiority_mean(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required superiority mean.
+    r"""Estimate the required superiority mean.
 
     - If `alternative` is `'greater'`, the superiority mean is defined as the smallest mean that exceeds the
       null hypothesis mean and is considered superior.
@@ -714,8 +716,7 @@ def solve_offset(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required offset.
+    r"""Estimate the required offset.
 
     The offset is defined as the difference between the mean under the alternative hypothesis and the superiority mean.
 
@@ -767,8 +768,7 @@ def solve_std(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required standard deviation.
+    r"""Estimate the required standard deviation.
 
     Args:
         mean:
@@ -848,7 +848,6 @@ def solve_std(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the offset.
     """
-
     pv = _ParamsValidator(
         mean=mean,
         null_mean=null_mean,

@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 2025
 # Module: Two-Sample Z-Tests Assuming Equal Variance
 #         Two-Sample Z-Tests Allowing Unequal Variance
@@ -10,8 +13,15 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.mean.independent.inequality import _verify_mean_and_get_diff, _verify_std_and_get_std, solve_power, solve_size, solve_diff, solve_treatment_mean, solve_reference_mean, solve_treatment_std, solve_reference_std
-
+from pystatpower.mean.independent.inequality import _verify_mean_and_get_diff
+from pystatpower.mean.independent.inequality import _verify_std_and_get_std
+from pystatpower.mean.independent.inequality import solve_diff
+from pystatpower.mean.independent.inequality import solve_power
+from pystatpower.mean.independent.inequality import solve_reference_mean
+from pystatpower.mean.independent.inequality import solve_reference_std
+from pystatpower.mean.independent.inequality import solve_size
+from pystatpower.mean.independent.inequality import solve_treatment_mean
+from pystatpower.mean.independent.inequality import solve_treatment_std
 from tests.models import BaseTestCase
 
 
@@ -35,7 +45,7 @@ class TestCase(BaseTestCase):
 
     direction: Literal["greater", "less"] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.diff = _verify_mean_and_get_diff(self.treatment_mean, self.reference_mean, self.diff)
         self.std = _verify_std_and_get_std(self.treatment_std, self.reference_std, self.std, self.dist, self.equal_var)
 
@@ -550,7 +560,13 @@ case_group_t_unequal_var_satterthwaite = (
     ]
 )
 
-case_group = case_group_z_equal_var + case_group_z_unequal_var + case_group_t_equal_var + case_group_t_unequal_var_welch + case_group_t_unequal_var_satterthwaite
+case_group = (
+    case_group_z_equal_var
+    + case_group_z_unequal_var
+    + case_group_t_equal_var
+    + case_group_t_unequal_var_welch
+    + case_group_t_unequal_var_satterthwaite
+)
 
 
 def test_verify_mean_and_get_diff() -> None:
@@ -632,17 +648,40 @@ def test_solve_power(case: TestCase) -> None:
 
 def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if (case.treatment_mean in [42, 47, 54, 55] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (
-        case.treatment_mean in [41, 46, 52, 53] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"
+    if (
+        case.treatment_mean in [42, 47, 54, 55]
+        and case.alternative == "greater"
+        and case.dist == "t"
+        and case.equal_var
+    ) or (
+        case.treatment_mean in [41, 46, 52, 53]
+        and case.alternative == "greater"
+        and case.dist == "t"
+        and not case.equal_var
+        and case.approx_t_method == "satterthwaite"
     ):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.treatment_mean in range(40, 61) and (
         (case.alternative == "two-sided" and case.dist == "t" and case.equal_var)
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite")
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "welch")
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "satterthwaite"
+        )
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "welch"
+        )
     ):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     ratio = case.treatment_size / case.reference_size
     assert solve_size(
@@ -664,15 +703,35 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (
+        case.treatment_mean in [42, 55]
+        and case.alternative == "greater"
+        and case.dist == "t"
+        and not case.equal_var
+        and case.approx_t_method == "satterthwaite"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.treatment_mean in range(40, 61) and (
         (case.alternative == "two-sided" and case.dist == "t" and case.equal_var)
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite")
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "welch")
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "satterthwaite"
+        )
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "welch"
+        )
     ):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     case.direction = "greater" if case.diff > 0 else "less"
     assert (
@@ -703,15 +762,35 @@ def test_solve_diff_raise_error() -> None:
 
 def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (
+        case.treatment_mean in [42, 55]
+        and case.alternative == "greater"
+        and case.dist == "t"
+        and not case.equal_var
+        and case.approx_t_method == "satterthwaite"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.treatment_mean in range(40, 61) and (
         (case.alternative == "two-sided" and case.dist == "t" and case.equal_var)
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite")
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "welch")
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "satterthwaite"
+        )
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "welch"
+        )
     ):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     case.direction = "greater" if case.treatment_mean > case.reference_mean else "less"
     assert (
@@ -744,15 +823,35 @@ def test_solve_treatment_mean_raise_error() -> None:
 
 def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (case.treatment_mean in [42, 55] and case.alternative == "greater" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite"):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+    if (case.treatment_mean in [55, 56] and case.alternative == "greater" and case.dist == "t" and case.equal_var) or (
+        case.treatment_mean in [42, 55]
+        and case.alternative == "greater"
+        and case.dist == "t"
+        and not case.equal_var
+        and case.approx_t_method == "satterthwaite"
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     if case.treatment_mean in range(40, 61) and (
         (case.alternative == "two-sided" and case.dist == "t" and case.equal_var)
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "satterthwaite")
-        or (case.alternative == "two-sided" and case.dist == "t" and not case.equal_var and case.approx_t_method == "welch")
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "satterthwaite"
+        )
+        or (
+            case.alternative == "two-sided"
+            and case.dist == "t"
+            and not case.equal_var
+            and case.approx_t_method == "welch"
+        )
     ):
-        request.node.add_marker(pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470"))
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     case.direction = "greater" if case.reference_mean > case.treatment_mean else "less"
     assert (
@@ -829,7 +928,9 @@ def test_solve_treatment_std(case: TestCase) -> None:
 
 def test_solve_treatment_std_raise_error() -> None:
     with pytest.raises(ValueError):
-        solve_treatment_std(diff=30, treatment_size=20, reference_size=30, alternative="two-sided", dist="t", equal_var=False)
+        solve_treatment_std(
+            diff=30, treatment_size=20, reference_size=30, alternative="two-sided", dist="t", equal_var=False
+        )
 
 
 def test_solve_reference_std(case: TestCase) -> None:
@@ -878,4 +979,6 @@ def test_solve_reference_std(case: TestCase) -> None:
 
 def test_solve_reference_std_raise_error() -> None:
     with pytest.raises(ValueError):
-        solve_reference_std(diff=30, treatment_size=20, reference_size=30, alternative="two-sided", dist="t", equal_var=False)
+        solve_reference_std(
+            diff=30, treatment_size=20, reference_size=30, alternative="two-sided", dist="t", equal_var=False
+        )

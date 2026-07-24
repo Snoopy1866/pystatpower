@@ -1,13 +1,16 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from collections.abc import Callable
 from math import sqrt
 from typing import Literal
 
-from scipy.stats import binom, norm
+from scipy.stats import binom
+from scipy.stats import norm
 
 
 def _min_nonneg(f: Callable[[int], float], *, bounds: tuple[int, int], strict: bool = False) -> int:
-    """
-    Return the smallest non-negative integer satisfying f(x) >= 0.
+    """Return the smallest non-negative integer satisfying f(x) >= 0.
 
     Args:
         f:
@@ -23,7 +26,6 @@ def _min_nonneg(f: Callable[[int], float], *, bounds: tuple[int, int], strict: b
     Returns:
         Non-negative integer solutions satisfying the condition.
     """
-
     lb, ub = bounds
 
     x = lb
@@ -44,7 +46,6 @@ def _power_exact(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using exact test."""
-
     match alternative:
         case "two-sided":
             reject_L = binom.ppf(alpha / 2, size, proportion_threshold)
@@ -72,7 +73,6 @@ def _power_p0(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using p0 to calculate the variance."""
-
     offset = proportion - proportion_threshold
     p0_se = sqrt(proportion_threshold * (1 - proportion_threshold) / size)
     p_se = sqrt(proportion * (1 - proportion) / size)
@@ -98,7 +98,6 @@ def _power_p0_cc(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using p0 with continuity correction to calculate the variance."""
-
     if abs(proportion - proportion_threshold) > 1 / (2 * size):
         c = 1 / (2 * size)
     else:
@@ -129,7 +128,6 @@ def _power_phat(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using phat to calculate the variance."""
-
     offset = proportion - proportion_threshold
     p_se = sqrt(proportion * (1 - proportion) / size)
     match alternative:
@@ -153,7 +151,6 @@ def _power_phat_cc(
     alpha: float,
 ) -> float:
     """Calculate the statistical power, using phat with continuity correction to calculate the variance."""
-
     if abs(proportion - proportion_threshold) > 1 / (2 * size):
         c = 1 / (2 * size)
     else:
@@ -186,7 +183,6 @@ def _power(
     continuity_correction: bool,
 ) -> float:
     """Calculate the statistical power."""
-
     match method:
         case "exact":
             return _power_exact(proportion, proportion_threshold, size, alternative, alpha)

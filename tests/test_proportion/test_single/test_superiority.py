@@ -1,3 +1,5 @@
+# Copyright 2024-2026 <wtwang>
+#
 # Validation Software: PASS 15
 # Module: Non-Inferiority Tests for One Proportion
 
@@ -6,8 +8,13 @@ from typing import Literal
 
 import pytest
 
-from pystatpower.proportion.single.superiority import _verify_and_get_sup_proportion, solve_power, solve_size, solve_null_proportion, solve_proportion, solve_superiority_proportion, solve_margin
-
+from pystatpower.proportion.single.superiority import _verify_and_get_sup_proportion
+from pystatpower.proportion.single.superiority import solve_margin
+from pystatpower.proportion.single.superiority import solve_null_proportion
+from pystatpower.proportion.single.superiority import solve_power
+from pystatpower.proportion.single.superiority import solve_proportion
+from pystatpower.proportion.single.superiority import solve_size
+from pystatpower.proportion.single.superiority import solve_superiority_proportion
 from tests.models import BaseTestCase
 
 
@@ -32,7 +39,18 @@ class TestCase(BaseTestCase):
 
 case_group_z_p0 = [
     # null_proportion = 0.75, proportion = 0.81 to 0.95 by 0.01, margin = 0.05, alternative = "greater", alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = False
-    TestCase(null_proportion=0.75, proportion=proportion, margin=0.05, size=size, alternative="greater", alpha=0.025, power=0.80, method="z-p0", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=0.05,
+        size=size,
+        alternative="greater",
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.81, 12414, 0.8000),
         (0.82, 3066, 0.8001),
@@ -52,7 +70,18 @@ case_group_z_p0 = [
     ]
 ] + [
     # null_proportion = 0.75, proportion = 0.55 to 0.69 by 0.01, margin = -0.05, alternative = "less", alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = False
-    TestCase(null_proportion=0.75, proportion=proportion, margin=-0.05, size=size, alternative="less", alpha=0.025, power=0.80, method="z-p0", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=-0.05,
+        size=size,
+        alternative="less",
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.55, 78, 0.8044),
         (0.56, 89, 0.8027),
@@ -74,7 +103,18 @@ case_group_z_p0 = [
 
 case_group_z_p0_cc = [
     # null_proportion = 0.75, proportion = 0.81 to 0.95 by 0.01, margin = 0.05, alternative = "greater", alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = True
-    TestCase(null_proportion=0.75, proportion=proportion, margin=0.05, size=size, alternative="greater", alpha=0.025, power=0.80, method="z-p0", continuity_correction=True, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=0.05,
+        size=size,
+        alternative="greater",
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=True,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.81, 12514, 0.8000),
         (0.82, 3116, 0.8001),
@@ -94,7 +134,18 @@ case_group_z_p0_cc = [
     ]
 ] + [
     # null_proportion = 0.75, proportion = 0.55 to 0.69 by 0.01, margin = -0.05, alternative = "less", alpha = 0.025, power = 0.80, method = "z-p0", continuity_correction = True
-    TestCase(null_proportion=0.75, proportion=proportion, margin=-0.05, size=size, alternative="less", alpha=0.025, power=0.80, method="z-p0", continuity_correction=True, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=-0.05,
+        size=size,
+        alternative="less",
+        alpha=0.025,
+        power=0.80,
+        method="z-p0",
+        continuity_correction=True,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.55, 84, 0.8019),
         (0.56, 96, 0.8027),
@@ -116,7 +167,18 @@ case_group_z_p0_cc = [
 
 case_group_z_phat = [
     # null_proportion = 0.75, proportion = 0.81 to 0.95 by 0.01, margin = 0.05, alternative = "greater", alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = False
-    TestCase(null_proportion=0.75, proportion=proportion, margin=0.05, size=size, alternative="greater", alpha=0.025, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=0.05,
+        size=size,
+        alternative="greater",
+        alpha=0.025,
+        power=0.80,
+        method="z-phat",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.81, 12080, 0.8000),
         (0.82, 2897, 0.8001),
@@ -136,7 +198,18 @@ case_group_z_phat = [
     ]
 ] + [
     # null_proportion = 0.75, proportion = 0.55 to 0.69 by 0.01, margin = -0.05, alternative = "less", alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = False
-    TestCase(null_proportion=0.75, proportion=proportion, margin=-0.05, size=size, alternative="less", alpha=0.025, power=0.80, method="z-phat", continuity_correction=False, actual_power=actual_power)
+    TestCase(
+        null_proportion=0.75,
+        proportion=proportion,
+        margin=-0.05,
+        size=size,
+        alternative="less",
+        alpha=0.025,
+        power=0.80,
+        method="z-phat",
+        continuity_correction=False,
+        actual_power=actual_power,
+    )
     for proportion, size, actual_power in [
         (0.55, 87, 0.8030),
         (0.56, 99, 0.8013),
@@ -159,7 +232,18 @@ case_group_z_phat = [
 case_group_z_phat_cc = (
     [
         # null_proportion = 0.75, proportion = 0.81 to 0.95 by 0.01, margin = 0.05, alternative = "greater", alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = True
-        TestCase(null_proportion=0.75, proportion=proportion, margin=0.05, size=size, alternative="greater", alpha=0.025, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
+        TestCase(
+            null_proportion=0.75,
+            proportion=proportion,
+            margin=0.05,
+            size=size,
+            alternative="greater",
+            alpha=0.025,
+            power=0.80,
+            method="z-phat",
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for proportion, size, actual_power in [
             (0.81, 12180, 0.8000),
             (0.82, 2947, 0.8001),
@@ -180,7 +264,18 @@ case_group_z_phat_cc = (
     ]
     + [
         # null_proportion = 0.75, proportion = 0.55 to 0.69 by 0.01, margin = -0.05, alternative = "less", alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = True
-        TestCase(null_proportion=0.75, proportion=proportion, margin=-0.05, size=size, alternative="less", alpha=0.025, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
+        TestCase(
+            null_proportion=0.75,
+            proportion=proportion,
+            margin=-0.05,
+            size=size,
+            alternative="less",
+            alpha=0.025,
+            power=0.80,
+            method="z-phat",
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for proportion, size, actual_power in [
             (0.55, 93, 0.8005),
             (0.56, 106, 0.8012),
@@ -201,7 +296,18 @@ case_group_z_phat_cc = (
     ]
     + [
         # null_proportion = 0.80, proportion = 0.81 to 0.95 by 0.01, margin = 0, alternative = "greater", alpha = 0.025, power = 0.80, method = "z-phat", continuity_correction = True
-        TestCase(null_proportion=0.80, proportion=proportion, margin=0, size=size, alternative="greater", alpha=0.025, power=0.80, method="z-phat", continuity_correction=True, actual_power=actual_power)
+        TestCase(
+            null_proportion=0.80,
+            proportion=proportion,
+            margin=0,
+            size=size,
+            alternative="greater",
+            alpha=0.025,
+            power=0.80,
+            method="z-phat",
+            continuity_correction=True,
+            actual_power=actual_power,
+        )
         for proportion, size, actual_power in [
             (0.81, 12180, 0.800025301),
             (0.82, 2947, 0.800132046),
