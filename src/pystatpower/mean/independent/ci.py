@@ -1,3 +1,14 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of two independent means.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- precision
+- sample size
+"""
+
 from math import ceil
 from math import sqrt
 from typing import Literal
@@ -16,7 +27,6 @@ def _precision(
     equal_var: bool,
 ) -> float:
     """Calculate the distance from the mean difference to the confidence limit."""
-
     alpha = 1 - conf_level
 
     if equal_var:
@@ -54,8 +64,7 @@ def solve_precision(
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     equal_var: bool = False,
 ) -> float:
-    """
-    Calculate the distance from the mean difference to the confidence limit.
+    """Calculate the distance from the mean difference to the confidence limit.
 
     Args:
         treatment_std:
@@ -83,7 +92,6 @@ def solve_precision(
     Returns:
         The distance from the mean difference to the confidence limit.
     """
-
     return _precision(
         treatment_std, reference_std, treatment_size, reference_size, conf_level, interval_type, equal_var
     )
@@ -99,8 +107,7 @@ def solve_size(
     interval_type: Literal["two-sided", "lower", "upper"] = "two-sided",
     equal_var: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         treatment_std:
@@ -128,7 +135,6 @@ def solve_size(
     Returns:
         The required sample sizes in the treatment and reference groups, respectively.
     """
-
     if ratio >= 1:
 
         def func(reference_size: float) -> float:

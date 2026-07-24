@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 15
 # Module: Non-Inferiority Tests for the Difference Between Two Means
 
@@ -469,8 +472,11 @@ def test_solve_size(case: TestCase, request: pytest.FixtureRequest) -> None:
 
 def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_macos
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -505,13 +511,17 @@ def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py310
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -529,13 +539,17 @@ def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -570,10 +584,11 @@ def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(
@@ -600,8 +615,11 @@ def test_solve_treatment_mean(case: TestCase, request: pytest.FixtureRequest) ->
 
 def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_macos
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -636,13 +654,17 @@ def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py310
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -660,13 +682,17 @@ def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -701,10 +727,11 @@ def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) ->
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(
@@ -731,8 +758,11 @@ def test_solve_reference_mean(case: TestCase, request: pytest.FixtureRequest) ->
 
 def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_macos
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -767,13 +797,17 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py310
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -791,13 +825,17 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -832,10 +870,11 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="welch",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(
@@ -861,8 +900,11 @@ def test_solve_diff(case: TestCase, request: pytest.FixtureRequest) -> None:
 
 def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
 
-    if request.config.is_macos and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_macos
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -897,13 +939,17 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py310:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py310
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -921,13 +967,17 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="satterthwaite",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
-    if request.config.is_windows and request.config.is_py311:
-        if case in [
+    if (
+        request.config.is_windows
+        and request.config.is_py311
+        and case
+        in [
             TestCase(
                 treatment_mean=10,
                 reference_mean=10,
@@ -962,10 +1012,11 @@ def test_solve_margin(case: TestCase, request: pytest.FixtureRequest) -> None:
                 equal_var=False,
                 approx_t_method="welch",
             ),
-        ]:
-            request.node.add_marker(
-                pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
-            )
+        ]
+    ):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="SciPy upstream bug: https://github.com/scipy/scipy/issues/25470")
+        )
 
     assert (
         round(

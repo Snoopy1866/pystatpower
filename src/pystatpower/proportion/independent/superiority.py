@@ -1,3 +1,17 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the superiority test of two independent proportions.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion for the treatment group
+- proportion for the reference group
+- superiority margin
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -7,8 +21,7 @@ from ._power import _power
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to regular form based on alternative hypothesis"""
-
+    """Convert margin to regular form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return abs(margin)
@@ -29,8 +42,7 @@ def solve_power(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         treatment_proportion:
@@ -81,7 +93,6 @@ def solve_power(
     Raises:
         ValueError: If `margin` and `superiority_proportion` are both omitted.
     """
-
     if superiority_proportion is None:
         if margin is None:
             msg = "at least one of 'margin' or 'superiority_proportion' is required."
@@ -116,8 +127,7 @@ def solve_size(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         treatment_proportion:
@@ -170,7 +180,6 @@ def solve_size(
     Raises:
         ValueError: If `margin` and `superiority_proportion` are both omitted.
     """
-
     if superiority_proportion is None:
         if margin is None:
             msg = "at least one of 'margin' or 'superiority_proportion' is required."
@@ -236,8 +245,7 @@ def solve_treatment_proportion(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion in the treatment group.
+    r"""Estimate the required proportion in the treatment group.
 
     Args:
         reference_proportion:
@@ -317,7 +325,6 @@ def solve_treatment_proportion(
         \\Rightarrow 0 < p_1 < p_2 + \\delta
         $$
     """
-
     if superiority_proportion is None:
         if margin is None:
             msg = "at least one of 'margin' or 'superiority_proportion' is required."
@@ -361,8 +368,7 @@ def solve_reference_proportion(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion in the reference group.
+    r"""Estimate the required proportion in the reference group.
 
     Args:
         treatment_proportion:
@@ -433,7 +439,6 @@ def solve_reference_proportion(
         \\Rightarrow p_1 - \\delta < p_2 < 1
         $$
     """
-
     margin = _margin(margin, alternative)
 
     def func(reference_proportion: float) -> float:
@@ -471,8 +476,7 @@ def solve_superiority_proportion(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required superiority proportion.
+    r"""Estimate the required superiority proportion.
 
     Args:
         treatment_proportion:
@@ -570,8 +574,7 @@ def solve_margin(
     method: Literal["z-pooled", "z-unpooled"] = "z-unpooled",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required superiority margin.
+    r"""Estimate the required superiority margin.
 
     Args:
         treatment_proportion:
@@ -639,7 +642,6 @@ def solve_margin(
         \\delta = p_{\\text{sup}} - p_2
         $$
     """
-
     return (
         solve_superiority_proportion(
             treatment_proportion=treatment_proportion,

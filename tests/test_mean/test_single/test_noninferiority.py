@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Validation Software: PASS 2025
 # Module: One-Sample Z-Tests for Non-Inferiority
 #         One-Sample T-Tests for Non-Inferiority

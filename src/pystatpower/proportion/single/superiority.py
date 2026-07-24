@@ -1,3 +1,18 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the superiority test of a single proportion.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- proportion under the alternative hypothesis
+- proportion under the null hypothesis
+- superiority proportion threshold
+- superiority margin
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -7,8 +22,7 @@ from ._power import _power
 
 
 def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
-    """Convert margin to standard form based on alternative hypothesis"""
-
+    """Convert margin to standard form based on alternative hypothesis."""
     match alternative:
         case "greater":
             return abs(margin)
@@ -19,8 +33,7 @@ def _margin(margin: float, alternative: Literal["greater", "less"]) -> float:
 def _verify_and_get_sup_proportion(
     null_proportion: float | None, margin: float | None, superiority_proportion: float | None
 ) -> float:
-    """Verify provided proportions and return the superiority proportion"""
-
+    """Verify provided proportions and return the superiority proportion."""
     if superiority_proportion is None:
         if null_proportion is None or margin is None:
             msg = "When 'superiority_proportion' is omitted, both 'null_proportion' and 'margin' are required."
@@ -42,8 +55,7 @@ def solve_power(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         proportion:
@@ -94,7 +106,6 @@ def solve_power(
     Raises:
         ValueError: If `superiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
-
     margin = _margin(margin, alternative)
     superiority_proportion = _verify_and_get_sup_proportion(null_proportion, margin, superiority_proportion)
 
@@ -113,8 +124,7 @@ def solve_size(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> int:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         proportion:
@@ -167,7 +177,6 @@ def solve_size(
     Raises:
         ValueError: If `superiority_proportion` is omitted, and either `null_proportion` or `margin` is missing.
     """
-
     margin = _margin(margin, alternative)
     superiority_proportion = _verify_and_get_sup_proportion(null_proportion, margin, superiority_proportion)
 
@@ -191,8 +200,7 @@ def solve_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion under the alternative hypothesis.
+    r"""Estimate the required proportion under the alternative hypothesis.
 
     Args:
         null_proportion:
@@ -272,7 +280,6 @@ def solve_proportion(
         \\Rightarrow 0 < p < p_0 + \\delta
         $$
     """
-
     margin = _margin(margin, alternative)
     superiority_proportion = _verify_and_get_sup_proportion(null_proportion, margin, superiority_proportion)
 
@@ -300,8 +307,7 @@ def solve_null_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required proportion under the null hypothesis.
+    r"""Estimate the required proportion under the null hypothesis.
 
     Args:
         proportion:
@@ -372,7 +378,6 @@ def solve_null_proportion(
         \\Rightarrow \\operatorname{max}(p - \\delta, -\\delta) < p_0 < 1
         $$
     """
-
     margin = _margin(margin, alternative)
 
     def func(null_proportion: float) -> float:
@@ -399,8 +404,7 @@ def solve_superiority_proportion(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required superiority proportion.
+    r"""Estimate the required superiority proportion.
 
     Args:
         proportion:
@@ -481,8 +485,7 @@ def solve_margin(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Estimate the required superiority margin.
+    r"""Estimate the required superiority margin.
 
     Args:
         proportion:
@@ -494,8 +497,8 @@ def solve_margin(
         alternative:
             Type of the alternative hypothesis:
 
-            - If `alternative` is `'greater'`, the alternative hypothesis is $p - p_0 > \\delta \\ (\\delta > 0)$
-            - If `alternative` is `'less'`, the alternative hypothesis is $p - p_0 < \\delta \\ (\\delta < 0)$
+            - If `alternative` is `'greater'`, the alternative hypothesis is $p - p_0 > \delta \ (\delta > 0)$
+            - If `alternative` is `'less'`, the alternative hypothesis is $p - p_0 < \delta \ (\delta < 0)$
         alpha:
             Significance level.
 
@@ -516,41 +519,40 @@ def solve_margin(
         The required superiority margin.
 
     Notes:
-        The value range of the null hypothesis proportion $p_0$ is determined by the alternative hypothesis proportion $p$ and the non-inferiority margin $\\delta$.
+        The value range of the null hypothesis proportion $p_0$ is determined by the alternative hypothesis proportion $p$ and the non-inferiority margin $\delta$.
 
         If `alternative` is `'greater'`, that is, higher proportions are better, we have:
 
         $$
-        \\begin{cases}
-        \\delta < p - p_0 \\\\
-        0 < p_0 + \\delta < 1 \\\\
-        \\delta > 0
-        \\end{cases}
-        \\
-        \\Rightarrow 0 < \\delta < p - p_0
+        \begin{cases}
+        \delta < p - p_0 \\
+        0 < p_0 + \delta < 1 \\
+        \delta > 0
+        \end{cases}
+        \
+        \Rightarrow 0 < \delta < p - p_0
         $$
 
         If `alternative` is `'less'`, that is, higher proportions are worse, we have:
 
         $$
-        \\begin{cases}
-        \\delta > p - p_0 \\\\
-        0 < p_0 + \\delta < 1 \\\\
-        \\delta < 0
-        \\end{cases}
-        \\
-        \\Rightarrow p - p_0 < \\delta < 0
+        \begin{cases}
+        \delta > p - p_0 \\
+        0 < p_0 + \delta < 1 \\
+        \delta < 0
+        \end{cases}
+        \
+        \Rightarrow p - p_0 < \delta < 0
         $$
 
         To handle cases where the superiority margin is zero, the program computes the margin indirectly.
         It first calls [solve_superiority_proportion][pystatpower.proportion.single.superiority.solve_superiority_proportion]
-        to determine the superiority proportion $p_{\\text{sup}}$, and then calculates the margin $\\delta$ using the following formula:
+        to determine the superiority proportion $p_{\text{sup}}$, and then calculates the margin $\delta$ using the following formula:
 
         $$
-        \\delta = p_{\\text{sup}} - p_0
+        \delta = p_{\text{sup}} - p_0
         $$
     """
-
     return (
         solve_superiority_proportion(
             proportion=proportion,

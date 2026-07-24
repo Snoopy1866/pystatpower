@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """
 Smoke test for the built package.
 Verifies that the package can be imported and basic functionality works.

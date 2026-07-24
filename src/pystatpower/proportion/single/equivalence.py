@@ -1,3 +1,14 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the equivalence test of a single proportion.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -17,7 +28,6 @@ def _power(
     continuity_correction: bool,
 ) -> float:
     """Calculate the statistical power."""
-
     return (
         _raw_power(proportion, null_proportion + margin_lower, size, "greater", alpha, method, continuity_correction)
         + _raw_power(proportion, null_proportion + margin_upper, size, "less", alpha, method, continuity_correction)
@@ -36,8 +46,7 @@ def solve_power(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the statistical power.
+    """Calculate the statistical power.
 
     Args:
         proportion:
@@ -65,7 +74,6 @@ def solve_power(
     Returns:
         The statistical power of the test.
     """
-
     return _power(proportion, null_proportion, margin_lower, margin_upper, size, alpha, method, continuity_correction)
 
 
@@ -80,8 +88,7 @@ def solve_size(
     method: Literal["z-p0", "z-phat"] = "z-phat",
     continuity_correction: bool = False,
 ) -> int:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         proportion:

@@ -1,3 +1,16 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of two independent proportion difference.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- width/distance
+- sample size
+- proportion for the treatment group
+- proportion for the reference group
+"""
+
 from math import acos
 from math import ceil
 from math import copysign
@@ -24,7 +37,6 @@ def _distance_chisq(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Pearson's chi-square method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
     sd = sqrt(
@@ -59,7 +71,6 @@ def _distance_chisq_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Yate's chi-square with continuity correction method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
     sd = sqrt(
@@ -95,13 +106,11 @@ def _distance_wilson(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Newcombe-Wilson method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
     def _wilson_ci(proportion: float, size: float, alpha: float) -> tuple[float, float]:
-        """Internal function to calculate Wilson confidence interval"""
-
+        """Internal function to calculate Wilson confidence interval."""
         z = norm.ppf(1 - alpha)
 
         a = 2 * size * proportion + z**2
@@ -161,13 +170,11 @@ def _distance_wilson_cc(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Newcombe-Wilson with continuity correction method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
     def _wilson_cc_ci(proportion: float, size: float, alpha: float) -> tuple[float, float]:
-        """Internal function to calculate Wilson confidence interval with continuity correction"""
-
+        """Internal function to calculate Wilson confidence interval with continuity correction."""
         z = norm.ppf(1 - alpha)
 
         a = 2 * size * proportion + z**2
@@ -227,7 +234,6 @@ def _distance_farrington_manning(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Farrington and Manning's score method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
@@ -281,7 +287,6 @@ def _distance_miettinen_nurminen(
     interval_type: Literal["two-sided", "lower", "upper"],
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit, using Miettinen and Nurminen's score method."""
-
     alpha = 1 - conf_level
     diff = treatment_proportion - reference_proportion
 
@@ -337,7 +342,6 @@ def _distance(
     continuity_correction: bool = False,
 ) -> float:
     """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit."""
-
     match method:
         case "chisq":
             if continuity_correction:
@@ -398,8 +402,7 @@ def solve_distance(
     method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> float:
-    """
-    Calculate the confidence interval width or the distance from the proportion difference to the confidence limit.
+    """Calculate the confidence interval width or the distance from the proportion difference to the confidence limit.
 
     Args:
         treatment_proportion:
@@ -439,7 +442,6 @@ def solve_distance(
             - If `interval_type` is `'lower'` or `'upper'`, the distance from the proportion difference to the confidence limit is returned.
 
     """
-
     return _distance(
         treatment_proportion,
         reference_proportion,
@@ -463,8 +465,7 @@ def solve_size(
     method: Literal["chisq", "wilson", "farrington_manning", "fm", "miettinen_nurminen", "mn"],
     continuity_correction: bool = False,
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         treatment_proportion:
@@ -503,7 +504,6 @@ def solve_size(
     Returns:
         The required sample sizes in treatment and reference groups, respectively.
     """
-
     if ratio >= 1:
 
         def func(reference_size: float) -> float:
@@ -558,8 +558,7 @@ def solve_treatment_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the treatment group.
+    """Estimate the required proportion in the treatment group.
 
     Args:
         reference_proportion:
@@ -662,8 +661,7 @@ def solve_reference_proportion(
     continuity_correction: bool = False,
     direction: Literal["greater", "less"],
 ) -> float:
-    """
-    Estimate the required proportion in the reference group.
+    """Estimate the required proportion in the reference group.
 
     Args:
         treatment_proportion:

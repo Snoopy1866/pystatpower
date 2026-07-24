@@ -1,3 +1,18 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the inequality test of a single mean.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- mean under the alternative hypothesis
+- mean under the null hypothesis
+- mean difference
+- standard deviation
+"""
+
 import warnings
 
 from math import ceil
@@ -45,7 +60,6 @@ class _ParamsValidator:
 
     def _warn_params_redundant(self, params: set[str], /) -> None:
         """Warn if parameters are redundant."""
-
         params_str = ", ".join(params)
         warnings.warn(
             f"Redundant parameters detected: {params_str}.",
@@ -62,7 +76,6 @@ def _power(
     dist: Literal["z", "t"],
 ) -> float:
     """Calculate the statistical power."""
-
     return _raw_power(diff, std, size, alternative, alpha, dist)
 
 
@@ -77,8 +90,7 @@ def solve_power(
     alpha: float = 0.05,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         mean:
@@ -120,7 +132,6 @@ def solve_power(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
-
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
     pv.validate(target="diff")
     diff = pv.diff
@@ -139,8 +150,7 @@ def solve_size(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> int:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         mean:
@@ -184,7 +194,6 @@ def solve_size(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
-
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
     pv.validate(target="diff")
     diff = pv.diff
@@ -206,8 +215,7 @@ def solve_mean(
     dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean under the alternative hypothesis.
+    r"""Estimate the required mean under the alternative hypothesis.
 
     Args:
         null_mean:
@@ -253,7 +261,6 @@ def solve_mean(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -284,8 +291,7 @@ def solve_null_mean(
     dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean under the null hypothesis.
+    r"""Estimate the required mean under the null hypothesis.
 
     Args:
         mean:
@@ -331,7 +337,6 @@ def solve_null_mean(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -361,8 +366,7 @@ def solve_diff(
     dist: Literal["z", "t"] = "t",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean difference.
+    r"""Estimate the required mean difference.
 
     Args:
         std:
@@ -406,7 +410,6 @@ def solve_diff(
     Raises:
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -437,8 +440,7 @@ def solve_std(
     power: float = 0.8,
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required standard deviation.
+    r"""Estimate the required standard deviation.
 
     Args:
         mean:
@@ -482,7 +484,6 @@ def solve_std(
     Raises:
         ValueError: The given set of parameters is insufficient to determine the mean difference.
     """
-
     pv = _ParamsValidator(mean=mean, null_mean=null_mean, diff=diff)
     pv.validate(target="diff")
     diff = pv.diff

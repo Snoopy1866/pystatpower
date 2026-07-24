@@ -1,3 +1,6 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from math import sqrt
 from typing import Literal
 
@@ -14,7 +17,6 @@ def _power_z(
     alpha: float,
 ) -> float:
     """Calculate the statistical power based on z-distribution."""
-
     se = std / sqrt(size)
     match alternative:
         case "two-sided":
@@ -35,7 +37,6 @@ def _power_t(
     alpha: float,
 ) -> float:
     """Calculate the statistical power based on t-distribution."""
-
     df = size - 1
     nc = offset * sqrt(size) / std
     match alternative:
@@ -58,7 +59,6 @@ def _power(
     dist: Literal["z", "t"] = "t",
 ) -> float:
     """Calculate the statistical power."""
-
     match dist:
         case "z":
             return _power_z(offset, std, size, alternative, alpha)

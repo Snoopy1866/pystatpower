@@ -1,4 +1,7 @@
-"""A module containing mathematical tool functions"""
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""A module containing mathematical tool functions."""
 
 from math import inf
 from math import sqrt
@@ -8,8 +11,7 @@ Domain: TypeAlias = tuple[float, float]
 
 
 def _domain_square_root_of_quad(a: float, b: float, c: float, /) -> Domain | tuple[Domain, Domain] | float | None:
-    r"""Solve the domain of the function f(x) = \sqrt{ax^2+bx+c} (a ≠ 0)"""
-
+    r"""Solve the domain of the function f(x) = \sqrt{ax^2+bx+c} (a ≠ 0)."""
     delta = b**2 - 4 * a * c
     if a > 0:
         if delta <= 0:

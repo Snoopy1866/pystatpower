@@ -1,3 +1,19 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the inequality test of two independent means.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- statistical power
+- sample size
+- mean difference
+- mean for the treatment group
+- mean for the reference group
+- standard deviation for the treatment group
+- standard deviation for the reference group
+"""
+
 from math import ceil
 from typing import Literal
 
@@ -55,8 +71,7 @@ def solve_power(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Calculate the statistical power.
+    r"""Calculate the statistical power.
 
     Args:
         treatment_mean:
@@ -121,7 +136,6 @@ def solve_power(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
@@ -156,8 +170,7 @@ def solve_size(
     equal_var: bool = False,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> tuple[int, int]:
-    """
-    Estimate the required sample size.
+    r"""Estimate the required sample size.
 
     Args:
         treatment_mean:
@@ -222,7 +235,6 @@ def solve_size(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and all `treatment_std`, `reference_std` and `std` are omitted.
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
     std = _verify_std_and_get_std(treatment_std, reference_std, std, dist, equal_var)
 
@@ -294,8 +306,7 @@ def solve_diff(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean difference.
+    r"""Estimate the required mean difference.
 
     Args:
         treatment_std:
@@ -362,7 +373,6 @@ def solve_diff(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -415,8 +425,7 @@ def solve_treatment_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean in the treatment group.
+    r"""Estimate the required mean in the treatment group.
 
     Args:
         reference_mean:
@@ -485,7 +494,6 @@ def solve_treatment_mean(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -538,8 +546,7 @@ def solve_reference_mean(
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
     direction: Literal["greater", "less"] | None = None,
 ) -> float:
-    """
-    Estimate the required mean in the reference group.
+    r"""Estimate the required mean in the reference group.
 
     Args:
         treatment_mean:
@@ -608,7 +615,6 @@ def solve_reference_mean(
         ValueError: If `dist` is `z` and `equal_var` is `True`, and both `treatment_std` and `reference_std` are provided, but they are not equal.
         ValueError: If `alternative` is `'two-sided'` and `direction` is omitted.
     """
-
     if alternative == "two-sided":
         if direction is None:
             msg = "'direction' is required when 'alternative' is 'two-sided'."
@@ -660,8 +666,7 @@ def solve_treatment_std(
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required standard deviation in the treatment group.
+    r"""Estimate the required standard deviation in the treatment group.
 
     Args:
         treatment_mean:
@@ -725,7 +730,6 @@ def solve_treatment_std(
         ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `reference_std` is omitted.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and reference_std is None:
@@ -825,8 +829,7 @@ def solve_reference_std(
     equal_var: bool = True,
     approx_t_method: Literal["welch", "satterthwaite"] = "welch",
 ) -> float:
-    """
-    Estimate the required standard deviation in the reference group.
+    r"""Estimate the required standard deviation in the reference group.
 
     Args:
         treatment_mean:
@@ -890,7 +893,6 @@ def solve_reference_std(
         ValueError: If all of `diff`, `treatment_mean` and `reference_mean` are omitted.
         ValueError: If `equal_var` is `False`, and `treatment_std` is omitted.
     """
-
     diff = _verify_mean_and_get_diff(treatment_mean, reference_mean, diff)
 
     if not equal_var and treatment_std is None:

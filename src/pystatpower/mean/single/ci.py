@@ -1,3 +1,15 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for the confidence interval of a single mean.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- precision
+- sample size
+- standard deviation
+"""
+
 from math import ceil
 from math import sqrt
 from typing import Literal
@@ -13,8 +25,7 @@ def _precision_z(
     conf_level: float,
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
 ) -> float:
-    """Calculate the distance from the mean to the confidence limit (commonly known as precision), using the z-distribution"""
-
+    """Calculate the distance from the mean to the confidence limit (commonly known as precision), using the z-distribution."""
     alpha = 1 - conf_level
 
     se = std / sqrt(size)
@@ -35,7 +46,6 @@ def _precision_t(
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"],
 ) -> float:
     """Calculate the distance from the mean to the confidence limit (commonly known as precision), using the t-distribution."""
-
     alpha = 1 - conf_level
 
     se = std / sqrt(size)
@@ -58,7 +68,6 @@ def _precision(
     dist: Literal["z", "t"],
 ) -> float:
     """Calculate the distance from the mean to the confidence limit (commonly known as precision)."""
-
     match dist:
         case "z":
             return _precision_z(std, size, conf_level, interval_type)
@@ -74,8 +83,7 @@ def solve_precision(
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Calculate the distance from the mean to the confidence limit (commonly known as precision).
+    """Calculate the distance from the mean to the confidence limit (commonly known as precision).
 
     Args:
         std:
@@ -106,7 +114,6 @@ def solve_precision(
     Notes:
         Since the confidence interval for the mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
-
     return _precision(std, size, conf_level, interval_type, dist)
 
 
@@ -118,8 +125,7 @@ def solve_size(
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
     dist: Literal["z", "t"] = "t",
 ) -> int:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         precision:
@@ -165,8 +171,7 @@ def solve_std(
     interval_type: Literal["two-sided", "one-sided", "lower", "upper"] = "two-sided",
     dist: Literal["z", "t"] = "t",
 ) -> float:
-    """
-    Estimate the required standard deviation.
+    """Estimate the required standard deviation.
 
     Args:
         precision:
@@ -197,7 +202,6 @@ def solve_std(
     Notes:
         Since the confidence interval for the mean is symmetric, specifying `interval_type` as `'lower'`, `'upper'`, or `'one-sided'` works consistently.
     """
-
     # First calculate precision d' under standard deviation s' = 1, and then use the conversion formula s = d/d' to
     # directly obtain the required standard deviation s under given precision d.
     # This algorithm does not require the use of brentq inverse solution.

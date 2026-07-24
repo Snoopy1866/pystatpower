@@ -1,3 +1,14 @@
+# Copyright (C) 2024-present The Package Authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Power analysis for observing at least one event.
+
+This module provides functions to calculate or estimate the following parameters:
+
+- detectable power
+- sample size
+"""
+
 from math import ceil
 from math import exp
 from typing import Literal
@@ -7,13 +18,11 @@ from scipy.optimize import brentq
 
 def _power_binom(proportion: float, size: float) -> float:
     """Calculate the power to observe at least one event, based on the binomial distribution."""
-
     return 1 - (1 - proportion) ** size
 
 
 def _power_poisson(proportion: float, size: float) -> float:
     """Calculate the power to observe at least one event, based on the Poisson distribution."""
-
     return 1 - exp(-size * proportion)
 
 
@@ -26,8 +35,7 @@ def _power(proportion: float, size: float, dist: Literal["bin", "poisson"]) -> f
 
 
 def solve_power(*, proportion: float, size: int, dist: Literal["bin", "poisson"] = "bin") -> float:
-    """
-    Calculate the detection power.
+    """Calculate the detection power.
 
     Args:
         proportion:
@@ -43,13 +51,11 @@ def solve_power(*, proportion: float, size: int, dist: Literal["bin", "poisson"]
     Returns:
         The power to observe at least one event.
     """
-
     return _power(proportion, size, dist)
 
 
 def solve_size(*, proportion: float, power: float = 0.95, dist: Literal["bin", "poisson"] = "bin") -> int:
-    """
-    Estimate the required sample size.
+    """Estimate the required sample size.
 
     Args:
         proportion:
@@ -75,8 +81,7 @@ def solve_size(*, proportion: float, power: float = 0.95, dist: Literal["bin", "
 
 
 def solve_proportion(*, size: int, power: float = 0.95, dist: Literal["bin", "poisson"] = "bin") -> float:
-    """
-    Estimate the required event proportion.
+    """Estimate the required event proportion.
 
     Args:
         size:
