@@ -8,7 +8,6 @@ repos:
     hooks:
       - id: check-added-large-files
       - id: check-case-conflict
-      - id: check-docstring-first
       - id: check-illegal-windows-names
       - id: check-toml
       - id: check-yaml
@@ -24,7 +23,6 @@ repos:
               tests/smoke_test\.py|
               tests/models\.py
           )$
-      - id: requirements-txt-fixer
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
