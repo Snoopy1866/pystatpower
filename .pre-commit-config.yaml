@@ -37,7 +37,7 @@ repos:
     rev: v0.15.22
     hooks:
       - id: ruff-check
-        args: [--fix --preview]
+        args: [--fix, --preview]
       - id: ruff-format
 
   - repo: https://github.com/opensource-nepal/commitlint
