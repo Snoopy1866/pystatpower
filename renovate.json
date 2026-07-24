@@ -17,5 +17,8 @@
       "matchDepTypes": ["project.dependencies"],
       "enabled": false
     }
-  ]
+  ],
+  "pre-commit": {
+    "enabled": true
+  }
 }
